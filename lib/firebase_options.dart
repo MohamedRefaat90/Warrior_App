@@ -77,4 +77,5 @@ class DefaultFirebaseOptions {
     authDomain: 'warrior-dd0f2.firebaseapp.com',
     storageBucket: 'warrior-dd0f2.firebasestorage.app',
   );
+
 }

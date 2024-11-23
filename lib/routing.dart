@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
 import 'package:Warrior/features/Auth/presentation/screens/login_screen.dart';
+import 'package:Warrior/features/Auth/presentation/screens/signup_screen.dart';
 import 'package:Warrior/features/onboarding/screens/Onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,7 @@ final GoRouter router = GoRouter(initialLocation: AppRouters.welcome, routes: [
     path: AppRouters.onboarding,
     name: AppRouters.onboarding,
     pageBuilder: (context, state) => CustomTransition(
-      child: OnboardingScreen(),
+      child: const OnboardingScreen(),
       transitionType: PageTransitionType.fade,
     ),
   ),
@@ -24,6 +25,14 @@ final GoRouter router = GoRouter(initialLocation: AppRouters.welcome, routes: [
     name: AppRouters.login,
     pageBuilder: (context, state) => CustomTransition(
       child: const LoginScreen(),
+      transitionType: PageTransitionType.fade,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.signup,
+    name: AppRouters.signup,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const SignupScreen(),
       transitionType: PageTransitionType.fade,
     ),
   ),

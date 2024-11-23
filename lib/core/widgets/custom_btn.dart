@@ -9,6 +9,7 @@ class CustomBTN extends StatelessWidget {
   final double? width;
   final bool isDisabled;
   final double? radius;
+  final Color? splashColor;
   const CustomBTN(
       {super.key,
       required this.widget,
@@ -17,6 +18,7 @@ class CustomBTN extends StatelessWidget {
       this.padding,
       this.width,
       this.radius,
+      this.splashColor,
       this.isDisabled = false});
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class CustomBTN extends StatelessWidget {
       onPressed: isDisabled ? null : press,
       padding: EdgeInsets.all(padding ?? 20),
       minWidth: width ?? 50,
-      splashColor: AppColors.primaryColor,
+      splashColor: splashColor ?? AppColors.primaryColor,
       textColor: Colors.white,
       color: color,
       shape: RoundedRectangleBorder(

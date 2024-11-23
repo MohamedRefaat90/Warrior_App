@@ -1,3 +1,5 @@
 abstract class AppRouters {
-  static const String appName = 'Flutter Starter';
+  static const String welcome = '/welcome';
+  static const String onboarding = '/onboarding';
+  static const String login = '/login';
 }

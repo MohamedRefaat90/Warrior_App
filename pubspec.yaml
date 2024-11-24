@@ -43,6 +43,7 @@ flutter:
   assets:
     - assets/
     - assets/images/onboarding/
+    - assets/images/signup/
   #   - images/a_dot_ham.jpeg
 
 

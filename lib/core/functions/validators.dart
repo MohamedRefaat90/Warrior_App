@@ -15,3 +15,13 @@ String? passwordValidator(String value) {
 
   return null;
 }
+
+String? confirmPasswordValidator(String value, String password) {
+  if (value.isEmpty) {
+    return 'Confirm Password is required';
+  }
+  if (value != password) {
+    return 'Password does not match';
+  }
+  return null;
+}

@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
+import 'package:Warrior/features/Auth/presentation/screens/forget_password_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/login_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_screen.dart';
 import 'package:Warrior/features/onboarding/screens/Onboarding_screen.dart';
@@ -33,7 +34,15 @@ final GoRouter router = GoRouter(initialLocation: AppRouters.welcome, routes: [
     name: AppRouters.signup,
     pageBuilder: (context, state) => CustomTransition(
       child: const SignupScreen(),
-      transitionType: PageTransitionType.fade,
+      transitionType: PageTransitionType.bottomToTop,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.forgetPassword,
+    name: AppRouters.forgetPassword,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const ForgetPasswordScreen(),
+      transitionType: PageTransitionType.rightToLeft,
     ),
   ),
 ]);

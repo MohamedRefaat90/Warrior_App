@@ -1,5 +1,5 @@
 import 'package:Warrior/core/widgets/custom_btn.dart';
-import 'package:Warrior/features/Auth/presentation/widgets/otp_with_shadows.dart';
+import 'package:Warrior/features/Auth/presentation/widgets/otp_fileds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';

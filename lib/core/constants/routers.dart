@@ -5,4 +5,5 @@ abstract class AppRouters {
   static const String signup = '/signup';
   static const String forgetPassword = '/forgetPassword';
   static const String verifyOTP = '/verifyOTPw';
+  static const String home = '/home';
 }

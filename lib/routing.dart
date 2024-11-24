@@ -5,7 +5,7 @@ import 'package:Warrior/features/Auth/presentation/screens/login_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dart';
 import 'package:Warrior/features/home/presentation/screen/home_screen.dart';
-import 'package:Warrior/features/onboarding/screens/Onboarding_screen.dart';
+import 'package:Warrior/features/onboarding/screens/onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';

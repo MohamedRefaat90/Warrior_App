@@ -3,6 +3,7 @@ import 'package:Warrior/core/functions/custom_transition_page.dart';
 import 'package:Warrior/features/Auth/presentation/screens/forget_password_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/login_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_screen.dart';
+import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dart';
 import 'package:Warrior/features/onboarding/screens/Onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +43,14 @@ final GoRouter router = GoRouter(initialLocation: AppRouters.welcome, routes: [
     name: AppRouters.forgetPassword,
     pageBuilder: (context, state) => CustomTransition(
       child: const ForgetPasswordScreen(),
+      transitionType: PageTransitionType.rightToLeft,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.verifyOTP,
+    name: AppRouters.verifyOTP,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const VerifyOtpScreen(),
       transitionType: PageTransitionType.rightToLeft,
     ),
   ),

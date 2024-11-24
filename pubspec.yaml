@@ -30,6 +30,8 @@ dependencies:
   page_transition: ^2.1.0
   another_flushbar: ^1.12.30
   smooth_page_indicator: ^1.2.0+3
+  pinput: ^5.0.0
+  otp_timer_button: ^1.1.1
 
 dev_dependencies:
   flutter_test:

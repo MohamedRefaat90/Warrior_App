@@ -4,7 +4,6 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
-import 'package:Warrior/core/widgets/text_logo.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/go_to_signup.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/google_button.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/login_with.dart';
@@ -82,28 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-          child: Stack(
-        children: [
-          Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15)),
-              ),
-              child: Image.asset(
-                AppAssets.loginBanar,
-                color: const Color.fromARGB(0, 0, 0, 0).withOpacity(0.5),
-                colorBlendMode: BlendMode.darken,
-              )),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.133,
-            left: MediaQuery.of(context).size.width * 0.345,
-            child: const TextLogo(fz: 30, letterSpacing: 5),
-          )
-        ],
-      )),
+      body: SafeArea(child: Image.asset(AppAssets.loginBanar)),
     );
   }
 }

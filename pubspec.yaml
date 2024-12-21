@@ -34,6 +34,7 @@ dependencies:
   otp_timer_button: ^1.1.1
   pretty_dio_logger: ^1.4.0
   flutter_secure_storage: ^9.2.2
+  google_sign_in: ^6.2.2
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,7 @@ flutter:
     - assets/images/onboarding/
     - assets/images/signup/
     - assets/animation/
+    - .env
   #   - images/a_dot_ham.jpeg
 
 

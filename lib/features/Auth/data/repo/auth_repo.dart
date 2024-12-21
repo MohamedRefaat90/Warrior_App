@@ -65,4 +65,17 @@ class AuthRepo {
       rethrow;
     }
   }
+
+  Future<UserModel> googleSignIn(String token) async {
+    try {
+      Response response =
+          await _dio.post(ApisUrl.googleLogin, data: {'token': token});
+      SecureStorageHandler.write(
+          key: "Token", value: response.data['data']['refresh']);
+      return UserModel.fromMap(
+          response.data['data']['user'] as Map<String, dynamic>);
+    } on DioException {
+      rethrow;
+    }
+  }
 }

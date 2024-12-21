@@ -31,6 +31,7 @@ class SignupSuccess extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: "Poppins"),
             ),
+            20.verticalSpace,
             CustomBTN(
                 widget: const Text("Login"),
                 color: AppColors.primaryColor,

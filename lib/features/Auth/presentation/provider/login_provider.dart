@@ -24,4 +24,15 @@ class LoginNotifier extends StateNotifier<AuthState> {
       state = AuthState(errorMessage: e.toString());
     }
   }
+
+  Future<void> googleLogin(String token) async {
+    try {
+      await _authRepo.googleSignIn(token);
+      state = AuthState(isSuccess: true);
+    } on DioException catch (e) {
+      state = AuthState(errorMessage: e.response!.data["message"]);
+    } catch (e) {
+      state = AuthState(errorMessage: e.toString());
+    }
+  }
 }

@@ -50,6 +50,7 @@ flutter:
     - assets/images/onboarding/
     - assets/images/signup/
     - assets/animation/
+    - .env
   #   - images/a_dot_ham.jpeg
 
 

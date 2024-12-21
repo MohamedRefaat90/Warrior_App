@@ -84,7 +84,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         isPassword: true,
                         validator: (value) => confirmPasswordvalidator(
                             value!, passwordController.text)),
-                    50.verticalSpace,
+                    40.verticalSpace,
                     CustomBTN(
                         widget: authState.isLoading
                             ? const BtnLoader()
@@ -108,7 +108,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   angle: 3.14 / 4,
                   child: Image.asset(
                     AppAssets.dumbbell,
-                    width: MediaQuery.of(context).size.width * 0.4,
+                    width: 0.4.sw,
                   ),
                 )
               ],

@@ -9,7 +9,7 @@ import 'package:Warrior/routing.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await dotenv.load();
   await AppServices.init();
 
   runApp(DevicePreview(

@@ -32,6 +32,8 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   pinput: ^5.0.0
   otp_timer_button: ^1.1.1
+  pretty_dio_logger: ^1.4.0
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +48,7 @@ flutter:
     - assets/
     - assets/images/onboarding/
     - assets/images/signup/
+    - assets/animation/
   #   - images/a_dot_ham.jpeg
 
 

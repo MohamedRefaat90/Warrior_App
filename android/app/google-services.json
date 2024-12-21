@@ -12,7 +12,16 @@
           "package_name": "com.warrior.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "235633173373-amuvmg1hulo50do8gfl2s8f9v901mjg8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.warrior.app",
+            "certificate_hash": "ac:e5:e6:bb:28:0d:f7:c3:a7:5c:65:1a:c9:e4:bf:18:62:bc:d6:d7"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDo0_DBUzdBPaiQ3Jxt4BT3FeZaGkl82Jw"

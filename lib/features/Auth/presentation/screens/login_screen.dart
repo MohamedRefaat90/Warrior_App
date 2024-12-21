@@ -1,28 +1,47 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
-import 'package:Warrior/core/widgets/text_logo.dart';
+import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/go_to_signup.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/google_button.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/login_with.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    ref.listenManual(loginProvider, (previous, current) {
+      if (current.isSuccess) {
+        context.goNamed(AppRouters.home);
+      } else if (current.errorMessage != null) {
+        flushBar(context, message: current.errorMessage!);
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(loginProvider);
     return Scaffold(
       bottomSheet: Container(
         height: 0.56.sh,
@@ -40,12 +59,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 15.verticalSpace,
                 CustomTextField(
                     placeholderText: "Email",
+                    textEditingController: emailController,
                     validator: (value) => emailValidator(value!)),
                 10.verticalSpace,
                 CustomTextField(
                     placeholderText: "password",
+                    textEditingController: passwordController,
                     isPassword: true,
-                    validator: (value) => passwordValidator(value!)),
+                    validator: (value) =>
+                        value!.isEmpty ? "Password is required" : null),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -61,14 +83,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 0.verticalSpace,
                 CustomBTN(
-                    widget: const Text("Login"),
+                    widget: authState.isLoading
+                        ? const BtnLoader()
+                        : const Text("Login"),
                     color: AppColors.primaryColor,
                     padding: 15,
                     splashColor: AppColors.black,
                     width: 0.4.sw,
-                    press: () {
+                    press: () async {
                       if (formKey.currentState!.validate()) {
-                        // Navigator.pushNamed(context, "/home");
+                        await ref.read(loginProvider.notifier).login(
+                            emailController.text, passwordController.text);
                       }
                     }),
                 10.verticalSpace,
@@ -82,28 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-          child: Stack(
-        children: [
-          Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15)),
-              ),
-              child: Image.asset(
-                AppAssets.loginBanar,
-                color: const Color.fromARGB(0, 0, 0, 0).withOpacity(0.5),
-                colorBlendMode: BlendMode.darken,
-              )),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.133,
-            left: MediaQuery.of(context).size.width * 0.345,
-            child: const TextLogo(fz: 30, letterSpacing: 5),
-          )
-        ],
-      )),
+      body: SafeArea(child: Image.asset(AppAssets.loginBanar)),
     );
   }
 }

@@ -1,18 +1,20 @@
+import 'package:Warrior/features/Auth/presentation/provider/verifyOTP_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 
-class RoundedWithShadow extends StatefulWidget {
-  const RoundedWithShadow({super.key});
-
+class RoundedWithShadow extends ConsumerStatefulWidget {
+  final String email;
+  const RoundedWithShadow({super.key, required this.email});
   @override
   RoundedWithShadowState createState() => RoundedWithShadowState();
 
   @override
-  String toStringShort() => 'Rounded With Shadow';
+  String toStringShort() => 'OTP Pin Rounded With Shadow';
 }
 
-class RoundedWithShadowState extends State<RoundedWithShadow> {
+class RoundedWithShadowState extends ConsumerState<RoundedWithShadow> {
   final controller = TextEditingController();
   final focusNode = FocusNode();
 
@@ -63,11 +65,16 @@ class RoundedWithShadowState extends State<RoundedWithShadow> {
           ],
         ),
       ),
-      onCompleted: (value) => debugPrint(value),
-      // onClipboardFound: (value) {
-      //   debugPrint('onClipboardFound: $value');
-      //   controller.setText(value);
-      // },
+      onCompleted: (value) async {
+        await ref
+            .read(otpProvider.notifier)
+            .verifyOTP(email: widget.email, otp: value);
+      },
+      onClipboardFound: (value) async {
+        await ref
+            .read(otpProvider.notifier)
+            .verifyOTP(email: widget.email, otp: value);
+      },
       showCursor: true,
       cursor: cursor,
     );

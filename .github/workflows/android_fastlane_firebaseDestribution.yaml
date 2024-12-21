@@ -23,6 +23,10 @@ jobs:
       with:
         channel: stable
 
+    - name: Restore .env file
+      run: |
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:

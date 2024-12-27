@@ -26,6 +26,7 @@ class LoginNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> googleLogin(String token) async {
+    state = AuthState(isLoading: true);
     try {
       await _authRepo.googleSignIn(token);
       state = AuthState(isSuccess: true);

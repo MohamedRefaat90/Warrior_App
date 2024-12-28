@@ -1,19 +1,24 @@
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/features/Auth/presentation/screens/signup_success.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
 import 'package:Warrior/features/Auth/presentation/screens/forget_password_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/login_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/reset_password_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/reset_success.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_screen.dart';
+import 'package:Warrior/features/Auth/presentation/screens/signup_success.dart';
 import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dart';
-import 'package:Warrior/features/home/presentation/screen/home_screen.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
+import 'package:Warrior/features/Home/presentation/screen/home_screen.dart';
+import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
+import 'package:Warrior/features/Supplements/presentation/screens/supplements_screen.dart';
+import 'package:Warrior/features/Workouts/presentation/screens/workouts_screen.dart';
 import 'package:Warrior/features/onboarding/screens/onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 
-final GoRouter router = GoRouter(initialLocation: AppRouters.login, routes: [
+final GoRouter router =
+    GoRouter(initialLocation: AppRouters.exercises, routes: [
   GoRoute(
     path: AppRouters.welcome,
     builder: (context, state) => const WelcomeScreen(),
@@ -87,6 +92,38 @@ final GoRouter router = GoRouter(initialLocation: AppRouters.login, routes: [
     name: AppRouters.home,
     pageBuilder: (context, state) => CustomTransition(
       child: const HomeScreen(),
+      transitionType: PageTransitionType.rightToLeft,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.exercises,
+    name: AppRouters.exercises,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const ExercisesScreen(),
+      transitionType: PageTransitionType.rightToLeft,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.workouts,
+    name: AppRouters.workouts,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const WorkoutScreen(),
+      transitionType: PageTransitionType.rightToLeft,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.supplements,
+    name: AppRouters.supplements,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const SupplementsScreen(),
+      transitionType: PageTransitionType.rightToLeft,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.nutrition,
+    name: AppRouters.nutrition,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const NutritionScreen(),
       transitionType: PageTransitionType.rightToLeft,
     ),
   ),

@@ -6,4 +6,5 @@ class ApisUrl {
   static const String resetPassword = "auth/password-reset-confirm/";
   static const String signup = "auth/Signup/";
   static const String googleLogin = "auth/google-login/";
+  static const String muscles = "Muscles/";
 }

@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../provider/auth_states.dart';
+import '../../../../core/network/provider_states.dart';
 import '../provider/forgetpassword_provider.dart';
 
 class ForgetPasswordScreen extends ConsumerStatefulWidget {
@@ -27,7 +27,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(forgetPasswordProvider);
+    final ProviderStates = ref.watch(forgetPasswordProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forget Password'),
@@ -45,7 +45,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                     validator: (value) => emailValidator(value!)),
                 30.verticalSpace,
                 CustomBTN(
-                    widget: authState.isLoading
+                    widget: ProviderStates.isLoading
                         ? const BtnLoader()
                         : const Text("Send Email"),
                     color: AppColors.primaryColor,
@@ -59,9 +59,10 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                             .forgetPassword(emailController.text);
 
                         if (context.mounted) {
-                          if (authState.isSuccess) {
-                          } else if (authState.errorMessage != null) {
-                            flushBar(context, message: authState.errorMessage!);
+                          if (ProviderStates.isSuccess) {
+                          } else if (ProviderStates.errorMessage != null) {
+                            flushBar(context,
+                                message: ProviderStates.errorMessage!);
                           }
                         }
                       }
@@ -81,7 +82,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual<AuthState>(
+    ref.listenManual<ProviderStates>(
       forgetPasswordProvider,
       (previous, next) {
         if (next.isSuccess) {

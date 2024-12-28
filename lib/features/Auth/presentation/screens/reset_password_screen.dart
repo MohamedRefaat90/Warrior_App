@@ -2,10 +2,10 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
-import 'package:Warrior/features/Auth/presentation/provider/auth_states.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/password_validation_rules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +30,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AuthState authState = ref.watch(resetPasswordProvider);
+    ProviderStates providerStates = ref.watch(resetPasswordProvider);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.goNamed(AppRouters.login)),
@@ -67,7 +67,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   isPassword: true),
               20.verticalSpace,
               CustomBTN(
-                  widget: authState.isLoading
+                  widget: providerStates.isLoading
                       ? const BtnLoader()
                       : const Text("Reset Password"),
                   color: AppColors.black,
@@ -95,6 +95,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
   }
 
   @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    resetFlagFields();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     ref.listenManual(resetPasswordProvider, (previous, current) {
       if (current.isSuccess) {
@@ -104,13 +112,5 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       }
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    resetFlagFields();
-    super.dispose();
   }
 }

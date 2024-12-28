@@ -28,20 +28,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
 
   @override
-  void initState() {
-    ref.listenManual(loginProvider, (previous, current) {
-      if (current.isSuccess) {
-        context.goNamed(AppRouters.home);
-      } else if (current.errorMessage != null) {
-        flushBar(context, message: current.errorMessage!);
-      }
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(loginProvider);
+    final ProviderStates = ref.watch(loginProvider);
     return Scaffold(
       bottomSheet: Container(
         height: 0.56.sh,
@@ -83,7 +71,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 0.verticalSpace,
                 CustomBTN(
-                    widget: authState.isLoading
+                    widget: ProviderStates.isLoading
                         ? const BtnLoader()
                         : const Text("Login"),
                     color: AppColors.primaryColor,
@@ -109,5 +97,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
       body: SafeArea(child: Image.asset(AppAssets.loginBanar)),
     );
+  }
+
+  @override
+  void initState() {
+    ref.listenManual(loginProvider, (previous, current) {
+      if (current.isSuccess) {
+        context.goNamed(AppRouters.home);
+      } else if (current.errorMessage != null) {
+        flushBar(context, message: current.errorMessage!);
+      }
+    });
+    super.initState();
   }
 }

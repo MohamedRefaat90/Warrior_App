@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 List<CategoryItem> categoryItems = [
   CategoryItem(
-    title: "Exercises",
-    image: AppAssets.exercise,
-    navigateTo: AppRouters.exercises,
+    title: "Muscles",
+    image: AppAssets.muscles,
+    navigateTo: AppRouters.muscles,
   ),
   CategoryItem(
     title: "My Workouts",

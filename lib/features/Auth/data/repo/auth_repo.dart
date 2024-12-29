@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final authRepo = Provider((ref) {
-  return AuthRepo(DioHandler.getDio());
+  return AuthRepo(DioHandler.dio);
 });
 
 class AuthRepo {
@@ -17,6 +17,19 @@ class AuthRepo {
   Future<void> forgetPassword(String email) async {
     try {
       await _dio.post(ApisUrl.forgetPassword, data: {'email': email});
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  Future<UserModel> googleSignIn(String token) async {
+    try {
+      Response response =
+          await _dio.post(ApisUrl.googleLogin, data: {'token': token});
+      SecureStorageHandler.write(
+          key: "Token", value: response.data['data']['refresh']);
+      return UserModel.fromMap(
+          response.data['data']['user'] as Map<String, dynamic>);
     } on DioException {
       rethrow;
     }
@@ -61,19 +74,6 @@ class AuthRepo {
     try {
       await _dio
           .post(ApisUrl.otpVerification, data: {'email': email, 'otp': otp});
-    } on DioException {
-      rethrow;
-    }
-  }
-
-  Future<UserModel> googleSignIn(String token) async {
-    try {
-      Response response =
-          await _dio.post(ApisUrl.googleLogin, data: {'token': token});
-      SecureStorageHandler.write(
-          key: "Token", value: response.data['data']['refresh']);
-      return UserModel.fromMap(
-          response.data['data']['user'] as Map<String, dynamic>);
     } on DioException {
       rethrow;
     }

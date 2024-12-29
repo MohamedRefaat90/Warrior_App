@@ -1,36 +1,32 @@
-import 'package:Warrior/core/constants/assets.dart';
-import 'package:Warrior/core/network/api_error_handler.dart';
+import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscle_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 
-class ExercisesScreen extends ConsumerStatefulWidget {
-  const ExercisesScreen({super.key});
+class MusclesScreen extends ConsumerStatefulWidget {
+  const MusclesScreen({super.key});
 
   @override
-  ConsumerState<ExercisesScreen> createState() => _ExercisesScreenState();
+  ConsumerState<MusclesScreen> createState() => _MusclesScreenState();
 }
 
-class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
+class _MusclesScreenState extends ConsumerState<MusclesScreen> {
   @override
   Widget build(BuildContext context) {
-    ref.watch(muscleProvider);
+    ref.watch(musclesProvider);
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Exercises',
+          title: const Text('Muscles',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontFamily: "Kings",
                   fontSize: 30)),
           centerTitle: true,
         ),
-        body: ref.watch(muscleProvider).when(
-            loading: () => Center(
-                  child: Lottie.asset(AppAssets.loader, width: 150.w),
-                ),
+        body: ref.watch(musclesProvider).when(
+            loading: () => const Loader(),
             data: (muscles) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: ListView.separated(
@@ -38,7 +34,7 @@ class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
                       itemBuilder: (context, index) =>
                           MuscleTile(muscle: muscles[index]),
                       separatorBuilder: (context, index) => 10.verticalSpace,
-                      itemCount: 5),
+                      itemCount: muscles.length),
                 ),
             error: (error, stackTrace) => Center(
                   child: Padding(

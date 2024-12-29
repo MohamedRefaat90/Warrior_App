@@ -9,7 +9,9 @@ abstract class AppRouters {
   static const String resetSuccess = '/resetSuccess';
   static const String signupSuccess = '/signupSuccess';
   static const String home = '/home';
+  static const String muscles = '/muscles';
   static const String exercises = '/exercises';
+  static const String exerciseDetails = '/exerciseDetails';
   static const String workouts = '/workouts';
   static const String supplements = '/supplements';
   static const String nutrition = '/nutrition';

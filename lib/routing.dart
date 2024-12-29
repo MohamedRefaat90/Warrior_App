@@ -7,7 +7,10 @@ import 'package:Warrior/features/Auth/presentation/screens/reset_success.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_success.dart';
 import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dart';
-import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
+import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/exercise_screen.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
 import 'package:Warrior/features/Home/presentation/screen/home_screen.dart';
 import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
 import 'package:Warrior/features/Supplements/presentation/screens/supplements_screen.dart';
@@ -17,8 +20,7 @@ import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 
-final GoRouter router =
-    GoRouter(initialLocation: AppRouters.exercises, routes: [
+final GoRouter router = GoRouter(initialLocation: AppRouters.muscles, routes: [
   GoRoute(
     path: AppRouters.welcome,
     builder: (context, state) => const WelcomeScreen(),
@@ -96,10 +98,26 @@ final GoRouter router =
     ),
   ),
   GoRoute(
+    path: AppRouters.muscles,
+    name: AppRouters.muscles,
+    pageBuilder: (context, state) => CustomTransition(
+      child: const MusclesScreen(),
+      transitionType: PageTransitionType.rightToLeft,
+    ),
+  ),
+  GoRoute(
     path: AppRouters.exercises,
     name: AppRouters.exercises,
     pageBuilder: (context, state) => CustomTransition(
-      child: const ExercisesScreen(),
+      child: ExerciseScreen(muscle: state.extra as Map),
+      transitionType: PageTransitionType.rightToLeft,
+    ),
+  ),
+  GoRoute(
+    path: AppRouters.exerciseDetails,
+    name: AppRouters.exerciseDetails,
+    pageBuilder: (context, state) => CustomTransition(
+      child: ExerciseDetailsScreen(exercise: state.extra as ExerciseModel),
       transitionType: PageTransitionType.rightToLeft,
     ),
   ),

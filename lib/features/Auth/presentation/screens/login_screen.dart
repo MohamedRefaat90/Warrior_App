@@ -44,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   "Login",
                   style: TextStyle(fontFamily: "Poppins", fontSize: 30),
                 ),
-                15.verticalSpace,
+                10.verticalSpace,
                 CustomTextField(
                     placeholderText: "Email",
                     textEditingController: emailController,
@@ -88,7 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const LoginWith(),
                 10.verticalSpace,
                 const GoogleButton(),
-                10.verticalSpace,
+                // 10.verticalSpace,
                 const GoToSignup()
               ],
             ),

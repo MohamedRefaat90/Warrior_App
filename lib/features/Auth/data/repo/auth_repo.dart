@@ -27,7 +27,7 @@ class AuthRepo {
       Response response =
           await _dio.post(ApisUrl.googleLogin, data: {'token': token});
       SecureStorageHandler.write(
-          key: "Token", value: response.data['data']['refresh']);
+          key: "Token", value: response.data['data']['token']);
       return UserModel.fromMap(
           response.data['data']['user'] as Map<String, dynamic>);
     } on DioException {

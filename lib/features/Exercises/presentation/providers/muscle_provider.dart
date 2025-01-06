@@ -9,6 +9,7 @@ final muscleExerciseProvider = FutureProvider.family
   return await ref.read(exercisesRepo).getMuscleExercises(muscleID: id);
 });
 
-final musclesProvider = FutureProvider<List<MuscleModel>>((ref) async {
+final musclesProvider =
+    FutureProvider.autoDispose<List<MuscleModel>>((ref) async {
   return await ref.read(muscleRepo).getAllMuscles();
 });

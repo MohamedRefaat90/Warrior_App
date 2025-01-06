@@ -5,7 +5,7 @@ class ExerciseModel {
   final String name;
   final String description;
   final String image;
-  final String gif;
+  final String video;
   final String targetedMuscles;
   final int muscleID;
   final String muscle;
@@ -15,7 +15,7 @@ class ExerciseModel {
       required this.name,
       required this.description,
       required this.image,
-      required this.gif,
+      required this.video,
       required this.targetedMuscles,
       required this.muscleID,
       required this.muscle});
@@ -25,7 +25,7 @@ class ExerciseModel {
       'id': id,
       'name': name,
       'description': description,
-      'git': gif,
+      'git': video,
       'image': image,
       'targetedMuscles': targetedMuscles,
       'muscle': muscleID,
@@ -39,7 +39,7 @@ class ExerciseModel {
       name: map['name'] as String,
       description: map['description'] as String,
       image: map['image'] as String,
-      gif: map['gif'] as String,
+      video: map['video'] as String,
       targetedMuscles: map['targetedMuscles'] as String,
       muscleID: map['muscle'] as int,
       muscle: map['muscle_name'] as String,

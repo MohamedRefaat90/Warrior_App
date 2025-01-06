@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class ExerciseCard extends StatelessWidget {
-  const ExerciseCard({super.key, required this.exercise});
-
   final ExerciseModel exercise;
+
+  const ExerciseCard({super.key, required this.exercise});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,15 @@ class ExerciseCard extends StatelessWidget {
                 imageUrl: exercise.image,
                 height: 120.h,
               ),
-              Text(exercise.name),
+              SizedBox(
+                width: 100.w,
+                child: Text(
+                  exercise.name,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
             ],
           )),
     );

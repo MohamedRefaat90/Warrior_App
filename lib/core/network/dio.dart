@@ -16,14 +16,23 @@ class DioHandler {
       ..options.headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization':
-            "Token ${await SecureStorageHandler.read(key: 'Token')}"
       }
       ..interceptors.add(PrettyDioLogger(
         requestBody: true,
-        responseBody: true,
         requestHeader: false,
         responseHeader: false,
+      ))
+      ..interceptors.add(InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          // Add Authorization header conditionally
+          if (!options.path.startsWith("auth/")) {
+            String? token = await SecureStorageHandler.read(key: 'Token');
+            if (token != null && token.isNotEmpty) {
+              options.headers['Authorization'] = "Token $token";
+            }
+          }
+          return handler.next(options);
+        },
       ));
   }
 }

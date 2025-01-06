@@ -37,6 +37,8 @@ dependencies:
   google_sign_in: ^6.2.2
   cached_network_image: ^3.4.1
   video_player: ^2.9.2
+  flutter_cache_manager: ^3.4.1
+
 
 dev_dependencies:
   flutter_test:

@@ -13,7 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/functions/flushbar.dart';
-import '../provider/reset_password_provider..dart';
+import '../provider/reset_password_provider.dart';
 
 class ResetPasswordScreen extends ConsumerStatefulWidget {
   final String email;

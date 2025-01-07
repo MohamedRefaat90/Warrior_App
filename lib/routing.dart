@@ -9,7 +9,7 @@ import 'package:Warrior/features/Auth/presentation/screens/signup_success.dart';
 import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
-import 'package:Warrior/features/Exercises/presentation/screens/exercise_screen.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
 import 'package:Warrior/features/Home/presentation/screen/home_screen.dart';
 import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
@@ -109,7 +109,7 @@ final GoRouter router = GoRouter(initialLocation: AppRouters.muscles, routes: [
     path: AppRouters.exercises,
     name: AppRouters.exercises,
     pageBuilder: (context, state) => CustomTransition(
-      child: ExerciseScreen(muscle: state.extra as Map),
+      child: ExercisesScreen(muscle: state.extra as Map),
       transitionType: PageTransitionType.rightToLeft,
     ),
   ),

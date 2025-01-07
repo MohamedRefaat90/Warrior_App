@@ -1,13 +1,32 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
 
-class ExerciseModel {
+part 'exercise_model.g.dart';
+
+@HiveType(typeId: 1)
+class ExerciseModel extends HiveObject {
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String name;
+
+  @HiveField(2)
   final String description;
+
+  @HiveField(3)
   final String image;
+
+  @HiveField(4)
   final String video;
+
+  @HiveField(5)
   final String targetedMuscles;
+
+  @HiveField(6)
   final int muscleID;
+
+  @HiveField(7)
   final String muscle;
 
   ExerciseModel(
@@ -19,19 +38,6 @@ class ExerciseModel {
       required this.targetedMuscles,
       required this.muscleID,
       required this.muscle});
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'description': description,
-      'git': video,
-      'image': image,
-      'targetedMuscles': targetedMuscles,
-      'muscle': muscleID,
-      'muscle_name': muscle,
-    };
-  }
 
   factory ExerciseModel.fromMap(Map<String, dynamic> map) {
     return ExerciseModel(
@@ -45,8 +51,6 @@ class ExerciseModel {
       muscle: map['muscle_name'] as String,
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory ExerciseModel.fromJson(String source) =>
       ExerciseModel.fromMap(json.decode(source) as Map<String, dynamic>);

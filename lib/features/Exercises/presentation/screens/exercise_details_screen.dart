@@ -44,20 +44,17 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                     : const CustomLoadingWidget(),
               ),
             ),
-            Text(
-              widget.exercise.name,
-              style: const TextStyle(fontFamily: "Poppins"),
-            ),
+            Text(widget.exercise.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontFamily: "Poppins")),
             40.verticalSpace,
             ConnectivityChecker.isOnline!
                 ? CachedNetworkImage(
                     imageUrl: widget.exercise.targetedMuscles,
                     width: 200.w,
                     alignment: Alignment.center,
-                    // cacheManager: MyCacheManager(),
-                    placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    placeholder: (context, url) => const CustomLoadingWidget(),
                   )
                 : Image.file(File(widget.exercise.targetedMuscles)),
             const Text("Targeted Muscles"),

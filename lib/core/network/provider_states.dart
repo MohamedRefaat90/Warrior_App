@@ -1,8 +1,8 @@
-class AuthState {
+class ProviderStates {
   final bool isLoading;
   final bool isSuccess;
   final String? errorMessage;
 
-  AuthState(
+  ProviderStates(
       {this.isLoading = false, this.isSuccess = false, this.errorMessage});
 }

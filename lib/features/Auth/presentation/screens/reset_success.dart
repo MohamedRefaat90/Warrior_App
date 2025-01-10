@@ -31,7 +31,7 @@ class _ResetPasswordSuccessState extends State<ResetPasswordSuccess> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
-                child: Lottie.asset(AppAssets.reset_success,
+                child: Lottie.asset(AppAssets.resetSuccess,
                     repeat: false,
                     width: 200.w,
                     frameRate: const FrameRate(60))),

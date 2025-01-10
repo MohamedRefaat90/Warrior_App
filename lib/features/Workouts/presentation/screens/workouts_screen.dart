@@ -1,3 +1,4 @@
+import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,6 +10,13 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 }
 
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
+  @override
+  void initState() {
+    HiveBoxes.exercisesBox.clear();
+    HiveBoxes.musclesBox.clear();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

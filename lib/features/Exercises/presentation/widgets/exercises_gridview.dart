@@ -4,8 +4,8 @@ import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.da
 import 'package:flutter/material.dart';
 
 class ExercisesGridView extends StatelessWidget {
-  List<ExerciseModel> exercises;
-  ExercisesGridView({super.key, required this.exercises});
+  final List<ExerciseModel> exercises;
+  const ExercisesGridView({super.key, required this.exercises});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,7 +19,6 @@ class ExercisesGridView extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final ExerciseModel exercise = exercises[index];
-            HiveBoxes.exercisesBox.add(exercise);
             return ExerciseCard(exercise: exercise);
           }),
     );

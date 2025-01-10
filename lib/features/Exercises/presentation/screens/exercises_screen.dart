@@ -2,6 +2,7 @@ import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/error_widget.dart';
 import 'package:Warrior/core/widgets/loader.dart';
+import 'package:Warrior/core/widgets/refresh_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
@@ -16,9 +17,6 @@ class ExercisesScreen extends ConsumerWidget {
   const ExercisesScreen({super.key, required this.muscle});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    debugPrint('###########################################');
-    debugPrint(ConnectivityChecker.isOnline.toString());
-    debugPrint('###########################################');
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -36,8 +34,10 @@ class ExercisesScreen extends ConsumerWidget {
                   return ExercisesGridView(exercises: exercises);
                 },
                 error: (error, stackTrace) =>
-                    CustomErrorWidget(errorMsg: error.toString()))
+                    RefreshWidget(muscleExerciseProvider(muscle['id'])))
             : ExercisesGridView(
-                exercises: HiveBoxes.exercisesBox.values.toList()));
+                exercises: HiveBoxes.exercisesBox.values
+                    .where((exercise) => exercise.muscleID == muscle['id'])
+                    .toList()));
   }
 }

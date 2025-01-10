@@ -20,7 +20,7 @@ import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 
-final GoRouter router = GoRouter(initialLocation: AppRouters.muscles, routes: [
+final GoRouter router = GoRouter(initialLocation: AppRouters.login, routes: [
   GoRoute(
     path: AppRouters.welcome,
     builder: (context, state) => const WelcomeScreen(),

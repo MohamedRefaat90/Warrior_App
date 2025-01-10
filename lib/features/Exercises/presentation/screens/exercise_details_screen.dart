@@ -1,3 +1,4 @@
+import 'package:Warrior/core/services/cache_manager.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,14 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Center(
-              child: _controller.value.isInitialized
-                  ? AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    )
-                  : const CircularProgressIndicator(),
-            ),
+            // Center(
+            //   child: _controller.value.isInitialized
+            //       ? AspectRatio(
+            //           aspectRatio: _controller.value.aspectRatio,
+            //           child: VideoPlayer(_controller),
+            //         )
+            //       : const CircularProgressIndicator(),
+            // ),
             Text(
               widget.exercise.name,
               style: const TextStyle(fontFamily: "Poppins"),
@@ -38,6 +39,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
             CachedNetworkImage(
               imageUrl: widget.exercise.targetedMuscles,
               width: 200.w,
+              cacheManager: MyCacheManager(),
               placeholder: (context, url) => const Center(
                 child: CircularProgressIndicator(),
               ),

@@ -8,11 +8,11 @@ class CustomLoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        width: 70,
-        height: 70,
+        width: 25,
+        height: 25,
         child: CircularProgressIndicator(
           color: AppColors.primaryColor,
-          strokeWidth: 5,
+          strokeWidth: 3,
         ),
       ),
     );

@@ -1,8 +1,14 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/functions/save_to_hive.dart';
+import 'package:Warrior/core/services/cache_manager.dart';
+import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/widgets/image_error.dart';
 
 class MuscleTile extends StatelessWidget {
   final MuscleModel muscle;
@@ -18,7 +24,10 @@ class MuscleTile extends StatelessWidget {
             extra: {'id': muscle.id, 'name': muscle.name}),
         leading: CachedNetworkImage(
           imageUrl: muscle.image,
+          cacheManager: MyCacheManager(),
           width: 50,
+          placeholder: (context, url) => const CustomLoadingWidget(),
+          errorWidget: (context, url, error) => const ImageError(),
         ),
         title: Text(muscle.name),
         trailing: Column(

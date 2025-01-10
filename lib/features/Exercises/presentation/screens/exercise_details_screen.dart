@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -27,17 +28,20 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              decoration:
-                  BoxDecoration(border: Border.all(color: AppColors.black)),
+            Padding(
               padding: const EdgeInsets.all(10),
-              child: Center(
+              child: Container(
+                width: double.infinity,
+                height: 200.h,
+                foregroundDecoration: BoxDecoration(
+                    border: Border.all(color: AppColors.black, width: 3),
+                    borderRadius: BorderRadius.circular(10)),
                 child: _controller.value.isInitialized
                     ? AspectRatio(
                         aspectRatio: _controller.value.aspectRatio,
                         child: VideoPlayer(_controller),
                       )
-                    : const CircularProgressIndicator(),
+                    : const CustomLoadingWidget(),
               ),
             ),
             Text(
@@ -78,15 +82,17 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
   void _initializeVideoPlayer() {
     try {
-      _controller =
-          VideoPlayerController.contentUri(Uri.parse(widget.exercise.video))
-            ..initialize().then((_) {
-              setState(() {});
-              _controller.play();
-              _controller.setLooping(true);
-            }).catchError((error) {
-              debugPrint("Video initialization error: $error");
-            });
+      _controller = VideoPlayerController.networkUrl(
+          Uri.parse(widget.exercise.video),
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true))
+        ..initialize().then((_) {
+          setState(() {});
+          _controller.setVolume(0);
+          _controller.play();
+          _controller.setLooping(true);
+        }).catchError((error) {
+          debugPrint("Video initialization error: $error");
+        });
     } catch (e) {
       debugPrint("Exception in video initialization: $e");
     }

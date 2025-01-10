@@ -11,13 +11,6 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   @override
-  void initState() {
-    HiveBoxes.exercisesBox.clear();
-    HiveBoxes.musclesBox.clear();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -25,5 +18,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       ),
       body: Container(),
     );
+  }
+
+  @override
+  void initState() {
+    HiveManager.exercisesBox.clear();
+    HiveManager.musclesBox.clear();
+    super.initState();
   }
 }

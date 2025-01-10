@@ -8,7 +8,7 @@ abstract class AppServices {
   static Future<void> init() async {
     await DioHandler.initDio();
     await ConnectivityChecker.init();
-    await HiveBoxes.init();
+    await HiveManager.init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

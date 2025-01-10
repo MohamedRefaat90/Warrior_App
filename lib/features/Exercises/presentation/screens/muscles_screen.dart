@@ -1,4 +1,3 @@
-import 'package:Warrior/core/functions/save_to_hive.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -33,12 +32,12 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
             ? ref.watch(musclesProvider).when(
                 loading: () => const Loader(),
                 data: (muscles) {
-                  saveToHive(HiveBoxes.musclesBox, muscles);
+                  HiveManager.saveToHive(HiveManager.musclesBox, muscles);
                   return MusclesListView(muscles: muscles);
                 },
                 error: (error, stackTrace) => RefreshWidget(musclesProvider))
             : ValueListenableBuilder(
-                valueListenable: HiveBoxes.musclesBox.listenable(),
+                valueListenable: HiveManager.musclesBox.listenable(),
                 builder: (context, Box<MuscleModel> box, _) {
                   if (box.values.isEmpty) {
                     return const Center(child: Text('No muscles found.'));
@@ -53,8 +52,8 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
   @override
   void initState() {
     debugPrint('*************************************************');
-    debugPrint("Exercise Objects => ${HiveBoxes.exercisesBox.length}");
-    debugPrint("Muscles Objects => ${HiveBoxes.musclesBox.length}");
+    debugPrint("Exercise Objects => ${HiveManager.exercisesBox.length}");
+    debugPrint("Muscles Objects => ${HiveManager.musclesBox.length}");
     debugPrint('*************************************************');
     super.initState();
   }

@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:hive/hive.dart';
 
 part 'exercise_model.g.dart';
@@ -54,4 +56,26 @@ class ExerciseModel extends HiveObject {
 
   factory ExerciseModel.fromJson(String source) =>
       ExerciseModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  ExerciseModel copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? image,
+    String? video,
+    String? targetedMuscles,
+    int? muscleID,
+    String? muscle,
+  }) {
+    return ExerciseModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      video: video ?? this.video,
+      targetedMuscles: targetedMuscles ?? this.targetedMuscles,
+      muscleID: muscleID ?? this.muscleID,
+      muscle: muscle ?? this.muscle,
+    );
+  }
 }

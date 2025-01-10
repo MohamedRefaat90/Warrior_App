@@ -1,4 +1,7 @@
-import 'package:Warrior/core/services/cache_manager.dart';
+import 'dart:io';
+
+import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -22,28 +25,37 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Center(
-            //   child: _controller.value.isInitialized
-            //       ? AspectRatio(
-            //           aspectRatio: _controller.value.aspectRatio,
-            //           child: VideoPlayer(_controller),
-            //         )
-            //       : const CircularProgressIndicator(),
-            // ),
+            Container(
+              decoration:
+                  BoxDecoration(border: Border.all(color: AppColors.black)),
+              padding: const EdgeInsets.all(10),
+              child: Center(
+                child: _controller.value.isInitialized
+                    ? AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      )
+                    : const CircularProgressIndicator(),
+              ),
+            ),
             Text(
               widget.exercise.name,
               style: const TextStyle(fontFamily: "Poppins"),
             ),
             40.verticalSpace,
-            CachedNetworkImage(
-              imageUrl: widget.exercise.targetedMuscles,
-              width: 200.w,
-              cacheManager: MyCacheManager(),
-              placeholder: (context, url) => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
+            ConnectivityChecker.isOnline!
+                ? CachedNetworkImage(
+                    imageUrl: widget.exercise.targetedMuscles,
+                    width: 200.w,
+                    alignment: Alignment.center,
+                    // cacheManager: MyCacheManager(),
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Image.file(File(widget.exercise.targetedMuscles)),
             const Text("Targeted Muscles"),
             10.verticalSpace,
           ],

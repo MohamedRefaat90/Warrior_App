@@ -1,5 +1,4 @@
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/features/Auth/presentation/screens/forget_password_screen.dart';

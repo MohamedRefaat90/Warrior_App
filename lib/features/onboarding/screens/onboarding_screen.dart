@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/onboarding/data/Onboarding_data.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 color: AppColors.black,
                 padding: 15,
                 width: 0.5.sw,
-                press: () => context.goNamed(AppRouters.login))
+                press: () {
+                  SecureStorageHandler.write(
+                      key: 'isFirstTime', value: 'false');
+                  context.goNamed(AppRouters.login);
+                })
             : SmoothPageIndicator(
                 controller: pageController,
                 count: onboardingitems.length,

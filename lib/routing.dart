@@ -12,13 +12,12 @@ import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
-import 'package:Warrior/features/Home/presentation/screen/home_screen.dart';
+import 'package:Warrior/features/Home/presentation/screens/home_screen.dart';
 import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
 import 'package:Warrior/features/Supplements/presentation/screens/supplements_screen.dart';
 import 'package:Warrior/features/Workouts/presentation/screens/workouts_screen.dart';
 import 'package:Warrior/features/onboarding/screens/onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -27,14 +26,13 @@ Future<GoRouter> routerConfig() async {
       GoRouter(initialLocation: await routingChecker(), routes: [
     GoRoute(
       path: AppRouters.welcome,
-      builder: (context, state) =>
-          const WelcomeScreen(key: ValueKey('WelcomeScreen')),
+      builder: (context, state) => const WelcomeScreen(),
     ),
     GoRoute(
       path: AppRouters.onboarding,
       name: AppRouters.onboarding,
       pageBuilder: (context, state) => CustomTransition(
-        child: const OnboardingScreen(key: ValueKey('OnboardingScreen')),
+        child: const OnboardingScreen(),
         transitionType: PageTransitionType.fade,
       ),
     ),
@@ -42,7 +40,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.login,
       name: AppRouters.login,
       pageBuilder: (context, state) => CustomTransition(
-        child: const LoginScreen(key: ValueKey('LoginScreen')),
+        child: const LoginScreen(),
         transitionType: PageTransitionType.fade,
       ),
     ),
@@ -50,7 +48,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.signup,
       name: AppRouters.signup,
       pageBuilder: (context, state) => CustomTransition(
-        child: const SignupScreen(key: ValueKey('SignupScreen')),
+        child: const SignupScreen(),
         transitionType: PageTransitionType.bottomToTop,
       ),
     ),
@@ -58,7 +56,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.signupSuccess,
       name: AppRouters.signupSuccess,
       pageBuilder: (context, state) => CustomTransition(
-        child: const SignupSuccess(key: ValueKey('SignupSuccess')),
+        child: const SignupSuccess(),
         transitionType: PageTransitionType.bottomToTop,
       ),
     ),
@@ -66,8 +64,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.forgetPassword,
       name: AppRouters.forgetPassword,
       pageBuilder: (context, state) => CustomTransition(
-        child:
-            const ForgetPasswordScreen(key: ValueKey('ForgetPasswordScreen')),
+        child: const ForgetPasswordScreen(),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -75,9 +72,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.verifyOTP,
       name: AppRouters.verifyOTP,
       pageBuilder: (context, state) => CustomTransition(
-        child: VerifyOtpScreen(
-            key: const ValueKey('VerifyOtpScreen'),
-            email: state.extra! as String),
+        child: VerifyOtpScreen(email: state.extra! as String),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -85,9 +80,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.newPassword,
       name: AppRouters.newPassword,
       pageBuilder: (context, state) => CustomTransition(
-        child: ResetPasswordScreen(
-            key: const ValueKey('ResetPasswordScreen'),
-            email: state.extra! as String),
+        child: ResetPasswordScreen(email: state.extra! as String),
         transitionType: PageTransitionType.bottomToTop,
       ),
     ),
@@ -95,8 +88,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.resetSuccess,
       name: AppRouters.resetSuccess,
       pageBuilder: (context, state) => CustomTransition(
-        child:
-            const ResetPasswordSuccess(key: ValueKey('ResetPasswordSuccess')),
+        child: const ResetPasswordSuccess(),
         transitionType: PageTransitionType.bottomToTop,
       ),
     ),
@@ -104,7 +96,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.home,
       name: AppRouters.home,
       pageBuilder: (context, state) => CustomTransition(
-        child: const HomeScreen(key: ValueKey('HomeScreen')),
+        child: const HomeScreen(),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -112,7 +104,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.muscles,
       name: AppRouters.muscles,
       pageBuilder: (context, state) => CustomTransition(
-        child: const MusclesScreen(key: ValueKey('MusclesScreen')),
+        child: const MusclesScreen(),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -120,8 +112,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.exercises,
       name: AppRouters.exercises,
       pageBuilder: (context, state) => CustomTransition(
-        child: ExercisesScreen(
-            muscle: state.extra as Map, key: const ValueKey('ExercisesScreen')),
+        child: ExercisesScreen(muscle: state.extra as Map),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -129,9 +120,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.exerciseDetails,
       name: AppRouters.exerciseDetails,
       pageBuilder: (context, state) => CustomTransition(
-        child: ExerciseDetailsScreen(
-            key: const ValueKey('ExerciseDetailsScreen'),
-            exercise: state.extra as ExerciseModel),
+        child: ExerciseDetailsScreen(exercise: state.extra as ExerciseModel),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -139,7 +128,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.workouts,
       name: AppRouters.workouts,
       pageBuilder: (context, state) => CustomTransition(
-        child: const WorkoutScreen(key: ValueKey('WorkoutScreen')),
+        child: const WorkoutScreen(),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -147,7 +136,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.supplements,
       name: AppRouters.supplements,
       pageBuilder: (context, state) => CustomTransition(
-        child: const SupplementsScreen(key: ValueKey('SupplementsScreen')),
+        child: const SupplementsScreen(),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),
@@ -155,7 +144,7 @@ Future<GoRouter> routerConfig() async {
       path: AppRouters.nutrition,
       name: AppRouters.nutrition,
       pageBuilder: (context, state) => CustomTransition(
-        child: const NutritionScreen(key: ValueKey('NutritionScreen')),
+        child: const NutritionScreen(),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),

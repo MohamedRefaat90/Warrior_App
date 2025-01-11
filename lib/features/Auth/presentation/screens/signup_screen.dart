@@ -4,7 +4,7 @@ import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
-import 'package:Warrior/features/Auth/presentation/provider/auth_states.dart';
+import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/features/Auth/presentation/provider/signup_provider.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/password_validation_rules.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AuthState authState = ref.watch<AuthState>(signupProvider);
+    ProviderStates providerStates = ref.watch<ProviderStates>(signupProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -86,7 +86,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             value!, passwordController.text)),
                     40.verticalSpace,
                     CustomBTN(
-                        widget: authState.isLoading
+                        widget: providerStates.isLoading
                             ? const BtnLoader()
                             : const Text("Signup"),
                         color: AppColors.primaryColor,

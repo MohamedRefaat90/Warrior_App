@@ -1,43 +1,44 @@
+import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
-import 'package:Warrior/features/Auth/presentation/provider/auth_states.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/functions/validators.dart';
 
 final resetPasswordProvider =
-    StateNotifierProvider.autoDispose<ResetPasswordNotifier, AuthState>((ref) {
+    StateNotifierProvider.autoDispose<ResetPasswordNotifier, ProviderStates>(
+        (ref) {
   return ResetPasswordNotifier(ref.read(authRepo));
 });
 
-class ResetPasswordNotifier extends StateNotifier<AuthState> {
+class ResetPasswordNotifier extends StateNotifier<ProviderStates> {
   final AuthRepo _authRepo;
 
-  ResetPasswordNotifier(this._authRepo) : super(AuthState());
+  ResetPasswordNotifier(this._authRepo) : super(ProviderStates());
 
   Future<void> resendOTP(String email) async {
-    state = AuthState(isLoading: true);
+    state = ProviderStates(isLoading: true);
     try {
       await _authRepo.forgetPassword(email.toLowerCase().trim());
-      state = AuthState();
+      state = ProviderStates();
     } on DioException catch (e) {
-      state = AuthState(errorMessage: e.response!.data["message"]);
+      state = ProviderStates(errorMessage: e.response!.data["message"]);
     } catch (e) {
-      state = AuthState(errorMessage: e.toString());
+      state = ProviderStates(errorMessage: e.toString());
     }
   }
 
   Future<void> resetPassword(
       {required String email, required String password}) async {
-    state = AuthState(isLoading: true);
+    state = ProviderStates(isLoading: true);
     try {
       await _authRepo.resetPassword(
           email: email.toLowerCase().trim(), password: password);
-      state = AuthState(isSuccess: true);
+      state = ProviderStates(isSuccess: true);
     } on DioException catch (e) {
-      state = AuthState(errorMessage: e.response!.data["message"]);
+      state = ProviderStates(errorMessage: e.response!.data["message"]);
     } catch (e) {
-      state = AuthState(errorMessage: e.toString());
+      state = ProviderStates(errorMessage: e.toString());
     }
   }
 
@@ -47,7 +48,7 @@ class ResetPasswordNotifier extends StateNotifier<AuthState> {
     checkPasswordContainLowerChar(password);
     checkPasswordContainSpecialChar(password);
     checkPasswordContainNum(password);
-    state = AuthState();
+    state = ProviderStates();
   }
 
   bool validatePassword() {

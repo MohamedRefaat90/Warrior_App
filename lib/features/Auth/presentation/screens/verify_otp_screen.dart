@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
 
-import '../provider/auth_states.dart';
+import '../../../../core/network/provider_states.dart';
 
 class VerifyOtpScreen extends ConsumerStatefulWidget {
   final String email;
@@ -24,7 +24,7 @@ class VerifyOtpScreen extends ConsumerStatefulWidget {
 class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
   @override
   Widget build(BuildContext context) {
-    AuthState authState = ref.watch(otpProvider);
+    ProviderStates providerStates = ref.watch(otpProvider);
     return Scaffold(
         appBar: AppBar(title: const Text('Verify OTP'), centerTitle: true),
         body: Padding(
@@ -45,7 +45,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                 text: const Text('Resend OTP'),
                 duration: 90,
               ),
-              authState.isLoading
+              providerStates.isLoading
                   ? Lottie.asset(AppAssets.loader, width: 100.w)
                   : const SizedBox(),
             ],
@@ -55,7 +55,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
 
   @override
   void initState() {
-    ref.listenManual<AuthState>(otpProvider, (previous, current) {
+    ref.listenManual<ProviderStates>(otpProvider, (previous, current) {
       if (current.isSuccess) {
         context.goNamed(AppRouters.newPassword, extra: widget.email);
       } else if (current.errorMessage != null) {

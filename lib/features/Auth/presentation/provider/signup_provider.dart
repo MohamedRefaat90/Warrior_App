@@ -1,34 +1,34 @@
 import 'package:Warrior/core/functions/validators.dart';
-import 'package:Warrior/features/Auth/presentation/provider/auth_states.dart';
+import 'package:Warrior/core/network/provider_states.dart';
+import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 
 final signupProvider =
-    StateNotifierProvider.autoDispose<SignupNotifier, AuthState>((ref) {
+    StateNotifierProvider.autoDispose<SignupNotifier, ProviderStates>((ref) {
   return SignupNotifier(ref.read(authRepo));
 });
 
-class SignupNotifier extends StateNotifier<AuthState> {
+class SignupNotifier extends StateNotifier<ProviderStates> {
   final AuthRepo _authRepo;
 
-  SignupNotifier(this._authRepo) : super(AuthState());
+  SignupNotifier(this._authRepo) : super(ProviderStates());
 
   Future<void> signup(
       {required String email,
       required String password,
       required String username}) async {
-    state = AuthState(isLoading: true);
+    state = ProviderStates(isLoading: true);
     try {
       await _authRepo.signup(
           email: email.toLowerCase().trim(),
           password: password,
           username: username);
-      state = AuthState(isSuccess: true);
+      state = ProviderStates(isSuccess: true);
     } on DioException catch (e) {
-      state = AuthState(errorMessage: e.response!.data["message"]);
+      state = ProviderStates(errorMessage: e.response!.data["message"]);
     } catch (e) {
-      state = AuthState(errorMessage: e.toString());
+      state = ProviderStates(errorMessage: e.toString());
     }
   }
 
@@ -38,6 +38,6 @@ class SignupNotifier extends StateNotifier<AuthState> {
     checkPasswordContainLowerChar(password);
     checkPasswordContainSpecialChar(password);
     checkPasswordContainNum(password);
-    state = AuthState();
+    state = ProviderStates();
   }
 }

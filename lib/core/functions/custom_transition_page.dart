@@ -8,7 +8,7 @@ class CustomTransition extends Page {
   CustomTransition({
     required this.child,
     this.transitionType = PageTransitionType.rightToLeft,
-  }) : super(key: ValueKey(child));
+  }) : super(key: ValueKey(child.key));
 
   @override
   Route createRoute(BuildContext context) {

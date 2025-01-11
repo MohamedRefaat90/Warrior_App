@@ -1,4 +1,3 @@
-import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Warrior/routing.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +36,7 @@ class Warrior extends StatelessWidget {
                   seedColor: const Color.fromARGB(255, 168, 11, 11)),
               useMaterial3: true,
             ),
-            routerConfig: router,
+            routerConfig: AppServices.router,
           );
         });
   }

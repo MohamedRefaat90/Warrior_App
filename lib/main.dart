@@ -1,4 +1,5 @@
 import 'package:Warrior/core/services/services.dart';
+import 'package:Warrior/routing.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class Warrior extends StatelessWidget {
                   seedColor: const Color.fromARGB(255, 168, 11, 11)),
               useMaterial3: true,
             ),
-            routerConfig: AppServices.router,
+            routerConfig: RoutersManager.router,
           );
         });
   }

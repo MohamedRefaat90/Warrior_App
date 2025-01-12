@@ -64,10 +64,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 color: AppColors.black,
                 padding: 15,
                 width: 0.5.sw,
-                press: () {
-                  SecureStorageHandler.write(
+                press: () async {
+                  await SecureStorageHandler.write(
                       key: 'isFirstTime', value: 'false');
-                  context.goNamed(AppRouters.login);
+                  if (context.mounted) {
+                    context.pushNamed(AppRouters.login);
+                  }
                 })
             : SmoothPageIndicator(
                 controller: pageController,

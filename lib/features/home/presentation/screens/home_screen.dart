@@ -9,11 +9,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/routers.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
@@ -46,18 +46,20 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1.2,
-                ),
-                itemCount: ref.read(homeRepo).length,
-                itemBuilder: (context, index) => CategoryCard(
-                      category: ref.read(homeRepo)[index],
-                    )),
+            Consumer(
+              builder: (context, ref, child) => GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    childAspectRatio: 1.2,
+                  ),
+                  itemCount: ref.read(homeRepo).length,
+                  itemBuilder: (context, index) => CategoryCard(
+                        category: ref.read(homeRepo)[index],
+                      )),
+            ),
           ],
         ),
       ),

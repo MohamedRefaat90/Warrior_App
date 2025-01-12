@@ -8,7 +8,12 @@ class CustomTransition extends Page {
   CustomTransition({
     required this.child,
     this.transitionType = PageTransitionType.rightToLeft,
-  }) : super(key: ValueKey(child.key));
+  }) : super(key: ValueKey(_generateKey(child)));
+
+  static String _generateKey(Widget child) {
+    // Use a combination of the runtimeType of the child and a unique hash code
+    return '${child.runtimeType}-${child.hashCode}';
+  }
 
   @override
   Route createRoute(BuildContext context) {

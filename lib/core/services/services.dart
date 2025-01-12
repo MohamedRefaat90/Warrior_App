@@ -4,15 +4,14 @@ import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/firebase_options.dart';
 import 'package:Warrior/routing.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:go_router/go_router.dart';
 
 abstract class AppServices {
-  static late GoRouter router;
+  static late String? initialLocation;
   static Future<void> init() async {
     await DioHandler.initDio();
     await ConnectivityChecker.init();
     await HiveManager.init();
-    router = await routerConfig();
+    initialLocation = await RoutersManager.routingChecker();
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
   }

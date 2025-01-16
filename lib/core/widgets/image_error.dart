@@ -6,7 +6,11 @@ class ImageError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Icon(Icons.warning_rounded, color: Colors.amber),
+      child: Icon(
+        Icons.warning_rounded,
+        color: Colors.amber,
+        size: 50,
+      ),
     );
   }
 }

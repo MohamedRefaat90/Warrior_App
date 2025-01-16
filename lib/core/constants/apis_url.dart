@@ -7,4 +7,5 @@ class ApisUrl {
   static const String signup = "auth/Signup/";
   static const String googleLogin = "auth/google-login/";
   static const String muscles = "Muscles/";
+  static const String workouts = "workout/";
 }

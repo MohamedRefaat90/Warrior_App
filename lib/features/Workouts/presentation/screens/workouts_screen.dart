@@ -1,6 +1,10 @@
-import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/widgets/loader.dart';
+import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/empty_workoutlist.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/workouts_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   const WorkoutScreen({super.key});
@@ -14,16 +18,25 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('WorkoutScreen'),
+        centerTitle: true,
+        title: Text('Your Workouts',
+            style: TextStyle(
+                fontFamily: 'kings',
+                fontWeight: FontWeight.bold,
+                fontSize: 28.sp)),
       ),
-      body: Container(),
+      body: ref.watch(workoutsProvider).when(
+            loading: () => Loader(),
+            error: (error, stack) => Center(child: Text(error.toString())),
+            data: (workouts) => !workouts.isNotEmpty
+                ? WorkoutsListview(workouts)
+                : EmptyWorkoutList(),
+          ),
     );
   }
 
   @override
   void initState() {
-    HiveManager.exercisesBox.clear();
-    HiveManager.musclesBox.clear();
     super.initState();
   }
 }

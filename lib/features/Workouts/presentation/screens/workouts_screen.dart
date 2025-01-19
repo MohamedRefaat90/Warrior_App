@@ -16,6 +16,7 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   @override
   Widget build(BuildContext context) {
+    final workoutNotifier = ref.read(workoutsProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -25,18 +26,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 fontWeight: FontWeight.bold,
                 fontSize: 28.sp)),
       ),
-      body: ref.watch(workoutsProvider).when(
-            loading: () => Loader(),
-            error: (error, stack) => Center(child: Text(error.toString())),
-            data: (workouts) => !workouts.isNotEmpty
-                ? WorkoutsListview(workouts)
-                : EmptyWorkoutList(),
-          ),
+      body: ref.watch(workoutsProvider).isLoading
+          ? Loader()
+          : !workoutNotifier.workoutList.isEmpty
+              ? EmptyWorkoutList()
+              : WorkoutsListview(workoutNotifier.workoutList),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 }

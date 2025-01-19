@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class WorkoutItemModel {
@@ -29,22 +30,22 @@ class WorkoutItemModel {
 }
 
 class WorkoutSetModel {
-  final int id;
-  final String name;
-  final String description;
-  final String user;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<WorkoutItemModel> workoutItems;
+  final int? id;
+  final String? name;
+  final String? description;
+  final String? user;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final List<WorkoutItemModel>? workoutItems;
 
   WorkoutSetModel({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.user,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.workoutItems,
+    this.id,
+    this.name,
+    this.description,
+    this.user,
+    this.createdAt,
+    this.updatedAt,
+    this.workoutItems,
   });
 
   factory WorkoutSetModel.fromJson(String source) =>
@@ -75,9 +76,29 @@ class WorkoutSetModel {
       'name': name,
       'description': description,
       'user': user,
-      'created_at': createdAt.millisecondsSinceEpoch,
-      'updated_at': updatedAt.millisecondsSinceEpoch,
-      'workout_items': workoutItems.map((x) => x.toMap()).toList(),
+      'created_at': createdAt?.millisecondsSinceEpoch,
+      'updated_at': updatedAt?.millisecondsSinceEpoch,
+      'workout_items': workoutItems?.map((x) => x.toMap()).toList(),
     };
+  }
+
+  WorkoutSetModel copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? user,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<WorkoutItemModel>? workoutItems,
+  }) {
+    return WorkoutSetModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      user: user ?? this.user,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      workoutItems: workoutItems ?? this.workoutItems,
+    );
   }
 }

@@ -7,12 +7,14 @@ class CustomTextField extends StatefulWidget {
   final void Function(String)? onChange;
   final String? Function(String?)? validator;
   final bool isPassword;
+  final bool isTextArea;
   const CustomTextField(
       {this.textEditingController,
       super.key,
       this.isPassword = false,
       required this.placeholderText,
       this.onChange,
+      this.isTextArea = false,
       this.validator});
 
   @override
@@ -27,10 +29,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: widget.validator,
       onChanged: widget.onChange,
       obscureText: widget.isPassword,
+      maxLines: widget.isTextArea ? 5 : 1,
       decoration: InputDecoration(
           enabled: true,
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           filled: true,
           hintText: widget.placeholderText,
           hintStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 15),

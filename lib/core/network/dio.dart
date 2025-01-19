@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/apis_url.dart';
+import 'package:Warrior/core/constants/secure_storage_key.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -26,7 +27,8 @@ class DioHandler {
         onRequest: (options, handler) async {
           // Add Authorization header conditionally
           if (!options.path.startsWith("auth/")) {
-            String? token = await SecureStorageHandler.read(key: 'Token');
+            String? token =
+                await SecureStorageHandler.read(key: StorageKeys.token);
             if (token != null && token.isNotEmpty) {
               options.headers['Authorization'] = "Token $token";
             }

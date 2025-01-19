@@ -12,8 +12,8 @@ class WorkoutsListview extends StatelessWidget {
       itemBuilder: (context, index) {
         final workout = workouts[index];
         return ListTile(
-          title: Text(workout.name),
-          subtitle: Text(workout.description),
+          title: Text(workout.name!),
+          subtitle: Text(workout.description!),
         );
       },
     );

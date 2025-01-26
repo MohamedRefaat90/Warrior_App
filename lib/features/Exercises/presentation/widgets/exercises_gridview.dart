@@ -1,11 +1,15 @@
-import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 
 class ExercisesGridView extends StatelessWidget {
   final List<ExerciseModel> exercises;
-  const ExercisesGridView({super.key, required this.exercises});
+  final bool? isComingFromWorkoutScreen;
+  const ExercisesGridView({
+    super.key,
+    required this.exercises,
+    this.isComingFromWorkoutScreen,
+  });
   @override
   Widget build(BuildContext context) {
     return Padding(

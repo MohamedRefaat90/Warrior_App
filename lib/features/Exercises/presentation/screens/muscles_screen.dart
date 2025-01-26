@@ -11,17 +11,22 @@ import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview
 import 'package:Warrior/features/Exercises/presentation/widgets/workout_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../../../core/constants/routers.dart';
+
 class MusclesScreen extends ConsumerStatefulWidget {
-  final bool isComingFromWorkoutScreen;
-  const MusclesScreen({super.key, this.isComingFromWorkoutScreen = false});
+  final bool? isComingFromWorkoutScreen;
+  const MusclesScreen({super.key, this.isComingFromWorkoutScreen});
+
   @override
   ConsumerState<MusclesScreen> createState() => _MusclesScreenState();
 }
 
 class _MusclesScreenState extends ConsumerState<MusclesScreen> {
-  bool workoutAlert = false;
+  final bool _hasShownDialog = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,23 +67,32 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void initState() {
     debugPrint('*************************************************');
     debugPrint("Exercise Objects => ${HiveManager.exercisesBox.length}");
     debugPrint("Muscles Objects => ${HiveManager.musclesBox.length}");
+    debugPrint(
+        "isComingFromWorkoutScreen => ${widget.isComingFromWorkoutScreen}");
+    debugPrint(
+        "workoutAlert => ${SharedPref.getBool(StorageKeys.workoutAlert)}");
     debugPrint('*************************************************');
-    super.didChangeDependencies();
-    if (widget.isComingFromWorkoutScreen &&
-        (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
-            SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (widget.isComingFromWorkoutScreen) {
-          showDialog(
-            context: context,
-            builder: (context) => WorkoutDialog(),
-          );
-        }
-      });
-    }
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final router = GoRouter.of(context);
+      debugPrint('Current Route: ${router.state!.matchedLocation}');
+
+      if (router.state!.matchedLocation == AppRouters.muscles &&
+          (widget.isComingFromWorkoutScreen ?? false) &&
+          (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
+              SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
+        debugPrint('Showing workout dialog...');
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => WorkoutDialog(),
+        );
+      }
+    });
   }
 }

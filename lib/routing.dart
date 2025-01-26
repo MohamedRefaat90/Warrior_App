@@ -115,10 +115,16 @@ class RoutersManager {
     GoRoute(
       path: AppRouters.exercises,
       name: AppRouters.exercises,
-      pageBuilder: (context, state) => CustomTransition(
-        child: ExercisesScreen(muscle: state.extra as Map),
-        transitionType: PageTransitionType.rightToLeft,
-      ),
+      pageBuilder: (context, state) {
+        final Map extraData = state.extra as Map;
+        return CustomTransition(
+          child: ExercisesScreen(
+            muscle: extraData,
+            isComingFromWorkoutScreen: extraData['isComingFromWorkoutScreen'],
+          ),
+          transitionType: PageTransitionType.rightToLeft,
+        );
+      },
     ),
     GoRoute(
       path: AppRouters.exerciseDetails,

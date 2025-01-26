@@ -3,6 +3,8 @@ import 'package:Warrior/core/constants/secure_storage_key.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
+import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 
 class DioHandler {
   static late Dio dio;
@@ -18,10 +20,16 @@ class DioHandler {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       }
-      ..interceptors.add(PrettyDioLogger(
-        requestBody: true,
-        requestHeader: false,
-        responseHeader: false,
+      ..interceptors.add(TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+            printRequestHeaders: true,
+            printResponseHeaders: false,
+            printResponseMessage: true,
+            printResponseData: true,
+            printErrorData: true,
+            printErrorHeaders: false,
+            printErrorMessage: true,
+            printRequestData: true),
       ))
       ..interceptors.add(InterceptorsWrapper(
         onRequest: (options, handler) async {

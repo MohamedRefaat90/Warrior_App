@@ -29,17 +29,6 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: Colors.red,
             child: const Icon(Icons.logout, color: AppColors.white),
           ),
-          15.verticalSpace,
-          FloatingActionButton(
-            heroTag: 'clear',
-            onPressed: () async {
-              await SecureStorageHandler.storage.deleteAll();
-              // context.goNamed(AppRouters.login);
-              debugPrint('SecureStorage Cleared');
-            },
-            backgroundColor: Colors.black,
-            child: const Icon(Icons.clear_all, color: AppColors.white),
-          ),
         ],
       ),
       body: Padding(

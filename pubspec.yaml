@@ -43,6 +43,7 @@ dependencies:
 
   connectivity_plus: 
   shared_preferences: ^2.3.5
+  talker_dio_logger: ^4.6.7
 
 
 dev_dependencies:

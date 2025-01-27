@@ -16,14 +16,13 @@ class WorkoutRepo {
 
   Future<void> createWorkoutSet(WorkoutSetModel workoutSet) async {
     try {
-      debugPrint('Creating workout with data: ${workoutSet.toMap()}');
       await dio.post(
         ApisUrl.workouts,
         data: {
           'name': workoutSet.name,
           'description': workoutSet.description,
-          'user': workoutSet.user,
-          'workout_items': workoutSet.workoutItems?.map((item) => item.toMap()).toList(),
+          'workout_items':
+              workoutSet.workoutItems?.map((item) => item.toMap()).toList(),
         },
       );
     } on DioException {
@@ -35,8 +34,6 @@ class WorkoutRepo {
     try {
       final response = await dio.get(ApisUrl.workouts);
       final results = response.data['data']['results'] as List;
-      debugPrint('Workout response: ${response.data}');
-
       return results
           .map((e) {
             try {

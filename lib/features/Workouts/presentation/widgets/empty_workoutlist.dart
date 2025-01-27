@@ -3,6 +3,7 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
+import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,9 +18,9 @@ class EmptyWorkoutList extends ConsumerStatefulWidget {
 }
 
 class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final workoutNotifier = ref.read(workoutsProvider.notifier);
@@ -32,9 +33,10 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                 fontSize: 22.sp)),
         SizedBox(height: 20.h),
         CustomBTN(
-            widget: Text("Create Workout Set"),
+            widget: Text("Create New Workout Set"),
             color: AppColors.primaryColor,
             padding: 12,
+            radius: 8,
             press: () {
               showAdaptiveDialog(
                   context: context,
@@ -42,20 +44,20 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                     return AlertDialog(
                       title: Text('Create Your Workout Set'),
                       content: Form(
-                        key: _formKey,
+                        key: formKey,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CustomTextField(
                                 placeholderText: 'Workout Name Set',
-                                textEditingController: _nameController,
+                                textEditingController: nameController,
                                 validator: (value) => value!.isEmpty
                                     ? 'workout set name is required'
                                         .capitalizeWord()
                                     : null),
                             SizedBox(height: 10.h),
                             CustomTextField(
-                                textEditingController: _descriptionController,
+                                textEditingController: descriptionController,
                                 isTextArea: true,
                                 placeholderText: 'Description'),
                           ],
@@ -70,12 +72,12 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                         Consumer(
                           builder: (context, ref, child) => TextButton(
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  workoutNotifier.newWorkout
-                                      .copyWith(name: _nameController.text);
-                                  workoutNotifier.newWorkout.copyWith(
-                                      description: _descriptionController.text);
-
+                                if (formKey.currentState!.validate()) {
+                                  workoutNotifier.updateNewWorkout(
+                                      name: nameController.text,
+                                      description: descriptionController.text,
+                                      workoutItems: []);
+                                  Navigator.of(context).pop();
                                   context.pushNamed(AppRouters.muscles,
                                       extra: true);
                                 }

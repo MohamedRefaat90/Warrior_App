@@ -28,11 +28,11 @@ class WorkoutItemModel {
       'exercise_id': exerciseId,
       'last_weight': lastWeight,
     };
-    
+
     if (equipmentType != null) {
       map['equipment_type'] = equipmentType;
     }
-    
+
     return map;
   }
 
@@ -43,7 +43,6 @@ class WorkoutSetModel {
   final int? id;
   final String? name;
   final String? description;
-  final String? user;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<WorkoutItemModel>? workoutItems;
@@ -52,7 +51,6 @@ class WorkoutSetModel {
     this.id,
     this.name,
     this.description,
-    this.user,
     this.createdAt,
     this.updatedAt,
     this.workoutItems,
@@ -66,7 +64,6 @@ class WorkoutSetModel {
       id: map['id'] as int? ?? 0,
       name: map['name'] as String? ?? '',
       description: map['description'] as String? ?? '',
-      user: map['user'] as String? ?? '',
       createdAt: DateTime.parse(
           map['created_at'] as String? ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(
@@ -85,7 +82,6 @@ class WorkoutSetModel {
       'id': id,
       'name': name,
       'description': description,
-      'user': user,
       'created_at': createdAt?.millisecondsSinceEpoch,
       'updated_at': updatedAt?.millisecondsSinceEpoch,
       'workout_items': workoutItems?.map((x) => x.toMap()).toList(),
@@ -96,7 +92,6 @@ class WorkoutSetModel {
     int? id,
     String? name,
     String? description,
-    String? user,
     DateTime? createdAt,
     DateTime? updatedAt,
     List<WorkoutItemModel>? workoutItems,
@@ -105,7 +100,6 @@ class WorkoutSetModel {
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      user: user ?? this.user,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       workoutItems: workoutItems ?? this.workoutItems,

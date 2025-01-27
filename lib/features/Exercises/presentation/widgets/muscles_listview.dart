@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
@@ -7,6 +8,7 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class MusclesListView extends ConsumerWidget {
   final List<MuscleModel> muscles;
@@ -19,7 +21,7 @@ class MusclesListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final workoutNotifier = ref.read(workoutsProvider.notifier);
-
+    final workoutProviderState = ref.watch(workoutsProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Column(
@@ -50,8 +52,14 @@ class MusclesListView extends ConsumerWidget {
                 color: AppColors.black,
                 isDisabled: (workoutNotifier.newWorkout.workoutItems == null ||
                     workoutNotifier.newWorkout.workoutItems!.isEmpty),
-                press: () {
-                  workoutNotifier.createWorkoutSet();
+                press: () async {
+                  await workoutNotifier.createWorkoutSet();
+                  if (workoutProviderState.isSuccess) {
+                    if (context.mounted) {
+                      context.pop();  // Pop muscles screen
+                      context.pop();  // Return to workouts screen
+                    }
+                  }
                 }),
           20.verticalSpace,
         ],

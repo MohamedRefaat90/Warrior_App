@@ -31,15 +31,20 @@ class ExerciseModel extends HiveObject {
   @HiveField(7)
   final String muscle;
 
-  ExerciseModel(
-      {required this.id,
-      required this.name,
-      required this.description,
-      required this.image,
-      required this.video,
-      required this.targetedMuscles,
-      required this.muscleID,
-      required this.muscle});
+  @HiveField(8)
+  final String? equipmentType;
+
+  ExerciseModel({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.image,
+    required this.video,
+    required this.targetedMuscles,
+    required this.muscleID,
+    required this.muscle,
+    this.equipmentType = 'free_weight',
+  });
 
   factory ExerciseModel.fromMap(Map<String, dynamic> map) {
     return ExerciseModel(
@@ -51,6 +56,7 @@ class ExerciseModel extends HiveObject {
       targetedMuscles: map['targetedMuscles'] as String,
       muscleID: map['muscle'] as int,
       muscle: map['muscle_name'] as String,
+      equipmentType: map['equipment_type'] as String? ?? 'free_weight',
     );
   }
 
@@ -66,6 +72,7 @@ class ExerciseModel extends HiveObject {
     String? targetedMuscles,
     int? muscleID,
     String? muscle,
+    String? equipmentType,
   }) {
     return ExerciseModel(
       id: id ?? this.id,
@@ -76,6 +83,7 @@ class ExerciseModel extends HiveObject {
       targetedMuscles: targetedMuscles ?? this.targetedMuscles,
       muscleID: muscleID ?? this.muscleID,
       muscle: muscle ?? this.muscle,
+      equipmentType: equipmentType ?? this.equipmentType,
     );
   }
 }

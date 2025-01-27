@@ -3,10 +3,13 @@ import 'dart:convert';
 
 class WorkoutItemModel {
   final int exerciseId;
-  final String lastWeight;
+  final double lastWeight;
+  final String? equipmentType;
+
   WorkoutItemModel({
     required this.exerciseId,
     required this.lastWeight,
+    this.equipmentType,
   });
 
   factory WorkoutItemModel.fromJson(String source) =>
@@ -15,18 +18,25 @@ class WorkoutItemModel {
   factory WorkoutItemModel.fromMap(Map<String, dynamic> map) {
     return WorkoutItemModel(
       exerciseId: map['exercise_id'] as int,
-      lastWeight: map['last_weight'] as String,
+      lastWeight: double.parse(map['last_weight'].toString()),
+      equipmentType: map['equipment_type'] as String?,
     );
   }
 
-  String toJson() => json.encode(toMap());
-
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    final map = <String, dynamic>{
       'exercise_id': exerciseId,
       'last_weight': lastWeight,
     };
+    
+    if (equipmentType != null) {
+      map['equipment_type'] = equipmentType;
+    }
+    
+    return map;
   }
+
+  String toJson() => json.encode(toMap());
 }
 
 class WorkoutSetModel {

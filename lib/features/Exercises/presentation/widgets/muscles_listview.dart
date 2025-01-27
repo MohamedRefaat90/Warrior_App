@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -33,7 +32,8 @@ class MusclesListView extends ConsumerWidget {
               itemCount: muscles.length),
           Spacer(),
           if (isComingFromWorkoutScreen == true &&
-              workoutNotifier.newWorkout.workoutItems == null)
+              (workoutNotifier.newWorkout.workoutItems == null ||
+                  workoutNotifier.newWorkout.workoutItems!.isEmpty))
             Text(
               "you must add at least one exercise".capitalizeWord(),
               style: TextStyle(
@@ -48,8 +48,11 @@ class MusclesListView extends ConsumerWidget {
                 padding: 15,
                 width: 200.w,
                 color: AppColors.black,
-                isDisabled: workoutNotifier.newWorkout.workoutItems == null,
-                press: () {}),
+                isDisabled: (workoutNotifier.newWorkout.workoutItems == null ||
+                    workoutNotifier.newWorkout.workoutItems!.isEmpty),
+                press: () {
+                  workoutNotifier.createWorkoutSet();
+                }),
           20.verticalSpace,
         ],
       ),

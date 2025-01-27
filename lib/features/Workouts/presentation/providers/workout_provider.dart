@@ -17,7 +17,26 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
 
   List<WorkoutSetModel> workoutList = [];
 
-  WorkoutSetModel newWorkout = WorkoutSetModel();
+  WorkoutSetModel newWorkout = WorkoutSetModel(
+    name: '',
+    description: '',
+    user: '', // This should be set from your auth system
+    workoutItems: [],
+  );
+
+  void updateNewWorkout({
+    String? name,
+    String? description,
+    String? user,
+    List<WorkoutItemModel>? workoutItems,
+  }) {
+    newWorkout = newWorkout.copyWith(
+      name: name,
+      description: description,
+      user: user,
+      workoutItems: workoutItems,
+    );
+  }
 
   Future<void> getWorkoutSets() async {
     state = ProviderStates(isLoading: true);
@@ -29,7 +48,14 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     }
   }
 
-  Future<void> createWorkoutSet(String name, String description) async {
-    await _workoutRepo.createWorkoutSet(name: name, description: description);
+  Future<void> createWorkoutSet() async {
+    try {
+      state = ProviderStates(isLoading: true);
+      await _workoutRepo.createWorkoutSet(newWorkout);
+      await getWorkoutSets(); // Refresh the list after creating
+      state = ProviderStates(isSuccess: true);
+    } catch (e) {
+      state = ProviderStates(errorMessage: e.toString());
+    }
   }
 }

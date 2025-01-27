@@ -25,8 +25,6 @@ class MusclesScreen extends ConsumerStatefulWidget {
 }
 
 class _MusclesScreenState extends ConsumerState<MusclesScreen> {
-  final bool _hasShownDialog = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

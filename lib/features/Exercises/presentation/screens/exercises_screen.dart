@@ -24,9 +24,6 @@ class ExercisesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(
-          // leading: BackButton(
-          //     onPressed: () =>
-          //         context.goNamed(AppRouters.muscles, extra: false)),
           title: Text(
             '${muscle['name']} Exercises',
             style: const TextStyle(
@@ -50,6 +47,8 @@ class ExercisesScreen extends ConsumerWidget {
             : ExercisesGridView(
                 exercises: HiveManager.exercisesBox.values
                     .where((exercise) => exercise.muscleID == muscle['id'])
-                    .toList()));
+                    .toList(),
+                isComingFromWorkoutScreen: isComingFromWorkoutScreen ?? false,
+              ));
   }
 }

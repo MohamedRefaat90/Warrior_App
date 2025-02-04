@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -122,9 +123,15 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                                                     description: widget
                                                         .descriptionController
                                                         .text));
-                                        Navigator.of(context).pop();
+                                        if (context.mounted) {
+                                          Navigator.of(context).pop();
+                                        }
                                       },
-                                      child: Text('Edit')),
+                                      child:
+                                          ref.watch(workoutsProvider).isLoading
+                                              ? BtnLoader(
+                                                  color: AppColors.primaryColor)
+                                              : Text('Edit')),
                                 ),
                               ],
                             );

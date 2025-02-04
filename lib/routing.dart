@@ -18,6 +18,8 @@ import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.d
 import 'package:Warrior/features/Home/presentation/screens/home_screen.dart';
 import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
 import 'package:Warrior/features/Supplements/presentation/screens/supplements_screen.dart';
+import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
+import 'package:Warrior/features/Workouts/presentation/screens/workout_details.dart';
 import 'package:Warrior/features/Workouts/presentation/screens/workouts_screen.dart';
 import 'package:Warrior/features/onboarding/screens/onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
@@ -139,6 +141,14 @@ class RoutersManager {
       name: AppRouters.workouts,
       pageBuilder: (context, state) => CustomTransition(
         child: const WorkoutScreen(),
+        transitionType: PageTransitionType.rightToLeft,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.workoutDetails,
+      name: AppRouters.workoutDetails,
+      pageBuilder: (context, state) => CustomTransition(
+        child: WorkoutDetails(state.extra as WorkoutSetModel),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),

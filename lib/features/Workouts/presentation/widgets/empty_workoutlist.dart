@@ -73,7 +73,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                           builder: (context, ref, child) => TextButton(
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
-                                  workoutNotifier.updateNewWorkout(
+                                  workoutNotifier.fillNewWorkout(
                                       name: nameController.text,
                                       description: descriptionController.text,
                                       workoutItems: []);

@@ -86,4 +86,20 @@ class ExerciseModel extends HiveObject {
       equipmentType: equipmentType ?? this.equipmentType,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'image': image,
+      'video': video,
+      'targetedMuscles': targetedMuscles,
+      'muscle': muscleID,
+      'muscle_name': muscle,
+      'equipment_type': equipmentType,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 }

@@ -1,13 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+
 class WorkoutItemModel {
-  final int exerciseId;
+  final ExerciseModel exercise;
   final double lastWeight;
   final String? equipmentType;
 
   WorkoutItemModel({
-    required this.exerciseId,
+    required this.exercise,
     required this.lastWeight,
     this.equipmentType,
   });
@@ -17,7 +19,9 @@ class WorkoutItemModel {
 
   factory WorkoutItemModel.fromMap(Map<String, dynamic> map) {
     return WorkoutItemModel(
-      exerciseId: map['exercise_id'] as int,
+      exercise: map['exercise'] is ExerciseModel 
+          ? map['exercise'] as ExerciseModel
+          : ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>),
       lastWeight: double.parse(map['last_weight'].toString()),
       equipmentType: map['equipment_type'] as String?,
     );
@@ -25,7 +29,7 @@ class WorkoutItemModel {
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
-      'exercise_id': exerciseId,
+      'exercise': exercise.toMap(),
       'last_weight': lastWeight,
     };
 

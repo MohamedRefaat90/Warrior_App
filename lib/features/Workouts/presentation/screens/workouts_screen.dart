@@ -3,8 +3,6 @@ import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/core/widgets/loader.dart';
-import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
-import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/empty_workoutlist.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/workouts_listview.dart';
@@ -31,7 +29,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     final TextEditingController descriptionController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Scaffold(
-      floatingActionButton: workoutState.isSuccess
+      floatingActionButton: (!workoutState.isLoading &&
+              workoutNotifier.workoutList.isNotEmpty)
           ? CustomBTN(
               widget: Text("Create New Workout Set"),
               color: AppColors.primaryColor,
@@ -73,7 +72,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                             builder: (context, ref, child) => TextButton(
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
-                                    workoutNotifier.updateNewWorkout(
+                                    workoutNotifier.fillNewWorkout(
                                         name: nameController.text,
                                         description: descriptionController.text,
                                         workoutItems: []);
@@ -100,7 +99,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           ? const Loader()
           : workoutNotifier.workoutList.isEmpty
               ? const EmptyWorkoutList()
-              : WorkoutsListview(workoutNotifier.workoutList),
+              : WorkoutsListview(workoutNotifier.workoutList, nameController,
+                  descriptionController),
     );
   }
 }

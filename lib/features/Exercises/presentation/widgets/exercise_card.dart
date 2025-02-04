@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/widgets/image_error.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
-import 'package:Warrior/features/Workouts/data/models/workoutSet_model.dart';
+import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
     final workoutsNotifier = ref.read(workoutsProvider.notifier);
     // Check if exercise is already in workout list
     isSelected = workoutsNotifier.newWorkout.workoutItems!
-        .any((item) => item.exerciseId == widget.exercise.id);
+        .any((item) => item.exercise.id == widget.exercise.id);
   }
 
   @override
@@ -64,30 +64,32 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   ),
                 ],
               ),
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Checkbox.adaptive(
-                  value: isSelected,
-                  onChanged: (value) {
-                    setState(() {
-                      isSelected = value!;
-                    });
+              if (widget.isComingFromWorkoutScreen!)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: Checkbox.adaptive(
+                    value: isSelected,
+                    onChanged: (value) {
+                      setState(() {
+                        isSelected = value!;
+                      });
 
-                    isSelected
-                        ? workoutsNotifier.newWorkout.workoutItems!
-                            .add(WorkoutItemModel(
-                            exerciseId: widget.exercise.id,
-                            lastWeight: 0,
-                            equipmentType: widget.exercise.equipmentType!,
-                          ))
-                        : workoutsNotifier.newWorkout.workoutItems!.removeWhere(
-                            (e) => e.exerciseId == widget.exercise.id);
-                    print(workoutsNotifier.newWorkout.workoutItems!.length
-                        .toString());
-                  },
+                      isSelected
+                          ? workoutsNotifier.newWorkout.workoutItems!
+                              .add(WorkoutItemModel(
+                              exercise: widget.exercise,
+                              lastWeight: 0,
+                              equipmentType: widget.exercise.equipmentType!,
+                            ))
+                          : workoutsNotifier.newWorkout.workoutItems!
+                              .removeWhere(
+                                  (e) => e.exercise.id == widget.exercise.id);
+                      print(workoutsNotifier.newWorkout.workoutItems!.length
+                          .toString());
+                    },
+                  ),
                 ),
-              ),
             ],
           )),
     );

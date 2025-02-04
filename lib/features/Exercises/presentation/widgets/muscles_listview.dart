@@ -28,8 +28,10 @@ class MusclesListView extends ConsumerWidget {
         children: [
           ListView.separated(
               shrinkWrap: true,
-              itemBuilder: (context, index) =>
-                  MuscleTile(muscle: muscles[index]),
+              itemBuilder: (context, index) => MuscleTile(
+                    muscle: muscles[index],
+                    isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                  ),
               separatorBuilder: (context, index) => 10.verticalSpace,
               itemCount: muscles.length),
           Spacer(),
@@ -56,8 +58,8 @@ class MusclesListView extends ConsumerWidget {
                   await workoutNotifier.createWorkoutSet();
                   if (workoutProviderState.isSuccess) {
                     if (context.mounted) {
-                      context.pop();  // Pop muscles screen
-                      context.pop();  // Return to workouts screen
+                      context.pop(); // Pop muscles screen
+                      context.pop(); // Return to workouts screen
                     }
                   }
                 }),

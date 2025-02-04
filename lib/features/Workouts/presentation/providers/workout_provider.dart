@@ -1,5 +1,5 @@
 import 'package:Warrior/core/network/provider_states.dart';
-import 'package:Warrior/features/Workouts/data/models/workoutSet_model.dart';
+import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +23,7 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     workoutItems: [],
   );
 
-  void updateNewWorkout({
+  void fillNewWorkout({
     String? name,
     String? description,
     List<WorkoutItemModel>? workoutItems,
@@ -59,6 +59,27 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
       await _workoutRepo.createWorkoutSet(newWorkout);
       await getWorkoutSets(); // Refresh the list after creating
       resetNewWorkout();
+      state = ProviderStates(isSuccess: true);
+    } catch (e) {
+      state = ProviderStates(errorMessage: e.toString());
+    }
+  }
+
+  Future<void> deleteWorkoutSet(int workoutID) async {
+    try {
+      _workoutRepo.deleteWorkoutSet(workoutID);
+      state = ProviderStates(isSuccess: true);
+    } catch (e) {
+      state = ProviderStates(errorMessage: e.toString());
+    }
+  }
+
+  Future<void> updateWorkoutSet(WorkoutSetModel workout) async {
+    try {
+      state = ProviderStates(isLoading: true);
+      await _workoutRepo.updateWorkoutSet(workout);
+      await getWorkoutSets(); // Refresh the list after creating
+      // resetNewWorkout();
       state = ProviderStates(isSuccess: true);
     } catch (e) {
       state = ProviderStates(errorMessage: e.toString());

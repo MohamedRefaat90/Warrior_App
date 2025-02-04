@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 class ExercisesGridView extends StatelessWidget {
   final List<ExerciseModel> exercises;
   final bool? isComingFromWorkoutScreen;
-  const ExercisesGridView({
-    super.key,
-    required this.exercises,
-    this.isComingFromWorkoutScreen,
-  });
+  const ExercisesGridView(
+      {super.key, required this.exercises, this.isComingFromWorkoutScreen});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,7 +20,10 @@ class ExercisesGridView extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final ExerciseModel exercise = exercises[index];
-            return ExerciseCard(exercise: exercise);
+            return ExerciseCard(
+              exercise: exercise,
+              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+            );
           }),
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController? textEditingController;
-  final String placeholderText;
+  final String? placeholderText;
   final void Function(String)? onChange;
   final String? Function(String?)? validator;
   final bool isPassword;
@@ -12,7 +12,7 @@ class CustomTextField extends StatefulWidget {
       {this.textEditingController,
       super.key,
       this.isPassword = false,
-      required this.placeholderText,
+      this.placeholderText,
       this.onChange,
       this.isTextArea = false,
       this.validator});

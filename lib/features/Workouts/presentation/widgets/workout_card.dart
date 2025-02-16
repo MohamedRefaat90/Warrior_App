@@ -33,13 +33,6 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   nameController.dispose();
-  //   descriptionController.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

@@ -12,10 +12,12 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   final WorkoutRepo _workoutRepo;
 
   WorkoutsNotifier(this._workoutRepo) : super(ProviderStates()) {
-    getWorkoutSets();
+    // getWorkoutSets();
   }
 
   List<WorkoutSetModel> workoutList = [];
+
+  bool selectMode = false;
 
   WorkoutSetModel newWorkout = WorkoutSetModel(
     name: '',
@@ -84,5 +86,10 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     } catch (e) {
       state = ProviderStates(errorMessage: e.toString());
     }
+  }
+
+  toggleSelectMode() {
+    selectMode = !selectMode;
+    state = ProviderStates(isSuccess: true);
   }
 }

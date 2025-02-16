@@ -23,7 +23,6 @@ class ExerciseCard extends ConsumerStatefulWidget {
 
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   bool isSelected = false;
-
   @override
   void initState() {
     super.initState();
@@ -64,7 +63,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   ),
                 ],
               ),
-              if (widget.isComingFromWorkoutScreen!)
+              if (widget.isComingFromWorkoutScreen! ||
+                  ref.watch(workoutsProvider.notifier).selectMode)
                 Positioned(
                   top: 0,
                   left: 0,
@@ -85,8 +85,6 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                           : workoutsNotifier.newWorkout.workoutItems!
                               .removeWhere(
                                   (e) => e.exercise.id == widget.exercise.id);
-                      print(workoutsNotifier.newWorkout.workoutItems!.length
-                          .toString());
                     },
                   ),
                 ),

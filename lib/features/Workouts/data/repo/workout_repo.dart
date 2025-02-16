@@ -67,9 +67,9 @@ class WorkoutRepo {
         data: {
           'name': workoutSet.name,
           'description': workoutSet.description,
-          // 'workout_items': workoutSet.workoutItems!
-          //     .map((e) => {"exercise_id": e.exercise.id, "last_weight": 0.0})
-          //     .toList()
+          'workout_items': workoutSet.workoutItems!
+              .map((e) => {"exercise_id": e.exercise.id, "last_weight": 0.0})
+              .toList()
         },
       );
     } on DioException {

@@ -74,14 +74,13 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
     debugPrint(
         "workoutAlert => ${SharedPref.getBool(StorageKeys.workoutAlert)}");
     debugPrint('*************************************************');
-    super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final router = GoRouter.of(context);
       debugPrint('Current Route: ${router.state!.matchedLocation}');
 
       if (router.state!.matchedLocation == AppRouters.muscles &&
-          (widget.isComingFromWorkoutScreen ?? false) &&
+          (widget.isComingFromWorkoutScreen == false) &&
           (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
               SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
         debugPrint('Showing workout dialog...');
@@ -90,6 +89,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
           barrierDismissible: false,
           builder: (context) => WorkoutDialog(),
         );
+        super.initState();
       }
     });
   }

@@ -110,7 +110,8 @@ class RoutersManager {
       path: AppRouters.muscles,
       name: AppRouters.muscles,
       pageBuilder: (context, state) => CustomTransition(
-        child: MusclesScreen(isComingFromWorkoutScreen: state.extra as bool),
+        child: MusclesScreen(
+            isComingFromWorkoutScreen: (state.extra as bool?) ?? false),
         transitionType: PageTransitionType.rightToLeft,
       ),
     ),

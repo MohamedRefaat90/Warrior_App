@@ -103,4 +103,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                   descriptionController),
     );
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Future.microtask(() {
+      ref.read(workoutsProvider.notifier).getWorkoutSets();
+    });
+  }
 }

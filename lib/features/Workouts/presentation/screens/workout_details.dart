@@ -52,12 +52,18 @@ class WorkoutDetails extends ConsumerWidget {
                               })
                           .toList();
 
-                      List uniqueItems = workout.workoutItems!
+                      List<WorkoutItemModel> uniqueItems = workout.workoutItems!
                           .where((originalItem) => !afterSelect.any((newItem) =>
                               originalItem.exercise.id ==
                               newItem['exercise_id']))
                           .toList();
 
+                      ref.read(workoutsProvider.notifier).updateWorkoutSet(
+                          WorkoutSetModel(
+                              id: workout.id,
+                              name: workout.name,
+                              description: workout.description,
+                              workoutItems: uniqueItems));
                       debugPrint('New unique items: ${uniqueItems.length}');
                     }),
               )

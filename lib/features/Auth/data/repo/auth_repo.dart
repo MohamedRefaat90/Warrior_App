@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/apis_url.dart';
+import 'package:Warrior/core/constants/secure_storage_key.dart';
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
@@ -27,7 +28,7 @@ class AuthRepo {
       Response response =
           await _dio.post(ApisUrl.googleLogin, data: {'token': token});
       SecureStorageHandler.write(
-          key: "Token", value: response.data['data']['token']);
+          key: StorageKeys.token, value: response.data['data']['token']);
       return UserModel.fromMap(
           response.data['data']['user'] as Map<String, dynamic>);
     } on DioException {
@@ -40,7 +41,7 @@ class AuthRepo {
       final Response response = await _dio
           .post(ApisUrl.login, data: {'email': email, 'password': password});
       SecureStorageHandler.write(
-          key: "Token", value: response.data['data']['token']);
+          key: StorageKeys.token, value: response.data['data']['token']);
       return UserModel.fromMap(
           response.data['data']['user'] as Map<String, dynamic>);
     } on DioException {

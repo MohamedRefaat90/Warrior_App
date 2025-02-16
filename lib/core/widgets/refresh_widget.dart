@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class RefreshWidget extends ConsumerWidget {
   const RefreshWidget(this.provider, {super.key});
 
-  final AutoDisposeFutureProvider provider;
+  final provider;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Center(

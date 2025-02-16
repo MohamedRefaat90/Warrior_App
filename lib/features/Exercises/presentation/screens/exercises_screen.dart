@@ -7,10 +7,19 @@ import 'package:Warrior/features/Exercises/presentation/providers/muscle_provide
 import 'package:Warrior/features/Exercises/presentation/widgets/exercises_gridview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/constants/routers.dart';
 
 class ExercisesScreen extends ConsumerWidget {
   final Map muscle;
-  const ExercisesScreen({super.key, required this.muscle});
+  final bool? isComingFromWorkoutScreen;
+
+  const ExercisesScreen({
+    super.key,
+    required this.muscle,
+    this.isComingFromWorkoutScreen,
+  });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -28,13 +37,18 @@ class ExercisesScreen extends ConsumerWidget {
                 data: (exercises) {
                   DataManager.preloadAndSaveData(
                       HiveManager.exercisesBox, exercises);
-                  return ExercisesGridView(exercises: exercises);
+                  return ExercisesGridView(
+                      exercises: exercises,
+                      isComingFromWorkoutScreen:
+                          isComingFromWorkoutScreen ?? false);
                 },
                 error: (error, stackTrace) =>
                     RefreshWidget(muscleExerciseProvider(muscle['id'])))
             : ExercisesGridView(
                 exercises: HiveManager.exercisesBox.values
                     .where((exercise) => exercise.muscleID == muscle['id'])
-                    .toList()));
+                    .toList(),
+                isComingFromWorkoutScreen: isComingFromWorkoutScreen ?? false,
+              ));
   }
 }

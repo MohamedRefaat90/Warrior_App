@@ -1,11 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+
 class WorkoutItemModel {
-  final int exerciseId;
-  final String lastWeight;
+  final ExerciseModel exercise;
+  final double lastWeight;
+  final String? equipmentType;
+
   WorkoutItemModel({
-    required this.exerciseId,
+    required this.exercise,
     required this.lastWeight,
+    this.equipmentType,
   });
 
   factory WorkoutItemModel.fromJson(String source) =>
@@ -13,38 +19,45 @@ class WorkoutItemModel {
 
   factory WorkoutItemModel.fromMap(Map<String, dynamic> map) {
     return WorkoutItemModel(
-      exerciseId: map['exercise_id'] as int,
-      lastWeight: map['last_weight'] as String,
+      exercise: map['exercise'] is ExerciseModel 
+          ? map['exercise'] as ExerciseModel
+          : ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>),
+      lastWeight: double.parse(map['last_weight'].toString()),
+      equipmentType: map['equipment_type'] as String?,
     );
   }
 
-  String toJson() => json.encode(toMap());
-
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'exercise_id': exerciseId,
+    final map = <String, dynamic>{
+      'exercise': exercise.toMap(),
       'last_weight': lastWeight,
     };
+
+    if (equipmentType != null) {
+      map['equipment_type'] = equipmentType;
+    }
+
+    return map;
   }
+
+  String toJson() => json.encode(toMap());
 }
 
 class WorkoutSetModel {
-  final int id;
-  final String name;
-  final String description;
-  final String user;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<WorkoutItemModel> workoutItems;
+  final int? id;
+  final String? name;
+  final String? description;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final List<WorkoutItemModel>? workoutItems;
 
   WorkoutSetModel({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.user,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.workoutItems,
+    this.id,
+    this.name,
+    this.description,
+    this.createdAt,
+    this.updatedAt,
+    this.workoutItems,
   });
 
   factory WorkoutSetModel.fromJson(String source) =>
@@ -55,7 +68,6 @@ class WorkoutSetModel {
       id: map['id'] as int? ?? 0,
       name: map['name'] as String? ?? '',
       description: map['description'] as String? ?? '',
-      user: map['user'] as String? ?? '',
       createdAt: DateTime.parse(
           map['created_at'] as String? ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(
@@ -74,10 +86,27 @@ class WorkoutSetModel {
       'id': id,
       'name': name,
       'description': description,
-      'user': user,
-      'created_at': createdAt.millisecondsSinceEpoch,
-      'updated_at': updatedAt.millisecondsSinceEpoch,
-      'workout_items': workoutItems.map((x) => x.toMap()).toList(),
+      'created_at': createdAt?.millisecondsSinceEpoch,
+      'updated_at': updatedAt?.millisecondsSinceEpoch,
+      'workout_items': workoutItems?.map((x) => x.toMap()).toList(),
     };
+  }
+
+  WorkoutSetModel copyWith({
+    int? id,
+    String? name,
+    String? description,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<WorkoutItemModel>? workoutItems,
+  }) {
+    return WorkoutSetModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      workoutItems: workoutItems ?? this.workoutItems,
+    );
   }
 }

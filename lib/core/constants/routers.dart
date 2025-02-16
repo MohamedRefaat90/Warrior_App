@@ -13,6 +13,7 @@ abstract class AppRouters {
   static const String exercises = '/exercises';
   static const String exerciseDetails = '/exerciseDetails';
   static const String workouts = '/workouts';
+  static const String workoutDetails = '/workoutDetails';
   static const String supplements = '/supplements';
   static const String nutrition = '/nutrition';
 }

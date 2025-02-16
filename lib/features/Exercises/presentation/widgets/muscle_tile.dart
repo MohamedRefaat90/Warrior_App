@@ -9,16 +9,23 @@ import '../../../../core/widgets/image_error.dart';
 
 class MuscleTile extends StatelessWidget {
   final MuscleModel muscle;
-
-  const MuscleTile({super.key, required this.muscle});
+  final bool? isComingFromWorkoutScreen;
+  const MuscleTile({
+    super.key,
+    required this.muscle,
+    this.isComingFromWorkoutScreen,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
       child: ListTile(
-        onTap: () => context.pushNamed(AppRouters.exercises,
-            extra: {'id': muscle.id, 'name': muscle.name}),
+        onTap: () => context.pushNamed(AppRouters.exercises, extra: {
+          'id': muscle.id,
+          'name': muscle.name,
+          'isComingFromWorkoutScreen': isComingFromWorkoutScreen
+        }),
         leading: CachedNetworkImage(
           imageUrl: muscle.image,
           width: 50,

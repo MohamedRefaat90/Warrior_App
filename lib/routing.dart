@@ -15,7 +15,7 @@ import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
-import 'package:Warrior/features/Home/presentation/screens/home_screen.dart';
+import 'package:Warrior/features/Home/presentation/screen/home_screen.dart';
 import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
 import 'package:Warrior/features/Supplements/presentation/screens/supplements_screen.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';

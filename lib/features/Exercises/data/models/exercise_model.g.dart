@@ -25,7 +25,7 @@ class ExerciseModelAdapter extends TypeAdapter<ExerciseModel> {
       targetedMuscles: fields[5] as String,
       muscleID: fields[6] as int,
       muscle: fields[7] as String,
-      equipmentType: fields[8] as String,
+      equipmentType: fields[8] as String?,
     );
   }
 

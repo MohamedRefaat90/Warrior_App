@@ -1,0 +1,2 @@
+B:/Fullstack Projects/Warrior_App/android/app/.cxx/RelWithDebInfo/1x2v4zj1/x86/CMakeFiles/edit_cache.dir
+B:/Fullstack Projects/Warrior_App/android/app/.cxx/RelWithDebInfo/1x2v4zj1/x86/CMakeFiles/rebuild_cache.dir

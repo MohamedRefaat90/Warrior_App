@@ -92,4 +92,21 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     selectMode = !selectMode;
     state = ProviderStates(isSuccess: true);
   }
+
+  Future<void> reorderWorkoutsList(List<WorkoutSetModel> workouts) async {
+    try {
+      // state = ProviderStates(isLoading: true);
+      List<Map<String, dynamic>> reorderedWorkoutsList = workouts
+          .map((workout) =>
+              {"id": workout.id, "order": workouts.indexOf(workout)})
+          .toList();
+
+      await _workoutRepo.reorderWorkoutsList(reorderedWorkoutsList);
+      // await getWorkoutSets(); // Refresh the list after creating
+      // resetNewWorkout();
+      state = ProviderStates(isSuccess: true);
+    } catch (e) {
+      state = ProviderStates(errorMessage: e.toString());
+    }
+  }
 }

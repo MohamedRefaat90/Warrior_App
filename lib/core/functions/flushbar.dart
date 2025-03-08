@@ -10,7 +10,7 @@ flushBar(BuildContext context,
     Widget? textMessage}) {
   Flushbar(
           flushbarPosition: position ?? FlushbarPosition.BOTTOM,
-          margin: EdgeInsets.zero,
+          margin: margin ?? EdgeInsets.zero,
           icon: const Icon(Icons.info_outline,
               color: Color.fromARGB(255, 227, 245, 66)),
           backgroundColor: color,

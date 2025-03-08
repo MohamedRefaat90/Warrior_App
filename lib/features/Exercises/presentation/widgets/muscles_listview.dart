@@ -24,47 +24,52 @@ class MusclesListView extends ConsumerWidget {
     final workoutProviderState = ref.watch(workoutsProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Column(
-        children: [
-          ListView.separated(
-              shrinkWrap: true,
-              itemBuilder: (context, index) => MuscleTile(
-                    muscle: muscles[index],
-                    isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-                  ),
-              separatorBuilder: (context, index) => 10.verticalSpace,
-              itemCount: muscles.length),
-          Spacer(),
-          if (isComingFromWorkoutScreen == true &&
-              (workoutNotifier.newWorkout.workoutItems == null ||
-                  workoutNotifier.newWorkout.workoutItems!.isEmpty))
-            Text(
-              "you must add at least one exercise".capitalizeWord(),
-              style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w800),
-            ),
-          10.verticalSpace,
-          if (isComingFromWorkoutScreen ?? false)
-            CustomBTN(
-                widget: Text("Finish Your Workout Set".capitalizeWord()),
-                padding: 15,
-                width: 200.w,
-                color: AppColors.black,
-                isDisabled: (workoutNotifier.newWorkout.workoutItems == null ||
-                    workoutNotifier.newWorkout.workoutItems!.isEmpty),
-                press: () async {
-                  await workoutNotifier.createWorkoutSet();
-                  if (workoutProviderState.isSuccess) {
-                    if (context.mounted) {
-                      context.pop(); // Pop muscles screen
-                      context.pop(); // Return to workouts screen
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => MuscleTile(
+                      muscle: muscles[index],
+                      isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                    ),
+                separatorBuilder: (context, index) => 5.verticalSpace,
+                itemCount: muscles.length),
+            // Spacer(),
+            10.verticalSpace,
+            if (isComingFromWorkoutScreen == true &&
+                (workoutNotifier.newWorkout.workoutItems == null ||
+                    workoutNotifier.newWorkout.workoutItems!.isEmpty))
+              Text(
+                "you must add at least one exercise".capitalizeWord(),
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w800),
+              ),
+            5.verticalSpace,
+            if (isComingFromWorkoutScreen ?? false)
+              CustomBTN(
+                  widget: Text("Finish Your Workout Set".capitalizeWord()),
+                  padding: 15,
+                  width: 200.w,
+                  color: AppColors.black,
+                  isDisabled:
+                      (workoutNotifier.newWorkout.workoutItems == null ||
+                          workoutNotifier.newWorkout.workoutItems!.isEmpty),
+                  press: () async {
+                    await workoutNotifier.createWorkoutSet();
+                    if (workoutProviderState.isSuccess) {
+                      if (context.mounted) {
+                        context.pop(); // Pop muscles screen
+                        context.pop(); // Return to workouts screen
+                      }
                     }
-                  }
-                }),
-          20.verticalSpace,
-        ],
+                  }),
+            10.verticalSpace,
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/functions/flushbar.dart';
+import 'package:Warrior/core/functions/snakbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -101,13 +101,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   void initState() {
+    super.initState();
     ref.listenManual(loginProvider, (previous, current) {
       if (current.isSuccess) {
         context.goNamed(AppRouters.home);
       } else if (current.errorMessage != null) {
-        flushBar(context, message: current.errorMessage!);
+        showSnackBar(
+          context,
+          current.errorMessage!
+                  .contains("The connection errored: Failed host lookup:")
+              ? "There's a Problem With Your Internet 🛜"
+              : current.errorMessage!,
+        );
       }
     });
-    super.initState();
   }
 }

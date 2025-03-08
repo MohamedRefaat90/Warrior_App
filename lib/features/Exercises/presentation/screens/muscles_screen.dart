@@ -66,6 +66,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
 
   @override
   void initState() {
+    super.initState();
     debugPrint('*************************************************');
     debugPrint("Exercise Objects => ${HiveManager.exercisesBox.length}");
     debugPrint("Muscles Objects => ${HiveManager.musclesBox.length}");
@@ -77,10 +78,10 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final router = GoRouter.of(context);
-      debugPrint('Current Route: ${router.state!.matchedLocation}');
+      debugPrint('Current Route: ${router.state.matchedLocation}');
 
-      if (router.state!.matchedLocation == AppRouters.muscles &&
-          (widget.isComingFromWorkoutScreen == false) &&
+      if (router.state.matchedLocation == AppRouters.muscles &&
+          (widget.isComingFromWorkoutScreen == true) &&
           (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
               SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
         debugPrint('Showing workout dialog...');
@@ -89,7 +90,6 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
           barrierDismissible: false,
           builder: (context) => WorkoutDialog(),
         );
-        super.initState();
       }
     });
   }

@@ -5,15 +5,18 @@ void showSnackBar(BuildContext context, String message, [Color? color]) {
     ..hideCurrentSnackBar()
     ..showSnackBar(
       SnackBar(
-        behavior: SnackBarBehavior.floating,
+        behavior: SnackBarBehavior.fixed,
         duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.symmetric(horizontal: 0),
+        // margin: const EdgeInsets.symmetric(horizontal: 0),
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(0))),
-        backgroundColor: color ?? Colors.blue,
+            borderRadius: BorderRadius.all(Radius.circular(16))),
+        backgroundColor: color ?? Colors.black,
         content: Text(message,
             style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white)),
+              // fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Poppins',
+            )),
       ),
     );
 }

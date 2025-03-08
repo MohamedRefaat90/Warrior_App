@@ -4,6 +4,7 @@ import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final authRepo = Provider((ref) {
@@ -23,7 +24,7 @@ class AuthRepo {
     }
   }
 
-  Future<UserModel> googleSignIn(String token) async {
+  Future<UserModel> googleSignIn(String? token) async {
     try {
       Response response =
           await _dio.post(ApisUrl.googleLogin, data: {'token': token});
@@ -32,6 +33,8 @@ class AuthRepo {
       return UserModel.fromMap(
           response.data['data']['user'] as Map<String, dynamic>);
     } on DioException {
+      rethrow;
+    } on PlatformException {
       rethrow;
     }
   }

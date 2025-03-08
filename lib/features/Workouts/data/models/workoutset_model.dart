@@ -2,10 +2,18 @@
 import 'dart:convert';
 
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:hive/hive.dart';
+part 'workoutset_model.g.dart';
 
+@HiveType(typeId: 4)
 class WorkoutItemModel {
+  @HiveField(0)
   final ExerciseModel exercise;
+
+  @HiveField(1)
   final double lastWeight;
+
+  @HiveField(2)
   final String? equipmentType;
 
   WorkoutItemModel({
@@ -19,7 +27,7 @@ class WorkoutItemModel {
 
   factory WorkoutItemModel.fromMap(Map<String, dynamic> map) {
     return WorkoutItemModel(
-      exercise: map['exercise'] is ExerciseModel 
+      exercise: map['exercise'] is ExerciseModel
           ? map['exercise'] as ExerciseModel
           : ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>),
       lastWeight: double.parse(map['last_weight'].toString()),
@@ -43,12 +51,19 @@ class WorkoutItemModel {
   String toJson() => json.encode(toMap());
 }
 
-class WorkoutSetModel {
+@HiveType(typeId: 3)
+class WorkoutSetModel extends HiveObject {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String? name;
+  @HiveField(2)
   final String? description;
+  @HiveField(3)
   final DateTime? createdAt;
+  @HiveField(4)
   final DateTime? updatedAt;
+  @HiveField(5)
   final List<WorkoutItemModel>? workoutItems;
 
   WorkoutSetModel({

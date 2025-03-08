@@ -15,7 +15,7 @@ class GoogleButton extends StatelessWidget {
       builder: (context, ref, child) => MaterialButton(
         onPressed: () async {
           String? token = await handleGoogleSignIn();
-          ref.read(loginProvider.notifier).googleLogin(token!);
+          ref.read(loginProvider.notifier).googleLogin(token);
         },
         minWidth: 50,
         height: 50,

@@ -76,4 +76,14 @@ class WorkoutRepo {
       rethrow;
     }
   }
+
+  Future<void> reorderWorkoutsList(
+      List<Map<String, dynamic>> reorderedWorkouts) async {
+    try {
+      await dio.patch("${ApisUrl.workouts}/reorder/",
+          data: {"workouts": reorderedWorkouts});
+    } on DioException {
+      rethrow;
+    }
+  }
 }

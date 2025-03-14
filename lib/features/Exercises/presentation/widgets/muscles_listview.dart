@@ -1,5 +1,4 @@
 import 'package:Warrior/core/constants/colors.dart';
-import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
@@ -51,7 +50,14 @@ class MusclesListView extends ConsumerWidget {
             5.verticalSpace,
             if (isComingFromWorkoutScreen ?? false)
               CustomBTN(
-                  widget: Text("Finish Your Workout Set".capitalizeWord()),
+                  widget: workoutProviderState.isLoading
+                      ? SizedBox(
+                          width: 20.w,
+                          height: 20.w,
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ))
+                      : Text("Finish Your Workout Set".capitalizeWord()),
                   padding: 15,
                   width: 200.w,
                   color: AppColors.black,

@@ -1,10 +1,12 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercises_gridview.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class WorkoutDetails extends ConsumerWidget {
   final WorkoutSetModel workout;
@@ -18,6 +20,18 @@ class WorkoutDetails extends ConsumerWidget {
         ref.read(workoutsProvider.notifier).selectMode = false;
       },
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.primaryColor,
+            onPressed: () {
+              ref.read(workoutsProvider.notifier).newWorkout = workout;
+              context.pushNamed(AppRouters.muscles, extra: true);
+            },
+            tooltip: "Add New Exercise",
+            shape: CircleBorder(),
+            child: Icon(
+              Icons.add,
+              color: AppColors.white,
+            )),
         appBar: AppBar(
           title: Text(
             workout.name!,

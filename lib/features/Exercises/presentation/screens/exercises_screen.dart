@@ -5,11 +5,10 @@ import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/core/widgets/refresh_widget.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercises_gridview.dart';
+import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/constants/routers.dart';
 
 class ExercisesScreen extends ConsumerWidget {
   final Map muscle;
@@ -24,6 +23,12 @@ class ExercisesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                ref.read(workoutsProvider.notifier).selectMode = false;
+                context.pop();
+              },
+              icon: Icon(Icons.arrow_back_ios_new)),
           title: Text(
             '${muscle['name']} Exercises',
             style: const TextStyle(

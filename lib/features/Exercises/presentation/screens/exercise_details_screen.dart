@@ -25,12 +25,12 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
                 width: double.infinity,
                 height: 200.h,
                 foregroundDecoration: BoxDecoration(
@@ -43,23 +43,26 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                       )
                     : const CustomLoadingWidget(),
               ),
-            ),
-            Text(widget.exercise.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontFamily: "Poppins")),
-            40.verticalSpace,
-            ConnectivityChecker.isOnline!
-                ? CachedNetworkImage(
-                    imageUrl: widget.exercise.targetedMuscles,
-                    width: 200.w,
-                    alignment: Alignment.center,
-                    placeholder: (context, url) => const CustomLoadingWidget(),
-                  )
-                : Image.file(File(widget.exercise.targetedMuscles)),
-            const Text("Targeted Muscles"),
-            10.verticalSpace,
-          ],
+              10.verticalSpace,
+              Text(widget.exercise.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontFamily: "Poppins")),
+              40.verticalSpace,
+              ConnectivityChecker.isOnline!
+                  ? CachedNetworkImage(
+                      imageUrl: widget.exercise.targetedMuscles,
+                      width: 200.w,
+                      alignment: Alignment.center,
+                      placeholder: (context, url) =>
+                          const CustomLoadingWidget(),
+                    )
+                  : Image.file(File(widget.exercise.targetedMuscles)),
+              const Text("Targeted Muscles"),
+              10.verticalSpace,
+            ],
+          ),
         ),
       ),
     );

@@ -63,7 +63,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   ),
                 ],
               ),
-              if (widget.isComingFromWorkoutScreen! ||
+              if (widget.isComingFromWorkoutScreen! &&
                   ref.watch(workoutsProvider.notifier).selectMode)
                 Positioned(
                   top: 0,

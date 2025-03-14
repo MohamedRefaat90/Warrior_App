@@ -71,7 +71,7 @@ class RoutersManager {
       name: AppRouters.forgetPassword,
       pageBuilder: (context, state) => CustomTransition(
         child: const ForgetPasswordScreen(),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -79,7 +79,7 @@ class RoutersManager {
       name: AppRouters.verifyOTP,
       pageBuilder: (context, state) => CustomTransition(
         child: VerifyOtpScreen(email: state.extra! as String),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -103,7 +103,7 @@ class RoutersManager {
       name: AppRouters.home,
       pageBuilder: (context, state) => CustomTransition(
         child: const HomeScreen(),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -112,7 +112,7 @@ class RoutersManager {
       pageBuilder: (context, state) => CustomTransition(
         child: MusclesScreen(
             isComingFromWorkoutScreen: (state.extra as bool?) ?? false),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -125,7 +125,7 @@ class RoutersManager {
             muscle: extraData,
             isComingFromWorkoutScreen: extraData['isComingFromWorkoutScreen'],
           ),
-          transitionType: PageTransitionType.rightToLeft,
+          transitionType: PageTransitionType.fade,
         );
       },
     ),
@@ -134,7 +134,7 @@ class RoutersManager {
       name: AppRouters.exerciseDetails,
       pageBuilder: (context, state) => CustomTransition(
         child: ExerciseDetailsScreen(exercise: state.extra as ExerciseModel),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -142,7 +142,7 @@ class RoutersManager {
       name: AppRouters.workouts,
       pageBuilder: (context, state) => CustomTransition(
         child: const WorkoutScreen(),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -150,7 +150,7 @@ class RoutersManager {
       name: AppRouters.workoutDetails,
       pageBuilder: (context, state) => CustomTransition(
         child: WorkoutDetails(state.extra as WorkoutSetModel),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -158,7 +158,7 @@ class RoutersManager {
       name: AppRouters.supplements,
       pageBuilder: (context, state) => CustomTransition(
         child: const SupplementsScreen(),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
     GoRoute(
@@ -166,7 +166,7 @@ class RoutersManager {
       name: AppRouters.nutrition,
       pageBuilder: (context, state) => CustomTransition(
         child: const NutritionScreen(),
-        transitionType: PageTransitionType.rightToLeft,
+        transitionType: PageTransitionType.fade,
       ),
     ),
   ]);

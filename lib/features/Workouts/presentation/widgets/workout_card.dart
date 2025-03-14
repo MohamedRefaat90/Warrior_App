@@ -12,26 +12,16 @@ import 'package:go_router/go_router.dart';
 
 class WorkoutCard extends ConsumerStatefulWidget {
   final WorkoutSetModel workout;
-  TextEditingController nameController;
-  TextEditingController descriptionController;
-  WorkoutCard(
-      {super.key,
-      required this.workout,
-      required this.nameController,
-      required this.descriptionController});
+
+  WorkoutCard({super.key, required this.workout});
 
   @override
   ConsumerState<WorkoutCard> createState() => _WorkoutCardState();
 }
 
 class _WorkoutCardState extends ConsumerState<WorkoutCard> {
-  @override
-  void initState() {
-    widget.nameController = TextEditingController(text: widget.workout.name);
-    widget.descriptionController =
-        TextEditingController(text: widget.workout.description);
-    super.initState();
-  }
+  TextEditingController? nameController;
+  TextEditingController? descriptionController;
 
   @override
   Widget build(BuildContext context) {
@@ -82,18 +72,21 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                       showAdaptiveDialog(
                           context: context,
                           builder: (context) {
+                            nameController = TextEditingController(
+                                text: widget.workout.name);
+                            descriptionController = TextEditingController(
+                                text: widget.workout.description);
                             return AlertDialog(
                               title: Text('Edit Workout Set'),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   CustomTextField(
-                                      textEditingController:
-                                          widget.nameController),
+                                      textEditingController: nameController),
                                   SizedBox(height: 10.h),
                                   CustomTextField(
                                       textEditingController:
-                                          widget.descriptionController,
+                                          descriptionController,
                                       isTextArea: true,
                                       placeholderText: 'Description'),
                                 ],
@@ -111,11 +104,10 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                                             .read(workoutsProvider.notifier)
                                             .updateWorkoutSet(widget.workout
                                                 .copyWith(
-                                                    name: widget
-                                                        .nameController.text,
-                                                    description: widget
-                                                        .descriptionController
-                                                        .text));
+                                                    name: nameController!.text,
+                                                    description:
+                                                        descriptionController!
+                                                            .text));
                                         if (context.mounted) {
                                           Navigator.of(context).pop();
                                         }
@@ -138,14 +130,57 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                     padding: 15,
                     splashColor: AppColors.white,
                     press: () {
-                      ref
-                          .read(workoutsProvider.notifier)
-                          .deleteWorkoutSet(widget.workout.id!);
-                      ref
-                          .read(workoutsProvider.notifier)
-                          .workoutList
-                          .removeWhere(
-                              (element) => element.id == widget.workout.id);
+                      showAdaptiveDialog(
+                          context: context,
+                          builder: (context) {
+                            nameController = TextEditingController(
+                                text: widget.workout.name);
+                            descriptionController = TextEditingController(
+                                text: widget.workout.description);
+                            return AlertDialog(
+                              title: Text.rich(
+                                  TextSpan(children: [
+                                    TextSpan(text: "Delete "),
+                                    TextSpan(
+                                        text: widget.workout.name,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ]),
+                                  overflow: TextOverflow.ellipsis),
+                              content: Text(
+                                  'Are you sure you want to delete this workout set ?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel')),
+                                Consumer(
+                                  builder: (context, ref, child) => TextButton(
+                                      onPressed: () async {
+                                        ref
+                                            .read(workoutsProvider.notifier)
+                                            .deleteWorkoutSet(
+                                                widget.workout.id!);
+                                        ref
+                                            .read(workoutsProvider.notifier)
+                                            .workoutList
+                                            .removeWhere((element) =>
+                                                element.id ==
+                                                widget.workout.id);
+                                        if (context.mounted) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child:
+                                          ref.watch(workoutsProvider).isLoading
+                                              ? BtnLoader(
+                                                  color: AppColors.primaryColor)
+                                              : Text('Sure')),
+                                ),
+                              ],
+                            );
+                          });
                     },
                   ),
                 ],

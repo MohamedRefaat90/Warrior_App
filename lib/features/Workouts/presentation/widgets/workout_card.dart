@@ -139,12 +139,15 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                                 text: widget.workout.description);
                             return AlertDialog(
                               title: Text.rich(
+                                  maxLines: 1,
                                   TextSpan(children: [
                                     TextSpan(text: "Delete "),
                                     TextSpan(
                                         text: widget.workout.name,
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold))
+                                          fontWeight: FontWeight.bold,
+                                          overflow: TextOverflow.ellipsis,
+                                        ))
                                   ]),
                                   overflow: TextOverflow.ellipsis),
                               content: Text(

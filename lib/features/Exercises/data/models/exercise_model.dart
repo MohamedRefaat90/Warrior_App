@@ -43,7 +43,7 @@ class ExerciseModel extends HiveObject {
     required this.targetedMuscles,
     required this.muscleID,
     required this.muscle,
-    this.equipmentType = 'free_weight',
+    required this.equipmentType,
   });
 
   factory ExerciseModel.fromMap(Map<String, dynamic> map) {
@@ -56,7 +56,7 @@ class ExerciseModel extends HiveObject {
       targetedMuscles: map['targetedMuscles'] as String,
       muscleID: map['muscle'] as int,
       muscle: map['muscle_name'] as String,
-      equipmentType: map['equipment_type'] as String? ?? 'free_weight',
+      equipmentType: map['equipment_type'] as String,
     );
   }
 

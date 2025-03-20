@@ -111,7 +111,11 @@ class RoutersManager {
       name: AppRouters.muscles,
       pageBuilder: (context, state) => CustomTransition(
         child: MusclesScreen(
-            isComingFromWorkoutScreen: (state.extra as bool?) ?? false),
+          isComingFromWorkoutScreen:
+              (state.extra as Map?)?['isComingFromWorkoutScreen'] ?? false,
+          appendToExistingWorkoutSet:
+              (state.extra as Map?)?['appendToExistingWorkoutSet'] ?? false,
+        ),
         transitionType: PageTransitionType.fade,
       ),
     ),

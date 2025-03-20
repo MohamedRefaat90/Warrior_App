@@ -1,9 +1,9 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/exercises_gridview.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/workout_gridview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,14 +17,19 @@ class WorkoutDetails extends ConsumerWidget {
     ref.watch(workoutsProvider);
     return PopScope(
       onPopInvokedWithResult: (result, data) {
-        ref.read(workoutsProvider.notifier).selectMode = false;
+        debugPrint('Back from exercise screen');
+        ref.watch(workoutsProvider.notifier).selectMode = false;
       },
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
             backgroundColor: AppColors.primaryColor,
             onPressed: () {
               ref.read(workoutsProvider.notifier).newWorkout = workout;
-              context.pushNamed(AppRouters.muscles, extra: true);
+
+              context.pushNamed(AppRouters.muscles, extra: {
+                "isComingFromWorkoutScreen": true,
+                "appendToExistingWorkoutSet": true
+              });
             },
             tooltip: "Add New Exercise",
             shape: CircleBorder(),
@@ -82,10 +87,10 @@ class WorkoutDetails extends ConsumerWidget {
                     }),
               )
             : null,
-        body: ExercisesGridView(
-          exercises: workout.workoutItems!.map((e) => e.exercise).toList(),
-          isComingFromWorkoutScreen: false,
-        ),
+        body: WorkoutGridView(workoutItems: workout.workoutItems!
+            // isComingFromWorkoutScreen: true,
+            // workoutName: workout.name,
+            ),
       ),
     );
   }

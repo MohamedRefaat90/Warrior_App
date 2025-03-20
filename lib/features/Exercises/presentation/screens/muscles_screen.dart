@@ -17,8 +17,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../core/constants/routers.dart';
 
 class MusclesScreen extends ConsumerStatefulWidget {
-  final bool? isComingFromWorkoutScreen;
-  const MusclesScreen({super.key, this.isComingFromWorkoutScreen});
+  final bool isComingFromWorkoutScreen;
+  final bool appendToExistingWorkoutSet;
+  const MusclesScreen(
+      {super.key,
+      required this.isComingFromWorkoutScreen,
+      required this.appendToExistingWorkoutSet});
 
   @override
   ConsumerState<MusclesScreen> createState() => _MusclesScreenState();
@@ -42,9 +46,11 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                 data: (muscles) {
                   HiveManager.saveToHive(HiveManager.musclesBox, muscles);
                   return MusclesListView(
-                      muscles: muscles,
-                      isComingFromWorkoutScreen:
-                          widget.isComingFromWorkoutScreen);
+                    muscles: muscles,
+                    isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
+                    appendToExistingWorkoutSet:
+                        widget.appendToExistingWorkoutSet,
+                  );
                 },
                 error: (error, stackTrace) => RefreshWidget(musclesProvider))
             : ValueListenableBuilder(
@@ -57,9 +63,11 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
 
                   final muscles = box.values.toList();
                   return MusclesListView(
-                      muscles: muscles,
-                      isComingFromWorkoutScreen:
-                          widget.isComingFromWorkoutScreen);
+                    muscles: muscles,
+                    isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
+                    appendToExistingWorkoutSet:
+                        widget.appendToExistingWorkoutSet,
+                  );
                 },
               ));
   }

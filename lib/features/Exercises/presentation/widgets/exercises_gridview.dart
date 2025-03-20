@@ -7,8 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ExercisesGridView extends ConsumerStatefulWidget {
   final List<ExerciseModel> exercises;
   final bool? isComingFromWorkoutScreen;
-  const ExercisesGridView(
-      {super.key, required this.exercises, this.isComingFromWorkoutScreen});
+  const ExercisesGridView({
+    super.key,
+    required this.exercises,
+    this.isComingFromWorkoutScreen,
+  });
 
   @override
   ConsumerState<ExercisesGridView> createState() => _ExercisesGridViewState();
@@ -18,7 +21,6 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
   @override
   Widget build(BuildContext context) {
     ref.watch(workoutsProvider);
-    final workoutNotifier = ref.watch(workoutsProvider.notifier);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
@@ -29,23 +31,22 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
             mainAxisSpacing: 10,
           ),
           itemBuilder: (context, index) {
-            final ExerciseModel exercise = widget.exercises[index];
-            return Stack(
-              alignment: Alignment.center,
-              fit: StackFit.passthrough,
-              children: [
-                InkWell(
-                  onLongPress: () {
-                    workoutNotifier.toggleSelectMode();
-                  },
-                  child: ExerciseCard(
-                    exercise: exercise,
-                    isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
-                  ),
-                ),
-              ],
+            return ExerciseCard(
+              exercise: widget.exercises[index],
+              isComingFromWorkoutScreen:
+                  ref.watch(workoutsProvider.notifier).selectMode,
             );
           }),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (widget.isComingFromWorkoutScreen!) {
+      setState(() {
+        ref.read(workoutsProvider.notifier).selectMode = true;
+      });
+    }
+    super.didChangeDependencies();
   }
 }

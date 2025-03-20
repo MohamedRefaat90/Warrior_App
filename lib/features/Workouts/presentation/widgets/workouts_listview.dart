@@ -36,8 +36,6 @@ class _WorkoutsListviewState extends ConsumerState<WorkoutsListview> {
           return WorkoutCard(
             key: Key("$index"),
             workout: widget.workouts[index],
-            // nameController: widget.nameController,
-            // descriptionController: widget.descriptionController,
           );
         },
         onReorder: (oldIndex, newIndex) async {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -12,11 +14,12 @@ import 'package:go_router/go_router.dart';
 class MusclesListView extends ConsumerWidget {
   final List<MuscleModel> muscles;
   final bool? isComingFromWorkoutScreen;
-  const MusclesListView({
-    super.key,
-    required this.muscles,
-    this.isComingFromWorkoutScreen,
-  });
+  final bool? appendToExistingWorkoutSet;
+  const MusclesListView(
+      {super.key,
+      required this.muscles,
+      this.isComingFromWorkoutScreen,
+      this.appendToExistingWorkoutSet});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final workoutNotifier = ref.read(workoutsProvider.notifier);
@@ -35,7 +38,6 @@ class MusclesListView extends ConsumerWidget {
                     ),
                 separatorBuilder: (context, index) => 5.verticalSpace,
                 itemCount: muscles.length),
-            // Spacer(),
             10.verticalSpace,
             if (isComingFromWorkoutScreen == true &&
                 (workoutNotifier.newWorkout.workoutItems == null ||
@@ -57,7 +59,13 @@ class MusclesListView extends ConsumerWidget {
                           child: CircularProgressIndicator(
                             color: AppColors.primaryColor,
                           ))
-                      : Text("Finish Your Workout Set".capitalizeWord()),
+                      : Text.rich(TextSpan(children: [
+                          TextSpan(
+                              text: appendToExistingWorkoutSet!
+                                  ? "Update "
+                                  : "Finish "),
+                          TextSpan(text: "Your Workout Set"),
+                        ])),
                   padding: 15,
                   width: 200.w,
                   color: AppColors.black,
@@ -65,7 +73,13 @@ class MusclesListView extends ConsumerWidget {
                       (workoutNotifier.newWorkout.workoutItems == null ||
                           workoutNotifier.newWorkout.workoutItems!.isEmpty),
                   press: () async {
-                    await workoutNotifier.createWorkoutSet();
+                    if (!appendToExistingWorkoutSet!) {
+                      await workoutNotifier.createWorkoutSet();
+                    } else {
+                      await workoutNotifier
+                          .updateWorkoutSet(workoutNotifier.newWorkout);
+                      log("Update Existing Set");
+                    }
                     if (workoutProviderState.isSuccess) {
                       if (context.mounted) {
                         context.pop(); // Pop muscles screen

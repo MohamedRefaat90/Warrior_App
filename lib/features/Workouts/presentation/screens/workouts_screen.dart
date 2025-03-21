@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../../core/constants/routers.dart';
@@ -34,8 +33,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     final TextEditingController descriptionController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Scaffold(
-        floatingActionButton: (!workoutState.isLoading &&
-                workoutNotifier.workoutList.isNotEmpty)
+        floatingActionButton: workoutNotifier.createWorkoutBtnState()
             ? CustomBTN(
                 widget: Text("Create New Workout Set"),
                 color: AppColors.primaryColor,

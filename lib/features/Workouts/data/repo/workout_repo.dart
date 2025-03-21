@@ -86,4 +86,17 @@ class WorkoutRepo {
       rethrow;
     }
   }
+
+  Future<void> updateLastWeight(
+      int workoutID, int exerciseID, num weight) async {
+    try {
+      await dio
+          .patch("${ApisUrl.workouts}/$workoutID/update_last_weight/", data: {
+        "exercise_id": exerciseID,
+        "last_weight": weight,
+      });
+    } on DioException {
+      rethrow;
+    }
+  }
 }

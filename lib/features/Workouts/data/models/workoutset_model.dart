@@ -11,15 +11,15 @@ class WorkoutItemModel {
   final ExerciseModel exercise;
 
   @HiveField(1)
-  final double lastWeight;
+  num lastWeight;
 
-  @HiveField(2)
-  final String? equipmentType;
+  // @HiveField(2)
+  // final String? equipmentType;
 
   WorkoutItemModel({
     required this.exercise,
     required this.lastWeight,
-    this.equipmentType,
+    // this.equipmentType,
   });
 
   factory WorkoutItemModel.fromJson(String source) =>
@@ -31,7 +31,7 @@ class WorkoutItemModel {
           ? map['exercise'] as ExerciseModel
           : ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>),
       lastWeight: double.parse(map['last_weight'].toString()),
-      equipmentType: map['equipment_type'] as String?,
+      // equipmentType: map['equipment_type'] as String?,
     );
   }
 
@@ -41,9 +41,9 @@ class WorkoutItemModel {
       'last_weight': lastWeight,
     };
 
-    if (equipmentType != null) {
-      map['equipment_type'] = equipmentType;
-    }
+    // if (equipmentType != null) {
+    //   map['equipment_type'] = equipmentType;
+    // }
 
     return map;
   }

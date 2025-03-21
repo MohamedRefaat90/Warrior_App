@@ -67,7 +67,7 @@ class WorkoutDetails extends ConsumerWidget {
                           .map((e) => {
                                 "exercise_id": e.exercise.id,
                                 "last_weight": e.lastWeight,
-                                "equipment_type": e.equipmentType,
+                                "equipment_type": e.exercise.equipmentType,
                               })
                           .toList();
 
@@ -83,14 +83,10 @@ class WorkoutDetails extends ConsumerWidget {
                               name: workout.name,
                               description: workout.description,
                               workoutItems: uniqueItems));
-                      debugPrint('New unique items: ${uniqueItems.length}');
                     }),
               )
             : null,
-        body: WorkoutGridView(workoutItems: workout.workoutItems!
-            // isComingFromWorkoutScreen: true,
-            // workoutName: workout.name,
-            ),
+        body: WorkoutGridView(workout),
       ),
     );
   }

@@ -1,24 +1,17 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
-import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
-import 'package:Warrior/features/Workouts/data/data_sources/workout_item_weights.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
-import 'package:Warrior/features/Workouts/presentation/widgets/weight_chip.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/last_weight_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkoutGridView extends ConsumerStatefulWidget {
-  final List<WorkoutItemModel> workoutItems;
-  // final bool? isComingFromWorkoutScreen;
-  // final String? workoutName;
+  final WorkoutSetModel workout;
 
-  const WorkoutGridView({
-    super.key,
-    required this.workoutItems,
-  });
+  const WorkoutGridView(this.workout, {super.key});
 
   @override
   ConsumerState<WorkoutGridView> createState() => _ExercisesGridViewState();
@@ -32,94 +25,72 @@ class _ExercisesGridViewState extends ConsumerState<WorkoutGridView> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
-          itemCount: widget.workoutItems.length,
+          itemCount: widget.workout.workoutItems!.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.85,
+            mainAxisSpacing: 15,
+            childAspectRatio: 0.9,
           ),
           itemBuilder: (context, index) {
-            final WorkoutItemModel workoutExercise = widget.workoutItems[index];
+            final WorkoutItemModel workoutExercise =
+                widget.workout.workoutItems![index];
             return Stack(
               alignment: Alignment.center,
+              clipBehavior: Clip.none,
               fit: StackFit.passthrough,
               children: [
                 InkWell(
                   onLongPress: () {
-                    // if (widget.isComingFromWorkoutScreen!) {
                     workoutNotifier.toggleSelectMode();
-                    // }
                   },
                   child: ExerciseCard(
                     exercise: workoutExercise.exercise,
                     isComingFromWorkoutScreen: workoutNotifier.selectMode,
                   ),
                 ),
-                // if (widget.isComingFromWorkoutScreen! &&
-                //     widget.workoutName != null)
                 Positioned(
-                    width: 75.w,
-                    height: 15.h,
-                    top: 10.h,
-                    right: 5.w,
+                    width: 95.w,
+                    height: 17.h,
+                    bottom: -5.h,
+                    right: 33.w,
                     child: CustomBTN(
                       widget: Text.rich(
                         TextSpan(children: [
-                          TextSpan(text: "Last Weight : "),
-                          TextSpan(text: "0 "),
                           TextSpan(
-                              text: workoutExercise.equipmentType == "machine"
+                              text: "Last Weight : ",
+                              style: TextStyle(fontWeight: FontWeight.w400)),
+                          TextSpan(text: "${workoutExercise.lastWeight} "),
+                          TextSpan(
+                              text: workoutExercise.exercise.equipmentType ==
+                                      "machine"
                                   ? "Bar"
-                                  : "KG"),
+                                  : "KG",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                         ]),
-                        style: TextStyle(fontSize: 8.sp),
+                        style: TextStyle(fontSize: 9.sp),
                       ),
                       radius: 4,
                       color: AppColors.green,
                       padding: 0,
-                      press: () {
-                        showModalBottomSheet(
+                      press: () async {
+                        final newWeight = await showModalBottomSheet<num>(
                             context: context,
-                            builder: (context) => Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Expanded(
-                                      child: ListView(
-                                        scrollDirection: Axis.vertical,
-                                        shrinkWrap: true,
-                                        children:
-                                            workoutExercise.equipmentType ==
-                                                    "machine"
-                                                ? MachineWeights.values
-                                                    .map((e) => WeightChip(
-                                                          weight: e.weight,
-                                                          type: e,
-                                                          lastWeight:
-                                                              workoutExercise
-                                                                  .lastWeight,
-                                                        ))
-                                                    .toList()
-                                                : FreeWeights.values
-                                                    .map((e) => WeightChip(
-                                                          weight: e.weight,
-                                                          type: e,
-                                                          lastWeight:
-                                                              workoutExercise
-                                                                  .lastWeight,
-                                                        ))
-                                                    .toList(),
-                                      ),
-                                    ),
-                                    CustomBTN(
-                                        widget: Text("Update"),
-                                        padding: 10,
-                                        width: 150.w,
-                                        radius: 8,
-                                        color: Colors.deepPurpleAccent,
-                                        press: () {})
-                                  ],
-                                ));
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                            ),
+                            builder: (context) => LastWeightSelector(
+                                workoutID: widget.workout.id!,
+                                workoutExercise: workoutExercise));
+
+                        if (newWeight != null) {
+                          setState(() {
+                            workoutExercise.lastWeight = newWeight;
+                          });
+                        }
                       },
                     ))
               ],

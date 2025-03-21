@@ -24,22 +24,14 @@ class ExerciseCard extends ConsumerStatefulWidget {
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   bool isSelected = false;
   @override
-  void initState() {
-    super.initState();
-    final workoutsNotifier = ref.read(workoutsProvider.notifier);
-    // Check if exercise is already in workout list
-    isSelected = workoutsNotifier.newWorkout.workoutItems!
-        .any((item) => item.exercise.id == widget.exercise.id);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final workoutsNotifier = ref.read(workoutsProvider.notifier);
     return InkWell(
       onTap: () =>
           context.pushNamed(AppRouters.exerciseDetails, extra: widget.exercise),
       child: Card(
-          elevation: 3,
+          elevation: 5,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -80,7 +72,6 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                               .add(WorkoutItemModel(
                               exercise: widget.exercise,
                               lastWeight: 0,
-                              equipmentType: widget.exercise.equipmentType!,
                             ))
                           : workoutsNotifier.newWorkout.workoutItems!
                               .removeWhere(
@@ -91,5 +82,14 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
             ],
           )),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final workoutsNotifier = ref.read(workoutsProvider.notifier);
+    // Check if exercise is already in workout list
+    isSelected = workoutsNotifier.newWorkout.workoutItems!
+        .any((item) => item.exercise.id == widget.exercise.id);
   }
 }

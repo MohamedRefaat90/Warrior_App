@@ -1,4 +1,5 @@
 import 'package:Warrior/core/network/provider_states.dart';
+import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -105,5 +106,20 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     } catch (e) {
       state = ProviderStates(errorMessage: e.toString());
     }
+  }
+
+  Future<void> updateLastWeight(
+      int workoutID, int exerciseID, num weight) async {
+    try {
+      await _workoutRepo.updateLastWeight(workoutID, exerciseID, weight);
+      state = ProviderStates(isSuccess: true);
+    } catch (e) {
+      state = ProviderStates(errorMessage: e.toString());
+    }
+  }
+
+  bool createWorkoutBtnState() {
+    return (!state.isLoading &&
+        (workoutList.isNotEmpty || HiveManager.workoutsBox.isNotEmpty));
   }
 }

@@ -75,15 +75,6 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
   @override
   void initState() {
     super.initState();
-    debugPrint('*************************************************');
-    debugPrint("Exercise Objects => ${HiveManager.exercisesBox.length}");
-    debugPrint("Muscles Objects => ${HiveManager.musclesBox.length}");
-    debugPrint(
-        "isComingFromWorkoutScreen => ${widget.isComingFromWorkoutScreen}");
-    debugPrint(
-        "workoutAlert => ${SharedPref.getBool(StorageKeys.workoutAlert)}");
-    debugPrint('*************************************************');
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final router = GoRouter.of(context);
       debugPrint('Current Route: ${router.state.matchedLocation}');

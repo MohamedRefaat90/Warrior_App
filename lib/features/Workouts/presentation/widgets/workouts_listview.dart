@@ -35,6 +35,7 @@ class _WorkoutsListviewState extends ConsumerState<WorkoutsListview> {
         itemBuilder: (context, index) {
           return WorkoutCard(
             key: Key("$index"),
+            index: index,
             workout: widget.workouts[index],
           );
         },

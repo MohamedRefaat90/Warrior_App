@@ -85,11 +85,29 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   }
 
   @override
+  void didUpdateWidget(ExerciseCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update selection state when select mode changes
+    if (oldWidget.isComingFromWorkoutScreen !=
+        widget.isComingFromWorkoutScreen) {
+      updateSelectionState();
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
-    final workoutsNotifier = ref.read(workoutsProvider.notifier);
     // Check if exercise is already in workout list
-    isSelected = workoutsNotifier.newWorkout.workoutItems!
-        .any((item) => item.exercise.id == widget.exercise.id);
+    updateSelectionState();
+  }
+
+  void updateSelectionState() {
+    setState(() {
+      isSelected = ref
+          .read(workoutsProvider.notifier)
+          .newWorkout
+          .workoutItems!
+          .any((item) => item.exercise.id == widget.exercise.id);
+    });
   }
 }

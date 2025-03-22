@@ -12,10 +12,6 @@ final workoutsProvider =
 class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   final WorkoutRepo _workoutRepo;
 
-  WorkoutsNotifier(this._workoutRepo) : super(ProviderStates()) {
-    // getWorkoutSets();
-  }
-
   List<WorkoutSetModel> workoutList = [];
 
   bool selectMode = false;
@@ -26,34 +22,11 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     workoutItems: [],
   );
 
-  void fillNewWorkout({
-    String? name,
-    String? description,
-    List<WorkoutItemModel>? workoutItems,
-  }) {
-    newWorkout = newWorkout.copyWith(
-      name: name,
-      description: description,
-      workoutItems: workoutItems,
-    );
-  }
+  WorkoutsNotifier(this._workoutRepo) : super(ProviderStates());
 
-  void resetNewWorkout() {
-    newWorkout = WorkoutSetModel(
-      name: '',
-      description: '',
-      workoutItems: [],
-    );
-  }
-
-  Future<void> getWorkoutSets() async {
-    state = ProviderStates(isLoading: true);
-    try {
-      workoutList = await _workoutRepo.getWorkoutSets();
-      state = ProviderStates(isSuccess: true);
-    } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
-    }
+  bool createWorkoutBtnState() {
+    return (!state.isLoading &&
+        (workoutList.isNotEmpty || HiveManager.workoutsBox.isNotEmpty));
   }
 
   Future<void> createWorkoutSet() async {
@@ -77,21 +50,26 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     }
   }
 
-  Future<void> updateWorkoutSet(WorkoutSetModel workout) async {
+  void fillNewWorkout({
+    String? name,
+    String? description,
+    List<WorkoutItemModel>? workoutItems,
+  }) {
+    newWorkout = newWorkout.copyWith(
+      name: name,
+      description: description,
+      workoutItems: workoutItems,
+    );
+  }
+
+  Future<void> getWorkoutSets() async {
+    state = ProviderStates(isLoading: true);
     try {
-      state = ProviderStates(isLoading: true);
-      await _workoutRepo.updateWorkoutSet(workout);
-      await getWorkoutSets(); // Refresh the list after creating
-      // resetNewWorkout();
+      workoutList = await _workoutRepo.getWorkoutSets();
       state = ProviderStates(isSuccess: true);
     } catch (e) {
       state = ProviderStates(errorMessage: e.toString());
     }
-  }
-
-  toggleSelectMode() {
-    selectMode = !selectMode;
-    state = ProviderStates(isSuccess: true);
   }
 
   Future<void> reorderWorkoutsList(List<WorkoutSetModel> workouts) async {
@@ -108,6 +86,23 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     }
   }
 
+  void resetNewWorkout() {
+    newWorkout = WorkoutSetModel(
+      name: '',
+      description: '',
+      workoutItems: [],
+    );
+  }
+
+  toggleSelectMode() {
+    selectMode = !selectMode;
+    // Clear selected items when turning off select mode
+    if (!selectMode) {
+      newWorkout.workoutItems!.clear();
+    }
+    state = ProviderStates(isSuccess: true);
+  }
+
   Future<void> updateLastWeight(
       int workoutID, int exerciseID, num weight) async {
     try {
@@ -118,8 +113,15 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     }
   }
 
-  bool createWorkoutBtnState() {
-    return (!state.isLoading &&
-        (workoutList.isNotEmpty || HiveManager.workoutsBox.isNotEmpty));
+  Future<void> updateWorkoutSet(WorkoutSetModel workout) async {
+    try {
+      state = ProviderStates(isLoading: true);
+      await _workoutRepo.updateWorkoutSet(workout);
+      await getWorkoutSets(); // Refresh the list after creating
+      resetNewWorkout();
+      state = ProviderStates(isSuccess: true);
+    } catch (e) {
+      state = ProviderStates(errorMessage: e.toString());
+    }
   }
 }

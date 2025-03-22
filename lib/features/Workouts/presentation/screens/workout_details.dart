@@ -15,6 +15,7 @@ class WorkoutDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(workoutsProvider);
+    final workoutNotifier = ref.read(workoutsProvider.notifier);
     return PopScope(
       onPopInvokedWithResult: (result, data) {
         debugPrint('Back from exercise screen');
@@ -24,7 +25,7 @@ class WorkoutDetails extends ConsumerWidget {
         floatingActionButton: FloatingActionButton(
             backgroundColor: AppColors.primaryColor,
             onPressed: () {
-              ref.read(workoutsProvider.notifier).newWorkout = workout;
+              workoutNotifier.newWorkout = workout;
 
               context.pushNamed(AppRouters.muscles, extra: {
                 "isComingFromWorkoutScreen": true,
@@ -48,45 +49,50 @@ class WorkoutDetails extends ConsumerWidget {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              ref.read(workoutsProvider.notifier).selectMode = false;
+              workoutNotifier.selectMode = false;
               Navigator.pop(context);
             },
           ),
         ),
-        bottomNavigationBar: ref.watch(workoutsProvider.notifier).selectMode
+        bottomNavigationBar: workoutNotifier.selectMode
             ? Padding(
                 padding: const EdgeInsets.all(10),
                 child: CustomBTN(
-                    widget: Text("Delete"),
-                    color: AppColors.primaryColor,
-                    press: () {
-                      List afterSelect = ref
-                          .read(workoutsProvider.notifier)
-                          .newWorkout
-                          .workoutItems!
-                          .map((e) => {
-                                "exercise_id": e.exercise.id,
-                                "last_weight": e.lastWeight,
-                                "equipment_type": e.exercise.equipmentType,
-                              })
-                          .toList();
+                  widget: Text("Delete"),
+                  color: AppColors.primaryColor,
+                  press: () {
+                    if (workoutNotifier.newWorkout.workoutItems == null ||
+                        workout.workoutItems == null) {
+                      return;
+                    }
 
-                      List<WorkoutItemModel> uniqueItems = workout.workoutItems!
-                          .where((originalItem) => !afterSelect.any((newItem) =>
-                              originalItem.exercise.id ==
-                              newItem['exercise_id']))
-                          .toList();
+                    Set<int> selectedExerciseIds = workoutNotifier
+                        .newWorkout.workoutItems!
+                        .map((e) => e.exercise.id)
+                        .toSet();
 
-                      ref.read(workoutsProvider.notifier).updateWorkoutSet(
-                          WorkoutSetModel(
-                              id: workout.id,
-                              name: workout.name,
-                              description: workout.description,
-                              workoutItems: uniqueItems));
-                    }),
+                    // Both modify the local instance for immediate UI update
+                    // and create the list for the API update
+                    workout.workoutItems!.removeWhere((element) =>
+                        selectedExerciseIds.contains(element.exercise.id));
+
+                    workoutNotifier.toggleSelectMode();
+
+                    // Update the workout in the backend
+                    workoutNotifier.updateWorkoutSet(WorkoutSetModel(
+                      id: workout.id,
+                      name: workout.name,
+                      description: workout.description,
+                      workoutItems: workout.workoutItems,
+                    ));
+                  },
+                ),
               )
             : null,
-        body: WorkoutGridView(workout),
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: WorkoutGridView(workout),
+        ),
       ),
     );
   }

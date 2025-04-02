@@ -1,3 +1,4 @@
+import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/routing.dart';
 import 'package:device_preview/device_preview.dart';
@@ -19,11 +20,12 @@ void main() async {
       }));
 }
 
-class Warrior extends StatelessWidget {
+class Warrior extends ConsumerWidget {
   const Warrior({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ConnectivityChecker.initialize(ref);
     return ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,

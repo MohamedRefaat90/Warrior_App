@@ -11,8 +11,9 @@ abstract class AppServices {
   static Future<void> init() async {
     await SharedPref.init();
     await DioHandler.initDio();
-    await ConnectivityChecker.init();
+
     await HiveManager.init();
+    await ConnectivityChecker.checkConnectivity();
     initialLocation = await RoutersManager.routingChecker();
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);

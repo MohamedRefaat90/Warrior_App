@@ -78,7 +78,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final router = GoRouter.of(context);
       debugPrint('Current Route: ${router.state.matchedLocation}');
-
+      debugPrint(ConnectivityChecker.isOnline!.toString());
       if (router.state.matchedLocation == AppRouters.muscles &&
           (widget.isComingFromWorkoutScreen == true) &&
           (SharedPref.getBool(StorageKeys.workoutAlert) == null ||

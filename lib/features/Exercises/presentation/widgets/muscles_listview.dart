@@ -77,17 +77,16 @@ class MusclesListView extends ConsumerWidget {
                   press: () async {
                     if (!appendToExistingWorkoutSet!) {
                       await workoutNotifier.createWorkoutSet();
-                      HiveManager.workoutsBox.add(workoutNotifier.newWorkout);
+                      // HiveManager.workoutsBox.add(workoutNotifier.newWorkout);
                     } else {
                       await workoutNotifier
                           .updateWorkoutSet(workoutNotifier.newWorkout);
                       log("Update Existing Set");
                     }
-                    if (workoutProviderState.isSuccess) {
-                      if (context.mounted) {
-                        context.pop(); // Pop muscles screen
-                        context.pop(); // Return to workouts screen
-                      }
+
+                    if (context.mounted) {
+                      context.pop(); // Pop muscles screen
+                      context.pop(); // Return to workouts screen
                     }
                   }),
             10.verticalSpace,

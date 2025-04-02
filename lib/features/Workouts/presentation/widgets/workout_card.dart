@@ -1,9 +1,5 @@
-import 'dart:developer';
-
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/network/connectivity.dart';
-import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
@@ -17,7 +13,7 @@ import 'package:go_router/go_router.dart';
 class WorkoutCard extends ConsumerStatefulWidget {
   final WorkoutSetModel workout;
   final int index;
-  WorkoutCard({super.key, required this.workout, required this.index});
+  const WorkoutCard({super.key, required this.workout, required this.index});
 
   @override
   ConsumerState<WorkoutCard> createState() => _WorkoutCardState();
@@ -97,11 +93,6 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                                     ],
                                   ),
                                   actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Cancel')),
                                     Consumer(
                                       builder: (context, ref, child) =>
                                           TextButton(
@@ -175,24 +166,12 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                                       builder: (context, ref, child) =>
                                           TextButton(
                                               onPressed: () async {
-                                                if (ConnectivityChecker
-                                                    .isOnline!) {
-                                                  ref
-                                                      .read(workoutsProvider
-                                                          .notifier)
-                                                      .deleteWorkoutSet(
-                                                          widget.workout.id!);
-                                                  ref
-                                                      .read(workoutsProvider
-                                                          .notifier)
-                                                      .workoutList
-                                                      .removeWhere((element) =>
-                                                          element.id ==
-                                                          widget.workout.id);
-                                                }
-
-                                                await HiveManager.workoutsBox
-                                                    .delete(widget.index);
+                                                ref
+                                                    .read(workoutsProvider
+                                                        .notifier)
+                                                    .deleteWorkoutSet(
+                                                        widget.workout.id!,
+                                                        widget.index);
 
                                                 if (context.mounted) {
                                                   Navigator.of(context).pop();

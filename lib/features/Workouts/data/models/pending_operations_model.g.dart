@@ -23,6 +23,9 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
       id: fields[3] as int?,
       exerciseId: fields[4] as int?,
       weight: fields[5] as num?,
+      reorderWorkoutList: (fields[7] as List?)
+          ?.map((dynamic e) => (e as Map).cast<String, dynamic>())
+          ?.toList(),
       timestamp: fields[6] as DateTime?,
     );
   }
@@ -30,7 +33,7 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
   @override
   void write(BinaryWriter writer, PendingOperation obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.entityType)
       ..writeByte(1)
@@ -44,7 +47,9 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
       ..writeByte(5)
       ..write(obj.weight)
       ..writeByte(6)
-      ..write(obj.timestamp);
+      ..write(obj.timestamp)
+      ..writeByte(7)
+      ..write(obj.reorderWorkoutList);
   }
 
   @override
@@ -71,6 +76,8 @@ class SyncOperationTypeAdapter extends TypeAdapter<SyncOperationType> {
         return SyncOperationType.update;
       case 2:
         return SyncOperationType.delete;
+      case 3:
+        return SyncOperationType.reorder;
       default:
         return SyncOperationType.create;
     }
@@ -87,6 +94,9 @@ class SyncOperationTypeAdapter extends TypeAdapter<SyncOperationType> {
         break;
       case SyncOperationType.delete:
         writer.writeByte(2);
+        break;
+      case SyncOperationType.reorder:
+        writer.writeByte(3);
         break;
     }
   }

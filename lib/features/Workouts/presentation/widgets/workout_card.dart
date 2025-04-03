@@ -45,7 +45,11 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                     fontFamily: 'poppins',
                   ),
                 ),
-                Text(widget.workout.description!, maxLines: 2),
+                SizedBox(
+                  width: 0.6.sw,
+                  child: Text(widget.workout.description!,
+                      overflow: TextOverflow.ellipsis),
+                ),
                 Row(
                   children: [
                     Text(

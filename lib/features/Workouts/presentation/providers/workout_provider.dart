@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
-import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
@@ -13,12 +10,11 @@ import 'package:hive/hive.dart';
 
 final workoutsProvider =
     StateNotifierProvider.autoDispose<WorkoutsNotifier, ProviderStates>((ref) {
-  return WorkoutsNotifier(ref.read(workoutRepo), ref);
+  return WorkoutsNotifier(ref.read(workoutRepo));
 });
 
 class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   final WorkoutRepo _workoutRepo;
-  final Ref _ref;
 
   List<WorkoutSetModel> workoutList = [];
 
@@ -30,38 +26,7 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     workoutItems: [],
   );
 
-  WorkoutsNotifier(this._workoutRepo, this._ref) : super(ProviderStates()) {
-    if (ConnectivityChecker.isOnline!) {
-      // _trySync();
-      // HiveManager.clearPendingOperations();
-    }
-  }
-
-  // Future<void> _trySync() async {
-  //   if (!ConnectivityChecker.isOnline!) return;
-
-  //   try {
-  //     _ref.read(syncingProvider.notifier).state = true;
-
-  //     // Debug before sync
-  //     debugPrint('Before sync attempt:');
-  //     HiveManager.debugPendingOperations();
-
-  //     // Make sure the pending operations box is open
-  //     if (!Hive.isBoxOpen('pendingOperations')) {
-  //       await Hive.openBox<PendingOperation>('pendingOperations');
-  //       debugPrint('Had to reopen pendingOperations box');
-  //     }
-
-  //     final syncService = _ref.read(syncServiceProvider);
-  //     await syncService.syncPendingOperations();
-  //     // await getWorkoutSets(); // Refresh the list after sync
-  //   } catch (e) {
-  //     debugPrint('Error during sync: $e');
-  //   } finally {
-  //     _ref.read(syncingProvider.notifier).state = false;
-  //   }
-  // }
+  WorkoutsNotifier(this._workoutRepo) : super(ProviderStates());
 
   bool createWorkoutBtnState() {
     return (!state.isLoading &&
@@ -166,13 +131,27 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   }
 
   Future<void> reorderWorkoutsList(List<WorkoutSetModel> workouts) async {
+    List<Map<String, dynamic>> reorderedWorkoutsList = workouts.map((workout) {
+      int index = workouts.indexOf(workout);
+      HiveManager.workoutsBox.putAt(index, workout);
+      return {"id": workout.id, "order": index};
+    }).toList();
     try {
-      List<Map<String, dynamic>> reorderedWorkoutsList = workouts
-          .map((workout) =>
-              {"id": workout.id, "order": workouts.indexOf(workout)})
-          .toList();
+      if (ConnectivityChecker.isOnline!) {
+        // Online: Reorder on server
 
-      await _workoutRepo.reorderWorkoutsList(reorderedWorkoutsList);
+        await _workoutRepo.reorderWorkoutsList(reorderedWorkoutsList);
+      } else {
+        // Offline: Track for later sync
+
+        await HiveManager.addPendingOperation(PendingOperation(
+          entityType: 'workout',
+          operationType: SyncOperationType.reorder,
+          reorderWorkoutList: reorderedWorkoutsList,
+          timestamp: DateTime.now(),
+        ));
+      }
+
       state = ProviderStates(isSuccess: true);
     } catch (e) {
       state = ProviderStates(errorMessage: e.toString());
@@ -199,7 +178,24 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   Future<void> updateLastWeight(
       int workoutID, int exerciseID, num weight) async {
     try {
-      await _workoutRepo.updateLastWeight(workoutID, exerciseID, weight);
+      if (ConnectivityChecker.isOnline!) {
+        // Online: Update on server
+        state = ProviderStates(isLoading: true);
+        await _workoutRepo.updateLastWeight(workoutID, exerciseID, weight);
+        updateLastWeightLocal(workoutID, exerciseID, weight);
+      } else {
+        // Offline: Track for later sync
+        await HiveManager.addPendingOperation(PendingOperation(
+          entityType: 'workout_weight',
+          operationType: SyncOperationType.update,
+          workout: workoutList.firstWhere((workout) => workout.id == workoutID),
+          exerciseId: exerciseID,
+          weight: weight,
+        ));
+
+        // Update local Hive data
+        updateLastWeightLocal(workoutID, exerciseID, weight);
+      }
       state = ProviderStates(isSuccess: true);
     } catch (e) {
       state = ProviderStates(errorMessage: e.toString());
@@ -236,4 +232,37 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
       state = ProviderStates(errorMessage: e.toString());
     }
   }
+
+  Future<void> updateLastWeightLocal(
+      int workoutID, int exerciseID, num weight) async {
+    /// Updates the local record of the last weight used for a specific exercise within a workout.
+    ///
+    /// This method modifies the local data to reflect the most recent weight used by the user for
+    /// the specified exercise in a workout session. It doesn't persist the change to remote storage.
+    ///
+    /// Parameters:
+    /// - [workoutID]: The unique identifier of the workout containing the exercise.
+    /// - [exerciseID]: The unique identifier of the exercise whose weight is being updated.
+    /// - [weight]: The new weight value to be recorded for the exercise.
+    ///
+
+    int index = HiveManager.workoutsBox.values
+        .toList()
+        .indexWhere((element) => element.id == workoutID);
+    WorkoutSetModel workout = HiveManager.workoutsBox.getAt(index)!;
+    int exerciseIndex = workout.workoutItems!
+        .indexWhere((element) => element.exercise.id == exerciseID);
+    workout.workoutItems![exerciseIndex].lastWeight = weight;
+    await HiveManager.workoutsBox.putAt(index, workout);
+  }
+
+  // Future<void> reorderWorkoutsLocal(List workouts) async {
+  //   // Update local Hive data
+  //   for (var workout in workouts) {
+  //     int index = HiveManager.workoutsBox.values
+  //         .toList()
+  //         .indexWhere((element) => element.id == workout.id);
+  //     await HiveManager.workoutsBox.putAt(index, workout);
+  //   }
+  // }
 }

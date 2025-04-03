@@ -44,7 +44,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text('Create Your Workout Set'),
+                          title: Text('Create Workout Set'),
                           content: Form(
                             key: formKey,
                             child: Column(

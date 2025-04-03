@@ -1,11 +1,12 @@
+import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// final syncingProvider = StateProvider<bool>((ref) => false);
+import 'package:oktoast/oktoast.dart';
 
 class SyncService {
   final WorkoutRepo workoutRepo;
@@ -41,6 +42,11 @@ class SyncService {
                 await workoutRepo.deleteWorkoutSet(op.id!);
               }
               break;
+
+            case SyncOperationType.reorder:
+              await workoutRepo.reorderWorkoutsList(op.reorderWorkoutList!);
+
+              break;
           }
         } else if (op.entityType == 'workout_weight') {
           await workoutRepo.updateLastWeight(
@@ -50,18 +56,18 @@ class SyncService {
           );
         }
       }
-
-      // // Refresh from server to ensure consistency
-      // if (pendingOps.isNotEmpty) {
-      //   debugPrint('Refreshing workouts from server...');
-      //   await workoutRepo.getWorkoutSets();
-      // }
-
       // Clear processed operations
       await HiveManager.clearPendingOperations();
-
+      showToast('synced with server'.capitalizeWord(),
+          position: ToastPosition.bottom,
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+          textPadding: const EdgeInsets.all(10),
+          textStyle: const TextStyle(
+              fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500));
       debugPrint('All pending operations synced with server');
     } catch (e) {
+      await HiveManager.clearPendingOperations();
       debugPrint('Error during sync: $e');
     }
   }

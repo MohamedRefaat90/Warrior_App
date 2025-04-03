@@ -14,16 +14,16 @@ List<CategoryItem> categoryItems = [
     image: AppAssets.workout,
     navigateTo: AppRouters.workouts,
   ),
-  CategoryItem(
-    title: "Supplements",
-    image: AppAssets.supplements,
-    navigateTo: AppRouters.supplements,
-  ),
-  CategoryItem(
-    title: "Nutrition",
-    image: AppAssets.nutrition,
-    navigateTo: AppRouters.nutrition,
-  ),
+  // CategoryItem(
+  //   title: "Supplements",
+  //   image: AppAssets.supplements,
+  //   navigateTo: AppRouters.supplements,
+  // ),
+  // CategoryItem(
+  //   title: "Nutrition",
+  //   image: AppAssets.nutrition,
+  //   navigateTo: AppRouters.nutrition,
+  // ),
 ];
 
 final homeRepo = Provider<List<CategoryItem>>((ref) {

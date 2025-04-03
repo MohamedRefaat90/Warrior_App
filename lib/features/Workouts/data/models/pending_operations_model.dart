@@ -12,7 +12,10 @@ enum SyncOperationType {
   update,
 
   @HiveField(2)
-  delete
+  delete,
+
+  @HiveField(3)
+  reorder
 }
 
 @HiveType(typeId: 5)
@@ -38,6 +41,9 @@ class PendingOperation extends HiveObject {
   @HiveField(6)
   final DateTime timestamp;
 
+  @HiveField(7)
+  final List<Map<String, dynamic>>? reorderWorkoutList;
+
   PendingOperation({
     required this.entityType,
     required this.operationType,
@@ -45,6 +51,7 @@ class PendingOperation extends HiveObject {
     this.id,
     this.exerciseId,
     this.weight,
+    this.reorderWorkoutList,
     DateTime? timestamp,
   }) : timestamp = timestamp ?? DateTime.now();
 }

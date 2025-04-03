@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oktoast/oktoast.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,15 +32,17 @@ class Warrior extends ConsumerWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (_, child) {
-          return MaterialApp.router(
-            title: 'Warrior',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                  seedColor: const Color.fromARGB(255, 168, 11, 11)),
-              useMaterial3: true,
+          return OKToast(
+            child: MaterialApp.router(
+              title: 'Warrior',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(
+                    seedColor: const Color.fromARGB(255, 168, 11, 11)),
+                useMaterial3: true,
+              ),
+              routerConfig: RoutersManager.router,
             ),
-            routerConfig: RoutersManager.router,
           );
         });
   }

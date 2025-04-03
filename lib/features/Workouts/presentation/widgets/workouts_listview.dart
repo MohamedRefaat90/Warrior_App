@@ -47,11 +47,11 @@ class _WorkoutsListviewState extends ConsumerState<WorkoutsListview> {
             final WorkoutSetModel item = widget.workouts.removeAt(oldIndex);
             widget.workouts.insert(newIndex, item);
           });
-          if (ConnectivityChecker.isOnline!) {
-            await ref
-                .read(workoutsProvider.notifier)
-                .reorderWorkoutsList(widget.workouts);
-          }
+
+          await ref
+              .read(workoutsProvider.notifier)
+              .reorderWorkoutsList(widget.workouts);
+
           await HiveManager.saveToHive(
               HiveManager.workoutsBox, widget.workouts);
         },

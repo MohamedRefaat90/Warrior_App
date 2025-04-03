@@ -44,6 +44,7 @@ dependencies:
   connectivity_plus: 
   shared_preferences: ^2.3.5
   talker_dio_logger: ^4.6.7
+  oktoast: ^3.4.0
 
 
 dev_dependencies:

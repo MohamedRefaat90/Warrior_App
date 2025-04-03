@@ -24,8 +24,7 @@ class HiveManager {
     musclesBox = await Hive.openBox<MuscleModel>('muscles');
     exercisesBox = await Hive.openBox<ExerciseModel>('exercises');
     workoutsBox = await Hive.openBox<WorkoutSetModel>('workouts');
-    pendingOpsBox = await Hive.openBox<PendingOperation>("pendingOperations",
-        compactionStrategy: (entries, deletedEntries) => deletedEntries > 50);
+    pendingOpsBox = await Hive.openBox<PendingOperation>("pendingOperations");
   }
 
   static Future<void> saveToHive(Box box, List data) async {

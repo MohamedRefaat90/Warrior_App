@@ -29,7 +29,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: widget.validator,
       onChanged: widget.onChange,
       obscureText: widget.isPassword,
-      maxLines: widget.isTextArea ? 5 : 1,
+      maxLines: widget.isTextArea ? 4 : 1,
       decoration: InputDecoration(
           enabled: true,
           contentPadding:

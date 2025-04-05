@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/widgets/image_error.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
@@ -42,7 +43,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                     imageUrl: widget.exercise.image,
                     height: 120.h,
                     placeholder: (context, url) => CustomLoadingWidget(),
-                    errorWidget: (context, url, error) => ImageError(),
+                    errorWidget: (context, url, error) =>
+                        Image.file(File(widget.exercise.image)),
                   ),
                   SizedBox(
                     width: 100.w,

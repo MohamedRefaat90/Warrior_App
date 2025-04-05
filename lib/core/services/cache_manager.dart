@@ -11,19 +11,37 @@ class DataManager {
       Box<ExerciseModel> box, List<ExerciseModel> exercises) async {
     for (var exercise in exercises) {
       try {
-        // Check if the image is already cached
+        // Check if the image Path is already cached
         String? imagePath;
-        debugPrint('Checking cache for image: ${exercise.targetedMuscles}');
+        debugPrint('Checking cache for image: ${exercise.image}');
         final cachedImage =
-            await _cacheManager.getFileFromCache(exercise.targetedMuscles);
+            await _cacheManager.getFileFromCache(exercise.image);
         if (cachedImage != null) {
           debugPrint('Image already cached: ${cachedImage.file.path}');
           imagePath = cachedImage.file.path;
         } else {
-          debugPrint('Downloading image: ${exercise.targetedMuscles}');
+          debugPrint('Downloading image: ${exercise.image}');
+          final downloadedImage =
+              await _cacheManager.downloadFile(exercise.image);
+          imagePath = downloadedImage.file.path;
+        }
+
+        // Check if the targetedMusclesPath is already cached
+        String? targetedMusclesPath;
+        debugPrint(
+            'Checking cache for targetedMuscles: ${exercise.targetedMuscles}');
+        final cachedTargetedMuscles =
+            await _cacheManager.getFileFromCache(exercise.targetedMuscles);
+        if (cachedTargetedMuscles != null) {
+          debugPrint(
+              'targetedMuscles already cached: ${cachedTargetedMuscles.file.path}');
+          targetedMusclesPath = cachedTargetedMuscles.file.path;
+        } else {
+          debugPrint(
+              'Downloading targetedMuscles: ${exercise.targetedMuscles}');
           final downloadedImage =
               await _cacheManager.downloadFile(exercise.targetedMuscles);
-          imagePath = downloadedImage.file.path;
+          targetedMusclesPath = downloadedImage.file.path;
         }
 
         // Check if the video is already cached
@@ -46,7 +64,8 @@ class DataManager {
           debugPrint('Saving exercise to Hive: ${exercise.id}');
           // Create a new instance of ExerciseModel with updated paths
           final updatedExercise = exercise.copyWith(
-            targetedMuscles: imagePath,
+            image: imagePath,
+            targetedMuscles: targetedMusclesPath,
             video: videoPath,
           );
           await box.put(exercise.id, updatedExercise);

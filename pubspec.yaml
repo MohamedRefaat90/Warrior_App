@@ -36,15 +36,14 @@ dependencies:
   flutter_secure_storage: 
   google_sign_in: 
   cached_network_image: 
-  video_player: 
   flutter_cache_manager: 
   hive: 
   hive_flutter: 
-
   connectivity_plus: 
   shared_preferences: ^2.3.5
   talker_dio_logger: ^4.6.7
   oktoast: ^3.4.0
+  cached_video_player_plus: ^3.0.3
 
 
 dev_dependencies:

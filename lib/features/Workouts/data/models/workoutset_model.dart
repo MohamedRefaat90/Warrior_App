@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:hive/hive.dart';
+
+import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+
 part 'workoutset_model.g.dart';
 
 @HiveType(typeId: 4)
@@ -13,13 +15,9 @@ class WorkoutItemModel {
   @HiveField(1)
   num lastWeight;
 
-  // @HiveField(2)
-  // final String? equipmentType;
-
   WorkoutItemModel({
     required this.exercise,
     required this.lastWeight,
-    // this.equipmentType,
   });
 
   factory WorkoutItemModel.fromJson(String source) =>
@@ -31,7 +29,6 @@ class WorkoutItemModel {
           ? map['exercise'] as ExerciseModel
           : ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>),
       lastWeight: double.parse(map['last_weight'].toString()),
-      // equipmentType: map['equipment_type'] as String?,
     );
   }
 
@@ -41,14 +38,20 @@ class WorkoutItemModel {
       'last_weight': lastWeight,
     };
 
-    // if (equipmentType != null) {
-    //   map['equipment_type'] = equipmentType;
-    // }
-
     return map;
   }
 
   String toJson() => json.encode(toMap());
+
+  WorkoutItemModel copyWith({
+    ExerciseModel? exercise,
+    num? lastWeight,
+  }) {
+    return WorkoutItemModel(
+      exercise: exercise ?? this.exercise,
+      lastWeight: lastWeight ?? this.lastWeight,
+    );
+  }
 }
 
 @HiveType(typeId: 3)

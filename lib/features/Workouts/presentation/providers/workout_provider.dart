@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
@@ -6,7 +8,6 @@ import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
 
 final workoutsProvider =
     StateNotifierProvider.autoDispose<WorkoutsNotifier, ProviderStates>((ref) {
@@ -113,7 +114,6 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
         // Online: Get from server and update Hive
         state = ProviderStates(isLoading: true);
         workoutList = await _workoutRepo.getWorkoutSets();
-
         // Update Hive with fresh data
         await HiveManager.workoutsBox.clear();
         for (var workout in workoutList) {
@@ -122,6 +122,7 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
       } else {
         // Offline: Load from Hive
         workoutList = HiveManager.workoutsBox.values.toList();
+        updateWorkoutExerciseVideoPath(workoutList);
       }
 
       state = ProviderStates(isSuccess: true);
@@ -131,11 +132,10 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   }
 
   Future<void> reorderWorkoutsList(List<WorkoutSetModel> workouts) async {
-    List<Map<String, dynamic>> reorderedWorkoutsList = workouts.map((workout) {
-      int index = workouts.indexOf(workout);
-      HiveManager.workoutsBox.putAt(index, workout);
-      return {"id": workout.id, "order": index};
-    }).toList();
+    List<Map<String, dynamic>> reorderedWorkoutsList = workouts
+        .map(
+            (workout) => {"id": workout.id, "order": workouts.indexOf(workout)})
+        .toList();
     try {
       if (ConnectivityChecker.isOnline!) {
         // Online: Reorder on server
@@ -256,13 +256,49 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     await HiveManager.workoutsBox.putAt(index, workout);
   }
 
-  // Future<void> reorderWorkoutsLocal(List workouts) async {
-  //   // Update local Hive data
-  //   for (var workout in workouts) {
-  //     int index = HiveManager.workoutsBox.values
-  //         .toList()
-  //         .indexWhere((element) => element.id == workout.id);
-  //     await HiveManager.workoutsBox.putAt(index, workout);
-  //   }
-  // }
+  updateWorkoutExerciseVideoPath(List<WorkoutSetModel> workoutList) async {
+    // First, create a copy of all updated workouts without modifying Hive yet
+    List<WorkoutSetModel> updatedWorkouts = [];
+
+    for (WorkoutSetModel workout in workoutList) {
+      bool workoutModified = false;
+
+      if (workout.workoutItems != null) {
+        for (WorkoutItemModel workoutItem in workout.workoutItems!) {
+          final cachedExercise =
+              HiveManager.exercisesBox.get(workoutItem.exercise.id);
+          if (cachedExercise != null) {
+            // Only update if different from current path
+            if (workoutItem.exercise.video != cachedExercise.video) {
+              // Create updated workout item
+              workoutItem = workoutItem.copyWith(
+                  exercise: workoutItem.exercise.copyWith(
+                      video: cachedExercise.video,
+                      targetedMuscles: cachedExercise.targetedMuscles));
+
+              workoutModified = true;
+            }
+          } else {
+            debugPrint(
+                'No cached exercise found for ID: ${workoutItem.exercise.id}');
+          }
+        }
+      }
+
+      if (workoutModified) {
+        updatedWorkouts.add(workout);
+      }
+    }
+
+    // After collecting all updates, now update Hive
+    debugPrint('Saving ${updatedWorkouts.length} modified workouts to Hive');
+    for (var updatedWorkout in updatedWorkouts) {
+      int index =
+          HiveManager.workoutsBox.values.toList().indexOf(updatedWorkout);
+      if (index >= 0) {
+        await HiveManager.workoutsBox.putAt(index, updatedWorkout);
+        debugPrint('Updated workout at index $index');
+      }
+    }
+  }
 }

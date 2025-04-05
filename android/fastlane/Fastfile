@@ -26,7 +26,7 @@ platform :android do
       android_artifact_type: "APK",
       android_artifact_path: "../build/app/outputs/flutter-apk/app-release.apk",
       testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
-      release_notes: "Sync Feature 🚀: Sync Local Data With The Server",
+      release_notes: "Offline Mode Completed ✅",
     )
   
     # sh "your_script.sh"

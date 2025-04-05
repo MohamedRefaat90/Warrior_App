@@ -14,10 +14,10 @@ class WorkoutGridView extends ConsumerStatefulWidget {
   const WorkoutGridView(this.workout, {super.key});
 
   @override
-  ConsumerState<WorkoutGridView> createState() => _ExercisesGridViewState();
+  ConsumerState<WorkoutGridView> createState() => _WorkoutGridViewState();
 }
 
-class _ExercisesGridViewState extends ConsumerState<WorkoutGridView> {
+class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
   @override
   Widget build(BuildContext context) {
     ref.watch(workoutsProvider);

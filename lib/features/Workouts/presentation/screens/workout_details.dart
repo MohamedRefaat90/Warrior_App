@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
+import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/workout_gridview.dart';
@@ -60,7 +61,7 @@ class WorkoutDetails extends ConsumerWidget {
                 child: CustomBTN(
                   widget: Text("Delete"),
                   color: AppColors.primaryColor,
-                  press: () {
+                  press: () async {
                     if (workoutNotifier.newWorkout.workoutItems == null ||
                         workout.workoutItems == null) {
                       return;
@@ -76,23 +77,24 @@ class WorkoutDetails extends ConsumerWidget {
                     workout.workoutItems!.removeWhere((element) =>
                         selectedExerciseIds.contains(element.exercise.id));
 
-                    workoutNotifier.toggleSelectMode();
-
                     // Update the workout in the backend
-                    workoutNotifier.updateWorkoutSet(WorkoutSetModel(
+                    await workoutNotifier.updateWorkoutSet(WorkoutSetModel(
                       id: workout.id,
                       name: workout.name,
                       description: workout.description,
                       workoutItems: workout.workoutItems,
                     ));
+
+                    // Clear selected items from newWorkout to reset checkbox state
+                    workoutNotifier.newWorkout.workoutItems!.clear();
+
+                    // Reset selection mode
+                    workoutNotifier.toggleSelectMode();
                   },
                 ),
               )
             : null,
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: WorkoutGridView(workout),
-        ),
+        body: WorkoutGridView(workout),
       ),
     );
   }

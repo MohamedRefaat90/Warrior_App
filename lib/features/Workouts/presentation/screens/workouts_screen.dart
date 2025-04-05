@@ -1,11 +1,9 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
-import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/core/widgets/loader.dart';
-import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/empty_workoutlist.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/workouts_listview.dart';
@@ -13,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../../core/constants/routers.dart';
 
@@ -103,36 +100,19 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                   fontWeight: FontWeight.bold,
                   fontSize: 28.sp)),
         ),
-        body: ConnectivityChecker.isOnline!
-            ? workoutState.isLoading
-                ? const Loader()
-                : workoutNotifier.workoutList.isEmpty
-                    ? const EmptyWorkoutList()
-                    : WorkoutsListview(workoutNotifier.workoutList,
-                        nameController, descriptionController)
-            : ValueListenableBuilder(
-                valueListenable: HiveManager.workoutsBox.listenable(),
-                builder: (context, Box<WorkoutSetModel> box, _) {
-                  if (box.values.isEmpty) return const EmptyWorkoutList();
-
-                  final workouts = box.toMap().entries.toList()
-                    ..sort((a, b) => a.key.compareTo(b.key));
-
-                  return WorkoutsListview(
-                    workouts.map((e) => e.value).toList(),
-                    nameController,
-                    descriptionController,
-                  );
-                }));
+        body: workoutState.isLoading
+            ? const Loader()
+            : workoutNotifier.workoutList.isEmpty
+                ? const EmptyWorkoutList()
+                : WorkoutsListview(workoutNotifier.workoutList, nameController,
+                    descriptionController));
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     Future.microtask(() {
-      if (ConnectivityChecker.isOnline!) {
-        ref.read(workoutsProvider.notifier).getWorkoutSets();
-      }
+      ref.read(workoutsProvider.notifier).getWorkoutSets();
     });
   }
 }

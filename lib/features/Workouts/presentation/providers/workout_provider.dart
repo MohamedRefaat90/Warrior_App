@@ -257,21 +257,36 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   }
 
   updateWorkoutExerciseVideoPath(List<WorkoutSetModel> workoutList) async {
+    debugPrint(
+        'Updating workout exercise video paths for ${workoutList.length} workouts');
+
     // First, create a copy of all updated workouts without modifying Hive yet
     List<WorkoutSetModel> updatedWorkouts = [];
 
-    for (WorkoutSetModel workout in workoutList) {
+    for (var workout in workoutList) {
+      debugPrint(
+          'Processing workout: ${workout.name}, with ${workout.workoutItems?.length ?? 0} items');
       bool workoutModified = false;
 
       if (workout.workoutItems != null) {
-        for (WorkoutItemModel workoutItem in workout.workoutItems!) {
+        for (int i = 0; i < workout.workoutItems!.length; i++) {
+          var workoutItem = workout.workoutItems![i];
+          debugPrint(
+              'Checking exercise ${i + 1}: ${workoutItem.exercise.name}, ID: ${workoutItem.exercise.id}');
+
           final cachedExercise =
               HiveManager.exercisesBox.get(workoutItem.exercise.id);
           if (cachedExercise != null) {
+            debugPrint(
+                'Found cached exercise with video: ${cachedExercise.video}');
+
             // Only update if different from current path
             if (workoutItem.exercise.video != cachedExercise.video) {
+              debugPrint(
+                  'Updating video path from ${workoutItem.exercise.video} to ${cachedExercise.video}');
+
               // Create updated workout item
-              workoutItem = workoutItem.copyWith(
+              workout.workoutItems![i] = workoutItem.copyWith(
                   exercise: workoutItem.exercise.copyWith(
                       video: cachedExercise.video,
                       targetedMuscles: cachedExercise.targetedMuscles));

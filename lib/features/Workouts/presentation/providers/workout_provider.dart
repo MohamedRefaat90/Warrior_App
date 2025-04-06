@@ -264,27 +264,17 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     List<WorkoutSetModel> updatedWorkouts = [];
 
     for (var workout in workoutList) {
-      debugPrint(
-          'Processing workout: ${workout.name}, with ${workout.workoutItems?.length ?? 0} items');
       bool workoutModified = false;
 
       if (workout.workoutItems != null) {
         for (int i = 0; i < workout.workoutItems!.length; i++) {
           var workoutItem = workout.workoutItems![i];
-          debugPrint(
-              'Checking exercise ${i + 1}: ${workoutItem.exercise.name}, ID: ${workoutItem.exercise.id}');
 
           final cachedExercise =
               HiveManager.exercisesBox.get(workoutItem.exercise.id);
           if (cachedExercise != null) {
-            debugPrint(
-                'Found cached exercise with video: ${cachedExercise.video}');
-
             // Only update if different from current path
             if (workoutItem.exercise.video != cachedExercise.video) {
-              debugPrint(
-                  'Updating video path from ${workoutItem.exercise.video} to ${cachedExercise.video}');
-
               // Create updated workout item
               workout.workoutItems![i] = workoutItem.copyWith(
                   exercise: workoutItem.exercise.copyWith(
@@ -306,13 +296,11 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     }
 
     // After collecting all updates, now update Hive
-    debugPrint('Saving ${updatedWorkouts.length} modified workouts to Hive');
     for (var updatedWorkout in updatedWorkouts) {
       int index =
           HiveManager.workoutsBox.values.toList().indexOf(updatedWorkout);
       if (index >= 0) {
         await HiveManager.workoutsBox.putAt(index, updatedWorkout);
-        debugPrint('Updated workout at index $index');
       }
     }
   }

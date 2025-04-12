@@ -14,12 +14,8 @@
       },
       "oauth_client": [
         {
-          "client_id": "235633173373-amuvmg1hulo50do8gfl2s8f9v901mjg8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.warrior.app",
-            "certificate_hash": "ac:e5:e6:bb:28:0d:f7:c3:a7:5c:65:1a:c9:e4:bf:18:62:bc:d6:d7"
-          }
+          "client_id": "466603345246-r99b4r8056lqhgrcsagpoolmvc73pjdk.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
@@ -29,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466603345246-r99b4r8056lqhgrcsagpoolmvc73pjdk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "466603345246-91p5la38g88o8hh0jah4e4s6rfpkdd8f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Warrior"
+              }
+            }
+          ]
         }
       }
     }

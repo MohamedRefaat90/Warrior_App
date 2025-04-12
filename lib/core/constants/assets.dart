@@ -8,6 +8,8 @@ abstract class AppAssets {
   static const String loginBanar = "assets/login.jpg";
   static const String dumbbell = "assets/images/signup/dumbbell.png";
   static const String loader = "assets/animation/loader.json";
+  static const String horizontalLoader =
+      "assets/animation/horizontal_loader.json";
   static const String resetSuccess = "assets/animation/reset_success.json";
   static const String trainer = "assets/animation/Trainer.json";
   static const String muscles = "assets/images/home/Aps.png";

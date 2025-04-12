@@ -37,7 +37,7 @@ class ConnectivityChecker {
 
         // Get sync service and sync
 
-        await ref.read(syncServiceProvider).syncPendingOperations();
+        await ref.read(syncServiceProvider.notifier).syncPendingOperations();
 
         // End sync
         // ref.read(syncingProvider.notifier).state = false;

@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  // Client ID from the Google Console for Web application
+  // Use different client IDs for web vs Android
   clientId: dotenv.env['GOOGLE_WEB_CLIENT_ID'],
   scopes: [
     'email',
@@ -13,20 +14,26 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
 
 Future<String?> handleGoogleSignIn() async {
   try {
+    debugPrint('Starting Google Sign-In process...');
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
-      // User canceled the sign-in process
+      debugPrint('User canceled the sign-in process');
       return null;
     }
 
+    debugPrint('User signed in: ${googleUser.email}');
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
+    debugPrint('Authentication successful');
     final String? idToken = googleAuth.idToken;
-    final String? accessToken = googleAuth.accessToken;
 
     return idToken;
   } catch (error) {
-    print('Error during Google Sign-In: $error');
+    debugPrint('Error during Google Sign-In: $error');
+    if (error is Exception) {
+      debugPrint('Error details: ${error.toString()}');
+    }
   }
+  return null;
 }

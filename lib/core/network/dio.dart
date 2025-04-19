@@ -1,5 +1,5 @@
 import 'package:Warrior/core/constants/apis_url.dart';
-import 'package:Warrior/core/constants/secure_storage_key.dart';
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';

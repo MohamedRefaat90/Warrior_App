@@ -1,8 +1,10 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/functions/snakbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
@@ -48,7 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 CustomTextField(
                     placeholderText: "Email",
                     textEditingController: emailController,
-                    validator: (value) => emailValidator(value!)),
+                    validator: (value) => emailValidator(value!.trim())),
                 10.verticalSpace,
                 CustomTextField(
                     placeholderText: "password",
@@ -84,7 +86,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             emailController.text, passwordController.text);
                       }
                     }),
-                10.verticalSpace,
+                // 10.verticalSpace,
+                TextButton(
+                    onPressed: () {
+                      SharedPref.setBool(StorageKeys.isGuestMode, true);
+                      context.goNamed(AppRouters.muscles);
+                    },
+                    child: Text("Gust Mode")),
                 const LoginWith(),
                 10.verticalSpace,
                 const GoogleButton(),

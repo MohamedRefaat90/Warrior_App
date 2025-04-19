@@ -1,4 +1,5 @@
-import 'package:Warrior/core/constants/secure_storage_key.dart';
+import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
@@ -40,6 +41,17 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                   fontSize: 30)),
           centerTitle: true,
         ),
+        floatingActionButton: SharedPref.getBool(StorageKeys.isGuestMode)!
+            ? FloatingActionButton(
+                heroTag: 'logout',
+                onPressed: () async {
+                  context.goNamed(AppRouters.login);
+                  debugPrint('Logged out');
+                },
+                backgroundColor: Colors.red,
+                child: const Icon(Icons.logout, color: AppColors.white),
+              )
+            : null,
         body: ConnectivityChecker.isOnline!
             ? ref.watch(musclesProvider).when(
                 loading: () => Center(child: const Loader()),
@@ -52,7 +64,10 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                         widget.appendToExistingWorkoutSet,
                   );
                 },
-                error: (error, stackTrace) => RefreshWidget(musclesProvider))
+                error: (error, stackTrace) =>
+                    ref.read(musclesProvider).isRefreshing
+                        ? Center(child: const Loader())
+                        : RefreshWidget(musclesProvider))
             : ValueListenableBuilder(
                 valueListenable: HiveManager.musclesBox.listenable(),
                 builder: (context, Box<MuscleModel> box, _) {

@@ -15,9 +15,24 @@ final syncServiceProvider = StateNotifierProvider<SyncService, bool>((ref) {
 class SyncService extends StateNotifier<bool> {
   final WorkoutRepo workoutRepo;
 
-  SyncService(this.workoutRepo) : super(false); // Initialize isLoading to false
+  SyncService(this.workoutRepo) : super(false) {
+    // Initialize and check for pending operations on startup
+    _initSync();
+  }
+
 
   bool get isLoading => state;
+  // Initialize sync on app startup
+  Future<void> _initSync() async {
+    // Wait a moment for the app to fully initialize
+    await Future.delayed(const Duration(seconds: 2));
+    
+    // Check if there are pending operations and if we're online
+    if (HiveManager.pendingOpsBox.isNotEmpty && ConnectivityChecker.isOnline == true) {
+      debugPrint('Found pending operations on app startup, attempting to sync');
+      await syncPendingOperations();
+    }
+  }
 
   Future<void> syncPendingOperations() async {
     if (!ConnectivityChecker.isOnline!) return;
@@ -37,36 +52,45 @@ class SyncService extends StateNotifier<bool> {
       // Sort operations by timestamp to maintain order
       pendingOps.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
+      List<int?> successfullyProcessedIds = [];
+
       for (final op in pendingOps) {
-        if (op.entityType == 'workout') {
-          switch (op.operationType) {
-            case SyncOperationType.create:
-              final workout = op.workout!;
-              debugPrint('Creating workout: ${workout.name}');
-              await workoutRepo.createWorkoutSet(workout);
-              break;
+        try {
+          if (op.entityType == 'workout') {
+            switch (op.operationType) {
+              case SyncOperationType.create:
+                final workout = op.workout!;
+                debugPrint('Creating workout: ${workout.name}');
+                await workoutRepo.createWorkoutSet(workout);
+                break;
 
-            case SyncOperationType.update:
-              final workout = op.workout!;
-              await workoutRepo.updateWorkoutSet(workout);
-              break;
+              case SyncOperationType.update:
+                final workout = op.workout!;
+                await workoutRepo.updateWorkoutSet(workout);
+                break;
 
-            case SyncOperationType.delete:
-              if (op.id != null) {
-                await workoutRepo.deleteWorkoutSet(op.id!);
-              }
-              break;
+              case SyncOperationType.delete:
+                if (op.id != null) {
+                  await workoutRepo.deleteWorkoutSet(op.id!);
+                }
+                break;
 
-            case SyncOperationType.reorder:
-              await workoutRepo.reorderWorkoutsList(op.reorderWorkoutList!);
-              break;
+              case SyncOperationType.reorder:
+                await workoutRepo.reorderWorkoutsList(op.reorderWorkoutList!);
+                break;
+            }
+          } else if (op.entityType == 'workout_weight') {
+            await workoutRepo.updateLastWeight(
+              op.workout!.id!,
+              op.exerciseId!,
+              op.weight!,
+            );
           }
-        } else if (op.entityType == 'workout_weight') {
-          await workoutRepo.updateLastWeight(
-            op.workout!.id!,
-            op.exerciseId!,
-            op.weight!,
-          );
+          successfullyProcessedIds.add(op.id);
+        } on Exception catch (e) {
+          debugPrint('Error processing operation ${op.id}: $e');
+          // Continue with next operation instead of failing entire sync
+          continue;
         }
       }
       // Clear processed operations

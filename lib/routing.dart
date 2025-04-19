@@ -1,5 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/constants/secure_storage_key.dart';
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/services.dart';

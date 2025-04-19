@@ -108,7 +108,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   angle: 3.14 / 4,
                   child: Image.asset(
                     AppAssets.dumbbell,
-                    width: 0.4.sw,
+                    width: 0.35.sw,
                   ),
                 )
               ],

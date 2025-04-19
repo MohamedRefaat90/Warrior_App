@@ -1,11 +1,10 @@
 import 'package:Warrior/core/constants/colors.dart';
-import 'package:Warrior/core/constants/secure_storage_key.dart';
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/features/Home/data/repo/home_repo.dart';
 import 'package:Warrior/features/Home/presentation/widgets/category_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/routers.dart';
@@ -16,20 +15,15 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            heroTag: 'logout',
-            onPressed: () async {
-              await SecureStorageHandler.delete(key: StorageKeys.token);
-              context.goNamed(AppRouters.login);
-              debugPrint('Logged out');
-            },
-            backgroundColor: Colors.red,
-            child: const Icon(Icons.logout, color: AppColors.white),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'logout',
+        onPressed: () async {
+          await SecureStorageHandler.delete(key: StorageKeys.token);
+          context.goNamed(AppRouters.login);
+          debugPrint('Logged out');
+        },
+        backgroundColor: Colors.red,
+        child: const Icon(Icons.logout, color: AppColors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -46,9 +40,9 @@ class HomeScreen extends StatelessWidget {
                     childAspectRatio: 1.2,
                   ),
                   itemCount: ref.read(homeRepo).length,
-                  itemBuilder: (context, index) => CategoryCard(
-                        category: ref.read(homeRepo)[index],
-                      )),
+                  itemBuilder: (context, index) {
+                    return CategoryCard(category: ref.read(homeRepo)[index]);
+                  }),
             ),
           ],
         ),

@@ -34,7 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final ProviderStates = ref.watch(loginProvider);
     return Scaffold(
       bottomSheet: Container(
-        height: 0.56.sh,
+        height: 0.6.sh,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

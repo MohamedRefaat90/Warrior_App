@@ -33,8 +33,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final ProviderStates = ref.watch(loginProvider);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomSheet: Container(
-        height: 0.6.sh,
+        height: 0.66.sh,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -49,6 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 10.verticalSpace,
                 CustomTextField(
                     placeholderText: "Email",
+                    isObscure: false,
                     textEditingController: emailController,
                     validator: (value) => emailValidator(value!.trim())),
                 10.verticalSpace,
@@ -56,6 +58,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     placeholderText: "password",
                     textEditingController: passwordController,
                     isPassword: true,
+                    isObscure: true,
                     validator: (value) =>
                         value!.isEmpty ? "Password is required" : null),
                 Align(
@@ -92,7 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       SharedPref.setBool(StorageKeys.isGuestMode, true);
                       context.goNamed(AppRouters.muscles);
                     },
-                    child: Text("Gust Mode")),
+                    child: Text("Guest Mode")),
                 const LoginWith(),
                 10.verticalSpace,
                 const GoogleButton(),
@@ -103,7 +106,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
-      body: SafeArea(child: Image.asset(AppAssets.loginBanar)),
+      body: SafeArea(
+          child: Image.asset(
+        AppAssets.loginBanar,
+        fit: BoxFit.cover,
+      )),
     );
   }
 
@@ -118,7 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           context,
           current.errorMessage!
                   .contains("The connection errored: Failed host lookup:")
-              ? "There's a Problem With Your Internet 🛜"
+              ? "Check Your Internet Connection"
               : current.errorMessage!,
         );
       }

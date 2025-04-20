@@ -50,11 +50,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               alignment: Alignment.bottomRight,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     15.verticalSpace,
                     CustomTextField(
                         placeholderText: "Name",
                         textEditingController: nameController,
+                        isObscure: false,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Name is required';
@@ -65,11 +67,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     CustomTextField(
                         placeholderText: "Email",
                         textEditingController: emailController,
-                        validator: (value) => emailValidator(value!)),
+                        isObscure: false,
+                        validator: (value) => emailValidator(value!.trim())),
                     10.verticalSpace,
                     CustomTextField(
                       placeholderText: "password",
                       textEditingController: passwordController,
+                      isObscure: true,
                       isPassword: true,
                       onChange: (password) => ref
                           .read(signupProvider.notifier)
@@ -81,6 +85,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     10.verticalSpace,
                     CustomTextField(
                         placeholderText: "Confirm Password",
+                        isObscure: true,
                         isPassword: true,
                         validator: (value) => confirmPasswordvalidator(
                             value!, passwordController.text)),

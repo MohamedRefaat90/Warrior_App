@@ -40,6 +40,7 @@ class HomeScreen extends StatelessWidget {
                     childAspectRatio: 1.2,
                   ),
                   itemCount: ref.read(homeRepo).length,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return CategoryCard(category: ref.read(homeRepo)[index]);
                   }),

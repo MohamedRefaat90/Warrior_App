@@ -14,7 +14,7 @@ class CustomTextField extends StatefulWidget {
       {this.textEditingController,
       super.key,
       this.isPassword = false,
-      this.isObscure = false,
+      required this.isObscure,
       this.placeholderText,
       this.onChange,
       this.isTextArea = false,

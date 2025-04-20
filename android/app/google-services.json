@@ -16,6 +16,22 @@
         {
           "client_id": "466603345246-r99b4r8056lqhgrcsagpoolmvc73pjdk.apps.googleusercontent.com",
           "client_type": 3
+        },
+        {
+          "client_id": "466603345246-somegeneratedid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.warrior.app",
+            "certificate_hash": "ac:e5:e6:bb:28:0d:f7:c3:a7:5c:65:1a:c9:e4:bf:18:62:bc:d6:d7"
+          }
+        },
+        {
+          "client_id": "466603345246-anothergeneratedid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.warrior.app",
+            "certificate_hash": "15:d3:a1:c6:75:29:90:25:f3:0a:60:71:d1:ca:65:83:b6:13:5c:3e:0c:6e:5a:8a:0a:63:90:cd:85:99:61:d8"
+          }
         }
       ],
       "api_key": [

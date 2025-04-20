@@ -42,7 +42,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('Create Your Workout Set'),
+                      title: Text('Create Workout Set'),
                       content: Form(
                         key: formKey,
                         child: Column(
@@ -51,6 +51,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                             CustomTextField(
                                 placeholderText: 'Workout Name Set',
                                 textEditingController: nameController,
+                                isObscure: false,
                                 validator: (value) => value!.isEmpty
                                     ? 'workout set name is required'
                                         .capitalizeWord()
@@ -59,6 +60,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                             CustomTextField(
                                 textEditingController: descriptionController,
                                 isTextArea: true,
+                                isObscure: false,
                                 placeholderText: 'Description'),
                           ],
                         ),
@@ -78,8 +80,10 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList> {
                                       description: descriptionController.text,
                                       workoutItems: []);
                                   Navigator.of(context).pop();
-                                  context.pushNamed(AppRouters.muscles,
-                                      extra: true);
+                                  context.pushNamed(AppRouters.muscles, extra: {
+                                    "isComingFromWorkoutScreen": true,
+                                    "appendToExistingWorkoutSet": false
+                                  });
                                 }
                               },
                               child: Text('Create')),

@@ -49,11 +49,22 @@ class ExercisesScreen extends ConsumerWidget {
                 },
                 error: (error, stackTrace) =>
                     RefreshWidget(muscleExerciseProvider(muscle['id'])))
-            : ExercisesGridView(
-                exercises: HiveManager.exercisesBox.values
-                    .where((exercise) => exercise.muscleID == muscle['id'])
-                    .toList(),
-                isComingFromWorkoutScreen: isComingFromWorkoutScreen ?? false,
-              ));
+            : HiveManager.exercisesBox.isEmpty
+                ? Center(
+                    child: Text(
+                      "No exercises available offline",
+                      style: TextStyle(
+                          fontFamily: "poppins",
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : ExercisesGridView(
+                    exercises: HiveManager.exercisesBox.values
+                        .where((exercise) => exercise.muscleID == muscle['id'])
+                        .toList(),
+                    isComingFromWorkoutScreen:
+                        isComingFromWorkoutScreen ?? false,
+                  ));
   }
 }

@@ -30,9 +30,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     final TextEditingController descriptionController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         floatingActionButton: workoutNotifier.createWorkoutBtnState()
             ? CustomBTN(
-                widget: Text("Create New Workout Set"),
+                widget: Text("New Workout Set"),
                 color: AppColors.primaryColor,
                 padding: 12,
                 radius: 8,
@@ -49,6 +50,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               children: [
                                 CustomTextField(
                                     placeholderText: 'Workout Name Set',
+                                    isObscure: false,
                                     textEditingController: nameController,
                                     validator: (value) => value!.isEmpty
                                         ? 'workout set name is required'
@@ -59,6 +61,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                     textEditingController:
                                         descriptionController,
                                     isTextArea: true,
+                                    isObscure: false,
                                     placeholderText: 'Description'),
                               ],
                             ),

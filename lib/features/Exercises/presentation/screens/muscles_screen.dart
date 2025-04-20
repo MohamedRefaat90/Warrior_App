@@ -41,17 +41,19 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                   fontSize: 30)),
           centerTitle: true,
         ),
-        floatingActionButton: SharedPref.getBool(StorageKeys.isGuestMode)!
-            ? FloatingActionButton(
-                heroTag: 'logout',
-                onPressed: () async {
-                  context.goNamed(AppRouters.login);
-                  debugPrint('Logged out');
-                },
-                backgroundColor: Colors.red,
-                child: const Icon(Icons.logout, color: AppColors.white),
-              )
-            : null,
+        floatingActionButton:
+            SharedPref.getBool(StorageKeys.isGuestMode) == true
+                ? FloatingActionButton(
+                    heroTag: 'logout',
+                    onPressed: () async {
+                      context.goNamed(AppRouters.login);
+                      SharedPref.setBool(StorageKeys.isGuestMode, false);
+                      debugPrint('Logged out');
+                    },
+                    backgroundColor: Colors.red,
+                    child: const Icon(Icons.logout, color: AppColors.white),
+                  )
+                : null,
         body: ConnectivityChecker.isOnline!
             ? ref.watch(musclesProvider).when(
                 loading: () => Center(child: const Loader()),

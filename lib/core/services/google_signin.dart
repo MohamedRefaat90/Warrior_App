@@ -4,12 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   // Use different client IDs for web vs Android
-  clientId: null,
-  scopes: [
-    'email',
-    'profile',
-    'openid'
-  ],
+  clientId: dotenv.env['GOOGLE_WEB_CLIENT_ID'],
+  scopes: ['email', 'profile', 'openid'],
 );
 
 Future<String?> handleGoogleSignIn() async {

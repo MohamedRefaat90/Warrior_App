@@ -20,7 +20,6 @@ class WorkoutDetails extends ConsumerWidget {
     final workoutNotifier = ref.read(workoutsProvider.notifier);
     return PopScope(
       onPopInvokedWithResult: (result, data) {
-        debugPrint('Back from exercise screen');
         ref.watch(workoutsProvider.notifier).selectMode = false;
       },
       child: Scaffold(
@@ -95,10 +94,7 @@ class WorkoutDetails extends ConsumerWidget {
                 ),
               )
             : null,
-        body: Padding(
-          padding: EdgeInsets.only(bottom: 0.1.h),
-          child: WorkoutGridView(workout),
-        ),
+        body: WorkoutGridView(workout),
       ),
     );
   }

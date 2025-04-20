@@ -38,9 +38,14 @@ class LoginNotifier extends StateNotifier<ProviderStates> {
       user = await _authRepo.login(email.toLowerCase().trim(), password);
       state = ProviderStates(isSuccess: true);
     } on DioException catch (e) {
-      state = ProviderStates(errorMessage: e.response!.data["message"]);
+      // Safely extract error message from response
+      final errorMsg = e.response?.data?["message"] as String? ??
+          e.message ??
+          'Network error occurred';
+      state = ProviderStates(errorMessage: errorMsg);
+      print('Error: $errorMsg');
     } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
+      state = ProviderStates(errorMessage: 'Sign-in failed: ${e.toString()}');
     }
   }
 }

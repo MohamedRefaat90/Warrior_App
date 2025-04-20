@@ -86,13 +86,15 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       CustomTextField(
-                                          textEditingController:
-                                              nameController),
+                                        textEditingController: nameController,
+                                        isObscure: false,
+                                      ),
                                       SizedBox(height: 10.h),
                                       CustomTextField(
                                           textEditingController:
                                               descriptionController,
                                           isTextArea: true,
+                                          isObscure: false,
                                           placeholderText: 'Description'),
                                     ],
                                   ),

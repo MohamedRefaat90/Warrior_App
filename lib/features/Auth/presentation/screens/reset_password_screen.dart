@@ -51,6 +51,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               CustomTextField(
                   textEditingController: passwordController,
                   placeholderText: 'New Password',
+                  isObscure: true,
                   onChange: (password) => ref
                       .read(resetPasswordProvider.notifier)
                       .passwordValidator(password),
@@ -64,6 +65,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   validator: (value) =>
                       confirmPasswordvalidator(value!, passwordController.text),
                   placeholderText: 'Confirm Password',
+                  isObscure: true,
                   isPassword: true),
               20.verticalSpace,
               CustomBTN(

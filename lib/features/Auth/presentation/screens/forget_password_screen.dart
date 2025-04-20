@@ -42,7 +42,8 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                 CustomTextField(
                     placeholderText: "Email",
                     textEditingController: emailController,
-                    validator: (value) => emailValidator(value!)),
+                    isObscure: false,
+                    validator: (value) => emailValidator(value!.trim())),
                 30.verticalSpace,
                 CustomBTN(
                     widget: ProviderStates.isLoading

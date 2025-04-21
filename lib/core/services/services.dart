@@ -5,13 +5,22 @@ import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/firebase_options.dart';
 import 'package:Warrior/routing.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class AppServices {
   static late String? initialLocation;
   static Future<void> init() async {
     await SharedPref.init();
     await DioHandler.initDio();
-
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
     await HiveManager.init();
     await ConnectivityChecker.checkConnectivity();
     initialLocation = await RoutersManager.routingChecker();

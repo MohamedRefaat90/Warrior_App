@@ -50,6 +50,7 @@ class DefaultFirebaseOptions {
     projectId: 'warrior-dd0f2',
     authDomain: 'warrior-dd0f2.firebaseapp.com',
     storageBucket: 'warrior-dd0f2.firebasestorage.app',
+    measurementId: 'G-91E50EVEXX',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -66,6 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '466603345246',
     projectId: 'warrior-dd0f2',
     storageBucket: 'warrior-dd0f2.firebasestorage.app',
+    iosClientId: '466603345246-91p5la38g88o8hh0jah4e4s6rfpkdd8f.apps.googleusercontent.com',
     iosBundleId: 'com.Warrior',
   );
 
@@ -76,6 +78,7 @@ class DefaultFirebaseOptions {
     projectId: 'warrior-dd0f2',
     authDomain: 'warrior-dd0f2.firebaseapp.com',
     storageBucket: 'warrior-dd0f2.firebasestorage.app',
+    measurementId: 'G-GF0Q84V5ZD',
   );
 
 }

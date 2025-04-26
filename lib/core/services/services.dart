@@ -7,10 +7,15 @@ import 'package:Warrior/routing.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 abstract class AppServices {
   static late String? initialLocation;
   static Future<void> init() async {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     await SharedPref.init();
     await DioHandler.initDio();
     FlutterError.onError = (errorDetails) {

@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:466603345246:android:a4d0161c402a1bd30a3bcf",
+        "mobilesdk_app_id": "1:466603345246:android:810666c6db8b75510a3bcf",
         "android_client_info": {
-          "package_name": "com.warrior.app"
+          "package_name": "com.warrior90.app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "466603345246-fma727b53sicchn02kb752gu2ior82fe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.warrior90.app",
+            "certificate_hash": "fc50a8b4597510c7916410d94a5e1acad328f6cd"
+          }
+        },
         {
           "client_id": "466603345246-r99b4r8056lqhgrcsagpoolmvc73pjdk.apps.googleusercontent.com",
           "client_type": 3

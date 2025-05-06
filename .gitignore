@@ -44,5 +44,5 @@ app.*.map.json
 
 .env
 
-**/android/key.properties
-**/android/app/*.jks
+# **/android/key.properties
+# **/android/app/*.jks

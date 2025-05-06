@@ -1,4 +1,4 @@
-package com.warrior.app
+package com.warrior90.app
 
 import io.flutter.embedding.android.FlutterActivity
 

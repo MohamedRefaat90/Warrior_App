@@ -1,0 +1,10 @@
+# Firebase Configuration Example
+# Copy this file to .env and fill in your actual values
+
+FIREBASE_CLI_TOKEN=1//03C3OnT6AFA1JCgYIARAAGAMSNwF-L9IrTIZcU7r-TBMH-1ElGgZGbkpuoIGuY-tSZnQMLiJbG9xnfY8Zjku0LvxSskJaxHPxa5w
+
+# Instructions:
+# 1. Create a .env file in the project root
+# 2. Copy the FIREBASE_CLI_TOKEN line above to your .env file
+# 3. Replace with your actual Firebase CLI token if different
+# 4. Make sure .env is in your .gitignore file 

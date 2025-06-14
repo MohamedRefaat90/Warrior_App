@@ -11,6 +11,10 @@
 #
 
 require 'fileutils'
+require 'dotenv'
+
+# Load environment variables from .env file if it exists
+Dotenv.load if File.exist?('../.env')
 
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
@@ -20,7 +24,7 @@ default_platform(:android)
 platform :android do
   desc "Lane For Firebase Distribution"
   lane :fbd do
-    # Verify environment variables
+    # Verify Firebase token
     firebase_token = ENV["FIREBASE_CLI_TOKEN"]
     if firebase_token.nil? || firebase_token.empty?
       UI.user_error!("FIREBASE_CLI_TOKEN environment variable is not set or empty")
@@ -28,122 +32,41 @@ platform :android do
     
     # Clean and build
     sh "flutter clean"
-    
-    # Clear Gradle caches to resolve Kotlin version conflicts
-    UI.message("Clearing Gradle caches...")
-    begin
-      sh "cd android && ./gradlew clean --no-daemon"
-    rescue => exception
-      UI.important("Gradle clean failed, continuing anyway: #{exception.message}")
-    end
-    
     sh "flutter build apk --release"
     
-    # Debug: Show current directory and build output
-    UI.message("Current working directory: #{Dir.pwd}")
-    UI.message("Build output structure:")
-    sh "find .. -name 'build' -type d 2>/dev/null | head -5 || echo 'No build directories found'"
-    UI.message("Looking for APK files...")
-    sh "find .. -name '*.apk' -type f 2>/dev/null || echo 'No APK found with find command'"
-    
-    # Additional debugging for file system
-    UI.message("Directory listing around current location:")
-    sh "ls -la .. 2>/dev/null || echo 'Cannot list parent directory'"
-    sh "ls -la ../build 2>/dev/null || echo 'No build directory in parent'"
-    sh "ls -la ../../build 2>/dev/null || echo 'No build directory in grandparent'"
-    
-    # Verify APK exists
-    apk_path = "../build/app/outputs/flutter-apk/app-release.apk"
-    
-    # Try different possible paths since the build might be in different locations
+    # Find APK
     possible_paths = [
       "../build/app/outputs/flutter-apk/app-release.apk",
-      "../../build/app/outputs/flutter-apk/app-release.apk",
-      File.expand_path("../build/app/outputs/flutter-apk/app-release.apk"),
-      File.expand_path("../../build/app/outputs/flutter-apk/app-release.apk")
+      "../../build/app/outputs/flutter-apk/app-release.apk"
     ]
     
     apk_path = possible_paths.find { |path| File.exist?(path) }
-    
     unless apk_path
-      UI.error("APK file not found in any of these locations:")
-      possible_paths.each { |path| UI.error("  - #{path}") }
-      UI.user_error!("APK build might have failed or APK is in an unexpected location")
+      UI.user_error!("APK file not found. Build may have failed.")
     end
     
-    # Convert to absolute path for Firebase plugin
-    apk_absolute_path = File.expand_path(apk_path)
-    UI.message("Found APK at: #{apk_path}")
-    UI.message("Absolute APK path: #{apk_absolute_path}")
-    
-    # Verify the absolute path exists
-    unless File.exist?(apk_absolute_path)
-      UI.user_error!("APK file not found at absolute path: #{apk_absolute_path}")
-    end
-    
-    # Copy APK to current directory as fallback for Firebase plugin
+    # Copy APK to current directory for Firebase plugin
     local_apk_path = "app-release.apk"
-    UI.message("Copying APK to current directory as fallback...")
-    FileUtils.cp(apk_absolute_path, local_apk_path)
-    
-    # Use the local copy for Firebase distribution
-    final_apk_path = File.expand_path(local_apk_path)
-    UI.message("Using APK path for Firebase: #{final_apk_path}")
-    
-    # Get APK size for logging
-    apk_size = File.size(final_apk_path) / (1024.0 * 1024.0)
-    UI.message("APK size: #{apk_size.round(2)} MB")
+    FileUtils.cp(File.expand_path(apk_path), local_apk_path)
     
     begin
       firebase_app_distribution(
         app: "1:466603345246:android:a4d0161c402a1bd30a3bcf",
-        firebase_cli_token: firebase_token,
+        firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
         android_artifact_type: "APK",
-        apk_path: final_apk_path,
+        apk_path: File.expand_path(local_apk_path),
         testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
-        release_notes: "Automated release from CI/CD pipeline - Build #{Time.now.strftime('%Y%m%d-%H%M')}",
-        debug: true
+        release_notes: "Automated release from CI/CD pipeline - Build #{Time.now.strftime('%Y%m%d-%H%M')}"
       )
       UI.success("🎉 Firebase App Distribution upload successful!")
     rescue => exception
       UI.error("❌ Firebase App Distribution failed: #{exception.message}")
-      UI.important("Please check:")
-      UI.important("1. Firebase App Distribution is enabled in your Firebase console")
-      UI.important("2. The app ID '1:466603345246:android:a4d0161c402a1bd30a3bcf' exists in your project")
-      UI.important("3. The service account has 'Firebase App Distribution Admin' role")
-      UI.important("4. The FIREBASE_CLI_TOKEN has proper permissions")
+      UI.important("Check: 1) App Distribution enabled 2) Token permissions 3) App registered")
       raise exception
     ensure
-      # Clean up the copied APK file
-      if File.exist?(local_apk_path)
-        File.delete(local_apk_path)
-        UI.message("Cleaned up temporary APK file")
-      end
+      # Clean up
+      File.delete(local_apk_path) if File.exist?(local_apk_path)
     end
-  end
-
-  desc "Get version name from build.gradle"
-  private_lane :get_version_name do
-    # Try different possible paths for build.gradle
-    possible_gradle_paths = [
-      "app/build.gradle",
-      "../app/build.gradle",
-      File.expand_path("../app/build.gradle"),
-      File.expand_path("../../android/app/build.gradle")
-    ]
-    
-    gradle_path = possible_gradle_paths.find { |path| File.exist?(path) }
-    
-    unless gradle_path
-      UI.error("build.gradle not found in any of these locations:")
-      possible_gradle_paths.each { |path| UI.error("  - #{path}") }
-      return "unknown"
-    end
-    
-    UI.message("Reading version from: #{gradle_path}")
-    gradle_file = File.read(gradle_path)
-    version_match = gradle_file.match(/versionName\s*[=:]\s*"([^"]+)"/)
-    version_match ? version_match[1] : "unknown"
   end
 
   desc "Build release APK only"
@@ -151,22 +74,17 @@ platform :android do
     sh "flutter clean"
     sh "flutter build apk --release"
     
-    # Try different possible paths
     possible_paths = [
       "../build/app/outputs/flutter-apk/app-release.apk",
-      "../../build/app/outputs/flutter-apk/app-release.apk",
-      File.expand_path("../build/app/outputs/flutter-apk/app-release.apk"),
-      File.expand_path("../../build/app/outputs/flutter-apk/app-release.apk")
+      "../../build/app/outputs/flutter-apk/app-release.apk"
     ]
     
     apk_path = possible_paths.find { |path| File.exist?(path) }
     
     if apk_path
       apk_size = File.size(apk_path) / (1024.0 * 1024.0)
-      UI.success("✅ APK built successfully: #{apk_size.round(2)} MB at #{apk_path}")
+      UI.success("✅ APK built successfully: #{apk_size.round(2)} MB")
     else
-      UI.error("APK file not found in any of these locations:")
-      possible_paths.each { |path| UI.error("  - #{path}") }
       UI.user_error!("❌ APK build failed - file not found")
     end
   end

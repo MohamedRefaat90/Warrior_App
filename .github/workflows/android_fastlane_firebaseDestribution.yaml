@@ -1,13 +1,17 @@
 name: Android Fastlane With Firebase App Distribution Workflow
 
 on:
-    push:
-        branches:
-            - main
+  workflow_run:
+    workflows: ["Tests & Quality Checks"]
+    types:
+      - completed
+    branches:
+      - main
 
 jobs:
   Distribute_To_Firebase:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - name: Checkout My Repo Code
       uses: actions/checkout@v4

@@ -1,14 +1,5 @@
 import 'package:Warrior/core/constants/assets.dart';
 
-class OnboardingItem {
-  final String title;
-  final String description;
-  final String image;
-
-  OnboardingItem(
-      {required this.title, required this.description, required this.image});
-}
-
 List<OnboardingItem> onboardingItems = [
   OnboardingItem(
       title: 'Target Every Muscle',
@@ -26,3 +17,12 @@ List<OnboardingItem> onboardingItems = [
           'Take control of your training with a personalized approach to achieving your best self.',
       image: AppAssets.onboarding3),
 ];
+
+class OnboardingItem {
+  final String title;
+  final String description;
+  final String image;
+
+  OnboardingItem(
+      {required this.title, required this.description, required this.image});
+}

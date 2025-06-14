@@ -3,6 +3,8 @@ import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/core/widgets/refresh_widget.dart';
@@ -46,9 +48,10 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                 ? FloatingActionButton(
                     heroTag: 'logout',
                     onPressed: () async {
-                      context.goNamed(AppRouters.login);
-                      SharedPref.setBool(StorageKeys.isGuestMode, false);
-                      debugPrint('Logged out');
+                      await SecureStorageHandler.delete(key: StorageKeys.token);
+                      AppLogger.info(
+                          'User logged out from muscles screen', 'MUSCLES');
+                      context.pushReplacementNamed(AppRouters.login);
                     },
                     backgroundColor: Colors.red,
                     child: const Icon(Icons.logout, color: AppColors.white),
@@ -94,18 +97,14 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final router = GoRouter.of(context);
-      debugPrint('Current Route: ${router.state.matchedLocation}');
-      debugPrint(ConnectivityChecker.isOnline!.toString());
-      if (router.state.matchedLocation == AppRouters.muscles &&
-          (widget.isComingFromWorkoutScreen == true) &&
-          (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
-              SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
-        debugPrint('Showing workout dialog...');
+      AppLogger.debug(
+          'Current Route: ${router.state.matchedLocation}', 'MUSCLES');
+      AppLogger.debug('Is Online: ${ConnectivityChecker.isOnline}', 'MUSCLES');
+      if (router.state.matchedLocation == "/muscles" &&
+          ConnectivityChecker.isOnline!) {
+        AppLogger.info('Showing workout dialog...', 'MUSCLES');
         showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => WorkoutDialog(),
-        );
+            context: context, builder: (context) => const WorkoutDialog());
       }
     });
   }

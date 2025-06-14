@@ -1,6 +1,7 @@
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oktoast/oktoast.dart';
 
 final syncServiceProvider = StateNotifierProvider<SyncService, bool>((ref) {
-  final workout_repo = ref.read(workoutRepo);
-  return SyncService(workout_repo);
+  final workoutRepository = ref.read(workoutRepo);
+  return SyncService(workoutRepository);
 });
 
 class SyncService extends StateNotifier<bool> {
@@ -20,20 +21,7 @@ class SyncService extends StateNotifier<bool> {
     _initSync();
   }
 
-
   bool get isLoading => state;
-  // Initialize sync on app startup
-  Future<void> _initSync() async {
-    // Wait a moment for the app to fully initialize
-    await Future.delayed(const Duration(seconds: 2));
-    
-    // Check if there are pending operations and if we're online
-    if (HiveManager.pendingOpsBox.isNotEmpty && ConnectivityChecker.isOnline == true) {
-      debugPrint('Found pending operations on app startup, attempting to sync');
-      await syncPendingOperations();
-    }
-  }
-
   Future<void> syncPendingOperations() async {
     if (!ConnectivityChecker.isOnline!) return;
     try {
@@ -41,7 +29,7 @@ class SyncService extends StateNotifier<bool> {
       state = true; // Set loading to true
       final List<PendingOperation> pendingOps =
           HiveManager.pendingOpsBox.values.toList();
-      debugPrint('Found ${pendingOps.length} pending operations');
+      AppLogger.info('Found ${pendingOps.length} pending operations', 'SYNC');
 
       // Skip sync if no operations
       if (pendingOps.isEmpty) {
@@ -59,9 +47,11 @@ class SyncService extends StateNotifier<bool> {
           if (op.entityType == 'workout') {
             switch (op.operationType) {
               case SyncOperationType.create:
-                final workout = op.workout!;
-                debugPrint('Creating workout: ${workout.name}');
-                await workoutRepo.createWorkoutSet(workout);
+                if (op.workout != null) {
+                  AppLogger.info(
+                      'Creating workout: ${op.workout!.name}', 'SYNC');
+                  await workoutRepo.createWorkoutSet(op.workout!);
+                }
                 break;
 
               case SyncOperationType.update:
@@ -88,7 +78,7 @@ class SyncService extends StateNotifier<bool> {
           }
           successfullyProcessedIds.add(op.id);
         } on Exception catch (e) {
-          debugPrint('Error processing operation ${op.id}: $e');
+          AppLogger.error('Error processing operation ${op.id}', 'SYNC', e);
           // Continue with next operation instead of failing entire sync
           continue;
         }
@@ -103,11 +93,26 @@ class SyncService extends StateNotifier<bool> {
           textStyle: const TextStyle(
               fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500));
       state = false; // Set loading to false
-      debugPrint('All pending operations synced with server');
+      AppLogger.info('All pending operations synced with server', 'SYNC');
     } catch (e) {
       await HiveManager.clearPendingOperations();
-      debugPrint('Error during sync: $e');
+      AppLogger.error('Error during sync', 'SYNC', e);
       state = false; // Set loading to false on error too
+    }
+  }
+
+  // Initialize sync on app startup
+  Future<void> _initSync() async {
+    // Wait a moment for the app to fully initialize
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Check if there are pending operations and if we're online
+    if (HiveManager.pendingOpsBox.isNotEmpty &&
+        ConnectivityChecker.isOnline == true) {
+      AppLogger.info(
+          'Found pending operations on app startup, attempting to sync',
+          'SYNC');
+      await syncPendingOperations();
     }
   }
 }

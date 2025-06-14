@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/routers.dart';
+import '../../../../core/services/logger.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,8 +20,8 @@ class HomeScreen extends StatelessWidget {
         heroTag: 'logout',
         onPressed: () async {
           await SecureStorageHandler.delete(key: StorageKeys.token);
-          context.goNamed(AppRouters.login);
-          debugPrint('Logged out');
+          AppLogger.info('User logged out from home screen', 'HOME');
+          context.pushReplacementNamed(AppRouters.login);
         },
         backgroundColor: Colors.red,
         child: const Icon(Icons.logout, color: AppColors.white),

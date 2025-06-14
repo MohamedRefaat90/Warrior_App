@@ -1,8 +1,8 @@
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
-import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveManager {
@@ -10,6 +10,25 @@ class HiveManager {
   static late Box<MuscleModel> musclesBox;
   static late Box<WorkoutSetModel> workoutsBox;
   static late Box<PendingOperation> pendingOpsBox;
+
+  // Update or add this method to ensure operations are properly stored
+  static Future<void> addPendingOperation(PendingOperation operation) async {
+    await pendingOpsBox.add(operation);
+    AppLogger.debug(
+        'Added pending operation: ${operation.operationType}, total count: ${pendingOpsBox.length}',
+        'HIVE');
+  }
+
+  // Clear pending operations
+  static Future<void> clearPendingOperations() async {
+    await pendingOpsBox.clear();
+  }
+
+  static List<PendingOperation> getPendingOperations() {
+    AppLogger.debug(
+        'Getting pending operations, count: ${pendingOpsBox.length}', 'HIVE');
+    return pendingOpsBox.values.toList();
+  }
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -34,24 +53,7 @@ class HiveManager {
         await box.put(i, data[i]);
       }
     } catch (e) {
-      debugPrint('Failed to save data to Hive: $e');
+      AppLogger.error('Failed to save data to Hive', 'HIVE', e);
     }
-  }
-
-  // Update or add this method to ensure operations are properly stored
-  static Future<void> addPendingOperation(PendingOperation operation) async {
-    await pendingOpsBox.add(operation);
-    debugPrint(
-        'Added pending operation: ${operation.operationType}, total count: ${pendingOpsBox.length}');
-  }
-
-  static List<PendingOperation> getPendingOperations() {
-    debugPrint('Getting pending operations, count: ${pendingOpsBox.length}');
-    return pendingOpsBox.values.toList();
-  }
-
-  // Clear pending operations
-  static Future<void> clearPendingOperations() async {
-    await pendingOpsBox.clear();
   }
 }

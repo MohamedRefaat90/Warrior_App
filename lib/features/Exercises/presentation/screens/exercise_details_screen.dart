@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,12 +19,17 @@ class ExerciseDetailsScreen extends StatefulWidget {
 }
 
 class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
-  late CachedVideoPlayerPlusController _controller;
+  CachedVideoPlayerPlusController? _controller;
+  bool _isVideoInitialized = false;
+  bool _hasVideoError = false;
+  String? _videoErrorMessage;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(widget.exercise.name),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -33,32 +39,36 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
               Container(
                 width: double.infinity,
                 height: 200.h,
-                foregroundDecoration: BoxDecoration(
-                    border: Border.all(color: AppColors.black, width: 3),
-                    borderRadius: BorderRadius.circular(10)),
-                child: _controller.value.isInitialized
-                    ? AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: CachedVideoPlayerPlus(_controller),
-                      )
-                    : const CustomLoadingWidget(),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.black, width: 3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: _buildVideoWidget(),
+                ),
               ),
               10.verticalSpace,
-              Text(widget.exercise.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontFamily: "Poppins")),
-              40.verticalSpace,
-              CachedNetworkImage(
-                imageUrl: widget.exercise.targetedMuscles,
-                width: 200.w,
-                alignment: Alignment.center,
-                placeholder: (context, url) => const CustomLoadingWidget(),
-                errorWidget: (context, url, error) =>
-                    Image.file(File(widget.exercise.targetedMuscles)),
+              Text(
+                widget.exercise.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              const Text("Targeted Muscles"),
+              40.verticalSpace,
+              _buildTargetedMusclesImage(),
+              const Text(
+                "Targeted Muscles",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               10.verticalSpace,
             ],
           ),
@@ -69,7 +79,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -79,35 +89,205 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     _initializeVideoPlayer();
   }
 
+  Widget _buildTargetedMusclesImage() {
+    return CachedNetworkImage(
+      imageUrl: widget.exercise.targetedMuscles,
+      width: 200.w,
+      alignment: Alignment.center,
+      placeholder: (context, url) => const CustomLoadingWidget(),
+      errorWidget: (context, url, error) {
+        AppLogger.warning(
+          'Failed to load targeted muscles image from network: $url',
+          'EXERCISE_DETAILS',
+          error,
+        );
+
+        // Try to load from local file if network fails
+        try {
+          return Image.file(
+            File(widget.exercise.targetedMuscles),
+            width: 200.w,
+            errorBuilder: (context, error, stackTrace) {
+              AppLogger.error(
+                'Failed to load targeted muscles image from file',
+                'EXERCISE_DETAILS',
+                error,
+                stackTrace,
+              );
+              return Container(
+                width: 200.w,
+                height: 150.h,
+                color: Colors.grey[200],
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.image_not_supported,
+                        size: 48, color: Colors.grey),
+                    SizedBox(height: 8),
+                    Text('Image not available'),
+                  ],
+                ),
+              );
+            },
+          );
+        } catch (e) {
+          return Container(
+            width: 200.w,
+            height: 150.h,
+            color: Colors.grey[200],
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.image_not_supported, size: 48, color: Colors.grey),
+                SizedBox(height: 8),
+                Text('Image not available'),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildVideoWidget() {
+    if (_hasVideoError) {
+      return Container(
+        color: Colors.grey[200],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 8),
+            const Text('Video Error'),
+            if (_videoErrorMessage != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                _videoErrorMessage!,
+                style: const TextStyle(fontSize: 12),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ],
+        ),
+      );
+    }
+
+    if (!_isVideoInitialized || _controller == null) {
+      return const CustomLoadingWidget();
+    }
+
+    if (_controller!.value.isInitialized) {
+      return AspectRatio(
+        aspectRatio: _controller!.value.aspectRatio,
+        child: CachedVideoPlayerPlus(_controller!),
+      );
+    }
+
+    return const CustomLoadingWidget();
+  }
+
+  void _initializeLocalVideo() {
+    try {
+      final file = File(widget.exercise.video);
+
+      _controller = CachedVideoPlayerPlusController.file(
+        file,
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      );
+
+      _controller!.initialize().then((_) {
+        if (mounted) {
+          setState(() {
+            _isVideoInitialized = true;
+          });
+          _controller!.setVolume(0);
+          _controller!.play();
+          _controller!.setLooping(true);
+          AppLogger.info(
+              'Local video initialized successfully', 'EXERCISE_DETAILS');
+        }
+      }).catchError((error) {
+        AppLogger.error(
+            'Local video initialization failed', 'EXERCISE_DETAILS', error);
+        if (mounted) {
+          setState(() {
+            _hasVideoError = true;
+            _videoErrorMessage = 'Video not available';
+          });
+        }
+      });
+    } catch (e, stackTrace) {
+      AppLogger.error(
+          'Local video setup failed', 'EXERCISE_DETAILS', e, stackTrace);
+      if (mounted) {
+        setState(() {
+          _hasVideoError = true;
+          _videoErrorMessage = 'Video file error';
+        });
+      }
+    }
+  }
+
+  void _initializeNetworkVideo() {
+    try {
+      final uri = Uri.tryParse(widget.exercise.video);
+      if (uri == null) {
+        throw Exception('Invalid video URL: ${widget.exercise.video}');
+      }
+
+      _controller = CachedVideoPlayerPlusController.networkUrl(
+        uri,
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      );
+
+      _controller!.initialize().then((_) {
+        if (mounted) {
+          setState(() {
+            _isVideoInitialized = true;
+          });
+          _controller!.setVolume(0);
+          _controller!.play();
+          _controller!.setLooping(true);
+          AppLogger.info(
+              'Network video initialized successfully', 'EXERCISE_DETAILS');
+        }
+      }).catchError((error) {
+        AppLogger.error(
+            'Network video initialization failed', 'EXERCISE_DETAILS', error);
+        if (mounted) {
+          // Try local video as fallback
+          _initializeLocalVideo();
+        }
+      });
+    } catch (e, stackTrace) {
+      AppLogger.error(
+          'Network video setup failed', 'EXERCISE_DETAILS', e, stackTrace);
+      _initializeLocalVideo();
+    }
+  }
+
   void _initializeVideoPlayer() {
     try {
-      if (ConnectivityChecker.isOnline!) {
-        _controller = CachedVideoPlayerPlusController.networkUrl(
-            Uri.parse(widget.exercise.video),
-            videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true))
-          ..initialize().then((_) {
-            setState(() {});
-            _controller.setVolume(0);
-            _controller.play();
-            _controller.setLooping(true);
-          }).catchError((error) {
-            debugPrint("Video URL initialization error: $error");
-          });
-      } else {
-        _controller = CachedVideoPlayerPlusController.file(
-            File(widget.exercise.video),
-            videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true))
-          ..initialize().then((_) {
-            setState(() {});
-            _controller.setVolume(0);
-            _controller.play();
-            _controller.setLooping(true);
-          }).catchError((error) {
-            debugPrint("Video File initialization error: $error");
-          });
+      final isOnline = ConnectivityChecker.isOnline;
+
+      if (isOnline == null) {
+        AppLogger.warning(
+            'Connectivity status unknown, attempting network video',
+            'EXERCISE_DETAILS');
       }
-    } catch (e) {
-      debugPrint("Exception in video initialization: $e");
+
+      if (isOnline == true || isOnline == null) {
+        _initializeNetworkVideo();
+      } else {
+        _initializeLocalVideo();
+      }
+    } catch (e, stackTrace) {
+      AppLogger.error('Exception in video initialization', 'EXERCISE_DETAILS',
+          e, stackTrace);
+      setState(() {
+        _hasVideoError = true;
+        _videoErrorMessage = 'Failed to initialize video';
+      });
     }
   }
 }

@@ -1,0 +1,37 @@
+# Test configuration for Warrior app
+test_settings:
+  unit_test_timeout: 30s
+  widget_test_timeout: 60s
+  integration_test_timeout: 300s
+  
+  coverage:
+    enabled: true
+    minimum_coverage: 80
+    exclude_patterns:
+      - "**/*.g.dart"
+      - "**/*.freezed.dart"
+      - "**/generated_plugin_registrant.dart"
+      - "lib/main.dart"
+
+test_data:
+  users:
+    valid_user:
+      email: "test@example.com"
+      password: "password123"
+      username: "testuser"
+    
+    invalid_user:
+      email: "invalid-email"
+      password: "123"
+      username: "a"
+
+execution:
+  parallel_workers: 4
+  shuffle_tests: true
+  repeat_failed_tests: 3
+
+performance:
+  app_startup_time_ms: 5000
+  widget_render_time_ms: 100
+  network_request_timeout_ms: 30000
+  memory_usage_mb: 512 

@@ -1,4 +1,5 @@
 import 'package:Warrior/core/network/provider_states.dart';
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,39 +17,108 @@ class ResetPasswordNotifier extends StateNotifier<ProviderStates> {
 
   ResetPasswordNotifier(this._authRepo) : super(ProviderStates());
 
+  void clearError() {
+    if (state.errorMessage != null) {
+      state = ProviderStates();
+    }
+  }
+
+  void passwordValidator(String password) {
+    try {
+      checkLengthOfPassword(password);
+      checkPasswordContainUpperChar(password);
+      checkPasswordContainLowerChar(password);
+      checkPasswordContainSpecialChar(password);
+      checkPasswordContainNum(password);
+      state = ProviderStates();
+    } catch (e) {
+      AppLogger.warning('Password validation failed in reset', 'AUTH', e);
+      state = ProviderStates(errorMessage: 'Password validation failed');
+    }
+  }
+
   Future<void> resendOTP(String email) async {
+    // Validate input
+    if (email.trim().isEmpty) {
+      state = ProviderStates(errorMessage: 'Email is required');
+      AppLogger.warning('OTP resend attempted with empty email', 'AUTH');
+      return;
+    }
+
     state = ProviderStates(isLoading: true);
     try {
       await _authRepo.forgetPassword(email.toLowerCase().trim());
-      state = ProviderStates();
+      state = ProviderStates(isSuccess: true);
+      AppLogger.info(
+          'OTP resent for password reset: ${email.toLowerCase().trim()}',
+          'AUTH');
     } on DioException catch (e) {
-      state = ProviderStates(errorMessage: e.response!.data["message"]);
+      // Safely extract error message
+      final errorMsg = e.response?.data?["message"] as String? ??
+          e.message ??
+          'Failed to resend OTP';
+      state = ProviderStates(errorMessage: errorMsg);
+      AppLogger.error(
+          'OTP resend failed for: ${email.toLowerCase().trim()}', 'AUTH', e);
     } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
+      final errorMessage = 'Failed to resend OTP: ${e.toString()}';
+      state = ProviderStates(errorMessage: errorMessage);
+      AppLogger.error('OTP resend unexpected error', 'AUTH', e);
     }
   }
 
-  Future<void> resetPassword(
-      {required String email, required String password}) async {
+  Future<void> resetPassword({
+    required String email,
+    required String password,
+  }) async {
+    // Validate inputs
+    if (email.trim().isEmpty || password.isEmpty) {
+      state = ProviderStates(errorMessage: 'Email and password are required');
+      AppLogger.warning('Password reset attempted with missing fields', 'AUTH');
+      return;
+    }
+
+    // Basic password validation
+    if (password.length < 6) {
+      state = ProviderStates(
+          errorMessage: 'Password must be at least 6 characters');
+      AppLogger.warning('Password reset attempted with weak password', 'AUTH');
+      return;
+    }
+
     state = ProviderStates(isLoading: true);
     try {
       await _authRepo.resetPassword(
-          email: email.toLowerCase().trim(), password: password);
+        email: email.toLowerCase().trim(),
+        password: password,
+      );
       state = ProviderStates(isSuccess: true);
+      AppLogger.info(
+          'Password reset successful for: ${email.toLowerCase().trim()}',
+          'AUTH');
     } on DioException catch (e) {
-      state = ProviderStates(errorMessage: e.response!.data["message"]);
+      // Safely extract error message
+      final errorMsg = e.response?.data?["message"] as String? ??
+          e.message ??
+          'Password reset failed';
+      state = ProviderStates(errorMessage: errorMsg);
+      AppLogger.error(
+          'Password reset failed for: ${email.toLowerCase().trim()}',
+          'AUTH',
+          e);
     } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
+      final errorMessage = 'Password reset failed: ${e.toString()}';
+      state = ProviderStates(errorMessage: errorMessage);
+      AppLogger.error('Password reset unexpected error', 'AUTH', e);
     }
   }
 
-  passwordValidator(String password) {
-    checkLengthOfPassword(password);
-    checkPasswordContainUpperChar(password);
-    checkPasswordContainLowerChar(password);
-    checkPasswordContainSpecialChar(password);
-    checkPasswordContainNum(password);
-    state = ProviderStates();
+  bool validateAllFields() {
+    if (isPassMatchConfirmPass && isVaildEmail && validatePassword()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   bool validatePassword() {
@@ -57,14 +127,6 @@ class ResetPasswordNotifier extends StateNotifier<ProviderStates> {
         isContainLowerChar &&
         isContainNum &&
         isContainSpecailChar) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool validateAllFields() {
-    if (isPassMatchConfirmPass && isVaildEmail && validatePassword()) {
       return true;
     } else {
       return false;

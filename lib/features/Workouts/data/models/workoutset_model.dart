@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:hive/hive.dart';
-
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:hive/hive.dart';
 
 part 'workoutset_model.g.dart';
 
@@ -24,24 +24,39 @@ class WorkoutItemModel {
       WorkoutItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory WorkoutItemModel.fromMap(Map<String, dynamic> map) {
-    return WorkoutItemModel(
-      exercise: map['exercise'] is ExerciseModel
-          ? map['exercise'] as ExerciseModel
-          : ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>),
-      lastWeight: double.parse(map['last_weight'].toString()),
-    );
+    try {
+      // Safely parse exercise
+      ExerciseModel exercise;
+      if (map['exercise'] is ExerciseModel) {
+        exercise = map['exercise'] as ExerciseModel;
+      } else if (map['exercise'] is Map<String, dynamic>) {
+        exercise =
+            ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>);
+      } else {
+        throw Exception('Invalid exercise data');
+      }
+
+      // Safely parse last weight
+      num lastWeight = 0.0;
+      try {
+        if (map['last_weight'] != null) {
+          lastWeight = double.parse(map['last_weight'].toString());
+        }
+      } catch (e) {
+        AppLogger.warning(
+            'Error parsing last_weight, defaulting to 0.0', 'WORKOUT_ITEM', e);
+        lastWeight = 0.0;
+      }
+
+      return WorkoutItemModel(
+        exercise: exercise,
+        lastWeight: lastWeight,
+      );
+    } catch (e) {
+      AppLogger.error('Error parsing WorkoutItemModel', 'WORKOUT_ITEM', e);
+      rethrow; // Re-throw to be caught by the parent parser
+    }
   }
-
-  Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{
-      'exercise': exercise.toMap(),
-      'last_weight': lastWeight,
-    };
-
-    return map;
-  }
-
-  String toJson() => json.encode(toMap());
 
   WorkoutItemModel copyWith({
     ExerciseModel? exercise,
@@ -51,6 +66,17 @@ class WorkoutItemModel {
       exercise: exercise ?? this.exercise,
       lastWeight: lastWeight ?? this.lastWeight,
     );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{
+      'exercise': exercise.toMap(),
+      'last_weight': lastWeight,
+    };
+
+    return map;
   }
 }
 
@@ -82,32 +108,48 @@ class WorkoutSetModel extends HiveObject {
       WorkoutSetModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory WorkoutSetModel.fromMap(Map<String, dynamic> map) {
-    return WorkoutSetModel(
-      id: map['id'] as int? ?? 0,
-      name: map['name'] as String? ?? '',
-      description: map['description'] as String? ?? '',
-      createdAt: DateTime.parse(
-          map['created_at'] as String? ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(
-          map['updated_at'] as String? ?? DateTime.now().toIso8601String()),
-      workoutItems: (map['workout_items'] as List<dynamic>?)
-              ?.map((x) => WorkoutItemModel.fromMap(x as Map<String, dynamic>))
-              .toList() ??
-          [],
-    );
-  }
+    try {
+      // Safely parse workout items with better error handling
+      List<WorkoutItemModel> workoutItems = [];
 
-  String toJson() => json.encode(toMap());
+      if (map['workout_items'] != null) {
+        final workoutItemsData = map['workout_items'];
+        if (workoutItemsData is List) {
+          for (var item in workoutItemsData) {
+            try {
+              if (item is Map<String, dynamic>) {
+                workoutItems.add(WorkoutItemModel.fromMap(item));
+              }
+            } catch (e) {
+              // Skip invalid workout items instead of failing completely
+              AppLogger.warning(
+                  'Skipping invalid workout item', 'WORKOUT_SET', e);
+              continue;
+            }
+          }
+        }
+      }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'description': description,
-      'created_at': createdAt?.millisecondsSinceEpoch,
-      'updated_at': updatedAt?.millisecondsSinceEpoch,
-      'workout_items': workoutItems?.map((x) => x.toMap()).toList(),
-    };
+      return WorkoutSetModel(
+        id: map['id'] as int? ?? 0,
+        name: map['name'] as String? ?? '',
+        description: map['description'] as String? ?? '',
+        createdAt: _parseDateTime(map['created_at']),
+        updatedAt: _parseDateTime(map['updated_at']),
+        workoutItems: workoutItems,
+      );
+    } catch (e) {
+      // If all else fails, return a minimal valid object
+      AppLogger.error('Error parsing WorkoutSetModel', 'WORKOUT_SET', e);
+      return WorkoutSetModel(
+        id: map['id'] as int? ?? 0,
+        name: map['name'] as String? ?? 'Unknown Workout',
+        description: map['description'] as String? ?? '',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        workoutItems: [],
+      );
+    }
   }
 
   WorkoutSetModel copyWith({
@@ -126,5 +168,35 @@ class WorkoutSetModel extends HiveObject {
       updatedAt: updatedAt ?? this.updatedAt,
       workoutItems: workoutItems ?? this.workoutItems,
     );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'description': description,
+      'created_at': createdAt?.millisecondsSinceEpoch,
+      'updated_at': updatedAt?.millisecondsSinceEpoch,
+      'workout_items': workoutItems?.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  // Helper method to safely parse DateTime
+  static DateTime _parseDateTime(dynamic dateValue) {
+    if (dateValue == null) return DateTime.now();
+
+    try {
+      if (dateValue is String) {
+        return DateTime.parse(dateValue);
+      } else if (dateValue is int) {
+        return DateTime.fromMillisecondsSinceEpoch(dateValue);
+      }
+    } catch (e) {
+      AppLogger.warning('Error parsing date', 'WORKOUT_SET', e);
+    }
+
+    return DateTime.now();
   }
 }

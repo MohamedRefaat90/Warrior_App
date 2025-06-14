@@ -46,22 +46,22 @@ class ExerciseModel extends HiveObject {
     required this.equipmentType,
   });
 
-  factory ExerciseModel.fromMap(Map<String, dynamic> map) {
-    return ExerciseModel(
-      id: map['id'] as int,
-      name: map['name'] as String,
-      description: map['description'] as String,
-      image: map['image'] as String,
-      video: map['video'] as String,
-      targetedMuscles: map['targetedMuscles'] as String,
-      muscleID: map['muscle'] as int,
-      muscle: map['muscle_name'] as String,
-      equipmentType: map['equipment_type'] as String,
-    );
-  }
-
   factory ExerciseModel.fromJson(String source) =>
       ExerciseModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  factory ExerciseModel.fromMap(Map<String, dynamic> map) {
+    return ExerciseModel(
+      id: map['id'] as int? ?? 0,
+      name: map['name'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      image: map['image'] as String? ?? '',
+      video: map['video'] as String? ?? '',
+      targetedMuscles: map['targetedMuscles'] as String? ?? '',
+      muscleID: map['muscle'] as int? ?? 0,
+      muscle: map['muscle_name'] as String? ?? '',
+      equipmentType: map['equipment_type'] as String?,
+    );
+  }
 
   ExerciseModel copyWith({
     int? id,
@@ -87,6 +87,8 @@ class ExerciseModel extends HiveObject {
     );
   }
 
+  String toJson() => json.encode(toMap());
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -100,6 +102,4 @@ class ExerciseModel extends HiveObject {
       'equipment_type': equipmentType,
     };
   }
-
-  String toJson() => json.encode(toMap());
 }

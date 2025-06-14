@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/apis_url.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/dio.dart';
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:dio/dio.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final authRepo = Provider((ref) {
-  return AuthRepo(DioHandler.dio);
+  return AuthRepo(ref.read(dioProvider));
 });
 
 class AuthRepo {
@@ -18,68 +19,263 @@ class AuthRepo {
 
   Future<void> forgetPassword(String email) async {
     try {
-      await _dio.post(ApisUrl.forgetPassword, data: {'email': email});
-    } on DioException {
+      // Validate email
+      if (email.trim().isEmpty) {
+        throw ArgumentError('Email cannot be empty');
+      }
+
+      if (!_isValidEmail(email)) {
+        throw ArgumentError('Invalid email format');
+      }
+
+      AppLogger.info('Sending password reset email to: $email', 'AUTH_REPO');
+
+      await _dio.post(ApisUrl.forgetPassword, data: {'email': email.trim()});
+
+      AppLogger.info('Password reset email sent successfully', 'AUTH_REPO');
+    } on DioException catch (e) {
+      AppLogger.error('Network error in forgetPassword', 'AUTH_REPO', e);
+      rethrow;
+    } catch (e) {
+      AppLogger.error('Unexpected error in forgetPassword', 'AUTH_REPO', e);
       rethrow;
     }
   }
 
   Future<UserModel> googleSignIn(String? token) async {
     try {
-      Response response =
-          await _dio.post(ApisUrl.googleLogin, data: {'token': token});
-      SecureStorageHandler.write(
-          key: StorageKeys.token, value: response.data['data']['token']);
-      return UserModel.fromMap(
-          response.data['data']['user'] as Map<String, dynamic>);
-    } on DioException {
+      // Validate token
+      if (token == null || token.trim().isEmpty) {
+        throw ArgumentError('Google sign-in token cannot be null or empty');
+      }
+
+      AppLogger.info('Attempting Google sign-in', 'AUTH_REPO');
+
+      final response = await _dio.post(
+        ApisUrl.googleLogin,
+        data: {'token': token.trim()},
+      );
+
+      // Validate response structure
+      if (response.data == null ||
+          response.data['data'] == null ||
+          response.data['data']['token'] == null ||
+          response.data['data']['user'] == null) {
+        throw Exception('Invalid response format from Google sign-in');
+      }
+
+      final authToken = response.data['data']['token'] as String;
+      final userData = response.data['data']['user'] as Map<String, dynamic>;
+
+      // Store token securely
+      await SecureStorageHandler.write(
+        key: StorageKeys.token,
+        value: authToken,
+      );
+
+      final user = UserModel.fromMap(userData);
+      AppLogger.info(
+          'Google sign-in successful for user: ${user.email ?? "unknown"}',
+          'AUTH_REPO');
+
+      return user;
+    } on DioException catch (e) {
+      AppLogger.error('Network error in googleSignIn', 'AUTH_REPO', e);
       rethrow;
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      AppLogger.error('Platform error in googleSignIn', 'AUTH_REPO', e);
+      rethrow;
+    } catch (e) {
+      AppLogger.error('Unexpected error in googleSignIn', 'AUTH_REPO', e);
       rethrow;
     }
   }
 
-  Future<UserModel?> login(String email, String password) async {
+  Future<UserModel> login(String email, String password) async {
     try {
-      final Response response = await _dio
-          .post(ApisUrl.login, data: {'email': email, 'password': password});
-      SecureStorageHandler.write(
-          key: StorageKeys.token, value: response.data['data']['token']);
-      return UserModel.fromMap(
-          response.data['data']['user'] as Map<String, dynamic>);
-    } on DioException {
+      // Validate inputs
+      if (email.trim().isEmpty || password.isEmpty) {
+        throw ArgumentError('Email and password cannot be empty');
+      }
+
+      if (!_isValidEmail(email)) {
+        throw ArgumentError('Invalid email format');
+      }
+
+      if (password.length < 6) {
+        throw ArgumentError('Password must be at least 6 characters');
+      }
+
+      AppLogger.info('Attempting login for user: ${email.trim()}', 'AUTH_REPO');
+
+      final response = await _dio.post(
+        ApisUrl.login,
+        data: {
+          'email': email.toLowerCase().trim(),
+          'password': password,
+        },
+      );
+
+      // Validate response structure
+      if (response.data == null ||
+          response.data['data'] == null ||
+          response.data['data']['token'] == null ||
+          response.data['data']['user'] == null) {
+        throw Exception('Invalid response format from login');
+      }
+
+      final authToken = response.data['data']['token'] as String;
+      final userData = response.data['data']['user'] as Map<String, dynamic>;
+
+      // Store token securely
+      await SecureStorageHandler.write(
+        key: StorageKeys.token,
+        value: authToken,
+      );
+
+      final user = UserModel.fromMap(userData);
+      AppLogger.info(
+          'Login successful for user: ${user.email ?? "unknown"}', 'AUTH_REPO');
+
+      return user;
+    } on DioException catch (e) {
+      AppLogger.error(
+          'Network error in login for: ${email.trim()}', 'AUTH_REPO', e);
+      rethrow;
+    } catch (e) {
+      AppLogger.error('Unexpected error in login', 'AUTH_REPO', e);
       rethrow;
     }
   }
 
-  Future<void> resetPassword(
-      {required String email, required String password}) async {
+  Future<void> resetPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
-      await _dio.post(ApisUrl.resetPassword,
-          data: {'email': email, 'new_password': password});
-    } on DioException {
+      // Validate inputs
+      if (email.trim().isEmpty || password.isEmpty) {
+        throw ArgumentError('Email and password cannot be empty');
+      }
+
+      if (!_isValidEmail(email)) {
+        throw ArgumentError('Invalid email format');
+      }
+
+      if (password.length < 6) {
+        throw ArgumentError('Password must be at least 6 characters');
+      }
+
+      AppLogger.info(
+          'Resetting password for user: ${email.trim()}', 'AUTH_REPO');
+
+      await _dio.post(
+        ApisUrl.resetPassword,
+        data: {
+          'email': email.toLowerCase().trim(),
+          'new_password': password,
+        },
+      );
+
+      AppLogger.info('Password reset successful', 'AUTH_REPO');
+    } on DioException catch (e) {
+      AppLogger.error('Network error in resetPassword', 'AUTH_REPO', e);
+      rethrow;
+    } catch (e) {
+      AppLogger.error('Unexpected error in resetPassword', 'AUTH_REPO', e);
       rethrow;
     }
   }
 
-  Future<void> signup(
-      {required String email,
-      required String password,
-      required String username}) async {
+  Future<void> signup({
+    required String email,
+    required String password,
+    required String username,
+  }) async {
     try {
-      await _dio.post(ApisUrl.signup,
-          data: {'email': email, 'password': password, 'username': username});
-    } on DioException {
+      // Validate inputs
+      if (email.trim().isEmpty || password.isEmpty || username.trim().isEmpty) {
+        throw ArgumentError('All fields are required');
+      }
+
+      if (!_isValidEmail(email)) {
+        throw ArgumentError('Invalid email format');
+      }
+
+      if (password.length < 6) {
+        throw ArgumentError('Password must be at least 6 characters');
+      }
+
+      if (username.trim().length < 2) {
+        throw ArgumentError('Username must be at least 2 characters');
+      }
+
+      AppLogger.info('Creating account for user: ${email.trim()}', 'AUTH_REPO');
+
+      await _dio.post(
+        ApisUrl.signup,
+        data: {
+          'email': email.toLowerCase().trim(),
+          'password': password,
+          'username': username.trim(),
+        },
+      );
+
+      AppLogger.info('Account created successfully', 'AUTH_REPO');
+    } on DioException catch (e) {
+      AppLogger.error('Network error in signup', 'AUTH_REPO', e);
+      rethrow;
+    } catch (e) {
+      AppLogger.error('Unexpected error in signup', 'AUTH_REPO', e);
       rethrow;
     }
   }
 
-  Future<void> verifyOTP({required String email, required String otp}) async {
+  Future<void> verifyOTP({
+    required String email,
+    required String otp,
+  }) async {
     try {
-      await _dio
-          .post(ApisUrl.otpVerification, data: {'email': email, 'otp': otp});
-    } on DioException {
+      // Validate inputs
+      if (email.trim().isEmpty || otp.trim().isEmpty) {
+        throw ArgumentError('Email and OTP cannot be empty');
+      }
+
+      if (!_isValidEmail(email)) {
+        throw ArgumentError('Invalid email format');
+      }
+
+      if (otp.trim().length < 4 || otp.trim().length > 6) {
+        throw ArgumentError('OTP must be 4-6 digits');
+      }
+
+      if (!RegExp(r'^\d+$').hasMatch(otp.trim())) {
+        throw ArgumentError('OTP must contain only digits');
+      }
+
+      AppLogger.info('Verifying OTP for user: ${email.trim()}', 'AUTH_REPO');
+
+      await _dio.post(
+        ApisUrl.otpVerification,
+        data: {
+          'email': email.toLowerCase().trim(),
+          'otp': otp.trim(),
+        },
+      );
+
+      AppLogger.info('OTP verification successful', 'AUTH_REPO');
+    } on DioException catch (e) {
+      AppLogger.error('Network error in verifyOTP', 'AUTH_REPO', e);
+      rethrow;
+    } catch (e) {
+      AppLogger.error('Unexpected error in verifyOTP', 'AUTH_REPO', e);
       rethrow;
     }
+  }
+
+  // Helper method for email validation
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(email.trim());
   }
 }

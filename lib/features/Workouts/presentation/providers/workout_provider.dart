@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final workoutsProvider =
@@ -29,6 +27,14 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
 
   WorkoutsNotifier(this._workoutRepo) : super(ProviderStates());
 
+  bool get _isOnline => ConnectivityChecker.isOnline == true;
+
+  void clearError() {
+    if (state.errorMessage != null) {
+      state = ProviderStates();
+    }
+  }
+
   bool createWorkoutBtnState() {
     return (!state.isLoading &&
         (workoutList.isNotEmpty || HiveManager.workoutsBox.isNotEmpty));
@@ -36,15 +42,34 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
 
   Future<void> createWorkoutSet() async {
     try {
+      // Validate workout data
+      if (newWorkout.name?.trim().isEmpty ?? true) {
+        state = ProviderStates(errorMessage: 'Workout name is required');
+        AppLogger.warning(
+            'Attempted to create workout without name', 'WORKOUT');
+        return;
+      }
+
+      if (newWorkout.workoutItems?.isEmpty ?? true) {
+        state =
+            ProviderStates(errorMessage: 'Please add at least one exercise');
+        AppLogger.warning(
+            'Attempted to create workout without exercises', 'WORKOUT');
+        return;
+      }
+
       state = ProviderStates(isLoading: true);
-      if (ConnectivityChecker.isOnline!) {
+
+      if (_isOnline) {
         // Online: Create on server and update local
         await _workoutRepo.createWorkoutSet(newWorkout);
         await HiveManager.workoutsBox.add(newWorkout);
         // Refresh the list after creating
         await getWorkoutSets();
+        AppLogger.info('Workout created online: ${newWorkout.name}', 'WORKOUT');
       } else {
-        debugPrint('Saving workout offline...');
+        AppLogger.info(
+            'Creating workout offline: ${newWorkout.name}', 'WORKOUT');
 
         // Step 1: Add to Hive workouts box
         await HiveManager.workoutsBox.add(newWorkout);
@@ -62,17 +87,27 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
       }
 
       state = ProviderStates(isSuccess: true);
-    } catch (e) {
-      debugPrint('EXCEPTION in createWorkoutSet: $e');
-      state = ProviderStates(errorMessage: e.toString());
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to create workout set', 'WORKOUT', e, stackTrace);
+      state = ProviderStates(
+          errorMessage: 'Failed to create workout: ${e.toString()}');
     }
   }
 
   Future<void> deleteWorkoutSet(int workoutID, int index) async {
     try {
-      if (ConnectivityChecker.isOnline!) {
+      if (workoutID <= 0) {
+        state = ProviderStates(errorMessage: 'Invalid workout ID');
+        AppLogger.warning(
+            'Attempted to delete workout with invalid ID: $workoutID',
+            'WORKOUT');
+        return;
+      }
+
+      if (_isOnline) {
         // Online: Delete from server
         _workoutRepo.deleteWorkoutSet(workoutID);
+        AppLogger.info('Workout deleted online: ID $workoutID', 'WORKOUT');
       } else {
         // Offline: Track for later sync
         await HiveManager.addPendingOperation(
@@ -80,19 +115,26 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
             entityType: 'workout',
             operationType: SyncOperationType.delete,
             id: workoutID,
+            timestamp: DateTime.now(),
           ),
         );
+        AppLogger.info(
+            'Workout deletion queued for sync: ID $workoutID', 'WORKOUT');
       }
 
       // Update UI
       workoutList.removeWhere((workout) => workout.id == workoutID);
 
-      // Remove from Hive
-      await HiveManager.workoutsBox.delete(index);
+      // Remove from Hive safely
+      if (index >= 0 && index < HiveManager.workoutsBox.length) {
+        await HiveManager.workoutsBox.deleteAt(index);
+      }
 
       state = ProviderStates(isSuccess: true);
-    } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to delete workout set', 'WORKOUT', e, stackTrace);
+      state = ProviderStates(
+          errorMessage: 'Failed to delete workout: ${e.toString()}');
     }
   }
 
@@ -101,60 +143,94 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     String? description,
     List<WorkoutItemModel>? workoutItems,
   }) {
-    newWorkout = newWorkout.copyWith(
-      name: name,
-      description: description,
-      workoutItems: workoutItems,
-    );
+    try {
+      newWorkout = newWorkout.copyWith(
+        name: name,
+        description: description,
+        workoutItems: workoutItems,
+      );
+    } catch (e) {
+      AppLogger.error('Failed to update new workout data', 'WORKOUT', e);
+    }
   }
 
   Future<void> getWorkoutSets() async {
     try {
-      if (ConnectivityChecker.isOnline!) {
+      if (_isOnline) {
         // Online: Get from server and update Hive
         state = ProviderStates(isLoading: true);
         workoutList = await _workoutRepo.getWorkoutSets();
+
         // Update Hive with fresh data
         await HiveManager.workoutsBox.clear();
         for (var workout in workoutList) {
           await HiveManager.workoutsBox.add(workout);
         }
+        AppLogger.info(
+            'Loaded ${workoutList.length} workouts from server', 'WORKOUT');
       } else {
         // Offline: Load from Hive
         workoutList = HiveManager.workoutsBox.values.toList();
         updateWorkoutExerciseVideoPath(workoutList);
+        AppLogger.info(
+            'Loaded ${workoutList.length} workouts from cache', 'WORKOUT');
       }
 
       state = ProviderStates(isSuccess: true);
-    } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to get workout sets', 'WORKOUT', e, stackTrace);
+
+      // Fallback to cached data
+      try {
+        workoutList = HiveManager.workoutsBox.values.toList();
+        updateWorkoutExerciseVideoPath(workoutList);
+        state = ProviderStates(isSuccess: true);
+        AppLogger.info(
+            'Fallback to cached workouts: ${workoutList.length}', 'WORKOUT');
+      } catch (fallbackError) {
+        AppLogger.error(
+            'Failed to load cached workouts', 'WORKOUT', fallbackError);
+        state = ProviderStates(errorMessage: 'Failed to load workouts');
+      }
     }
   }
 
   Future<void> reorderWorkoutsList(List<WorkoutSetModel> workouts) async {
-    List<Map<String, dynamic>> reorderedWorkoutsList = workouts
-        .map(
-            (workout) => {"id": workout.id, "order": workouts.indexOf(workout)})
-        .toList();
-    try {
-      if (ConnectivityChecker.isOnline!) {
-        // Online: Reorder on server
+    if (workouts.isEmpty) {
+      AppLogger.warning('Attempted to reorder empty workout list', 'WORKOUT');
+      return;
+    }
 
+    final reorderedWorkoutsList = workouts
+        .asMap()
+        .entries
+        .map((entry) => {
+              "id": entry.value.id,
+              "order": entry.key,
+            })
+        .toList();
+
+    try {
+      if (_isOnline) {
+        // Online: Reorder on server
         await _workoutRepo.reorderWorkoutsList(reorderedWorkoutsList);
+        AppLogger.info('Workouts reordered online', 'WORKOUT');
       } else {
         // Offline: Track for later sync
-
         await HiveManager.addPendingOperation(PendingOperation(
           entityType: 'workout',
           operationType: SyncOperationType.reorder,
           reorderWorkoutList: reorderedWorkoutsList,
           timestamp: DateTime.now(),
         ));
+        AppLogger.info('Workout reorder queued for sync', 'WORKOUT');
       }
 
       state = ProviderStates(isSuccess: true);
-    } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to reorder workouts', 'WORKOUT', e, stackTrace);
+      state = ProviderStates(
+          errorMessage: 'Failed to reorder workouts: ${e.toString()}');
     }
   }
 
@@ -166,11 +242,13 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     );
   }
 
-  toggleSelectMode() {
+  void toggleSelectMode() {
     selectMode = !selectMode;
     // Clear selected items when turning off select mode
     if (!selectMode) {
-      newWorkout.workoutItems!.clear();
+      newWorkout.workoutItems?.clear();
+      AppLogger.info(
+          'Select mode ${selectMode ? 'enabled' : 'disabled'}', 'WORKOUT');
     }
     state = ProviderStates(isSuccess: true);
   }
@@ -178,130 +256,199 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
   Future<void> updateLastWeight(
       int workoutID, int exerciseID, num weight) async {
     try {
-      if (ConnectivityChecker.isOnline!) {
+      // Validate inputs
+      if (workoutID <= 0 || exerciseID <= 0 || weight < 0) {
+        state =
+            ProviderStates(errorMessage: 'Invalid workout or exercise data');
+        AppLogger.warning(
+            'Invalid data for weight update: workout=$workoutID, exercise=$exerciseID, weight=$weight',
+            'WORKOUT');
+        return;
+      }
+
+      if (_isOnline) {
         // Online: Update on server
         state = ProviderStates(isLoading: true);
         await _workoutRepo.updateLastWeight(workoutID, exerciseID, weight);
         updateLastWeightLocal(workoutID, exerciseID, weight);
+        AppLogger.info(
+            'Weight updated online: workout=$workoutID, exercise=$exerciseID, weight=$weight',
+            'WORKOUT');
       } else {
         // Offline: Track for later sync
+        final workout = workoutList.firstWhere(
+          (workout) => workout.id == workoutID,
+          orElse: () => throw Exception('Workout not found'),
+        );
+
         await HiveManager.addPendingOperation(PendingOperation(
           entityType: 'workout_weight',
           operationType: SyncOperationType.update,
-          workout: workoutList.firstWhere((workout) => workout.id == workoutID),
+          workout: workout,
           exerciseId: exerciseID,
           weight: weight,
+          timestamp: DateTime.now(),
         ));
 
         // Update local Hive data
         updateLastWeightLocal(workoutID, exerciseID, weight);
-      }
-      state = ProviderStates(isSuccess: true);
-    } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
-    }
-  }
-
-  Future<void> updateWorkoutSet(WorkoutSetModel workout) async {
-    try {
-      if (ConnectivityChecker.isOnline!) {
-        // Online: Update on server
-        state = ProviderStates(isLoading: true);
-        await _workoutRepo.updateWorkoutSet(workout);
-        await getWorkoutSets(); // Refresh the list after Editing
-      } else {
-        // Offline: Update local Hive data
-        int index = HiveManager.workoutsBox.values
-            .toList()
-            .indexWhere((element) => element.id == workout.id);
-
-        await HiveManager.workoutsBox.putAt(index, workout);
-        // Offline: Track for later sync
-        await HiveManager.addPendingOperation(
-          PendingOperation(
-            entityType: 'workout',
-            operationType: SyncOperationType.update,
-            workout: workout,
-          ),
-        );
+        AppLogger.info(
+            'Weight update queued for sync: workout=$workoutID, exercise=$exerciseID, weight=$weight',
+            'WORKOUT');
       }
 
-      resetNewWorkout();
       state = ProviderStates(isSuccess: true);
-    } catch (e) {
-      state = ProviderStates(errorMessage: e.toString());
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to update last weight', 'WORKOUT', e, stackTrace);
+      state = ProviderStates(
+          errorMessage: 'Failed to update weight: ${e.toString()}');
     }
   }
 
   Future<void> updateLastWeightLocal(
       int workoutID, int exerciseID, num weight) async {
-    /// Updates the local record of the last weight used for a specific exercise within a workout.
-    ///
-    /// This method modifies the local data to reflect the most recent weight used by the user for
-    /// the specified exercise in a workout session. It doesn't persist the change to remote storage.
-    ///
-    /// Parameters:
-    /// - [workoutID]: The unique identifier of the workout containing the exercise.
-    /// - [exerciseID]: The unique identifier of the exercise whose weight is being updated.
-    /// - [weight]: The new weight value to be recorded for the exercise.
-    ///
+    try {
+      final index = HiveManager.workoutsBox.values
+          .toList()
+          .indexWhere((element) => element.id == workoutID);
 
-    int index = HiveManager.workoutsBox.values
-        .toList()
-        .indexWhere((element) => element.id == workoutID);
-    WorkoutSetModel workout = HiveManager.workoutsBox.getAt(index)!;
-    int exerciseIndex = workout.workoutItems!
-        .indexWhere((element) => element.exercise.id == exerciseID);
-    workout.workoutItems![exerciseIndex].lastWeight = weight;
-    await HiveManager.workoutsBox.putAt(index, workout);
+      if (index < 0) {
+        throw Exception('Workout not found in local storage');
+      }
+
+      final workout = HiveManager.workoutsBox.getAt(index);
+      if (workout == null) {
+        throw Exception('Workout data is null');
+      }
+
+      final exerciseIndex = workout.workoutItems?.indexWhere(
+            (element) => element.exercise.id == exerciseID,
+          ) ??
+          -1;
+
+      if (exerciseIndex < 0) {
+        throw Exception('Exercise not found in workout');
+      }
+
+      workout.workoutItems![exerciseIndex].lastWeight = weight;
+      await HiveManager.workoutsBox.putAt(index, workout);
+
+      AppLogger.info(
+          'Local weight updated: workout=$workoutID, exercise=$exerciseID, weight=$weight',
+          'WORKOUT');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+          'Failed to update local weight', 'WORKOUT', e, stackTrace);
+      rethrow;
+    }
   }
 
-  updateWorkoutExerciseVideoPath(List<WorkoutSetModel> workoutList) async {
-    debugPrint(
-        'Updating workout exercise video paths for ${workoutList.length} workouts');
+  void updateWorkoutExerciseVideoPath(List<WorkoutSetModel> workoutList) async {
+    try {
+      AppLogger.info(
+          'Updating workout exercise video paths for ${workoutList.length} workouts',
+          'WORKOUT');
 
-    // First, create a copy of all updated workouts without modifying Hive yet
-    List<WorkoutSetModel> updatedWorkouts = [];
+      List<WorkoutSetModel> updatedWorkouts = [];
 
-    for (var workout in workoutList) {
-      bool workoutModified = false;
+      for (var workout in workoutList) {
+        bool workoutModified = false;
 
-      if (workout.workoutItems != null) {
-        for (int i = 0; i < workout.workoutItems!.length; i++) {
-          var workoutItem = workout.workoutItems![i];
+        if (workout.workoutItems != null) {
+          for (int i = 0; i < workout.workoutItems!.length; i++) {
+            var workoutItem = workout.workoutItems![i];
 
-          final cachedExercise =
-              HiveManager.exercisesBox.get(workoutItem.exercise.id);
-          if (cachedExercise != null) {
-            // Only update if different from current path
-            if (workoutItem.exercise.video != cachedExercise.video) {
-              // Create updated workout item
-              workout.workoutItems![i] = workoutItem.copyWith(
+            final cachedExercise =
+                HiveManager.exercisesBox.get(workoutItem.exercise.id);
+            if (cachedExercise != null) {
+              // Only update if different from current path
+              if (workoutItem.exercise.video != cachedExercise.video) {
+                // Create updated workout item
+                workout.workoutItems![i] = workoutItem.copyWith(
                   exercise: workoutItem.exercise.copyWith(
-                      video: cachedExercise.video,
-                      targetedMuscles: cachedExercise.targetedMuscles));
-
-              workoutModified = true;
+                    video: cachedExercise.video,
+                    targetedMuscles: cachedExercise.targetedMuscles,
+                  ),
+                );
+                workoutModified = true;
+              }
+            } else {
+              AppLogger.warning(
+                  'No cached exercise found for ID: ${workoutItem.exercise.id}',
+                  'WORKOUT');
             }
-          } else {
-            debugPrint(
-                'No cached exercise found for ID: ${workoutItem.exercise.id}');
           }
+        }
+
+        if (workoutModified) {
+          updatedWorkouts.add(workout);
         }
       }
 
-      if (workoutModified) {
-        updatedWorkouts.add(workout);
+      // Update Hive with modified workouts
+      for (var updatedWorkout in updatedWorkouts) {
+        final index =
+            HiveManager.workoutsBox.values.toList().indexOf(updatedWorkout);
+        if (index >= 0) {
+          await HiveManager.workoutsBox.putAt(index, updatedWorkout);
+        }
       }
-    }
 
-    // After collecting all updates, now update Hive
-    for (var updatedWorkout in updatedWorkouts) {
-      int index =
-          HiveManager.workoutsBox.values.toList().indexOf(updatedWorkout);
-      if (index >= 0) {
-        await HiveManager.workoutsBox.putAt(index, updatedWorkout);
+      AppLogger.info(
+          'Video path update completed for ${updatedWorkouts.length} workouts',
+          'WORKOUT');
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to update video paths', 'WORKOUT', e, stackTrace);
+    }
+  }
+
+  Future<void> updateWorkoutSet(WorkoutSetModel workout) async {
+    try {
+      // Validate workout
+      if (workout.name?.trim().isEmpty ?? true) {
+        state = ProviderStates(errorMessage: 'Workout name is required');
+        AppLogger.warning(
+            'Attempted to update workout without name', 'WORKOUT');
+        return;
       }
+
+      if (_isOnline) {
+        // Online: Update on server
+        state = ProviderStates(isLoading: true);
+        await _workoutRepo.updateWorkoutSet(workout);
+        await getWorkoutSets(); // Refresh the list after editing
+        AppLogger.info('Workout updated online: ${workout.name}', 'WORKOUT');
+      } else {
+        // Offline: Update local Hive data
+        final index = HiveManager.workoutsBox.values
+            .toList()
+            .indexWhere((element) => element.id == workout.id);
+
+        if (index >= 0) {
+          await HiveManager.workoutsBox.putAt(index, workout);
+
+          // Track for later sync
+          await HiveManager.addPendingOperation(
+            PendingOperation(
+              entityType: 'workout',
+              operationType: SyncOperationType.update,
+              workout: workout,
+              timestamp: DateTime.now(),
+            ),
+          );
+          AppLogger.info(
+              'Workout update queued for sync: ${workout.name}', 'WORKOUT');
+        } else {
+          throw Exception('Workout not found in local storage');
+        }
+      }
+
+      resetNewWorkout();
+      state = ProviderStates(isSuccess: true);
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to update workout set', 'WORKOUT', e, stackTrace);
+      state = ProviderStates(
+          errorMessage: 'Failed to update workout: ${e.toString()}');
     }
   }
 }

@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:Warrior/core/services/logger.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -8,28 +7,28 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: ['email', 'profile', 'openid'],
 );
 
-Future<String?> handleGoogleSignIn() async {
-  try {
-    debugPrint('Starting Google Sign-In process...');
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
-      debugPrint('User canceled the sign-in process');
+class GoogleSignInService {
+  static Future<String?> signIn() async {
+    try {
+      AppLogger.info('Starting Google Sign-In process...', 'GOOGLE_SIGNIN');
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        AppLogger.warning('User canceled the sign-in process', 'GOOGLE_SIGNIN');
+        return null;
+      }
+
+      AppLogger.info('User signed in: ${googleUser.email}', 'GOOGLE_SIGNIN');
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      AppLogger.info('Authentication successful', 'GOOGLE_SIGNIN');
+
+      return googleAuth.idToken;
+    } catch (error) {
+      AppLogger.error('Error during Google Sign-In', 'GOOGLE_SIGNIN', error);
+
+      AppLogger.error('Error details: ${error.toString()}', 'GOOGLE_SIGNIN');
       return null;
     }
-
-    debugPrint('User signed in: ${googleUser.email}');
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-
-    debugPrint('Authentication successful');
-    final String? idToken = googleAuth.idToken;
-
-    return idToken;
-  } catch (error) {
-    debugPrint('Error during Google Sign-In: $error');
-    if (error is Exception) {
-      debugPrint('Error details: ${error.toString()}');
-    }
   }
-  return null;
 }

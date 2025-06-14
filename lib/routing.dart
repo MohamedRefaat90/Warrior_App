@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
+import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
@@ -23,7 +24,6 @@ import 'package:Warrior/features/Workouts/presentation/screens/workout_details.d
 import 'package:Warrior/features/Workouts/presentation/screens/workouts_screen.dart';
 import 'package:Warrior/features/onboarding/screens/onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -181,7 +181,7 @@ class RoutersManager {
     try {
       // Handle first-time user
       if (isFirstTime == null) {
-        debugPrint('First-time user, redirecting to welcome');
+        AppLogger.info('First-time user, redirecting to welcome', 'ROUTING');
         return AppRouters.welcome;
       }
 
@@ -198,7 +198,7 @@ class RoutersManager {
       // Default case
       return null;
     } catch (e) {
-      debugPrint('Error in redirect logic: $e');
+      AppLogger.error('Error in redirect logic', 'ROUTING', e);
       return AppRouters.login; // Fallback to login on error
     }
   }

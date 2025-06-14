@@ -119,7 +119,8 @@ jobs:
         echo "| Tests & Quality | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Integration Tests | ${{ needs.integration-test.result }} |" >> $GITHUB_STEP_SUMMARY
         
-        if [[ "${{ needs.test.result }}" == "success" && "${{ needs.integration-test.result }}" == "success" && "${{ needs.build-validation.result }}" == "success" ]]; then
+        if [[ "${{ needs.test.result }}" == "success" && "${{ needs.integration-test.result }}" == "success" ]]; then
           echo "✅ All checks passed! Ready for deployment." >> $GITHUB_STEP_SUMMARY
         else
-          echo "❌ Some checks failed. Please review the results." >> $GITHUB_STEP_SUMMARY 
+          echo "❌ Some checks failed. Please review the results." >> $GITHUB_STEP_SUMMARY
+        fi 

@@ -45,12 +45,12 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                     placeholder: (context, url) => CustomLoadingWidget(),
                     errorWidget: (context, url, error) {
                       // First check if it's a local file path
-                      if (widget.exercise.image.startsWith('/') || 
+                      if (widget.exercise.image.startsWith('/') ||
                           widget.exercise.image.contains(':\\')) {
                         return Image.file(
                           File(widget.exercise.image),
                           height: 120.h,
-                          errorBuilder: (context, error, stackTrace) => 
+                          errorBuilder: (context, error, stackTrace) =>
                               Icon(Icons.image_not_supported, size: 50),
                         );
                       } else {

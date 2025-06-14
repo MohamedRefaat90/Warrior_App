@@ -76,7 +76,7 @@ platform :android do
         android_artifact_type: "APK",
         apk_path: apk_path,
         testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
-        release_notes: "Automated release from CI/CD pipeline - Version #{get_version_name}",
+        release_notes: "Automated release from CI/CD pipeline - Build #{Time.now.strftime('%Y%m%d-%H%M')}",
         debug: true
       )
       UI.success("🎉 Firebase App Distribution upload successful!")
@@ -93,7 +93,24 @@ platform :android do
 
   desc "Get version name from build.gradle"
   private_lane :get_version_name do
-    gradle_file = File.read("app/build.gradle")
+    # Try different possible paths for build.gradle
+    possible_gradle_paths = [
+      "app/build.gradle",
+      "../app/build.gradle",
+      File.expand_path("../app/build.gradle"),
+      File.expand_path("../../android/app/build.gradle")
+    ]
+    
+    gradle_path = possible_gradle_paths.find { |path| File.exist?(path) }
+    
+    unless gradle_path
+      UI.error("build.gradle not found in any of these locations:")
+      possible_gradle_paths.each { |path| UI.error("  - #{path}") }
+      return "unknown"
+    end
+    
+    UI.message("Reading version from: #{gradle_path}")
+    gradle_file = File.read(gradle_path)
     version_match = gradle_file.match(/versionName\s*[=:]\s*"([^"]+)"/)
     version_match ? version_match[1] : "unknown"
   end

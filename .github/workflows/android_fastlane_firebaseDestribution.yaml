@@ -55,6 +55,23 @@ jobs:
           echo "✅ FIREBASE_CLI_TOKEN is set (length: ${#FIREBASE_CLI_TOKEN})"
         fi
 
+    - name: Install Firebase CLI
+      run: |
+        curl -sL https://firebase.tools | bash
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Test Firebase Access
+      env:
+        FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+      run: |
+        echo "🔍 Testing Firebase access..."
+        firebase projects:list --token "$FIREBASE_CLI_TOKEN"
+        echo "🎯 Testing App Distribution access..."
+        firebase appdistribution:apps:list --project warrior-dd0f2 --token "$FIREBASE_CLI_TOKEN" || {
+          echo "❌ App Distribution access failed - this is likely the root cause"
+          echo "Please enable App Distribution in Firebase Console"
+        }
+
     - name: Try Building APK First
       run: |
         bundle exec fastlane android build_release

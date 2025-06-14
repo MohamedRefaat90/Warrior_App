@@ -18,20 +18,66 @@ default_platform(:android)
 platform :android do
   desc "Lane For Firebase Distribution"
   lane :fbd do
+    # Verify environment variables
+    firebase_token = ENV["FIREBASE_CLI_TOKEN"]
+    if firebase_token.nil? || firebase_token.empty?
+      UI.user_error!("FIREBASE_CLI_TOKEN environment variable is not set or empty")
+    end
+    
+    # Clean and build
     sh "flutter clean"
     sh "flutter build apk --release"
-    firebase_app_distribution(
-      app: "1:466603345246:android:a4d0161c402a1bd30a3bcf",
-      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
-      android_artifact_type: "APK",
-      apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
-      testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
-      release_notes: "First Release To Google Play",
-    )
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+    
+    # Verify APK exists
+    apk_path = "../build/app/outputs/flutter-apk/app-release.apk"
+    unless File.exist?(apk_path)
+      UI.user_error!("APK file not found at: #{apk_path}")
+    end
+    
+    # Get APK size for logging
+    apk_size = File.size(apk_path) / (1024.0 * 1024.0)
+    UI.message("APK size: #{apk_size.round(2)} MB")
+    
+    begin
+      firebase_app_distribution(
+        app: "1:466603345246:android:a4d0161c402a1bd30a3bcf",
+        firebase_cli_token: firebase_token,
+        android_artifact_type: "APK",
+        apk_path: apk_path,
+        testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
+        release_notes: "Automated release from CI/CD pipeline - Version #{get_version_name}",
+        debug: true
+      )
+      UI.success("🎉 Firebase App Distribution upload successful!")
+    rescue => exception
+      UI.error("❌ Firebase App Distribution failed: #{exception.message}")
+      UI.important("Please check:")
+      UI.important("1. Firebase App Distribution is enabled in your Firebase console")
+      UI.important("2. The app ID '1:466603345246:android:a4d0161c402a1bd30a3bcf' exists in your project")
+      UI.important("3. The service account has 'Firebase App Distribution Admin' role")
+      UI.important("4. The FIREBASE_CLI_TOKEN has proper permissions")
+      raise exception
+    end
   end
 
+  desc "Get version name from build.gradle"
+  private_lane :get_version_name do
+    gradle_file = File.read("app/build.gradle")
+    version_match = gradle_file.match(/versionName\s*[=:]\s*"([^"]+)"/)
+    version_match ? version_match[1] : "unknown"
+  end
 
+  desc "Build release APK only"
+  lane :build_release do
+    sh "flutter clean"
+    sh "flutter build apk --release"
+    
+    apk_path = "../build/app/outputs/flutter-apk/app-release.apk"
+    if File.exist?(apk_path)
+      apk_size = File.size(apk_path) / (1024.0 * 1024.0)
+      UI.success("✅ APK built successfully: #{apk_size.round(2)} MB")
+    else
+      UI.user_error!("❌ APK build failed - file not found")
+    end
+  end
 end

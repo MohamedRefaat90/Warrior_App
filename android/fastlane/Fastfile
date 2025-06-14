@@ -10,12 +10,6 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
-require 'fileutils'
-require 'dotenv'
-
-# Load environment variables from .env file if it exists
-Dotenv.load if File.exist?('../.env')
-
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
@@ -24,68 +18,20 @@ default_platform(:android)
 platform :android do
   desc "Lane For Firebase Distribution"
   lane :fbd do
-    # Verify Firebase token
-    firebase_token = ENV["FIREBASE_CLI_TOKEN"]
-    if firebase_token.nil? || firebase_token.empty?
-      UI.user_error!("FIREBASE_CLI_TOKEN environment variable is not set or empty")
-    end
-    
-    # Clean and build
     sh "flutter clean"
     sh "flutter build apk --release"
-    
-    # Find APK
-    possible_paths = [
-      "../build/app/outputs/flutter-apk/app-release.apk",
-      "../../build/app/outputs/flutter-apk/app-release.apk"
-    ]
-    
-    apk_path = possible_paths.find { |path| File.exist?(path) }
-    unless apk_path
-      UI.user_error!("APK file not found. Build may have failed.")
-    end
-    
-    # Copy APK to current directory for Firebase plugin
-    local_apk_path = "app-release.apk"
-    FileUtils.cp(File.expand_path(apk_path), local_apk_path)
-    
-    begin
-      firebase_app_distribution(
-        app: "1:466603345246:android:a4d0161c402a1bd30a3bcf",
-        firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
-        android_artifact_type: "APK",
-        apk_path: File.expand_path(local_apk_path),
-        testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
-        release_notes: "Automated release from CI/CD pipeline - Build #{Time.now.strftime('%Y%m%d-%H%M')}"
-      )
-      UI.success("🎉 Firebase App Distribution upload successful!")
-    rescue => exception
-      UI.error("❌ Firebase App Distribution failed: #{exception.message}")
-      UI.important("Check: 1) App Distribution enabled 2) Token permissions 3) App registered")
-      raise exception
-    ensure
-      # Clean up
-      File.delete(local_apk_path) if File.exist?(local_apk_path)
-    end
+    firebase_app_distribution(
+      app: "1:466603345246:android:a4d0161c402a1bd30a3bcf",
+      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
+      android_artifact_type: "APK",
+      android_artifact_path: "../build/app/outputs/flutter-apk/app-release.apk",
+      testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
+      release_notes: "First Release To Google Play",
+    )
+  
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
   end
 
-  desc "Build release APK only"
-  lane :build_release do
-    sh "flutter clean"
-    sh "flutter build apk --release"
-    
-    possible_paths = [
-      "../build/app/outputs/flutter-apk/app-release.apk",
-      "../../build/app/outputs/flutter-apk/app-release.apk"
-    ]
-    
-    apk_path = possible_paths.find { |path| File.exist?(path) }
-    
-    if apk_path
-      apk_size = File.size(apk_path) / (1024.0 * 1024.0)
-      UI.success("✅ APK built successfully: #{apk_size.round(2)} MB")
-    else
-      UI.user_error!("❌ APK build failed - file not found")
-    end
-  end
+
 end

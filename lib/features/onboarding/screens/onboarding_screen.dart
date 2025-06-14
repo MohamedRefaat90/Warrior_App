@@ -3,7 +3,7 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
-import 'package:Warrior/features/onboarding/data/Onboarding_data.dart';
+import 'package:Warrior/features/onboarding/data/onboarding_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -28,7 +28,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Expanded(
           child: PageView.builder(
             controller: pageController,
-            itemCount: onboardingitems.length,
+            itemCount: onboardingItems.length,
             onPageChanged: (index) {
               setState(() {
                 currentIndex = index;
@@ -40,18 +40,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    onboardingitems[index].image,
+                    onboardingItems[index].image,
                     width: 0.8.sw,
                   ),
                   20.verticalSpace,
                   Text(
-                    onboardingitems[index].title,
+                    onboardingItems[index].title,
                     style:
                         TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
                   10.verticalSpace,
                   Text(
-                    onboardingitems[index].description,
+                    onboardingItems[index].description,
                     textAlign: TextAlign.center,
                   )
                 ],
@@ -73,7 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 })
             : SmoothPageIndicator(
                 controller: pageController,
-                count: onboardingitems.length,
+                count: onboardingItems.length,
                 effect: WormEffect(
                     dotColor: AppColors.black,
                     activeDotColor: AppColors.primaryColor!),

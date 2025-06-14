@@ -2,7 +2,6 @@ import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/cache_manager.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/loader.dart';
-import 'package:Warrior/core/widgets/refresh_widget.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercises_gridview.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
@@ -47,8 +46,19 @@ class ExercisesScreen extends ConsumerWidget {
                       isComingFromWorkoutScreen:
                           isComingFromWorkoutScreen ?? false);
                 },
-                error: (error, stackTrace) =>
-                    RefreshWidget(muscleExerciseProvider(muscle['id'])))
+                error: (error, stackTrace) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Something went wrong!'),
+                          ElevatedButton(
+                            onPressed: () => ref
+                                .refresh(muscleExerciseProvider(muscle['id'])),
+                            child: Text('Refresh'),
+                          ),
+                        ],
+                      ),
+                    ))
             : HiveManager.exercisesBox.isEmpty
                 ? Center(
                     child: Text(

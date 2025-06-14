@@ -101,19 +101,19 @@ class ResponseCode {
 
 // Simplified ResponseMessage
 class ResponseMessage {
-  static const String NO_CONTENT = ApiErrors.noContent;
-  static const String BAD_REQUEST = ApiErrors.badRequestError;
-  static const String FORBIDDEN = ApiErrors.forbiddenError;
-  static const String UNAUTHORIZED = ApiErrors.unauthorizedError;
-  static const String NOT_FOUND = ApiErrors.notFoundError;
-  static const String INTERNAL_SERVER_ERROR = ApiErrors.internalServerError;
+  static const String noContent = ApiErrors.noContent;
+  static const String badRequest = ApiErrors.badRequestError;
+  static const String forbidden = ApiErrors.forbiddenError;
+  static const String unauthorized = ApiErrors.unauthorizedError;
+  static const String notFound = ApiErrors.notFoundError;
+  static const String internalServerError = ApiErrors.internalServerError;
 
   // Local status codes
-  static const String TIMEOUT = ApiErrors.timeoutError;
-  static const String CANCEL = ApiErrors.defaultError;
-  static const String CACHE_ERROR = ApiErrors.cacheError;
-  static const String NO_INTERNET_CONNECTION = ApiErrors.noInternetError;
-  static const String DEFAULT = ApiErrors.defaultError;
+  static const String timeout = ApiErrors.timeoutError;
+  static const String cancel = ApiErrors.defaultError;
+  static const String cacheError = ApiErrors.cacheError;
+  static const String noInternetConnection = ApiErrors.noInternetError;
+  static const String defaultError = ApiErrors.defaultError;
 }
 
 // Enhanced DataSource extension
@@ -125,32 +125,32 @@ extension DataSourceExtension on DataSource {
     switch (this) {
       case DataSource.noContent:
         code = ResponseCode.noContent;
-        message = ResponseMessage.NO_CONTENT;
+        message = ResponseMessage.noContent;
         break;
 
       case DataSource.badRequest:
         code = ResponseCode.badRequest;
-        message = ResponseMessage.BAD_REQUEST;
+        message = ResponseMessage.badRequest;
         break;
 
       case DataSource.forbidden:
         code = ResponseCode.forbidden;
-        message = ResponseMessage.FORBIDDEN;
+        message = ResponseMessage.forbidden;
         break;
 
       case DataSource.unauthorized:
         code = ResponseCode.unauthorized;
-        message = ResponseMessage.UNAUTHORIZED;
+        message = ResponseMessage.unauthorized;
         break;
 
       case DataSource.notFound:
         code = ResponseCode.notFound;
-        message = ResponseMessage.NOT_FOUND;
+        message = ResponseMessage.notFound;
         break;
 
       case DataSource.internalServerError:
         code = ResponseCode.internalServerError;
-        message = ResponseMessage.INTERNAL_SERVER_ERROR;
+        message = ResponseMessage.internalServerError;
         break;
 
       case DataSource.timeout:
@@ -158,27 +158,27 @@ extension DataSourceExtension on DataSource {
       case DataSource.sendTimeout:
       case DataSource.receiveTimeout:
         code = ResponseCode.timeout;
-        message = ResponseMessage.TIMEOUT;
+        message = ResponseMessage.timeout;
         break;
 
       case DataSource.cancel:
         code = ResponseCode.cancel;
-        message = ResponseMessage.CANCEL;
+        message = ResponseMessage.cancel;
         break;
 
       case DataSource.cacheError:
         code = ResponseCode.cacheError;
-        message = ResponseMessage.CACHE_ERROR;
+        message = ResponseMessage.cacheError;
         break;
 
       case DataSource.noInternetConnection:
         code = ResponseCode.noInternetConnection;
-        message = ResponseMessage.NO_INTERNET_CONNECTION;
+        message = ResponseMessage.noInternetConnection;
         break;
 
       case DataSource.defaultError:
         code = ResponseCode.defaultError;
-        message = ResponseMessage.DEFAULT;
+        message = ResponseMessage.defaultError;
         break;
     }
 

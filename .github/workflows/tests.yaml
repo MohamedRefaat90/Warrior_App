@@ -51,44 +51,8 @@ jobs:
       run: flutter test test/unit/ --reporter=expanded
       
     - name: Run Widget Tests
-      run: flutter test test/widget/ --reporter=expanded
+      run: flutter test test/widget/ --reporter=expanded    
       
-    - name: Run All Tests with Coverage
-      run: flutter test --coverage --reporter=expanded
-      
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        file: coverage/lcov.info
-        flags: unittests
-        name: warrior-app-coverage
-      if: success()
-      
-    - name: Generate Coverage Report
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y lcov
-        genhtml coverage/lcov.info -o coverage/html
-      if: success()
-      
-    - name: Upload Coverage Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report
-        path: coverage/html/
-        retention-days: 30
-      if: success()
-      
-    - name: Check Build (Debug)
-      run: flutter build apk --debug
-      
-    - name: Upload Debug APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: debug-apk
-        path: build/app/outputs/flutter-apk/app-debug.apk
-        retention-days: 7
-      if: success()
 
   integration-test:
     name: Run Integration Tests

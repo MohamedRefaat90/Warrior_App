@@ -1,12 +1,11 @@
-import 'package:Warrior/core/functions/validators.dart';
-import 'package:Warrior/features/Auth/presentation/provider/reset_password_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:Warrior/core/functions/validators.dart';
 
 import 'validator_text.dart';
 
 class PasswordValidationRules extends ConsumerWidget {
-  PasswordValidationRules({super.key});
+  const PasswordValidationRules({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

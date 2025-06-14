@@ -7,7 +7,6 @@ import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/loader.dart';
-import 'package:Warrior/core/widgets/refresh_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
@@ -72,7 +71,18 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                 error: (error, stackTrace) =>
                     ref.read(musclesProvider).isRefreshing
                         ? Center(child: const Loader())
-                        : RefreshWidget(musclesProvider))
+                        : Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Something went wrong!'),
+                                ElevatedButton(
+                                  onPressed: () => ref.refresh(musclesProvider),
+                                  child: Text('Refresh'),
+                                ),
+                              ],
+                            ),
+                          ))
             : ValueListenableBuilder(
                 valueListenable: HiveManager.musclesBox.listenable(),
                 builder: (context, Box<MuscleModel> box, _) {

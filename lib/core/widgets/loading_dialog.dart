@@ -9,7 +9,7 @@ class LoadingDialog extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withValues(alpha: 0.5),
       child: Center(
         child: Container(
           width: 80,

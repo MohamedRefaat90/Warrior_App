@@ -2,7 +2,7 @@ import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
-import 'package:Warrior/features/Auth/presentation/provider/verifyOTP_provider.dart';
+import 'package:Warrior/features/Auth/presentation/provider/verify_otp_provider.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/otp_fileds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

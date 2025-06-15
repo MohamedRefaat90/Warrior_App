@@ -2,8 +2,9 @@ import 'package:Warrior/core/services/logger.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  // Use different client IDs for web vs Android
-  // clientId: dotenv.env['GOOGLE_WEB_CLIENT_ID'],
+  // Use serverClientId for Android - this is the OAuth 2.0 client ID from Firebase
+  serverClientId:
+      '466603345246-r99b4r8056lqhgrcsagpoolmvc73pjdk.apps.googleusercontent.com',
   scopes: ['email', 'profile', 'openid'],
 );
 

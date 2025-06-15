@@ -38,13 +38,6 @@ class WorkoutDetails extends ConsumerWidget {
               color: AppColors.white,
             )),
         appBar: AppBar(
-          title: Text(
-            workout.name!,
-            style: TextStyle(
-                fontFamily: 'poppins',
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.5),
-          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {

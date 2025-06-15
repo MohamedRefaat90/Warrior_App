@@ -110,11 +110,16 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
       AppLogger.debug(
           'Current Route: ${router.state.matchedLocation}', 'MUSCLES');
       AppLogger.debug('Is Online: ${ConnectivityChecker.isOnline}', 'MUSCLES');
-      if (router.state.matchedLocation == "/muscles" &&
-          ConnectivityChecker.isOnline!) {
+      if (router.state.matchedLocation == AppRouters.muscles &&
+          (widget.isComingFromWorkoutScreen == true) &&
+          (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
+              SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
         AppLogger.info('Showing workout dialog...', 'MUSCLES');
         showDialog(
-            context: context, builder: (context) => const WorkoutDialog());
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => WorkoutDialog(),
+        );
       }
     });
   }

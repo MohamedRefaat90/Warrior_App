@@ -21,7 +21,8 @@ platform :android do
     sh "flutter clean"
     sh "flutter build apk --release"
     firebase_app_distribution(
-      app: "1:466603345246:android:a4d0161c402a1bd30a3bcf",
+      app: "1:466603345246:android:810666c6db8b75510a3bcf",
+      # Option 1: Use CLI token (requires Node.js upgrade)
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
       android_artifact_type: "APK",
       android_artifact_path: "../build/app/outputs/flutter-apk/app-release.apk",

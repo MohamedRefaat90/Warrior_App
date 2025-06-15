@@ -71,6 +71,7 @@ flutter:
     - assets/images/signup/
     - assets/images/home/
     - assets/animation/
+    - .env
   #   - images/a_dot_ham.jpeg
 
 

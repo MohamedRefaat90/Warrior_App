@@ -22,7 +22,7 @@ void main() async {
 
   // Wrap main initialization in error handling
   try {
-    await dotenv.load();
+    // await dotenv.load();
     await AppServices.init();
 
     AppLogger.info('App initialization completed successfully');

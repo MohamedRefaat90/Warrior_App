@@ -17,17 +17,18 @@ default_platform(:android)
 
 platform :android do
   desc "Lane For Firebase Distribution"
-  lane :fbd do
+  lane :fbd do |options|
+    release_notes = options[:release_notes] || "Bug fixes and improvements"
+    
     sh "flutter clean"
     sh "flutter build apk --release"
     firebase_app_distribution(
       app: "1:466603345246:android:810666c6db8b75510a3bcf",
-      # Option 1: Use CLI token (requires Node.js upgrade)
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
       android_artifact_type: "APK",
       android_artifact_path: "../build/app/outputs/flutter-apk/app-release.apk",
       testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com",
-      release_notes: "First Release To Google Play",
+      release_notes: release_notes,
     )
   
     # sh "your_script.sh"
@@ -37,6 +38,7 @@ platform :android do
   desc "Deploy to Google Play Store"
   lane :deploy_to_play_store do |options|
     track = options[:track] || "internal"
+    release_notes = options[:release_notes] || "Performance improvements and bug fixes"
     
     # Ensure bundle is already built by the workflow
     upload_to_play_store(
@@ -47,7 +49,10 @@ platform :android do
       skip_upload_apk: true,
       skip_upload_metadata: true,
       skip_upload_images: true,
-      skip_upload_screenshots: true
+      skip_upload_screenshots: true,
+      release_notes: {
+        "en-US" => release_notes
+      }
     )
   end
 

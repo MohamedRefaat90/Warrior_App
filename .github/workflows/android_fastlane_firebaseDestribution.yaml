@@ -25,7 +25,24 @@ jobs:
         bundler-cache: true
         working-directory: android
     - run: flutter pub get
-    - run: bundle exec fastlane android fbd
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        echo "Generating release notes from recent commits..."
+        RELEASE_NOTES=$(git log --pretty=format:"• %s" -10 --no-merges | head -10)
+        if [ -z "$RELEASE_NOTES" ]; then
+          RELEASE_NOTES="• Bug fixes and improvements"
+        fi
+        echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+        echo "🚀 What's New:" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo "📅 Build: $(date '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_OUTPUT
+        echo "🔧 Branch: ${{ github.ref_name }}" >> $GITHUB_OUTPUT
+        echo "📝 Commit: ${{ github.sha }}" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+    - run: bundle exec fastlane android fbd release_notes:"${{ steps.release_notes.outputs.RELEASE_NOTES }}"
       working-directory: android
       env:
         FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}  

@@ -59,7 +59,18 @@ jobs:
         if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
           DEPLOY_TYPE="${{ github.event.inputs.deploy_type }}"
         else
-          DEPLOY_TYPE="patch"  # Default for push events
+          # Check for asset changes in recent commits
+          ASSET_CHANGES=$(git diff --name-only HEAD~5..HEAD | grep -E '\.(png|jpg|jpeg|svg|gif|webp|json|txt|md|yaml|xml)$|assets/|web/|NOTICES' || true)
+          
+          if [ -n "$ASSET_CHANGES" ]; then
+            echo "🔍 Asset changes detected:"
+            echo "$ASSET_CHANGES"
+            DEPLOY_TYPE="release"
+            echo "📦 Switching to release mode due to asset changes"
+          else
+            DEPLOY_TYPE="patch"
+            echo "🔄 No asset changes detected, using patch mode"
+          fi
         fi
         
         if [ "$DEPLOY_TYPE" = "release" ]; then

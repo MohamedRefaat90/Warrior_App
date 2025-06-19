@@ -18,7 +18,7 @@ default_platform(:android)
 platform :android do
   desc "Lane For Firebase Distribution"
   lane :fbd do |options|
-    release_notes = options[:release_notes] || "Bug fixes and improvements"
+    release_notes = options[:release_notes] || "Performance improvements and bug fixes"
     
     sh "flutter clean"
     sh "flutter build apk --release"

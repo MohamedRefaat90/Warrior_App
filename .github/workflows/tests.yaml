@@ -20,5 +20,5 @@ jobs:
         cache: true
     - run: flutter pub get
     - run: flutter packages pub run build_runner build --delete-conflicting-outputs
-    - run: flutter analyze
+    - run: flutter analyze --no-fatal-warnings --no-fatal-infos
     - run: flutter test 

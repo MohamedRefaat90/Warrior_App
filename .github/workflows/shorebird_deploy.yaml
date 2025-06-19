@@ -23,6 +23,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 10
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -60,23 +62,44 @@ jobs:
           DEPLOY_TYPE="${{ github.event.inputs.deploy_type }}"
         else
           # Check for asset changes in recent commits
-          ASSET_CHANGES=$(git diff --name-only HEAD~5..HEAD | grep -E '\.(png|jpg|jpeg|svg|gif|webp|json|txt|md|yaml|xml)$|assets/|web/|NOTICES' || true)
+          echo "🔍 Checking for asset changes in recent commits..."
           
-          if [ -n "$ASSET_CHANGES" ]; then
-            echo "🔍 Asset changes detected:"
-            echo "$ASSET_CHANGES"
-            DEPLOY_TYPE="release"
-            echo "📦 Switching to release mode due to asset changes"
+          # Try to get git history, fallback to release mode if insufficient history
+          if git rev-parse --verify HEAD~5 >/dev/null 2>&1; then
+            ASSET_CHANGES=$(git diff --name-only HEAD~5..HEAD | grep -E '\.(png|jpg|jpeg|svg|gif|webp|json|txt|md|yaml|xml)$|assets/|web/|NOTICES' || true)
+            
+            if [ -n "$ASSET_CHANGES" ]; then
+              echo "🔍 Asset changes detected:"
+              echo "$ASSET_CHANGES"
+              DEPLOY_TYPE="release"
+              echo "📦 Switching to release mode due to asset changes"
+              echo "ℹ️  Asset changes include: SVG files, images, NOTICES, or configuration files"
+            else
+              DEPLOY_TYPE="patch"
+              echo "🔄 No asset changes detected, using patch mode"
+            fi
           else
-            DEPLOY_TYPE="patch"
-            echo "🔄 No asset changes detected, using patch mode"
+            echo "⚠️  Insufficient git history, defaulting to release mode"
+            DEPLOY_TYPE="release"
           fi
         fi
         
+        echo "📋 Deployment type: $DEPLOY_TYPE"
+        
         if [ "$DEPLOY_TYPE" = "release" ]; then
           echo "🚀 Creating Shorebird release"
-          $HOME/.config/shorebird/bin/shorebird release android --no-confirm
+          if ! $HOME/.config/shorebird/bin/shorebird release android --no-confirm; then
+            echo "❌ Release failed, this might be due to:"
+            echo "   - Asset changes that require a new release"
+            echo "   - Configuration issues"
+            echo "   - Network connectivity problems"
+            exit 1
+          fi
         else
           echo "🔄 Creating Shorebird patch"
-          $HOME/.config/shorebird/bin/shorebird patch android --no-confirm
+          if ! $HOME/.config/shorebird/bin/shorebird patch android --no-confirm; then
+            echo "❌ Patch failed, falling back to release mode"
+            echo "🚀 Creating Shorebird release as fallback"
+            $HOME/.config/shorebird/bin/shorebird release android --no-confirm
+          fi
         fi 

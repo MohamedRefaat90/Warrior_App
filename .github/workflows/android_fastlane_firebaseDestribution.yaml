@@ -6,7 +6,7 @@ on:
     types:
       - completed
     branches:
-      - main
+      - dev
 
 jobs:
   Distribute_To_Firebase:

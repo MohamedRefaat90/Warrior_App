@@ -34,5 +34,27 @@ platform :android do
     # You can also use other beta testing services here
   end
 
+  desc "Deploy to Google Play Store"
+  lane :deploy_to_play_store do |options|
+    track = options[:track] || "internal"
+    
+    # Ensure bundle is already built by the workflow
+    upload_to_play_store(
+      track: track,
+      release_status: track == "production" ? "completed" : "draft",
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_KEY_PATH"],
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  desc "Build Release Bundle for Play Store"
+  lane :build_release do
+    sh "flutter clean"
+    sh "flutter build appbundle --release"
+  end
 
 end

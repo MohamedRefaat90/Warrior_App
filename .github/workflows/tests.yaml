@@ -2,7 +2,7 @@ name: Tests & Quality Checks
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
   workflow_call:
 
 jobs:

@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
-import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/logger.dart';
@@ -11,6 +10,7 @@ import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/workout_alert_dialog.dart';
+import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +33,14 @@ class MusclesScreen extends ConsumerStatefulWidget {
 class _MusclesScreenState extends ConsumerState<MusclesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        // Reset select mode when navigating back using device back button
+        if (didPop && widget.isComingFromWorkoutScreen == true) {
+          ref.read(workoutsProvider.notifier).selectMode = false;
+        }
+      },
+      child: Scaffold(
         appBar: AppBar(
           title: const Text('Muscles',
               style: TextStyle(
@@ -88,7 +95,35 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                 builder: (context, Box<MuscleModel> box, _) {
                   if (box.values.isEmpty) {
                     return Center(
-                        child: Text('No muscles found.'.capitalizeWord()));
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.wifi_off,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'No muscles available offline',
+                            style: TextStyle(
+                                fontFamily: "poppins",
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Please go online to download muscle groups',
+                            style: TextStyle(
+                                fontFamily: "poppins",
+                                fontSize: 16,
+                                color: Colors.grey[600]),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
                   }
 
                   final muscles = box.values.toList();
@@ -99,7 +134,9 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                         widget.appendToExistingWorkoutSet,
                   );
                 },
-              ));
+              ),
+      ),
+    );
   }
 
   @override
@@ -110,6 +147,13 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
       AppLogger.debug(
           'Current Route: ${router.state.matchedLocation}', 'MUSCLES');
       AppLogger.debug('Is Online: ${ConnectivityChecker.isOnline}', 'MUSCLES');
+
+      // Reset select mode when entering muscles screen from exercises
+      // This ensures select mode doesn't persist when navigating back
+      if (widget.isComingFromWorkoutScreen == true) {
+        ref.read(workoutsProvider.notifier).selectMode = false;
+      }
+
       if (router.state.matchedLocation == AppRouters.muscles &&
           (widget.isComingFromWorkoutScreen == true) &&
           (SharedPref.getBool(StorageKeys.workoutAlert) == null ||

@@ -10,7 +10,7 @@
 [![Dart](https://img.shields.io/badge/Dart-3.5.3+-0175C2?style=flat-square&logo=dart&logoColor=white)](https://dart.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Enabled-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com)
 [![Tests](https://img.shields.io/badge/Tests-63%20Passing-brightgreen?style=flat-square)](tests)
-[![Version](https://img.shields.io/badge/Version-2.0.0-blue?style=flat-square)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)](pubspec.yaml)
 
 *Your personal fitness companion for creating and managing custom workout routines*
 
@@ -55,6 +55,7 @@
 - **Network Layer** - Dio HTTP client with interceptors and error handling
 - **Authentication** - Firebase Auth with Google Sign-In integration
 - **Responsive UI** - Flutter ScreenUtil for adaptive layouts
+- **Over-the-Air Updates** - Shorebird for instant app updates without store approval
 - **Testing** - Comprehensive unit, widget, and integration tests
 
 ### 🎯 User Experience
@@ -177,7 +178,7 @@ flutter build ipa --release
 
 ### 📋 **GitHub Workflows**
 
-The project includes comprehensive CI/CD automation with two main workflows:
+The project includes comprehensive CI/CD automation with three main workflows:
 
 #### 1. **Tests & Quality Checks** (`.github/workflows/tests.yaml`)
 **Triggers**: Pushes to `main` branch only
@@ -195,6 +196,14 @@ The project includes comprehensive CI/CD automation with two main workflows:
 - **Automated APK Build**: Release APK generation
 - **Firebase Distribution**: Automatic distribution to beta testers
 - **Fastlane Integration**: Streamlined deployment process
+
+#### 3. **Shorebird Deploy** (`.github/workflows/shorebird_deploy.yaml`)
+**Triggers**: Pushes to `main`, version changes, manual dispatch
+
+- **Over-the-Air Updates**: Instant patches for bug fixes and small features
+- **Release Management**: Automated releases for version changes
+- **Multi-platform Support**: Android and iOS deployment
+- **Smart Detection**: Automatically determines patch vs release deployment
 
 ### 🎯 **Workflow Features**
 

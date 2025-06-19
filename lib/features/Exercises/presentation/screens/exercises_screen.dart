@@ -20,7 +20,14 @@ class ExercisesScreen extends ConsumerWidget {
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        // Reset select mode when navigating back using device back button
+        if (didPop && (isComingFromWorkoutScreen ?? false)) {
+          ref.read(workoutsProvider.notifier).selectMode = false;
+        }
+      },
+      child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
               onPressed: () {
@@ -61,20 +68,80 @@ class ExercisesScreen extends ConsumerWidget {
                     ))
             : HiveManager.exercisesBox.isEmpty
                 ? Center(
-                    child: Text(
-                      "No exercises available offline",
-                      style: TextStyle(
-                          fontFamily: "poppins",
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.wifi_off,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          "No exercises available offline",
+                          style: TextStyle(
+                              fontFamily: "poppins",
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Please go online to download exercises",
+                          style: TextStyle(
+                              fontFamily: "poppins",
+                              fontSize: 16,
+                              color: Colors.grey[600]),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   )
-                : ExercisesGridView(
-                    exercises: HiveManager.exercisesBox.values
+                : () {
+                    final filteredExercises = HiveManager.exercisesBox.values
                         .where((exercise) => exercise.muscleID == muscle['id'])
-                        .toList(),
-                    isComingFromWorkoutScreen:
-                        isComingFromWorkoutScreen ?? false,
-                  ));
+                        .toList();
+
+                    if (filteredExercises.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.fitness_center,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              "No ${muscle['name']} exercises available offline",
+                              style: TextStyle(
+                                  fontFamily: "poppins",
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "Go online to get ${muscle['name']} exercises",
+                              style: TextStyle(
+                                  fontFamily: "poppins",
+                                  fontSize: 16,
+                                  color: Colors.grey[600]),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ExercisesGridView(
+                      exercises: filteredExercises,
+                      isComingFromWorkoutScreen:
+                          isComingFromWorkoutScreen ?? false,
+                    );
+                  }(),
+      ),
+    );
   }
 }

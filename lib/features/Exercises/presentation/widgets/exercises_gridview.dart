@@ -49,4 +49,14 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
     }
     super.didChangeDependencies();
   }
+
+  @override
+  void dispose() {
+    // Reset select mode when leaving the exercises screen
+    // This prevents the select mode from persisting when navigating back
+    if (widget.isComingFromWorkoutScreen == true) {
+      ref.read(workoutsProvider.notifier).selectMode = false;
+    }
+    super.dispose();
+  }
 }

@@ -45,6 +45,12 @@ class WorkoutDetails extends ConsumerWidget {
               Navigator.pop(context);
             },
           ),
+          title: Text(
+            '${workout.name} Exercises',
+            style: const TextStyle(
+                fontFamily: "Kings", fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
         ),
         bottomNavigationBar: workoutNotifier.selectMode
             ? Padding(

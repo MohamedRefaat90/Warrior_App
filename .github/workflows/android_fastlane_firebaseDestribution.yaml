@@ -12,6 +12,8 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 10
     - uses: actions/setup-java@v4
       with:
         java-version: "17"
@@ -28,11 +30,18 @@ jobs:
     - name: Generate release notes
       id: release_notes
       run: |
-        echo "Generating release notes from recent commits..."
+        echo "🔍 Debugging git history..."
+        git log --oneline -5
+        echo ""
+        echo "📝 Generating release notes from recent commits..."
         RELEASE_NOTES=$(git log --pretty=format:"• %s" -10 --no-merges | head -10)
         if [ -z "$RELEASE_NOTES" ]; then
+          echo "⚠️  No commits found, using fallback"
           RELEASE_NOTES="• Bug fixes and improvements"
         fi
+        echo "📋 Generated release notes:"
+        echo "$RELEASE_NOTES"
+        echo ""
         echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
         echo "🚀 What's New:" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
@@ -42,7 +51,13 @@ jobs:
         echo "🔧 Branch: ${{ github.ref_name }}" >> $GITHUB_OUTPUT
         echo "📝 Commit: ${{ github.sha }}" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
-    - run: bundle exec fastlane android fbd release_notes:"${{ steps.release_notes.outputs.RELEASE_NOTES }}"
+    - name: Deploy to Firebase Distribution
+      run: |
+        echo "🚀 Deploying to Firebase with release notes..."
+        echo "Release notes preview:"
+        echo "${{ steps.release_notes.outputs.RELEASE_NOTES }}"
+        echo ""
+        bundle exec fastlane android fbd release_notes:"${{ steps.release_notes.outputs.RELEASE_NOTES }}"
       working-directory: android
       env:
         FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}  

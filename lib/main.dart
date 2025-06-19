@@ -114,7 +114,7 @@ class Warrior extends ConsumerWidget {
               alignment: Alignment.bottomCenter,
               children: [
                 MaterialApp.router(
-                  title: 'Warrior v1.0 🚀',
+                  title: 'Warrior',
                   debugShowCheckedModeBanner: false,
                   theme: ThemeData(
                     colorScheme: ColorScheme.fromSeed(
@@ -181,7 +181,7 @@ class Warrior extends ConsumerWidget {
                 const Text('App Error'),
                 if (kDebugMode) ...[
                   const SizedBox(height: 8),
-                  Text(error.toString()),
+                  Text(error.toString())
                 ],
               ],
             ),

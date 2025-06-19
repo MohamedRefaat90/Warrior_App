@@ -40,19 +40,32 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
+    - name: Generate code
+      run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+    - name: Test build
+      run: flutter build apk --debug
+
     - name: Install and Setup Shorebird CLI
       run: |
         curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
         mkdir -p ~/.config/shorebird
         echo '${{ secrets.SHOREBIRD_TOKEN }}' > ~/.config/shorebird/credentials.json
-        $HOME/.shorebird/bin/shorebird doctor
+        $HOME/.config/shorebird/bin/shorebird doctor
 
     - name: Deploy
       run: |
-        if [ "${{ github.event.inputs.deploy_type }}" = "release" ]; then
+        # Determine deployment type
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          DEPLOY_TYPE="${{ github.event.inputs.deploy_type }}"
+        else
+          DEPLOY_TYPE="patch"  # Default for push events
+        fi
+        
+        if [ "$DEPLOY_TYPE" = "release" ]; then
           echo "🚀 Creating Shorebird release"
-          $HOME/.shorebird/bin/shorebird release android --force
+          $HOME/.config/shorebird/bin/shorebird release android --force
         else
           echo "🔄 Creating Shorebird patch"
-          $HOME/.shorebird/bin/shorebird patch android --force
+          $HOME/.config/shorebird/bin/shorebird patch android --force
         fi 

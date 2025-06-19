@@ -1,127 +1,31 @@
-name: Android Fastlane With Firebase App Distribution Workflow
+name: Firebase Distribution
 
 on:
   workflow_run:
-    workflows: ["Tests & Quality Checks"]
-    types:
-      - completed
-    branches:
-      - dev
+    workflows: ["Tests"]
+    types: [completed]
+    branches: [dev]
 
 jobs:
-  Distribute_To_Firebase:
+  distribute:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event.workflow_run.conclusion == 'success'
     steps:
-    - name: Checkout My Repo Code
-      uses: actions/checkout@v4
-        
-    - name: Setup JDK 17
-      uses: actions/setup-java@v4
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
       with:
         java-version: "17"
         distribution: "temurin"
-
-    - name: Install Flutter
-      uses: subosito/flutter-action@v2
+    - uses: subosito/flutter-action@v2
       with:
         channel: stable
-
-    - name: Restore .env file
-      run: |
-          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
-      if: env.ENV_FILE_CONTENT != ''
-      env:
-        ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
-
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+    - uses: ruby/setup-ruby@v1
       with:
         ruby-version: "3.2.3"
         bundler-cache: true
         working-directory: android
-
-    - name: Install Flutter Dependencies
-      run: flutter pub get
-
-    - name: Verify Firebase CLI Token
-      env:
-        FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
-      run: |
-        if [ -z "$FIREBASE_CLI_TOKEN" ]; then
-          echo "❌ FIREBASE_CLI_TOKEN is not set"
-          exit 1
-        else
-          echo "✅ FIREBASE_CLI_TOKEN is set (length: ${#FIREBASE_CLI_TOKEN})"
-        fi
-
-    - name: Install Firebase CLI
-      run: |
-        curl -sL https://firebase.tools | bash
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-    - name: Test Firebase Access
-      env:
-        FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
-      run: |
-        echo "🔍 Testing Firebase access..."
-        firebase projects:list --token "$FIREBASE_CLI_TOKEN"
-        echo "🎯 Testing App Distribution access..."
-        firebase appdistribution:apps:list --project warrior-dd0f2 --token "$FIREBASE_CLI_TOKEN" || {
-          echo "❌ App Distribution access failed - this is likely the root cause"
-          echo "Please enable App Distribution in Firebase Console"
-        }
-
-    - name: Try Building APK First
-      run: |
-        bundle exec fastlane android build_release
+    - run: flutter pub get
+    - run: bundle exec fastlane android fbd
       working-directory: android
-      continue-on-error: true
-
-    - name: Build and Distribute App
-      id: firebase_distribution
       env:
-        FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
-      run: |
-        bundle exec fastlane android fbd
-      working-directory: android
-      continue-on-error: true
-
-    - name: Upload APK as Artifact (Fallback)
-      if: steps.firebase_distribution.outcome == 'failure'
-      uses: actions/upload-artifact@v4
-      with:
-        name: warrior-app-release
-        path: build/app/outputs/flutter-apk/app-release.apk
-        retention-days: 30
-
-    - name: Firebase Distribution Troubleshooting
-      if: steps.firebase_distribution.outcome == 'failure'
-      run: |
-        echo "## 🔧 Firebase App Distribution Failed" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "The Firebase App Distribution upload failed. This could be due to:" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Possible Causes:" >> $GITHUB_STEP_SUMMARY
-        echo "1. **Firebase App Distribution not enabled** - Check Firebase Console > App Distribution" >> $GITHUB_STEP_SUMMARY
-        echo "2. **Service account permissions** - Ensure the service account has 'Firebase App Distribution Admin' role" >> $GITHUB_STEP_SUMMARY
-        echo "3. **App ID mismatch** - Verify the app ID exists in your Firebase project" >> $GITHUB_STEP_SUMMARY
-        echo "4. **Token permissions** - The CLI token might not have sufficient permissions" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
-        echo "1. Check the Firebase Console for your project: [warrior-dd0f2](https://console.firebase.google.com/project/warrior-dd0f2)" >> $GITHUB_STEP_SUMMARY
-        echo "2. Verify App Distribution is enabled under 'Release & Monitor' > 'App Distribution'" >> $GITHUB_STEP_SUMMARY
-        echo "3. Check service account permissions in Firebase Console > Project Settings > Service Accounts" >> $GITHUB_STEP_SUMMARY
-        echo "4. The APK has been uploaded as an artifact for manual distribution" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Manual Distribution:" >> $GITHUB_STEP_SUMMARY
-        echo "Download the APK artifact from this workflow run and upload it manually to Firebase App Distribution" >> $GITHUB_STEP_SUMMARY
-        
-    - name: Success Summary
-      if: steps.firebase_distribution.outcome == 'success'
-      run: |
-        echo "## ✅ Firebase App Distribution Success" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "The Warrior app has been successfully distributed to Firebase App Distribution!" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Testers will receive email notifications with download links.**" >> $GITHUB_STEP_SUMMARY  
+        FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}  

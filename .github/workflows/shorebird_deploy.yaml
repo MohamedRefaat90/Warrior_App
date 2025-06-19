@@ -23,8 +23,6 @@ on:
         type: choice
         options:
         - android
-        - ios
-        - both
 
 env:
   FLUTTER_VERSION: "3.32.0"
@@ -123,6 +121,8 @@ jobs:
         # Install Shorebird CLI
         curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
         echo "$HOME/.shorebird/bin" >> $GITHUB_PATH
+        # Add to PATH for current session
+        export PATH="$HOME/.shorebird/bin:$PATH"
 
     - name: Authenticate with Shorebird
       run: |
@@ -132,17 +132,23 @@ jobs:
 
     - name: Verify Shorebird setup
       run: |
+        # Ensure shorebird is in PATH
+        export PATH="$HOME/.shorebird/bin:$PATH"
         shorebird doctor
 
     - name: Deploy Release
       if: needs.determine-strategy.outputs.deploy_type == 'release'
       run: |
+        # Ensure shorebird is in PATH
+        export PATH="$HOME/.shorebird/bin:$PATH"
         echo "🚀 Creating Shorebird release for ${{ matrix.platform }}"
         shorebird release ${{ matrix.platform }} --force
 
     - name: Deploy Patch
       if: needs.determine-strategy.outputs.deploy_type == 'patch'
       run: |
+        # Ensure shorebird is in PATH
+        export PATH="$HOME/.shorebird/bin:$PATH"
         echo "🔄 Creating Shorebird patch for ${{ matrix.platform }}"
         shorebird patch ${{ matrix.platform }} --force
 

@@ -64,8 +64,8 @@ jobs:
         
         if [ "$DEPLOY_TYPE" = "release" ]; then
           echo "🚀 Creating Shorebird release"
-          $HOME/.config/shorebird/bin/shorebird release android --force
+          $HOME/.config/shorebird/bin/shorebird release android --no-confirm
         else
           echo "🔄 Creating Shorebird patch"
-          $HOME/.config/shorebird/bin/shorebird patch android --force
+          $HOME/.config/shorebird/bin/shorebird patch android --no-confirm
         fi 

@@ -49,7 +49,7 @@ platform :android do
       track: track,
       release_status: track == "production" ? "completed" : "draft",
       aab: "../build/app/outputs/bundle/release/app-release.aab",
-      json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_KEY"],
+              json_key: "google-play-service-account.json",
       skip_upload_apk: true,
       skip_upload_metadata: true,
       skip_upload_images: true,

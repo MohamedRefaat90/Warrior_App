@@ -55,7 +55,15 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
     // Reset select mode when leaving the exercises screen
     // This prevents the select mode from persisting when navigating back
     if (widget.isComingFromWorkoutScreen == true) {
-      ref.read(workoutsProvider.notifier).selectMode = false;
+      try {
+        // Check if the provider is still available before accessing it
+        if (mounted) {
+          ref.read(workoutsProvider.notifier).selectMode = false;
+        }
+      } catch (e) {
+        // Ignore errors if the widget is already disposed or ref is unavailable
+        // The selectMode will be reset by the parent ExercisesScreen's PopScope
+      }
     }
     super.dispose();
   }

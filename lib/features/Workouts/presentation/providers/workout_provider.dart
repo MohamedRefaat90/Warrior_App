@@ -138,6 +138,13 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     }
   }
 
+  void disableSelectMode() {
+    selectMode = false;
+    newWorkout.workoutItems?.clear();
+    AppLogger.info('Select mode explicitly disabled', 'WORKOUT');
+    state = ProviderStates(isSuccess: true);
+  }
+
   void fillNewWorkout({
     String? name,
     String? description,

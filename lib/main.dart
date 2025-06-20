@@ -224,7 +224,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    kDebugMode
+                    !kDebugMode
                         ? _error.toString()
                         : 'An unexpected error occurred. Please restart the app.',
                     textAlign: TextAlign.center,
@@ -237,8 +237,10 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        _error = null;
-                        _stackTrace = null;
+                        // _error = null;
+                        // _stackTrace = null;
+                        AppLogger.error('Error Boundary', 'ERROR_BOUNDARY',
+                            _error, _stackTrace);
                       });
                     },
                     child: const Text('Try Again'),

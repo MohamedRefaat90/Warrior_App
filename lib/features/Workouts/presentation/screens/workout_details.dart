@@ -24,7 +24,17 @@ class WorkoutDetails extends ConsumerWidget {
         floatingActionButton: FloatingActionButton(
             backgroundColor: AppColors.primaryColor,
             onPressed: () {
-              workoutNotifier.newWorkout = workout;
+              // Create a proper copy of the workout with existing exercises
+              workoutNotifier.newWorkout = WorkoutSetModel(
+                id: workout.id,
+                name: workout.name,
+                description: workout.description,
+                createdAt: workout.createdAt,
+                updatedAt: workout.updatedAt,
+                workoutItems: workout.workoutItems != null
+                    ? List<WorkoutItemModel>.from(workout.workoutItems!)
+                    : [],
+              );
 
               context.pushNamed(AppRouters.muscles, extra: {
                 "isComingFromWorkoutScreen": true,
@@ -58,7 +68,7 @@ class WorkoutDetails extends ConsumerWidget {
                 child: CustomBTN(
                   widget: Text("Delete"),
                   color: AppColors.primaryColor,
-                  press: () async {
+                  press: () {
                     if (workoutNotifier.newWorkout.workoutItems == null ||
                         workout.workoutItems == null) {
                       return;
@@ -75,18 +85,15 @@ class WorkoutDetails extends ConsumerWidget {
                         selectedExerciseIds.contains(element.exercise.id));
 
                     // Update the workout in the backend
-                    await workoutNotifier.updateWorkoutSet(WorkoutSetModel(
+                    workoutNotifier.updateWorkoutSet(WorkoutSetModel(
                       id: workout.id,
                       name: workout.name,
                       description: workout.description,
                       workoutItems: workout.workoutItems,
                     ));
 
-                    // Clear selected items from newWorkout to reset checkbox state
-                    workoutNotifier.newWorkout.workoutItems!.clear();
-
-                    // Reset selection mode
-                    workoutNotifier.toggleSelectMode();
+                    // Explicitly disable selection mode and clear all selections
+                    workoutNotifier.disableSelectMode();
                   },
                 ),
               )

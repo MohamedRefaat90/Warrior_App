@@ -90,12 +90,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       }
                     }),
                 // 10.verticalSpace,
-                TextButton(
-                    onPressed: () {
-                      SharedPref.setBool(StorageKeys.isGuestMode, true);
-                      context.goNamed(AppRouters.muscles);
-                    },
-                    child: Text("Guest Mode")),
+                // TextButton(
+                //     onPressed: () {
+                //       SharedPref.setBool(StorageKeys.isGuestMode, true);
+                //       context.goNamed(AppRouters.muscles);
+                //     },
+                //     child: Text("Guest Mode")),
                 const LoginWith(),
                 10.verticalSpace,
                 const GoogleButton(),

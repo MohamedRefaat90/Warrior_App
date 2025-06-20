@@ -33,7 +33,7 @@ dependencies:
   pinput: 
   otp_timer_button: 
   pretty_dio_logger: 
-  flutter_secure_storage: 
+  flutter_secure_storage: ^9.2.2 
   google_sign_in: 
   cached_network_image: 
   flutter_cache_manager: 

@@ -3,6 +3,7 @@ import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/empty_workout_exercises.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/last_weight_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,13 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
   Widget build(BuildContext context) {
     ref.watch(workoutsProvider);
     final workoutNotifier = ref.watch(workoutsProvider.notifier);
+
+    // Check if workout has no exercises
+    if (widget.workout.workoutItems == null ||
+        widget.workout.workoutItems!.isEmpty) {
+      return EmptyWorkoutExercises(workout: widget.workout);
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.8),
       child: SingleChildScrollView(

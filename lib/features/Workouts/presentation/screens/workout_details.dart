@@ -16,6 +16,14 @@ class WorkoutDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(workoutsProvider);
     final workoutNotifier = ref.read(workoutsProvider.notifier);
+
+    // Get the updated workout from the provider's workout list
+    // This ensures we always show the latest data after updates
+    final updatedWorkout = workoutNotifier.workoutList
+            .where((w) => w.id == workout.id)
+            .firstOrNull ??
+        workout;
+
     return PopScope(
       onPopInvokedWithResult: (result, data) {
         ref.watch(workoutsProvider.notifier).selectMode = false;
@@ -26,13 +34,13 @@ class WorkoutDetails extends ConsumerWidget {
             onPressed: () {
               // Create a proper copy of the workout with existing exercises
               workoutNotifier.newWorkout = WorkoutSetModel(
-                id: workout.id,
-                name: workout.name,
-                description: workout.description,
-                createdAt: workout.createdAt,
-                updatedAt: workout.updatedAt,
-                workoutItems: workout.workoutItems != null
-                    ? List<WorkoutItemModel>.from(workout.workoutItems!)
+                id: updatedWorkout.id,
+                name: updatedWorkout.name,
+                description: updatedWorkout.description,
+                createdAt: updatedWorkout.createdAt,
+                updatedAt: updatedWorkout.updatedAt,
+                workoutItems: updatedWorkout.workoutItems != null
+                    ? List<WorkoutItemModel>.from(updatedWorkout.workoutItems!)
                     : [],
               );
 
@@ -56,7 +64,7 @@ class WorkoutDetails extends ConsumerWidget {
             },
           ),
           title: Text(
-            '${workout.name} Exercises',
+            '${updatedWorkout.name}',
             style: const TextStyle(
                 fontFamily: "Kings", fontSize: 30, fontWeight: FontWeight.bold),
           ),
@@ -70,7 +78,7 @@ class WorkoutDetails extends ConsumerWidget {
                   color: AppColors.primaryColor,
                   press: () {
                     if (workoutNotifier.newWorkout.workoutItems == null ||
-                        workout.workoutItems == null) {
+                        updatedWorkout.workoutItems == null) {
                       return;
                     }
 
@@ -81,15 +89,15 @@ class WorkoutDetails extends ConsumerWidget {
 
                     // Both modify the local instance for immediate UI update
                     // and create the list for the API update
-                    workout.workoutItems!.removeWhere((element) =>
+                    updatedWorkout.workoutItems!.removeWhere((element) =>
                         selectedExerciseIds.contains(element.exercise.id));
 
                     // Update the workout in the backend
                     workoutNotifier.updateWorkoutSet(WorkoutSetModel(
-                      id: workout.id,
-                      name: workout.name,
-                      description: workout.description,
-                      workoutItems: workout.workoutItems,
+                      id: updatedWorkout.id,
+                      name: updatedWorkout.name,
+                      description: updatedWorkout.description,
+                      workoutItems: updatedWorkout.workoutItems,
                     ));
 
                     // Explicitly disable selection mode and clear all selections
@@ -98,7 +106,7 @@ class WorkoutDetails extends ConsumerWidget {
                 ),
               )
             : null,
-        body: WorkoutGridView(workout),
+        body: WorkoutGridView(updatedWorkout),
       ),
     );
   }

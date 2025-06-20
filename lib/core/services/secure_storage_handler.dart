@@ -1,8 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageHandler {
-  static const storage = FlutterSecureStorage(
-      aOptions: AndroidOptions(encryptedSharedPreferences: true));
+  static final storage = FlutterSecureStorage();
 
   static Future<void> delete({required String key}) async {
     await storage.delete(key: key);

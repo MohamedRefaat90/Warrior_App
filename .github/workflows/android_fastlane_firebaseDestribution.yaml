@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 10
+        fetch-depth: 5
     - uses: actions/setup-java@v4
       with:
         java-version: "17"
@@ -34,7 +34,7 @@ jobs:
         git log --oneline -5
         echo ""
         echo "📝 Generating release notes from recent commits..."
-        RELEASE_NOTES=$(git log --pretty=format:"• %s" -10 --no-merges | head -10)
+        RELEASE_NOTES=$(git log --pretty=format:"• %s" -5 --no-merges | head -5)
         if [ -z "$RELEASE_NOTES" ]; then
           echo "⚠️  No commits found, using fallback"
           RELEASE_NOTES="• Bug fixes and improvements"

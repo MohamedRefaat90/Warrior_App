@@ -39,7 +39,7 @@ platform :android do
   desc "Deploy to Google Play Store"
   lane :deploy_to_play_store do |options|
     track = options[:track] || "internal"
-    release_notes = options[:release_notes] || "Bug fixes and improvements"
+    release_notes = "Bug fixes and improvements"
     
     # Log the release notes for reference
     UI.message("📝 Release Notes: #{release_notes}")

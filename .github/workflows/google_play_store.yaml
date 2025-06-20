@@ -43,7 +43,7 @@ jobs:
         echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
         echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
         echo "storeFile=keystore/upload-keystore.jks" >> android/key.properties
-        echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}' > android/fastlane/google-play-service-account.json
+        echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}' > android/google-play-service-account.json
     - run: flutter build appbundle --release
     - run: bundle exec fastlane android deploy_to_play_store track:${{ github.event.inputs.track || 'internal' }}
       working-directory: android 

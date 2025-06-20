@@ -224,7 +224,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    !kDebugMode
+                    kDebugMode
                         ? _error.toString()
                         : 'An unexpected error occurred. Please restart the app.',
                     textAlign: TextAlign.center,

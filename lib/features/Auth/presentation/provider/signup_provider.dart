@@ -23,12 +23,21 @@ class SignupNotifier extends StateNotifier<ProviderStates> {
 
   void passwordValidator(String password) {
     try {
-      checkLengthOfPassword(password);
-      checkPasswordContainUpperChar(password);
-      checkPasswordContainLowerChar(password);
-      checkPasswordContainSpecialChar(password);
-      checkPasswordContainNum(password);
-      state = ProviderStates();
+      // Use the new stateless validation function
+      final result = validatePasswordDetailed(password);
+      
+      if (result.isValid) {
+        state = ProviderStates();
+      } else {
+        List<String> errors = [];
+        if (!result.isLengthValid) errors.add('At least 8 characters');
+        if (!result.hasUpperCase) errors.add('One uppercase letter');
+        if (!result.hasLowerCase) errors.add('One lowercase letter');
+        if (!result.hasNumber) errors.add('One number');
+        if (!result.hasSpecialChar) errors.add('One special character');
+        
+        state = ProviderStates(errorMessage: 'Password must contain: ${errors.join(', ')}');
+      }
     } catch (e) {
       AppLogger.warning('Password validation failed', 'AUTH', e);
       state = ProviderStates(errorMessage: 'Password validation failed');

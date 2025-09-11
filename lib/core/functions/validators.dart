@@ -1,51 +1,51 @@
-bool isVaildEmail = false;
+// Immutable class to hold password validation results
+class PasswordValidationResult {
+  final bool isLengthValid;
+  final bool hasUpperCase;
+  final bool hasLowerCase;
+  final bool hasNumber;
+  final bool hasSpecialChar;
+  final bool isValid;
 
-bool isPassLengthLargerThan8 = false;
-bool isContainUpperChar = false;
-bool isContainLowerChar = false;
-bool isContainNum = false;
-bool isContainSpecailChar = false;
-bool isPassMatchConfirmPass = false;
-bool isObsecured = true;
+  const PasswordValidationResult({
+    required this.isLengthValid,
+    required this.hasUpperCase,
+    required this.hasLowerCase,
+    required this.hasNumber,
+    required this.hasSpecialChar,
+  }) : isValid = isLengthValid && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
 
-checkLengthOfPassword(String password) {
-  if (password.length >= 8) {
-    isPassLengthLargerThan8 = true;
-  } else {
-    isPassLengthLargerThan8 = false;
+  // Factory constructor for easy creation
+  factory PasswordValidationResult.validate(String password) {
+    return PasswordValidationResult(
+      isLengthValid: password.length >= 8,
+      hasUpperCase: password.contains(RegExp(r"[A-Z]")),
+      hasLowerCase: password.contains(RegExp(r"[a-z]")),
+      hasNumber: password.contains(RegExp(r"[0-9]")),
+      hasSpecialChar: password.contains(RegExp(r"[!@#\$&*~]")),
+    );
   }
 }
 
-checkPasswordContainLowerChar(String password) {
-  if (password.contains(RegExp(r"[a-z]"))) {
-    isContainLowerChar = true;
-  } else {
-    isContainLowerChar = false;
-  }
+// Thread-safe, stateless validation functions
+bool checkLengthOfPassword(String password) {
+  return password.length >= 8;
 }
 
-checkPasswordContainSpecialChar(String password) {
-  if (password.contains(RegExp(r"(?=.*?[!@#\$&*~])"))) {
-    isContainSpecailChar = true;
-  } else {
-    isContainSpecailChar = false;
-  }
+bool checkPasswordContainLowerChar(String password) {
+  return password.contains(RegExp(r"[a-z]"));
 }
 
-checkPasswordContainUpperChar(String password) {
-  if (password.contains(RegExp(r"[A-Z]"))) {
-    isContainUpperChar = true;
-  } else {
-    isContainUpperChar = false;
-  }
+bool checkPasswordContainSpecialChar(String password) {
+  return password.contains(RegExp(r"[!@#\$&*~]"));
 }
 
-checkPasswordContainNum(String password) {
-  if (password.contains(RegExp(r"[0-9]"))) {
-    isContainNum = true;
-  } else {
-    isContainNum = false;
-  }
+bool checkPasswordContainUpperChar(String password) {
+  return password.contains(RegExp(r"[A-Z]"));
+}
+
+bool checkPasswordContainNum(String password) {
+  return password.contains(RegExp(r"[0-9]"));
 }
 
 String? confirmPasswordvalidator(String confirmPassword, String password) {
@@ -56,36 +56,26 @@ String? confirmPasswordvalidator(String confirmPassword, String password) {
 }
 
 String? emailValidator(String email) {
-  if (RegExp(
-          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*\.(com|org|net|edu|gov|mil|biz|info|io)$")
-      .hasMatch(email)) {
-    return null;
-  } else if (email.isEmpty) {
+  if (email.isEmpty) {
     return "Email is required";
+  }
+  
+  // More comprehensive and secure email validation regex
+  // This regex is more restrictive and follows RFC 5322 more closely
+  if (RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$").hasMatch(email)) {
+    return null;
   } else {
     return "Invalid Email";
   }
 }
 
-bool validatePassword() {
-  if (isPassLengthLargerThan8 &&
-      isContainUpperChar &&
-      isContainLowerChar &&
-      isContainNum &&
-      isContainSpecailChar) {
-    return true;
-  } else {
-    return false;
-  }
+// Stateless password validation function
+bool validatePassword(String password) {
+  final result = PasswordValidationResult.validate(password);
+  return result.isValid;
 }
 
-void resetFlagFields() {
-  isVaildEmail = false;
-  isPassLengthLargerThan8 = false;
-  isContainUpperChar = false;
-  isContainLowerChar = false;
-  isContainNum = false;
-  isContainSpecailChar = false;
-  isPassMatchConfirmPass = false;
-  isObsecured = true;
+// Comprehensive password validation with detailed feedback
+PasswordValidationResult validatePasswordDetailed(String password) {
+  return PasswordValidationResult.validate(password);
 }

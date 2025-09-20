@@ -6,6 +6,7 @@ import 'package:Warrior/features/Workouts/data/models/pending_operations_model.d
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:oktoast/oktoast.dart';
 
 final syncServiceProvider = StateNotifierProvider<SyncService, bool>((ref) {

@@ -4,6 +4,7 @@ import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 final loginProvider =
     StateNotifierProvider.autoDispose<LoginNotifier, ProviderStates>((ref) {

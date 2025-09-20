@@ -6,6 +6,7 @@ import 'package:Warrior/features/Workouts/data/models/pending_operations_model.d
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 final workoutsProvider =
     StateNotifierProvider.autoDispose<WorkoutsNotifier, ProviderStates>((ref) {

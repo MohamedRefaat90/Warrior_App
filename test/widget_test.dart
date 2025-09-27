@@ -17,14 +17,10 @@ import 'helpers/test_helpers.dart';
 
 void main() {
   group('Warrior App Tests', () {
-    late MockDio mockDio;
     late MockWorkoutRepo mockWorkoutRepo;
-    late MockAuthRepo mockAuthRepo;
 
     setUp(() {
-      mockDio = MockDio();
       mockWorkoutRepo = MockWorkoutRepo();
-      mockAuthRepo = MockAuthRepo();
     });
 
     testWidgets('App should initialize without network dependencies',
@@ -35,8 +31,7 @@ void main() {
           overrides: [
             // Override the providers that depend on Dio
             workoutRepo.overrideWithValue(mockWorkoutRepo),
-            syncServiceProvider
-                .overrideWith((ref) => SyncService(mockWorkoutRepo)),
+            syncServiceProvider.overrideWith(() => SyncService()),
           ],
           child: ScreenUtilInit(
             designSize: const Size(360, 690),
@@ -70,8 +65,7 @@ void main() {
         ProviderScope(
           overrides: [
             workoutRepo.overrideWithValue(mockWorkoutRepo),
-            syncServiceProvider
-                .overrideWith((ref) => SyncService(mockWorkoutRepo)),
+            syncServiceProvider.overrideWith(() => SyncService()),
           ],
           child: Builder(
             builder: (context) {
@@ -106,8 +100,7 @@ void main() {
         ProviderScope(
           overrides: [
             workoutRepo.overrideWithValue(mockWorkoutRepo),
-            syncServiceProvider
-                .overrideWith((ref) => SyncService(mockWorkoutRepo)),
+            syncServiceProvider.overrideWith(() => SyncService()),
           ],
           child: ScreenUtilInit(
             designSize: const Size(360, 690),
@@ -143,8 +136,7 @@ void main() {
         ProviderScope(
           overrides: [
             workoutRepo.overrideWithValue(mockWorkoutRepo),
-            syncServiceProvider
-                .overrideWith((ref) => SyncService(mockWorkoutRepo)),
+            syncServiceProvider.overrideWith(() => SyncService()),
           ],
           child: MaterialApp(
             home: Scaffold(
@@ -183,8 +175,7 @@ void main() {
         ProviderScope(
           overrides: [
             workoutRepo.overrideWithValue(mockWorkoutRepo),
-            syncServiceProvider
-                .overrideWith((ref) => SyncService(mockWorkoutRepo)),
+            syncServiceProvider.overrideWith(() => SyncService()),
           ],
           child: MaterialApp(
             theme: ThemeData(
@@ -216,8 +207,7 @@ void main() {
         ProviderScope(
           overrides: [
             workoutRepo.overrideWithValue(mockWorkoutRepo),
-            syncServiceProvider
-                .overrideWith((ref) => SyncService(mockWorkoutRepo)),
+            syncServiceProvider.overrideWith(() => SyncService()),
           ],
           child: const MaterialApp(
             home: _TestCounterWidget(),
@@ -241,8 +231,7 @@ void main() {
         ProviderScope(
           overrides: [
             workoutRepo.overrideWithValue(mockWorkoutRepo),
-            syncServiceProvider
-                .overrideWith((ref) => SyncService(mockWorkoutRepo)),
+            syncServiceProvider.overrideWith(() => SyncService()),
           ],
           child: ScreenUtilInit(
             designSize: const Size(360, 690),

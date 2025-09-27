@@ -6,15 +6,19 @@ import 'package:Warrior/features/Workouts/data/models/pending_operations_model.d
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 
 final workoutsProvider =
-    StateNotifierProvider.autoDispose<WorkoutsNotifier, ProviderStates>((ref) {
-  return WorkoutsNotifier(ref.read(workoutRepo));
-});
+    NotifierProvider.autoDispose<WorkoutsNotifier, ProviderStates>(
+        WorkoutsNotifier.new);
 
-class WorkoutsNotifier extends StateNotifier<ProviderStates> {
-  final WorkoutRepo _workoutRepo;
+class WorkoutsNotifier extends Notifier<ProviderStates> {
+  late WorkoutRepo _workoutRepo;
+
+  @override
+  ProviderStates build() {
+    _workoutRepo = ref.read(workoutRepo);
+    return ProviderStates();
+  }
 
   List<WorkoutSetModel> workoutList = [];
 
@@ -25,8 +29,6 @@ class WorkoutsNotifier extends StateNotifier<ProviderStates> {
     description: '',
     workoutItems: [],
   );
-
-  WorkoutsNotifier(this._workoutRepo) : super(ProviderStates());
 
   bool get _isOnline => ConnectivityChecker.isOnline == true;
 

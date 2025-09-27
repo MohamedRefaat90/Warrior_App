@@ -3,18 +3,19 @@ import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 
 final forgetPasswordProvider =
-    StateNotifierProvider.autoDispose<ForgetPasswordNotifier, ProviderStates>(
-        (ref) {
-  return ForgetPasswordNotifier(ref.read(authRepo));
-});
+    NotifierProvider.autoDispose<ForgetPasswordNotifier, ProviderStates>(
+        ForgetPasswordNotifier.new);
 
-class ForgetPasswordNotifier extends StateNotifier<ProviderStates> {
-  final AuthRepo _authRepo;
+class ForgetPasswordNotifier extends Notifier<ProviderStates> {
+  late AuthRepo _authRepo;
 
-  ForgetPasswordNotifier(this._authRepo) : super(ProviderStates());
+  @override
+  ProviderStates build() {
+    _authRepo = ref.read(authRepo);
+    return ProviderStates();
+  }
 
   Future<void> forgetPassword(String email) async {
     // Validate input

@@ -6,20 +6,21 @@ import 'package:Warrior/features/Workouts/data/models/pending_operations_model.d
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
+// import 'package:flutter_riverpod/legacy.dart';
 import 'package:oktoast/oktoast.dart';
 
-final syncServiceProvider = StateNotifierProvider<SyncService, bool>((ref) {
-  final workoutRepository = ref.read(workoutRepo);
-  return SyncService(workoutRepository);
-});
+final syncServiceProvider =
+    NotifierProvider<SyncService, bool>(SyncService.new);
 
-class SyncService extends StateNotifier<bool> {
-  final WorkoutRepo workoutRepo;
+class SyncService extends Notifier<bool> {
+  late WorkoutRepo workoutRepository;
 
-  SyncService(this.workoutRepo) : super(false) {
+  @override
+  bool build() {
     // Initialize and check for pending operations on startup
+    workoutRepository = ref.read(workoutRepo);
     _initSync();
+    return false;
   }
 
   bool get isLoading => state;
@@ -51,27 +52,28 @@ class SyncService extends StateNotifier<bool> {
                 if (op.workout != null) {
                   AppLogger.info(
                       'Creating workout: ${op.workout!.name}', 'SYNC');
-                  await workoutRepo.createWorkoutSet(op.workout!);
+                  await workoutRepository.createWorkoutSet(op.workout!);
                 }
                 break;
 
               case SyncOperationType.update:
                 final workout = op.workout!;
-                await workoutRepo.updateWorkoutSet(workout);
+                await workoutRepository.updateWorkoutSet(workout);
                 break;
 
               case SyncOperationType.delete:
                 if (op.id != null) {
-                  await workoutRepo.deleteWorkoutSet(op.id!);
+                  await workoutRepository.deleteWorkoutSet(op.id!);
                 }
                 break;
 
               case SyncOperationType.reorder:
-                await workoutRepo.reorderWorkoutsList(op.reorderWorkoutList!);
+                await workoutRepository
+                    .reorderWorkoutsList(op.reorderWorkoutList!);
                 break;
             }
           } else if (op.entityType == 'workout_weight') {
-            await workoutRepo.updateLastWeight(
+            await workoutRepository.updateLastWeight(
               op.workout!.id!,
               op.exerciseId!,
               op.weight!,

@@ -29,8 +29,7 @@ class TestAppWrapper {
       authRepo.overrideWithValue(testAuthRepo),
       workoutRepo.overrideWithValue(testWorkoutRepo),
       // Override with test sync service that doesn't create timers
-      syncServiceProvider
-          .overrideWith((ref) => TestSyncService(testWorkoutRepo)),
+      syncServiceProvider.overrideWith(() => TestSyncService(testWorkoutRepo)),
       ...(additionalOverrides ?? []),
     ];
 
@@ -65,7 +64,7 @@ class TestAppWrapper {
 
 // Test-friendly SyncService that doesn't create timers
 class TestSyncService extends SyncService {
-  TestSyncService(super.workoutRepo);
+  TestSyncService(testWorkoutRepo);
 
   @override
   Future<void> syncPendingOperations() async {

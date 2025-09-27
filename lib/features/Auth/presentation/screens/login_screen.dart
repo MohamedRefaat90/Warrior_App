@@ -96,8 +96,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 //       context.goNamed(AppRouters.muscles);
                 //     },
                 //     child: Text("Guest Mode")),
+                15.verticalSpace,
                 const LoginWith(),
-                10.verticalSpace,
+                15.verticalSpace,
                 const GoogleButton(),
                 // 10.verticalSpace,
                 const GoToSignup()

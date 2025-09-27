@@ -4,17 +4,19 @@ import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 
 final signupProvider =
-    StateNotifierProvider.autoDispose<SignupNotifier, ProviderStates>((ref) {
-  return SignupNotifier(ref.read(authRepo));
-});
+    NotifierProvider.autoDispose<SignupNotifier, ProviderStates>(
+        SignupNotifier.new);
 
-class SignupNotifier extends StateNotifier<ProviderStates> {
-  final AuthRepo _authRepo;
+class SignupNotifier extends Notifier<ProviderStates> {
+  late AuthRepo _authRepo;
 
-  SignupNotifier(this._authRepo) : super(ProviderStates());
+  @override
+  ProviderStates build() {
+    _authRepo = ref.read(authRepo);
+    return ProviderStates();
+  }
 
   void clearError() {
     if (state.errorMessage != null) {

@@ -5,14 +5,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final otpProvider =
-    StateNotifierProvider.autoDispose<VerifyOTPProvider, ProviderStates>((ref) {
-  return VerifyOTPProvider(ref.read(authRepo));
-});
+    NotifierProvider.autoDispose<VerifyOTPProvider, ProviderStates>(
+        VerifyOTPProvider.new);
 
-class VerifyOTPProvider extends StateNotifier<ProviderStates> {
-  final AuthRepo _authRepo;
+class VerifyOTPProvider extends Notifier<ProviderStates> {
+  late AuthRepo _authRepo;
 
-  VerifyOTPProvider(this._authRepo) : super(ProviderStates());
+  @override
+  ProviderStates build() {
+    _authRepo = ref.read(authRepo);
+    return ProviderStates();
+  }
 
   void clearError() {
     if (state.errorMessage != null) {

@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   // Ensure Flutter is properly initialized
@@ -28,40 +29,69 @@ void main() async {
 
     // Only use DevicePreview in debug mode
     if (kDebugMode) {
-      runApp(DevicePreview(
-        enabled: true,
-        builder: (context) => const AppWrapper(),
-      ));
+      await SentryFlutter.init(
+        (options) {
+          options.dsn =
+              'https://c6b8807846be7a792b6107aa37edd95c@o4510028648677376.ingest.de.sentry.io/4510028651888720';
+          // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+          // We recommend adjusting this value in production.
+          options.tracesSampleRate = 1.0;
+        },
+        appRunner: () => runApp(SentryWidget(
+            child: DevicePreview(
+          enabled: true,
+          builder: (context) => const AppWrapper(),
+        ))),
+      );
     } else {
-      runApp(const AppWrapper());
+      await SentryFlutter.init(
+        (options) {
+          options.dsn =
+              'https://c6b8807846be7a792b6107aa37edd95c@o4510028648677376.ingest.de.sentry.io/4510028651888720';
+          // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+          // We recommend adjusting this value in production.
+          options.tracesSampleRate = 1.0;
+        },
+        appRunner: () => runApp(SentryWidget(child: const AppWrapper())),
+      );
     }
   } catch (error, stackTrace) {
     AppLogger.error('Failed to initialize app', 'MAIN', error, stackTrace);
 
     // Fallback app for initialization failures
-    runApp(MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              const Text(
-                'Failed to start app',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                kDebugMode ? error.toString() : 'Please restart the app',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ],
+    await SentryFlutter.init(
+      (options) {
+        options.dsn =
+            'https://c6b8807846be7a792b6107aa37edd95c@o4510028648677376.ingest.de.sentry.io/4510028651888720';
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(SentryWidget(
+          child: MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                const Text(
+                  'Failed to start app',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  kDebugMode ? error.toString() : 'Please restart the app',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    ));
+      ))),
+    );
   }
 }
 

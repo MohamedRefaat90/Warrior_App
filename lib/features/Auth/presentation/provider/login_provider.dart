@@ -6,14 +6,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final loginProvider =
-    StateNotifierProvider.autoDispose<LoginNotifier, ProviderStates>((ref) {
-  return LoginNotifier(ref.read(authRepo));
-});
+    NotifierProvider.autoDispose<LoginNotifier, ProviderStates>(
+        LoginNotifier.new);
 
-class LoginNotifier extends StateNotifier<ProviderStates> {
-  final AuthRepo _authRepo;
+class LoginNotifier extends Notifier<ProviderStates> {
+  late AuthRepo _authRepo;
   UserModel? user;
-  LoginNotifier(this._authRepo) : super(ProviderStates());
+
+  @override
+  ProviderStates build() {
+    _authRepo = ref.read(authRepo);
+    return ProviderStates();
+  }
 
   void clearError() {
     if (state.errorMessage != null) {

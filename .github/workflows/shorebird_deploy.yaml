@@ -25,6 +25,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 10
+        ref: main
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -47,6 +48,11 @@ jobs:
 
     - name: Test build
       run: flutter build apk --debug
+
+    - name: Verify app version
+      run: |
+        echo "📱 Current app version:"
+        grep "version:" pubspec.yaml
 
     - name: Install and Setup Shorebird CLI
       run: |

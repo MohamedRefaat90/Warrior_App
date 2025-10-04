@@ -43,31 +43,7 @@ jobs:
         echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
         echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
         echo "storeFile=keystore/upload-keystore.jks" >> android/key.properties
-        echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}' > android/fastlane/google-play-service-account.json
+        echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}' > android/google-play-service-account.json
     - run: flutter build appbundle --release
-    - name: Generate release notes
-      id: release_notes
-      run: |
-        echo "Generating release notes from recent commits..."
-        # Get commits since last tag, or last 10 commits if no tags
-        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-        if [ -n "$LAST_TAG" ]; then
-          RELEASE_NOTES=$(git log --pretty=format:"• %s" $LAST_TAG..HEAD --no-merges)
-        else
-          RELEASE_NOTES=$(git log --pretty=format:"• %s" -10 --no-merges)
-        fi
-        
-        if [ -z "$RELEASE_NOTES" ]; then
-          RELEASE_NOTES="• Performance improvements and bug fixes"
-        fi
-        
-        echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
-        echo "🚀 What's New in this Release:" >> $GITHUB_OUTPUT
-        echo "" >> $GITHUB_OUTPUT
-        echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
-        echo "" >> $GITHUB_OUTPUT
-        echo "📅 Release Date: $(date '+%Y-%m-%d')" >> $GITHUB_OUTPUT
-        echo "🏷️ Version: ${{ github.ref_name }}" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-    - run: bundle exec fastlane android deploy_to_play_store track:${{ github.event.inputs.track || 'internal' }} release_notes:"${{ steps.release_notes.outputs.RELEASE_NOTES }}"
+    - run: bundle exec fastlane android deploy_to_play_store track:${{ github.event.inputs.track || 'internal' }}
       working-directory: android 

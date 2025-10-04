@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notification tint color - using the app's primary red color -->
+    <color name="notification_color">#A80B0B</color>
+</resources>

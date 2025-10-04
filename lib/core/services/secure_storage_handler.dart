@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageHandler {
-  static final storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
 
   static Future<void> delete({required String key}) async {
     await storage.delete(key: key);

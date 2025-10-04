@@ -89,7 +89,8 @@ class AppLogger {
     final tagStr = tag != null ? '[$tag] ' : '';
     final prefix = _getLevelPrefix(level);
 
-    final logMessage = '$timestamp $prefix $tagStr$message';
+    // final logMessage = '$timestamp $prefix $tagStr$message';
+    final logMessage = '$prefix $tagStr$message';
 
     // Only show logs in debug mode
     if (kDebugMode) {

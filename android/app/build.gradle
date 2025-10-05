@@ -48,6 +48,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = 5
         versionName = "1.0.0"
+
+        // Add 16KB page size support
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
     }
     signingConfigs {
         release {
@@ -55,6 +60,15 @@ android {
             keyPassword keystoreProperties["keyPassword"] as String
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties["storePassword"] as String
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            universalApk true
         }
     }
 

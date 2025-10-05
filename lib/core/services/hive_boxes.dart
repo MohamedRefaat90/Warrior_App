@@ -1,4 +1,4 @@
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
@@ -14,7 +14,7 @@ class HiveManager {
   // Update or add this method to ensure operations are properly stored
   static Future<void> addPendingOperation(PendingOperation operation) async {
     await pendingOpsBox.add(operation);
-    AppLogger.debug(
+    TalkerService.debug(
         'Added pending operation: ${operation.operationType}, total count: ${pendingOpsBox.length}',
         'HIVE');
   }
@@ -25,7 +25,7 @@ class HiveManager {
   }
 
   static List<PendingOperation> getPendingOperations() {
-    AppLogger.debug(
+    TalkerService.debug(
         'Getting pending operations, count: ${pendingOpsBox.length}', 'HIVE');
     return pendingOpsBox.values.toList();
   }
@@ -53,7 +53,7 @@ class HiveManager {
         await box.put(i, data[i]);
       }
     } catch (e) {
-      AppLogger.error('Failed to save data to Hive', 'HIVE', e);
+      TalkerService.error('Failed to save data to Hive', 'HIVE', e);
     }
   }
 }

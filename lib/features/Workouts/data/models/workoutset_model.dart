@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:hive/hive.dart';
 
@@ -43,7 +43,7 @@ class WorkoutItemModel {
           lastWeight = double.parse(map['last_weight'].toString());
         }
       } catch (e) {
-        AppLogger.warning(
+        TalkerService.warning(
             'Error parsing last_weight, defaulting to 0.0', 'WORKOUT_ITEM', e);
         lastWeight = 0.0;
       }
@@ -53,7 +53,7 @@ class WorkoutItemModel {
         lastWeight: lastWeight,
       );
     } catch (e) {
-      AppLogger.error('Error parsing WorkoutItemModel', 'WORKOUT_ITEM', e);
+      TalkerService.error('Error parsing WorkoutItemModel', 'WORKOUT_ITEM', e);
       rethrow; // Re-throw to be caught by the parent parser
     }
   }
@@ -122,7 +122,7 @@ class WorkoutSetModel extends HiveObject {
               }
             } catch (e) {
               // Skip invalid workout items instead of failing completely
-              AppLogger.warning(
+              TalkerService.warning(
                   'Skipping invalid workout item', 'WORKOUT_SET', e);
               continue;
             }
@@ -140,7 +140,7 @@ class WorkoutSetModel extends HiveObject {
       );
     } catch (e) {
       // If all else fails, return a minimal valid object
-      AppLogger.error('Error parsing WorkoutSetModel', 'WORKOUT_SET', e);
+      TalkerService.error('Error parsing WorkoutSetModel', 'WORKOUT_SET', e);
       return WorkoutSetModel(
         id: map['id'] as int? ?? 0,
         name: map['name'] as String? ?? 'Unknown Workout',
@@ -194,7 +194,7 @@ class WorkoutSetModel extends HiveObject {
         return DateTime.fromMillisecondsSinceEpoch(dateValue);
       }
     } catch (e) {
-      AppLogger.warning('Error parsing date', 'WORKOUT_SET', e);
+      TalkerService.warning('Error parsing date', 'WORKOUT_SET', e);
     }
 
     return DateTime.now();

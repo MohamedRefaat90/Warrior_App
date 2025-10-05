@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/extensions/string.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class _WorkoutDialogState extends State<WorkoutDialog> {
               setState(() {
                 workoutAlert = value!;
               });
-              AppLogger.info(
+              TalkerService.info(
                   'Workout alert preference updated', 'WORKOUT_DIALOG');
               SharedPref.setBool(StorageKeys.workoutAlert, workoutAlert);
             },

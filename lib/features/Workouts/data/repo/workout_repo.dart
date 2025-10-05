@@ -1,6 +1,6 @@
 import 'package:Warrior/core/constants/apis_url.dart';
 import 'package:Warrior/core/network/dio.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,7 +49,7 @@ class WorkoutRepo {
             try {
               return WorkoutSetModel.fromMap(e);
             } catch (e, stack) {
-              AppLogger.error(
+              TalkerService.error(
                   'Error parsing workout', 'WORKOUT_REPO', e, stack);
               return null;
             }
@@ -57,7 +57,7 @@ class WorkoutRepo {
           .whereType<WorkoutSetModel>()
           .toList();
     } on DioException catch (e) {
-      AppLogger.error('Network error in getWorkoutSets', 'WORKOUT_REPO', e);
+      TalkerService.error('Network error in getWorkoutSets', 'WORKOUT_REPO', e);
       rethrow;
     }
   }

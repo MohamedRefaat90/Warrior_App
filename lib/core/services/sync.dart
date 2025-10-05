@@ -1,7 +1,7 @@
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class SyncService extends Notifier<bool> {
       state = true; // Set loading to true
       final List<PendingOperation> pendingOps =
           HiveManager.pendingOpsBox.values.toList();
-      AppLogger.info('Found ${pendingOps.length} pending operations', 'SYNC');
+      TalkerService.info('Found ${pendingOps.length} pending operations', 'SYNC');
 
       // Skip sync if no operations
       if (pendingOps.isEmpty) {
@@ -50,7 +50,7 @@ class SyncService extends Notifier<bool> {
             switch (op.operationType) {
               case SyncOperationType.create:
                 if (op.workout != null) {
-                  AppLogger.info(
+                  TalkerService.info(
                       'Creating workout: ${op.workout!.name}', 'SYNC');
                   await workoutRepository.createWorkoutSet(op.workout!);
                 }
@@ -81,7 +81,7 @@ class SyncService extends Notifier<bool> {
           }
           successfullyProcessedIds.add(op.id);
         } on Exception catch (e) {
-          AppLogger.error('Error processing operation ${op.id}', 'SYNC', e);
+          TalkerService.error('Error processing operation ${op.id}', 'SYNC', e);
           // Continue with next operation instead of failing entire sync
           continue;
         }
@@ -96,10 +96,10 @@ class SyncService extends Notifier<bool> {
           textStyle: const TextStyle(
               fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500));
       state = false; // Set loading to false
-      AppLogger.info('All pending operations synced with server', 'SYNC');
+      TalkerService.info('All pending operations synced with server', 'SYNC');
     } catch (e) {
       await HiveManager.clearPendingOperations();
-      AppLogger.error('Error during sync', 'SYNC', e);
+      TalkerService.error('Error during sync', 'SYNC', e);
       state = false; // Set loading to false on error too
     }
   }
@@ -112,7 +112,7 @@ class SyncService extends Notifier<bool> {
     // Check if there are pending operations and if we're online
     if (HiveManager.pendingOpsBox.isNotEmpty &&
         ConnectivityChecker.isOnline == true) {
-      AppLogger.info(
+      TalkerService.info(
           'Found pending operations on app startup, attempting to sync',
           'SYNC');
       await syncPendingOperations();

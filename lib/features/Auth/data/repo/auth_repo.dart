@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/apis_url.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/dio.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:dio/dio.dart';
@@ -28,16 +28,16 @@ class AuthRepo {
         throw ArgumentError('Invalid email format');
       }
 
-      AppLogger.info('Sending password reset email to: $email', 'AUTH_REPO');
+      TalkerService.info('Sending password reset email to: $email', 'AUTH_REPO');
 
       await _dio.post(ApisUrl.forgetPassword, data: {'email': email.trim()});
 
-      AppLogger.info('Password reset email sent successfully', 'AUTH_REPO');
+      TalkerService.info('Password reset email sent successfully', 'AUTH_REPO');
     } on DioException catch (e) {
-      AppLogger.error('Network error in forgetPassword', 'AUTH_REPO', e);
+      TalkerService.error('Network error in forgetPassword', 'AUTH_REPO', e);
       rethrow;
     } catch (e) {
-      AppLogger.error('Unexpected error in forgetPassword', 'AUTH_REPO', e);
+      TalkerService.error('Unexpected error in forgetPassword', 'AUTH_REPO', e);
       rethrow;
     }
   }
@@ -49,7 +49,7 @@ class AuthRepo {
         throw ArgumentError('Google sign-in token cannot be null or empty');
       }
 
-      AppLogger.info('Attempting Google sign-in', 'AUTH_REPO');
+      TalkerService.info('Attempting Google sign-in', 'AUTH_REPO');
 
       final response = await _dio.post(
         ApisUrl.googleLogin,
@@ -74,19 +74,19 @@ class AuthRepo {
       );
 
       final user = UserModel.fromMap(userData);
-      AppLogger.info(
+      TalkerService.info(
           'Google sign-in successful for user: ${user.email ?? "unknown"}',
           'AUTH_REPO');
 
       return user;
     } on DioException catch (e) {
-      AppLogger.error('Network error in googleSignIn', 'AUTH_REPO', e);
+      TalkerService.error('Network error in googleSignIn', 'AUTH_REPO', e);
       rethrow;
     } on PlatformException catch (e) {
-      AppLogger.error('Platform error in googleSignIn', 'AUTH_REPO', e);
+      TalkerService.error('Platform error in googleSignIn', 'AUTH_REPO', e);
       rethrow;
     } catch (e) {
-      AppLogger.error('Unexpected error in googleSignIn', 'AUTH_REPO', e);
+      TalkerService.error('Unexpected error in googleSignIn', 'AUTH_REPO', e);
       rethrow;
     }
   }
@@ -106,7 +106,7 @@ class AuthRepo {
         throw ArgumentError('Password must be at least 6 characters');
       }
 
-      AppLogger.info('Attempting login for user: ${email.trim()}', 'AUTH_REPO');
+      TalkerService.info('Attempting login for user: ${email.trim()}', 'AUTH_REPO');
 
       final response = await _dio.post(
         ApisUrl.login,
@@ -134,16 +134,16 @@ class AuthRepo {
       );
 
       final user = UserModel.fromMap(userData);
-      AppLogger.info(
+      TalkerService.info(
           'Login successful for user: ${user.email ?? "unknown"}', 'AUTH_REPO');
 
       return user;
     } on DioException catch (e) {
-      AppLogger.error(
+      TalkerService.error(
           'Network error in login for: ${email.trim()}', 'AUTH_REPO', e);
       rethrow;
     } catch (e) {
-      AppLogger.error('Unexpected error in login', 'AUTH_REPO', e);
+      TalkerService.error('Unexpected error in login', 'AUTH_REPO', e);
       rethrow;
     }
   }
@@ -166,7 +166,7 @@ class AuthRepo {
         throw ArgumentError('Password must be at least 6 characters');
       }
 
-      AppLogger.info(
+      TalkerService.info(
           'Resetting password for user: ${email.trim()}', 'AUTH_REPO');
 
       await _dio.post(
@@ -177,12 +177,12 @@ class AuthRepo {
         },
       );
 
-      AppLogger.info('Password reset successful', 'AUTH_REPO');
+      TalkerService.info('Password reset successful', 'AUTH_REPO');
     } on DioException catch (e) {
-      AppLogger.error('Network error in resetPassword', 'AUTH_REPO', e);
+      TalkerService.error('Network error in resetPassword', 'AUTH_REPO', e);
       rethrow;
     } catch (e) {
-      AppLogger.error('Unexpected error in resetPassword', 'AUTH_REPO', e);
+      TalkerService.error('Unexpected error in resetPassword', 'AUTH_REPO', e);
       rethrow;
     }
   }
@@ -210,7 +210,7 @@ class AuthRepo {
         throw ArgumentError('Username must be at least 2 characters');
       }
 
-      AppLogger.info('Creating account for user: ${email.trim()}', 'AUTH_REPO');
+      TalkerService.info('Creating account for user: ${email.trim()}', 'AUTH_REPO');
 
       await _dio.post(
         ApisUrl.signup,
@@ -221,12 +221,12 @@ class AuthRepo {
         },
       );
 
-      AppLogger.info('Account created successfully', 'AUTH_REPO');
+      TalkerService.info('Account created successfully', 'AUTH_REPO');
     } on DioException catch (e) {
-      AppLogger.error('Network error in signup', 'AUTH_REPO', e);
+      TalkerService.error('Network error in signup', 'AUTH_REPO', e);
       rethrow;
     } catch (e) {
-      AppLogger.error('Unexpected error in signup', 'AUTH_REPO', e);
+      TalkerService.error('Unexpected error in signup', 'AUTH_REPO', e);
       rethrow;
     }
   }
@@ -253,7 +253,7 @@ class AuthRepo {
         throw ArgumentError('OTP must contain only digits');
       }
 
-      AppLogger.info('Verifying OTP for user: ${email.trim()}', 'AUTH_REPO');
+      TalkerService.info('Verifying OTP for user: ${email.trim()}', 'AUTH_REPO');
 
       await _dio.post(
         ApisUrl.otpVerification,
@@ -263,12 +263,12 @@ class AuthRepo {
         },
       );
 
-      AppLogger.info('OTP verification successful', 'AUTH_REPO');
+      TalkerService.info('OTP verification successful', 'AUTH_REPO');
     } on DioException catch (e) {
-      AppLogger.error('Network error in verifyOTP', 'AUTH_REPO', e);
+      TalkerService.error('Network error in verifyOTP', 'AUTH_REPO', e);
       rethrow;
     } catch (e) {
-      AppLogger.error('Unexpected error in verifyOTP', 'AUTH_REPO', e);
+      TalkerService.error('Unexpected error in verifyOTP', 'AUTH_REPO', e);
       rethrow;
     }
   }

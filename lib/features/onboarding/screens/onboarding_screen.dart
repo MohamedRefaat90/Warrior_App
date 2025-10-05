@@ -67,6 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 width: 0.5.sw,
                 press: () async {
                   await SharedPref.setBool(StorageKeys.isFirstTime, false);
+                  await SharedPref.setInt(StorageKeys.numberOfWorkouts, 0);
                   if (context.mounted) {
                     context.pushNamed(AppRouters.login);
                   }

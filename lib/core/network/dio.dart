@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/apis_url.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
-import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,9 +48,11 @@ class DioHandler {
           'Accept': 'application/json',
         };
 
-      // Only add detailed logging in debug mode
+      // Add Talker Dio Logger with Talker instance
       if (kDebugMode) {
+        // Debug mode: Log everything
         dio.interceptors.add(TalkerDioLogger(
+          talker: TalkerService.instance,
           settings: const TalkerDioLoggerSettings(
             printRequestHeaders: true,
             printResponseHeaders: false,
@@ -65,6 +67,7 @@ class DioHandler {
       } else {
         // Production: Only log errors, not detailed requests/responses
         dio.interceptors.add(TalkerDioLogger(
+          talker: TalkerService.instance,
           settings: const TalkerDioLoggerSettings(
             printRequestHeaders: false,
             printResponseHeaders: false,
@@ -91,50 +94,39 @@ class DioHandler {
               }
             }
 
-            // Log request in debug mode
-            if (kDebugMode) {
-              AppLogger.networkRequest(options.uri.toString(), options.method);
-            }
-
             return handler.next(options);
           } catch (e) {
-            AppLogger.error('Error in request interceptor', 'DIO', e);
+            TalkerService.error('Error in request interceptor', 'DIO', e);
             return handler.next(options);
           }
         },
         onResponse: (response, handler) {
           try {
-            if (kDebugMode) {
-              AppLogger.networkResponse(
-                response.requestOptions.uri.toString(),
-                response.statusCode ?? 0,
-              );
-            }
             return handler.next(response);
           } catch (e) {
-            AppLogger.error('Error in response interceptor', 'DIO', e);
+            TalkerService.error('Error in response interceptor', 'DIO', e);
             return handler.next(response);
           }
         },
         onError: (error, handler) {
           try {
-            AppLogger.error(
+            TalkerService.error(
               'Network request failed: ${error.requestOptions.uri}',
               'DIO',
               error,
             );
             return handler.next(error);
           } catch (e) {
-            AppLogger.error('Error in error interceptor', 'DIO', e);
+            TalkerService.error('Error in error interceptor', 'DIO', e);
             return handler.next(error);
           }
         },
       ));
 
       _isInitialized = true;
-      AppLogger.info('Dio initialized successfully', 'DIO');
+      TalkerService.info('Dio initialized successfully', 'DIO');
     } catch (e, stackTrace) {
-      AppLogger.error('Failed to initialize Dio', 'DIO', e, stackTrace);
+      TalkerService.error('Failed to initialize Dio', 'DIO', e, stackTrace);
       rethrow;
     }
   }

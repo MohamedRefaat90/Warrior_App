@@ -1,13 +1,12 @@
 import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/network/provider_states.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final signupProvider =
-    NotifierProvider.autoDispose<SignupNotifier, ProviderStates>(
-        SignupNotifier.new);
+    NotifierProvider<SignupNotifier, ProviderStates>(SignupNotifier.new);
 
 class SignupNotifier extends Notifier<ProviderStates> {
   late AuthRepo _authRepo;
@@ -33,7 +32,7 @@ class SignupNotifier extends Notifier<ProviderStates> {
       checkPasswordContainNum(password);
       state = ProviderStates();
     } catch (e) {
-      AppLogger.warning('Password validation failed', 'AUTH', e);
+      TalkerService.warning('Password validation failed', 'AUTH', e);
       state = ProviderStates(errorMessage: 'Password validation failed');
     }
   }
@@ -46,14 +45,15 @@ class SignupNotifier extends Notifier<ProviderStates> {
     // Validate inputs
     if (email.trim().isEmpty || password.isEmpty || username.trim().isEmpty) {
       state = ProviderStates(errorMessage: 'All fields are required');
-      AppLogger.warning('Signup attempted with missing fields', 'AUTH');
+      TalkerService.warning('Signup attempted with missing fields', 'AUTH');
       return;
     }
 
     // Basic email validation
     if (!email.contains('@') || !email.contains('.')) {
       state = ProviderStates(errorMessage: 'Please enter a valid email');
-      AppLogger.warning('Signup attempted with invalid email format', 'AUTH');
+      TalkerService.warning(
+          'Signup attempted with invalid email format', 'AUTH');
       return;
     }
 
@@ -65,7 +65,7 @@ class SignupNotifier extends Notifier<ProviderStates> {
         username: username.trim(),
       );
       state = ProviderStates(isSuccess: true);
-      AppLogger.info(
+      TalkerService.info(
           'Signup successful for user: ${email.toLowerCase().trim()}', 'AUTH');
     } on DioException catch (e) {
       // Safely extract error message
@@ -73,12 +73,12 @@ class SignupNotifier extends Notifier<ProviderStates> {
           e.message ??
           'Registration failed';
       state = ProviderStates(errorMessage: errorMsg);
-      AppLogger.error(
+      TalkerService.error(
           'Signup failed for user: ${email.toLowerCase().trim()}', 'AUTH', e);
     } catch (e) {
       final errorMessage = 'Registration failed: ${e.toString()}';
       state = ProviderStates(errorMessage: errorMessage);
-      AppLogger.error('Signup unexpected error', 'AUTH', e);
+      TalkerService.error('Signup unexpected error', 'AUTH', e);
     }
   }
 }

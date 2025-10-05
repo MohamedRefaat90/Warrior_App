@@ -1,12 +1,11 @@
 import 'package:Warrior/core/network/provider_states.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final otpProvider =
-    NotifierProvider.autoDispose<VerifyOTPProvider, ProviderStates>(
-        VerifyOTPProvider.new);
+    NotifierProvider<VerifyOTPProvider, ProviderStates>(VerifyOTPProvider.new);
 
 class VerifyOTPProvider extends Notifier<ProviderStates> {
   late AuthRepo _authRepo;
@@ -27,7 +26,7 @@ class VerifyOTPProvider extends Notifier<ProviderStates> {
     // Validate input
     if (email.trim().isEmpty) {
       state = ProviderStates(errorMessage: 'Email is required');
-      AppLogger.warning('OTP resend attempted with empty email', 'AUTH');
+      TalkerService.warning('OTP resend attempted with empty email', 'AUTH');
       return;
     }
 
@@ -35,19 +34,20 @@ class VerifyOTPProvider extends Notifier<ProviderStates> {
     try {
       await _authRepo.forgetPassword(email.toLowerCase().trim());
       state = ProviderStates(isSuccess: true);
-      AppLogger.info('OTP resent for: ${email.toLowerCase().trim()}', 'AUTH');
+      TalkerService.info(
+          'OTP resent for: ${email.toLowerCase().trim()}', 'AUTH');
     } on DioException catch (e) {
       // Safely extract error message
       final errorMsg = e.response?.data?["message"] as String? ??
           e.message ??
           'Failed to resend OTP';
       state = ProviderStates(errorMessage: errorMsg);
-      AppLogger.error(
+      TalkerService.error(
           'OTP resend failed for: ${email.toLowerCase().trim()}', 'AUTH', e);
     } catch (e) {
       final errorMessage = 'Failed to resend OTP: ${e.toString()}';
       state = ProviderStates(errorMessage: errorMessage);
-      AppLogger.error('OTP resend unexpected error', 'AUTH', e);
+      TalkerService.error('OTP resend unexpected error', 'AUTH', e);
     }
   }
 
@@ -55,7 +55,7 @@ class VerifyOTPProvider extends Notifier<ProviderStates> {
     // Validate inputs
     if (email.trim().isEmpty || otp.trim().isEmpty) {
       state = ProviderStates(errorMessage: 'Email and OTP are required');
-      AppLogger.warning(
+      TalkerService.warning(
           'OTP verification attempted with missing fields', 'AUTH');
       return;
     }
@@ -63,7 +63,7 @@ class VerifyOTPProvider extends Notifier<ProviderStates> {
     // Basic OTP validation (assuming 4-6 digit OTP)
     if (otp.trim().length < 4 || otp.trim().length > 6) {
       state = ProviderStates(errorMessage: 'OTP must be 4-6 digits');
-      AppLogger.warning(
+      TalkerService.warning(
           'OTP verification attempted with invalid OTP length', 'AUTH');
       return;
     }
@@ -75,7 +75,7 @@ class VerifyOTPProvider extends Notifier<ProviderStates> {
         otp: otp.trim(),
       );
       state = ProviderStates(isSuccess: true);
-      AppLogger.info(
+      TalkerService.info(
           'OTP verification successful for: ${email.toLowerCase().trim()}',
           'AUTH');
     } on DioException catch (e) {
@@ -84,14 +84,14 @@ class VerifyOTPProvider extends Notifier<ProviderStates> {
           e.message ??
           'OTP verification failed';
       state = ProviderStates(errorMessage: errorMsg);
-      AppLogger.error(
+      TalkerService.error(
           'OTP verification failed for: ${email.toLowerCase().trim()}',
           'AUTH',
           e);
     } catch (e) {
       final errorMessage = 'OTP verification failed: ${e.toString()}';
       state = ProviderStates(errorMessage: errorMessage);
-      AppLogger.error('OTP verification unexpected error', 'AUTH', e);
+      TalkerService.error('OTP verification unexpected error', 'AUTH', e);
     }
   }
 }

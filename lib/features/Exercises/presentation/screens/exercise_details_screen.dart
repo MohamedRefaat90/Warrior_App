@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/network/connectivity.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
+import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,7 +20,7 @@ class ExerciseDetailsScreen extends StatefulWidget {
 }
 
 class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
-  CachedVideoPlayerPlusController? _controller;
+  CachedVideoPlayerPlus? _player;
   bool _isVideoInitialized = false;
   bool _hasVideoError = false;
   String? _videoErrorMessage;
@@ -77,7 +78,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _player?.dispose();
     super.dispose();
   }
 
@@ -94,7 +95,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       alignment: Alignment.center,
       placeholder: (context, url) => const CustomLoadingWidget(),
       errorWidget: (context, url, error) {
-        AppLogger.warning(
+        TalkerService.warning(
           'Failed to load targeted muscles image from network: $url',
           'EXERCISE_DETAILS',
           error,
@@ -106,7 +107,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
             File(widget.exercise.targetedMuscles),
             width: 200.w,
             errorBuilder: (context, error, stackTrace) {
-              AppLogger.error(
+              TalkerService.error(
                 'Failed to load targeted muscles image from file',
                 'EXERCISE_DETAILS',
                 error,
@@ -170,14 +171,14 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       );
     }
 
-    if (!_isVideoInitialized || _controller == null) {
+    if (!_isVideoInitialized || _player == null) {
       return const CustomLoadingWidget();
     }
 
-    if (_controller!.value.isInitialized) {
+    if (_player!.isInitialized) {
       return AspectRatio(
-        aspectRatio: _controller!.value.aspectRatio,
-        child: CachedVideoPlayerPlus(_controller!),
+        aspectRatio: _player!.controller.value.aspectRatio,
+        child: VideoPlayer(_player!.controller),
       );
     }
 
@@ -188,24 +189,24 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     try {
       final file = File(widget.exercise.video);
 
-      _controller = CachedVideoPlayerPlusController.file(
+      _player = CachedVideoPlayerPlus.file(
         file,
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
       );
 
-      _controller!.initialize().then((_) {
+      _player!.initialize().then((_) {
         if (mounted) {
           setState(() {
             _isVideoInitialized = true;
           });
-          _controller!.setVolume(0);
-          _controller!.play();
-          _controller!.setLooping(true);
-          AppLogger.info(
+          _player!.controller.setVolume(0);
+          _player!.controller.play();
+          _player!.controller.setLooping(true);
+          TalkerService.info(
               'Local video initialized successfully', 'EXERCISE_DETAILS');
         }
       }).catchError((error) {
-        AppLogger.error(
+        TalkerService.error(
             'Local video initialization failed', 'EXERCISE_DETAILS', error);
         if (mounted) {
           setState(() {
@@ -215,7 +216,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         }
       });
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Local video setup failed', 'EXERCISE_DETAILS', e, stackTrace);
       if (mounted) {
         setState(() {
@@ -233,24 +234,24 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         throw Exception('Invalid video URL: ${widget.exercise.video}');
       }
 
-      _controller = CachedVideoPlayerPlusController.networkUrl(
+      _player = CachedVideoPlayerPlus.networkUrl(
         uri,
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
       );
 
-      _controller!.initialize().then((_) {
+      _player!.initialize().then((_) {
         if (mounted) {
           setState(() {
             _isVideoInitialized = true;
           });
-          _controller!.setVolume(0);
-          _controller!.play();
-          _controller!.setLooping(true);
-          AppLogger.info(
+          _player!.controller.setVolume(0);
+          _player!.controller.play();
+          _player!.controller.setLooping(true);
+          TalkerService.info(
               'Network video initialized successfully', 'EXERCISE_DETAILS');
         }
       }).catchError((error) {
-        AppLogger.error(
+        TalkerService.error(
             'Network video initialization failed', 'EXERCISE_DETAILS', error);
         if (mounted) {
           // Try local video as fallback
@@ -258,7 +259,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         }
       });
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Network video setup failed', 'EXERCISE_DETAILS', e, stackTrace);
       _initializeLocalVideo();
     }
@@ -269,7 +270,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       final isOnline = ConnectivityChecker.isOnline;
 
       if (isOnline == null) {
-        AppLogger.warning(
+        TalkerService.warning(
             'Connectivity status unknown, attempting network video',
             'EXERCISE_DETAILS');
       }
@@ -280,7 +281,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         _initializeLocalVideo();
       }
     } catch (e, stackTrace) {
-      AppLogger.error('Exception in video initialization', 'EXERCISE_DETAILS',
+      TalkerService.error('Exception in video initialization', 'EXERCISE_DETAILS',
           e, stackTrace);
       setState(() {
         _hasVideoError = true;

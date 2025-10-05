@@ -1,4 +1,4 @@
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignInService {
@@ -7,7 +7,7 @@ class GoogleSignInService {
   static Future<String?> signIn() async {
     try {
       await _ensureInitialized();
-      AppLogger.info('Starting Google Sign-In process...', 'GOOGLE_SIGNIN');
+      TalkerService.info('Starting Google Sign-In process...', 'GOOGLE_SIGNIN');
 
       GoogleSignInAccount? account;
 
@@ -22,21 +22,21 @@ class GoogleSignInService {
       }
 
       if (account == null) {
-        AppLogger.warning(
+        TalkerService.warning(
             'User not signed in (lightweight failed or UI not supported).',
             'GOOGLE_SIGNIN');
         return null;
       }
 
-      AppLogger.info('User signed in: ${account.email}', 'GOOGLE_SIGNIN');
+      TalkerService.info('User signed in: ${account.email}', 'GOOGLE_SIGNIN');
 
       final String? idToken = account.authentication.idToken;
-      AppLogger.info('Authentication successful', 'GOOGLE_SIGNIN');
+      TalkerService.info('Authentication successful', 'GOOGLE_SIGNIN');
 
       return idToken;
     } catch (error) {
-      AppLogger.error('Error during Google Sign-In', 'GOOGLE_SIGNIN', error);
-      AppLogger.error('Error details: ${error.toString()}', 'GOOGLE_SIGNIN');
+      TalkerService.error('Error during Google Sign-In', 'GOOGLE_SIGNIN', error);
+      TalkerService.error('Error details: ${error.toString()}', 'GOOGLE_SIGNIN');
       return null;
     }
   }

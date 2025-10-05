@@ -1,4 +1,4 @@
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -13,15 +13,15 @@ class DataManager {
       try {
         // Check if the image Path is already cached
         String? imagePath;
-        AppLogger.debug('Checking cache for image: ${exercise.image}', 'CACHE');
+        TalkerService.debug('Checking cache for image: ${exercise.image}', 'CACHE');
         final cachedImage =
             await _cacheManager.getFileFromCache(exercise.image);
         if (cachedImage != null) {
-          AppLogger.debug(
+          TalkerService.debug(
               'Image already cached: ${cachedImage.file.path}', 'CACHE');
           imagePath = cachedImage.file.path;
         } else {
-          AppLogger.debug('Downloading image: ${exercise.image}', 'CACHE');
+          TalkerService.debug('Downloading image: ${exercise.image}', 'CACHE');
           final downloadedImage =
               await _cacheManager.downloadFile(exercise.image);
           imagePath = downloadedImage.file.path;
@@ -29,18 +29,18 @@ class DataManager {
 
         // Check if the targetedMusclesPath is already cached
         String? targetedMusclesPath;
-        AppLogger.debug(
+        TalkerService.debug(
             'Checking cache for targetedMuscles: ${exercise.targetedMuscles}',
             'CACHE');
         final cachedTargetedMuscles =
             await _cacheManager.getFileFromCache(exercise.targetedMuscles);
         if (cachedTargetedMuscles != null) {
-          AppLogger.debug(
+          TalkerService.debug(
               'targetedMuscles already cached: ${cachedTargetedMuscles.file.path}',
               'CACHE');
           targetedMusclesPath = cachedTargetedMuscles.file.path;
         } else {
-          AppLogger.debug(
+          TalkerService.debug(
               'Downloading targetedMuscles: ${exercise.targetedMuscles}',
               'CACHE');
           final downloadedImage =
@@ -50,15 +50,15 @@ class DataManager {
 
         // Check if the video is already cached
         String? videoPath;
-        AppLogger.debug('Checking cache for video: ${exercise.video}', 'CACHE');
+        TalkerService.debug('Checking cache for video: ${exercise.video}', 'CACHE');
         final cachedVideo =
             await _cacheManager.getFileFromCache(exercise.video);
         if (cachedVideo != null) {
-          AppLogger.debug(
+          TalkerService.debug(
               'Video already cached: ${cachedVideo.file.path}', 'CACHE');
           videoPath = cachedVideo.file.path;
         } else {
-          AppLogger.debug('Downloading video: ${exercise.video}', 'CACHE');
+          TalkerService.debug('Downloading video: ${exercise.video}', 'CACHE');
           final downloadedVideo =
               await _cacheManager.downloadFile(exercise.video);
           videoPath = downloadedVideo.file.path;
@@ -66,7 +66,7 @@ class DataManager {
 
         // Save to Hive if not already saved
         if (!box.containsKey(exercise.id)) {
-          AppLogger.debug('Saving exercise to Hive: ${exercise.id}', 'CACHE');
+          TalkerService.debug('Saving exercise to Hive: ${exercise.id}', 'CACHE');
           // Create a new instance of ExerciseModel with updated paths
           final updatedExercise = exercise.copyWith(
             image: imagePath,
@@ -76,11 +76,11 @@ class DataManager {
           await box.put(exercise.id, updatedExercise);
         }
       } catch (e) {
-        AppLogger.error('Error handling exercise data', 'CACHE', e);
+        TalkerService.error('Error handling exercise data', 'CACHE', e);
       }
     }
-    AppLogger.info('===========================================', 'CACHE');
-    AppLogger.info("Data preloading and saving completed", 'CACHE');
-    AppLogger.info('===========================================', 'CACHE');
+    TalkerService.info('===========================================', 'CACHE');
+    TalkerService.info("Data preloading and saving completed", 'CACHE');
+    TalkerService.info('===========================================', 'CACHE');
   }
 }

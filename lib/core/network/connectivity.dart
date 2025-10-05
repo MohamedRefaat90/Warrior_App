@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +30,7 @@ class ConnectivityChecker {
 
       // If we're coming back online and we were offline before
       if (isOnline! && wasOffline) {
-        AppLogger.info('Connection restored. Syncing data...', 'CONNECTIVITY');
+        TalkerService.info('Connection restored. Syncing data...', 'CONNECTIVITY');
 
         // Start sync
         // ref.read(syncingProvider.notifier).state = true;

@@ -1,5 +1,5 @@
 import 'package:Warrior/core/network/provider_states.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/functions/validators.dart';
 
 final resetPasswordProvider =
-    NotifierProvider.autoDispose<ResetPasswordNotifier, ProviderStates>(
+    NotifierProvider<ResetPasswordNotifier, ProviderStates>(
         ResetPasswordNotifier.new);
 
 class ResetPasswordNotifier extends Notifier<ProviderStates> {
@@ -34,7 +34,7 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
       checkPasswordContainNum(password);
       state = ProviderStates();
     } catch (e) {
-      AppLogger.warning('Password validation failed in reset', 'AUTH', e);
+      TalkerService.warning('Password validation failed in reset', 'AUTH', e);
       state = ProviderStates(errorMessage: 'Password validation failed');
     }
   }
@@ -43,7 +43,7 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
     // Validate input
     if (email.trim().isEmpty) {
       state = ProviderStates(errorMessage: 'Email is required');
-      AppLogger.warning('OTP resend attempted with empty email', 'AUTH');
+      TalkerService.warning('OTP resend attempted with empty email', 'AUTH');
       return;
     }
 
@@ -51,7 +51,7 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
     try {
       await _authRepo.forgetPassword(email.toLowerCase().trim());
       state = ProviderStates(isSuccess: true);
-      AppLogger.info(
+      TalkerService.info(
           'OTP resent for password reset: ${email.toLowerCase().trim()}',
           'AUTH');
     } on DioException catch (e) {
@@ -60,12 +60,12 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
           e.message ??
           'Failed to resend OTP';
       state = ProviderStates(errorMessage: errorMsg);
-      AppLogger.error(
+      TalkerService.error(
           'OTP resend failed for: ${email.toLowerCase().trim()}', 'AUTH', e);
     } catch (e) {
       final errorMessage = 'Failed to resend OTP: ${e.toString()}';
       state = ProviderStates(errorMessage: errorMessage);
-      AppLogger.error('OTP resend unexpected error', 'AUTH', e);
+      TalkerService.error('OTP resend unexpected error', 'AUTH', e);
     }
   }
 
@@ -76,7 +76,8 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
     // Validate inputs
     if (email.trim().isEmpty || password.isEmpty) {
       state = ProviderStates(errorMessage: 'Email and password are required');
-      AppLogger.warning('Password reset attempted with missing fields', 'AUTH');
+      TalkerService.warning(
+          'Password reset attempted with missing fields', 'AUTH');
       return;
     }
 
@@ -84,7 +85,8 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
     if (password.length < 6) {
       state = ProviderStates(
           errorMessage: 'Password must be at least 6 characters');
-      AppLogger.warning('Password reset attempted with weak password', 'AUTH');
+      TalkerService.warning(
+          'Password reset attempted with weak password', 'AUTH');
       return;
     }
 
@@ -95,7 +97,7 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
         password: password,
       );
       state = ProviderStates(isSuccess: true);
-      AppLogger.info(
+      TalkerService.info(
           'Password reset successful for: ${email.toLowerCase().trim()}',
           'AUTH');
     } on DioException catch (e) {
@@ -104,14 +106,14 @@ class ResetPasswordNotifier extends Notifier<ProviderStates> {
           e.message ??
           'Password reset failed';
       state = ProviderStates(errorMessage: errorMsg);
-      AppLogger.error(
+      TalkerService.error(
           'Password reset failed for: ${email.toLowerCase().trim()}',
           'AUTH',
           e);
     } catch (e) {
       final errorMessage = 'Password reset failed: ${e.toString()}';
       state = ProviderStates(errorMessage: errorMessage);
-      AppLogger.error('Password reset unexpected error', 'AUTH', e);
+      TalkerService.error('Password reset unexpected error', 'AUTH', e);
     }
   }
 

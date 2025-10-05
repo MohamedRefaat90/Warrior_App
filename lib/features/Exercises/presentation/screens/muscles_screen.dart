@@ -2,7 +2,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
-import 'package:Warrior/core/services/logger.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -55,7 +55,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                     heroTag: 'logout',
                     onPressed: () async {
                       await SecureStorageHandler.delete(key: StorageKeys.token);
-                      AppLogger.info(
+                      TalkerService.info(
                           'User logged out from muscles screen', 'MUSCLES');
                       context.pushReplacementNamed(AppRouters.login);
                     },
@@ -144,9 +144,9 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final router = GoRouter.of(context);
-      AppLogger.debug(
+      TalkerService.debug(
           'Current Route: ${router.state.matchedLocation}', 'MUSCLES');
-      AppLogger.debug('Is Online: ${ConnectivityChecker.isOnline}', 'MUSCLES');
+      TalkerService.debug('Is Online: ${ConnectivityChecker.isOnline}', 'MUSCLES');
 
       // Reset select mode when entering muscles screen from exercises
       // This ensures select mode doesn't persist when navigating back
@@ -158,7 +158,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
           (widget.isComingFromWorkoutScreen == true) &&
           (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
               SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
-        AppLogger.info('Showing workout dialog...', 'MUSCLES');
+        TalkerService.info('Showing workout dialog...', 'MUSCLES');
         showDialog(
           context: context,
           barrierDismissible: false,

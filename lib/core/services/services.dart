@@ -1,10 +1,11 @@
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
-import 'package:Warrior/core/services/logger.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/firebase_options.dart';
 import 'package:Warrior/routing.dart';
+import 'package:cached_video_player_plus/util/migration_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 /// Firebase background message handler
 @pragma('vm:entry-point')
@@ -21,9 +23,13 @@ abstract class AppServices {
   static String? initialLocation;
   static String? fcmToken;
   static FlutterLocalNotificationsPlugin? _localNotifications;
+  static final InAppReview inAppReview = InAppReview.instance;
+
   static Future<void> init() async {
     try {
-      AppLogger.info('Starting app services initialization', 'SERVICES');
+      TalkerService.init();
+
+      TalkerService.info('Starting app services initialization', 'SERVICES');
 
       // Set preferred orientations
       await _setPreferredOrientations();
@@ -37,10 +43,12 @@ abstract class AppServices {
       // Initialize other services
       await _initializeServices();
 
-      AppLogger.info(
+      await migrateCachedVideoDataToSharedPreferences();
+
+      TalkerService.info(
           'App services initialization completed successfully', 'SERVICES');
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Failed to initialize app services', 'SERVICES', e, stackTrace);
 
       // Send to Crashlytics if available
@@ -82,11 +90,11 @@ abstract class AppServices {
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
 
-      AppLogger.info(
+      TalkerService.info(
           'Notification channel "warrior_notification_channel" created successfully',
           'FCM');
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Failed to create notification channel', 'FCM', e, stackTrace);
       // Don't throw - Firebase will use default channel
     }
@@ -99,20 +107,20 @@ abstract class AppServices {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      AppLogger.info('Firebase initialized', 'SERVICES');
+      TalkerService.info('Firebase initialized', 'SERVICES');
 
       // Set Crashlytics collection based on release mode
       await FirebaseCrashlytics.instance
           .setCrashlyticsCollectionEnabled(!kDebugMode);
 
-      AppLogger.info('Crashlytics collection configured', 'SERVICES');
+      TalkerService.info('Crashlytics collection configured', 'SERVICES');
 
       // Configure Firebase Messaging
       await _setupFirebaseMessaging();
 
-      AppLogger.info('Firebase Messaging configured', 'SERVICES');
+      TalkerService.info('Firebase Messaging configured', 'SERVICES');
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Failed to initialize Firebase', 'SERVICES', e, stackTrace);
       throw Exception('Critical service initialization failed: Firebase');
     }
@@ -148,9 +156,9 @@ abstract class AppServices {
       // Create the notification channel for Android
       await _createNotificationChannel();
 
-      AppLogger.info('Local notifications initialized successfully', 'FCM');
+      TalkerService.info('Local notifications initialized successfully', 'FCM');
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Failed to initialize local notifications', 'FCM', e, stackTrace);
       // Don't throw - notifications can still work without local notifications
     }
@@ -174,9 +182,9 @@ abstract class AppServices {
             await HiveManager.init();
             break;
         }
-        AppLogger.info('$serviceName initialized successfully', 'SERVICES');
+        TalkerService.info('$serviceName initialized successfully', 'SERVICES');
       } catch (e, stackTrace) {
-        AppLogger.error(
+        TalkerService.error(
             'Failed to initialize $serviceName', 'SERVICES', e, stackTrace);
         throw Exception('Critical service initialization failed: $serviceName');
       }
@@ -193,15 +201,16 @@ abstract class AppServices {
             initialLocation = await RoutersManager.routingChecker();
             break;
         }
-        AppLogger.info('$serviceName initialized successfully', 'SERVICES');
+        TalkerService.info('$serviceName initialized successfully', 'SERVICES');
       } catch (e, _) {
-        AppLogger.warning('Failed to initialize $serviceName', 'SERVICES', e);
+        TalkerService.warning(
+            'Failed to initialize $serviceName', 'SERVICES', e);
         // Continue execution - these are not critical
 
         if (serviceName == 'Routing') {
           // Provide fallback for routing
           initialLocation = '/home';
-          AppLogger.info('Using fallback route: /home', 'SERVICES');
+          TalkerService.info('Using fallback route: /home', 'SERVICES');
         }
       }
     }
@@ -213,9 +222,9 @@ abstract class AppServices {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-      AppLogger.info('Orientation preferences set', 'SERVICES');
+      TalkerService.info('Orientation preferences set', 'SERVICES');
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Failed to set orientation preferences', 'SERVICES', e, stackTrace);
       // Don't throw - this is not critical
     }
@@ -225,7 +234,7 @@ abstract class AppServices {
     try {
       // Catch Flutter framework errors
       FlutterError.onError = (FlutterErrorDetails errorDetails) {
-        AppLogger.error(
+        TalkerService.error(
           'Flutter framework error: ${errorDetails.exception}',
           'FLUTTER_ERROR',
           errorDetails.exception,
@@ -240,7 +249,7 @@ abstract class AppServices {
 
       // Catch async errors not handled by Flutter
       PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
-        AppLogger.error(
+        TalkerService.error(
           'Unhandled async error: $error',
           'ASYNC_ERROR',
           error,
@@ -255,9 +264,9 @@ abstract class AppServices {
         return true;
       };
 
-      AppLogger.info('Error handlers configured', 'SERVICES');
+      TalkerService.info('Error handlers configured', 'SERVICES');
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Failed to setup error handlers', 'SERVICES', e, stackTrace);
       // Don't throw - app can still work without error handlers
     }
@@ -281,23 +290,23 @@ abstract class AppServices {
         criticalAlert: false,
       );
 
-      AppLogger.info(
+      TalkerService.info(
           'Notification permission status: ${settings.authorizationStatus}',
           'FCM');
 
       // Get FCM token
       fcmToken = await fcm.getToken();
-      AppLogger.info('FCM token: $fcmToken', 'FCM');
+      TalkerService.info('FCM token: $fcmToken', 'FCM');
 
       // Handle foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        AppLogger.info(
+        TalkerService.info(
             'Received foreground message: ${message.messageId}', 'FCM');
 
         if (kDebugMode) {
-          AppLogger.debug('Message data: ${message.data}', 'FCM');
+          TalkerService.debug('Message data: ${message.data}', 'FCM');
           if (message.notification != null) {
-            AppLogger.debug(
+            TalkerService.debug(
                 'Notification: ${message.notification?.title} - ${message.notification?.body}',
                 'FCM');
           }
@@ -309,7 +318,7 @@ abstract class AppServices {
 
       // Handle notification taps when app is in background but not terminated
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        AppLogger.info(
+        TalkerService.info(
             'Notification tapped (background): ${message.messageId}', 'FCM');
 
         // Handle notification tap here
@@ -319,16 +328,16 @@ abstract class AppServices {
       // Check if app was opened from a notification (when app was terminated)
       final RemoteMessage? initialMessage = await fcm.getInitialMessage();
       if (initialMessage != null) {
-        AppLogger.info(
+        TalkerService.info(
             'App opened from notification: ${initialMessage.messageId}', 'FCM');
 
         // Handle initial message here
         // Navigate to specific screen, etc.
       }
 
-      AppLogger.info('Firebase Messaging setup completed', 'FCM');
+      TalkerService.info('Firebase Messaging setup completed', 'FCM');
     } catch (e, stackTrace) {
-      AppLogger.error(
+      TalkerService.error(
           'Failed to setup Firebase Messaging', 'FCM', e, stackTrace);
       // Don't throw - FCM is not critical for app functionality
     }

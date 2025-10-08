@@ -85,13 +85,10 @@ class DioHandler {
       dio.interceptors.add(InterceptorsWrapper(
         onRequest: (options, handler) async {
           try {
-            // Add Authorization header conditionally
-            if (!options.path.startsWith("auth/")) {
-              final String? token =
-                  await SecureStorageHandler.read(key: StorageKeys.token);
-              if (token != null && token.isNotEmpty) {
-                options.headers['Authorization'] = "Token $token";
-              }
+            final String? token =
+                await SecureStorageHandler.read(key: StorageKeys.token);
+            if (token != null && token.isNotEmpty) {
+              options.headers['Authorization'] = "Token $token";
             }
 
             return handler.next(options);

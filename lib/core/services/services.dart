@@ -1,8 +1,11 @@
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/features/Home/data/models/app_version.dart';
 import 'package:Warrior/firebase_options.dart';
 import 'package:Warrior/routing.dart';
 import 'package:cached_video_player_plus/util/migration_utils.dart';
@@ -24,6 +27,7 @@ abstract class AppServices {
   static String? fcmToken;
   static FlutterLocalNotificationsPlugin? _localNotifications;
   static final InAppReview inAppReview = InAppReview.instance;
+  // static late AppVersion appVersion;
 
   static Future<void> init() async {
     try {
@@ -296,7 +300,8 @@ abstract class AppServices {
 
       // Get FCM token
       fcmToken = await fcm.getToken();
-      TalkerService.info('FCM token: $fcmToken', 'FCM');
+
+      TalkerService.warning('FCM token: $fcmToken', 'FCM');
 
       // Handle foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {

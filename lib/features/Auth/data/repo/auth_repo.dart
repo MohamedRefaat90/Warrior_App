@@ -28,7 +28,8 @@ class AuthRepo {
         throw ArgumentError('Invalid email format');
       }
 
-      TalkerService.info('Sending password reset email to: $email', 'AUTH_REPO');
+      TalkerService.info(
+          'Sending password reset email to: $email', 'AUTH_REPO');
 
       await _dio.post(ApisUrl.forgetPassword, data: {'email': email.trim()});
 
@@ -91,7 +92,8 @@ class AuthRepo {
     }
   }
 
-  Future<UserModel> login(String email, String password) async {
+  Future<UserModel> login(String email, String password, String deviceToken,
+      String deviceType) async {
     try {
       // Validate inputs
       if (email.trim().isEmpty || password.isEmpty) {
@@ -106,13 +108,16 @@ class AuthRepo {
         throw ArgumentError('Password must be at least 6 characters');
       }
 
-      TalkerService.info('Attempting login for user: ${email.trim()}', 'AUTH_REPO');
+      TalkerService.info(
+          'Attempting login for user: ${email.trim()}', 'AUTH_REPO');
 
       final response = await _dio.post(
         ApisUrl.login,
         data: {
           'email': email.toLowerCase().trim(),
           'password': password,
+          'token': deviceToken,
+          'device_type': deviceType
         },
       );
 
@@ -144,6 +149,25 @@ class AuthRepo {
       rethrow;
     } catch (e) {
       TalkerService.error('Unexpected error in login', 'AUTH_REPO', e);
+      rethrow;
+    }
+  }
+
+  Future<void> logout(String deviceToken) async {
+    try {
+      TalkerService.info('Attempting logout', 'AUTH_REPO');
+
+      await _dio.post(
+        ApisUrl.logout,
+        data: {'token': deviceToken},
+      );
+
+      TalkerService.info('Logout successful', 'AUTH_REPO');
+    } on DioException catch (e) {
+      TalkerService.error('Network error during logout', 'AUTH_REPO', e);
+      rethrow;
+    } catch (e) {
+      TalkerService.error('Error during logout', 'AUTH_REPO', e);
       rethrow;
     }
   }
@@ -210,7 +234,8 @@ class AuthRepo {
         throw ArgumentError('Username must be at least 2 characters');
       }
 
-      TalkerService.info('Creating account for user: ${email.trim()}', 'AUTH_REPO');
+      TalkerService.info(
+          'Creating account for user: ${email.trim()}', 'AUTH_REPO');
 
       await _dio.post(
         ApisUrl.signup,
@@ -253,7 +278,8 @@ class AuthRepo {
         throw ArgumentError('OTP must contain only digits');
       }
 
-      TalkerService.info('Verifying OTP for user: ${email.trim()}', 'AUTH_REPO');
+      TalkerService.info(
+          'Verifying OTP for user: ${email.trim()}', 'AUTH_REPO');
 
       await _dio.post(
         ApisUrl.otpVerification,

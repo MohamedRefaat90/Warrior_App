@@ -32,7 +32,4 @@ class MuscleModel extends HiveObject {
       exerciseCount: map['exercise_count'] as int,
     );
   }
-
-  factory MuscleModel.fromJson(String source) =>
-      MuscleModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

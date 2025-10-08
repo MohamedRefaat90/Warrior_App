@@ -46,9 +46,6 @@ class ExerciseModel extends HiveObject {
     required this.equipmentType,
   });
 
-  factory ExerciseModel.fromJson(String source) =>
-      ExerciseModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   factory ExerciseModel.fromMap(Map<String, dynamic> map) {
     return ExerciseModel(
       id: map['id'] as int? ?? 0,

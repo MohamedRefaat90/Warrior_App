@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,7 +48,12 @@ void main() {
       await provider.login(email, password);
 
       // Assert - Method was called
-      verify(() => mockAuthRepo.login(email, password)).called(1);
+      verify(() => mockAuthRepo.login(
+            email,
+            password,
+            AppServices.fcmToken!,
+            Platform.isAndroid ? 'android' : 'ios',
+          )).called(1);
     });
 
     test('should handle empty email validation', () async {
@@ -63,7 +71,7 @@ void main() {
       expect(state.isLoading, false);
       expect(state.errorMessage, contains('required'));
 
-      verifyNever(() => mockAuthRepo.login(any(), any()));
+      verifyNever(() => mockAuthRepo.login(any(), any(), any(), any()));
     });
 
     test('should handle empty password validation', () async {
@@ -81,7 +89,7 @@ void main() {
       expect(state.isLoading, false);
       expect(state.errorMessage, contains('required'));
 
-      verifyNever(() => mockAuthRepo.login(any(), any()));
+      verifyNever(() => mockAuthRepo.login(any(), any(), any(), any()));
     });
 
     test('should handle Google login method call', () async {

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class UserModel {
   final String id;
   final String email;
@@ -18,9 +16,6 @@ class UserModel {
       username: map['username'] as String,
     );
   }
-
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'UserModel(id: $id, email: $email, username: $username)';

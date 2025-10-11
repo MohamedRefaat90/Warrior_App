@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RefreshWidget extends ConsumerWidget {
-  final StateNotifierProvider provider;
+  final NotifierProvider provider;
 
   const RefreshWidget(this.provider, {super.key});
   @override

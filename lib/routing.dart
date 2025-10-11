@@ -18,6 +18,8 @@ import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen
 import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
 import 'package:Warrior/features/Home/presentation/screen/home_screen.dart';
 import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
+import 'package:Warrior/features/Predefined_workouts/presentation/screen/predefined_workout_details.dart';
+import 'package:Warrior/features/Predefined_workouts/presentation/screen/predefined_workout_screen.dart';
 import 'package:Warrior/features/Supplements/presentation/screens/supplements_screen.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/screens/workout_details.dart';
@@ -157,6 +159,22 @@ class RoutersManager {
       name: AppRouters.workoutDetails,
       pageBuilder: (context, state) => CustomTransition(
         child: WorkoutDetails(state.extra as WorkoutSetModel),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.predefinedWorkouts,
+      name: AppRouters.predefinedWorkouts,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const PredefinedWorkoutsScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.predefinedWorkoutDetails,
+      name: AppRouters.predefinedWorkoutDetails,
+      pageBuilder: (context, state) => CustomTransition(
+        child: PredefinedWorkoutDetails(state.extra as WorkoutSetModel),
         transitionType: PageTransitionType.fade,
       ),
     ),

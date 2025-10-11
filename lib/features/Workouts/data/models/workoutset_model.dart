@@ -20,18 +20,13 @@ class WorkoutItemModel {
     required this.lastWeight,
   });
 
-  factory WorkoutItemModel.fromJson(String source) =>
-      WorkoutItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   factory WorkoutItemModel.fromMap(Map<String, dynamic> map) {
     try {
       // Safely parse exercise
       ExerciseModel exercise;
-      if (map['exercise'] is ExerciseModel) {
-        exercise = map['exercise'] as ExerciseModel;
-      } else if (map['exercise'] is Map<String, dynamic>) {
-        exercise =
-            ExerciseModel.fromMap(map['exercise'] as Map<String, dynamic>);
+      final data = map.containsKey('exercise') ? map['exercise'] : map;
+      if (data is Map<String, dynamic>) {
+        exercise = ExerciseModel.fromMap(data);
       } else {
         throw Exception('Invalid exercise data');
       }
@@ -111,21 +106,20 @@ class WorkoutSetModel extends HiveObject {
     try {
       // Safely parse workout items with better error handling
       List<WorkoutItemModel> workoutItems = [];
-
-      if (map['workout_items'] != null) {
-        final workoutItemsData = map['workout_items'];
-        if (workoutItemsData is List) {
-          for (var item in workoutItemsData) {
-            try {
-              if (item is Map<String, dynamic>) {
-                workoutItems.add(WorkoutItemModel.fromMap(item));
-              }
-            } catch (e) {
-              // Skip invalid workout items instead of failing completely
-              TalkerService.warning(
-                  'Skipping invalid workout item', 'WORKOUT_SET', e);
-              continue;
+      final data = map.containsKey('workout_items')
+          ? map['workout_items']
+          : map['exercises'];
+      if (data != null && data is List) {
+        for (var item in data) {
+          try {
+            if (item is Map<String, dynamic>) {
+              workoutItems.add(WorkoutItemModel.fromMap(item));
             }
+          } catch (e) {
+            // Skip invalid workout items instead of failing completely
+            TalkerService.warning(
+                'Skipping invalid workout item', 'WORKOUT_SET', e);
+            continue;
           }
         }
       }

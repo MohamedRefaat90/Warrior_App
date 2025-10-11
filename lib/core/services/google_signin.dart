@@ -35,8 +35,10 @@ class GoogleSignInService {
 
       return idToken;
     } catch (error) {
-      TalkerService.error('Error during Google Sign-In', 'GOOGLE_SIGNIN', error);
-      TalkerService.error('Error details: ${error.toString()}', 'GOOGLE_SIGNIN');
+      TalkerService.error(
+          'Error during Google Sign-In', 'GOOGLE_SIGNIN', error);
+      TalkerService.error(
+          'Error details: ${error.toString()}', 'GOOGLE_SIGNIN');
       return null;
     }
   }

@@ -31,7 +31,8 @@ class SyncService extends Notifier<bool> {
       state = true; // Set loading to true
       final List<PendingOperation> pendingOps =
           HiveManager.pendingOpsBox.values.toList();
-      TalkerService.info('Found ${pendingOps.length} pending operations', 'SYNC');
+      TalkerService.info(
+          'Found ${pendingOps.length} pending operations', 'SYNC');
 
       // Skip sync if no operations
       if (pendingOps.isEmpty) {

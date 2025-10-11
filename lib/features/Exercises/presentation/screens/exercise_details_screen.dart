@@ -281,8 +281,8 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         _initializeLocalVideo();
       }
     } catch (e, stackTrace) {
-      TalkerService.error('Exception in video initialization', 'EXERCISE_DETAILS',
-          e, stackTrace);
+      TalkerService.error('Exception in video initialization',
+          'EXERCISE_DETAILS', e, stackTrace);
       setState(() {
         _hasVideoError = true;
         _videoErrorMessage = 'Failed to initialize video';

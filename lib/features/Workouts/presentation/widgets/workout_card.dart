@@ -25,7 +25,7 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         context.pushNamed(AppRouters.workoutDetails, extra: widget.workout);
       },

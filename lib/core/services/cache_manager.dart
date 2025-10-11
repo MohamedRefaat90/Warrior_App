@@ -13,7 +13,8 @@ class DataManager {
       try {
         // Check if the image Path is already cached
         String? imagePath;
-        TalkerService.debug('Checking cache for image: ${exercise.image}', 'CACHE');
+        TalkerService.debug(
+            'Checking cache for image: ${exercise.image}', 'CACHE');
         final cachedImage =
             await _cacheManager.getFileFromCache(exercise.image);
         if (cachedImage != null) {
@@ -50,7 +51,8 @@ class DataManager {
 
         // Check if the video is already cached
         String? videoPath;
-        TalkerService.debug('Checking cache for video: ${exercise.video}', 'CACHE');
+        TalkerService.debug(
+            'Checking cache for video: ${exercise.video}', 'CACHE');
         final cachedVideo =
             await _cacheManager.getFileFromCache(exercise.video);
         if (cachedVideo != null) {
@@ -66,7 +68,8 @@ class DataManager {
 
         // Save to Hive if not already saved
         if (!box.containsKey(exercise.id)) {
-          TalkerService.debug('Saving exercise to Hive: ${exercise.id}', 'CACHE');
+          TalkerService.debug(
+              'Saving exercise to Hive: ${exercise.id}', 'CACHE');
           // Create a new instance of ExerciseModel with updated paths
           final updatedExercise = exercise.copyWith(
             image: imagePath,

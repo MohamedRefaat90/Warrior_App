@@ -146,7 +146,8 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
       final router = GoRouter.of(context);
       TalkerService.debug(
           'Current Route: ${router.state.matchedLocation}', 'MUSCLES');
-      TalkerService.debug('Is Online: ${ConnectivityChecker.isOnline}', 'MUSCLES');
+      TalkerService.debug(
+          'Is Online: ${ConnectivityChecker.isOnline}', 'MUSCLES');
 
       // Reset select mode when entering muscles screen from exercises
       // This ensures select mode doesn't persist when navigating back

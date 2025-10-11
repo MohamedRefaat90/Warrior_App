@@ -8,9 +8,8 @@ class CategoryCard extends StatelessWidget {
   const CategoryCard({super.key, required this.category});
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () => context.pushNamed(category.navigateTo),
-      splashFactory: NoSplash.splashFactory,
       child: Card(
         elevation: 5,
         child: Padding(

@@ -28,6 +28,11 @@ class HomeRepo {
       image: AppAssets.workout,
       navigateTo: AppRouters.workouts,
     ),
+    CategoryItem(
+      title: "Predefined Workouts",
+      image: AppAssets.dumbbell,
+      navigateTo: AppRouters.predefinedWorkouts,
+    ),
     // CategoryItem(
     //   title: "Supplements",
     //   image: AppAssets.supplements,
@@ -46,7 +51,8 @@ class HomeRepo {
     try {
       final Response response = await _dio.get(ApisUrl.forceUpdate);
       if (response.statusCode == 200) {
-        AppVersion appVersion = AppVersion.fromMap(response.data['data']);
+        AppVersion appVersion =
+            AppVersion.fromMap(response.data as Map<String, dynamic>);
         SharedPref.setString(StorageKeys.appVersion, appVersion.version ?? '');
         TalkerService.info(
             'App version fetched: ${appVersion.version}', 'HOME-REPO');

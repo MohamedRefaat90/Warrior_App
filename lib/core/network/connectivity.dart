@@ -30,7 +30,8 @@ class ConnectivityChecker {
 
       // If we're coming back online and we were offline before
       if (isOnline! && wasOffline) {
-        TalkerService.info('Connection restored. Syncing data...', 'CONNECTIVITY');
+        TalkerService.info(
+            'Connection restored. Syncing data...', 'CONNECTIVITY');
 
         // Start sync
         // ref.read(syncingProvider.notifier).state = true;

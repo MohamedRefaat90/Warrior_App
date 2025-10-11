@@ -11,9 +11,9 @@ class AppVersion {
 
   factory AppVersion.fromMap(Map<String, dynamic> map) {
     return AppVersion(
-      version: map['version'] as String? ?? '',
-      build_number: map['build_number'] as String? ?? '',
-      is_force_update: map['force_update'] as bool? ?? false,
+      version: map['data']['version'] as String? ?? '',
+      build_number: map['data']['build_number'] as String? ?? '',
+      is_force_update: map['data']['force_update'] as bool? ?? false,
     );
   }
 }

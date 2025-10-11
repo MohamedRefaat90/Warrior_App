@@ -9,6 +9,7 @@ class HiveManager {
   static late Box<ExerciseModel> exercisesBox;
   static late Box<MuscleModel> musclesBox;
   static late Box<WorkoutSetModel> workoutsBox;
+  static late Box<WorkoutSetModel> predefinedWorkoutsBox;
   static late Box<PendingOperation> pendingOpsBox;
 
   // Update or add this method to ensure operations are properly stored
@@ -43,6 +44,8 @@ class HiveManager {
     musclesBox = await Hive.openBox<MuscleModel>('muscles');
     exercisesBox = await Hive.openBox<ExerciseModel>('exercises');
     workoutsBox = await Hive.openBox<WorkoutSetModel>('workouts');
+    predefinedWorkoutsBox =
+        await Hive.openBox<WorkoutSetModel>('predefinedWorkouts');
     pendingOpsBox = await Hive.openBox<PendingOperation>("pendingOperations");
   }
 

@@ -27,7 +27,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   @override
   Widget build(BuildContext context) {
     final workoutsNotifier = ref.read(workoutsProvider.notifier);
-    return InkWell(
+    return GestureDetector(
       onTap: () =>
           context.pushNamed(AppRouters.exerciseDetails, extra: widget.exercise),
       child: Card(

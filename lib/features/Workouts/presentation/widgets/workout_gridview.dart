@@ -53,7 +53,7 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                     clipBehavior: Clip.none,
                     fit: StackFit.passthrough,
                     children: [
-                      InkWell(
+                      GestureDetector(
                         onLongPress: () {
                           workoutNotifier.toggleSelectMode();
                         },

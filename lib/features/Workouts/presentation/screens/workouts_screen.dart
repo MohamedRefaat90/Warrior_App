@@ -1,5 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/services/interstitial_ad_manager.dart';
+import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -75,16 +77,27 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               builder: (context, ref, child) => TextButton(
                                   onPressed: () {
                                     if (formKey.currentState!.validate()) {
-                                      workoutNotifier.fillNewWorkout(
-                                          name: nameController.text,
-                                          description:
-                                              descriptionController.text,
-                                          workoutItems: []);
-                                      context.pushNamed(AppRouters.muscles,
-                                          extra: {
-                                            "isComingFromWorkoutScreen": true,
-                                            "appendToExistingWorkoutSet": false
-                                          });
+                                      // Close the dialog first
+                                      Navigator.of(context).pop();
+
+                                      // Show interstitial ad, then navigate
+                                      InterstitialAdManager.instance.showAd(
+                                        onAdDismissed: () {
+                                          // Navigate after ad is dismissed
+                                          workoutNotifier.fillNewWorkout(
+                                              name: nameController.text,
+                                              description:
+                                                  descriptionController.text,
+                                              workoutItems: []);
+                                          context.pushNamed(AppRouters.muscles,
+                                              extra: {
+                                                "isComingFromWorkoutScreen":
+                                                    true,
+                                                "appendToExistingWorkoutSet":
+                                                    false
+                                              });
+                                        },
+                                      );
                                     }
                                   },
                                   child: Text('Create')),
@@ -102,12 +115,22 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                   fontWeight: FontWeight.bold,
                   fontSize: 28.sp)),
         ),
-        body: workoutState.isLoading
-            ? const Loader()
-            : workoutNotifier.workoutList.isEmpty
-                ? const EmptyWorkoutList()
-                : WorkoutsListview(workoutNotifier.workoutList, nameController,
-                    descriptionController));
+        body: Column(
+          children: [
+            const BannerAdWidget(),
+            Expanded(
+              child: workoutState.isLoading
+                  ? const Loader()
+                  : workoutNotifier.workoutList.isEmpty
+                      ? const EmptyWorkoutList()
+                      : WorkoutsListview(
+                          workoutNotifier.workoutList,
+                          nameController,
+                          descriptionController,
+                        ),
+            ),
+          ],
+        ));
   }
 
   @override

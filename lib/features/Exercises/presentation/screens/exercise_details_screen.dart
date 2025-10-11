@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
-import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:video_player/video_player.dart';
 
 class ExerciseDetailsScreen extends StatefulWidget {
   final ExerciseModel exercise;
@@ -29,49 +30,56 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 200.h,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.black, width: 3),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: _buildVideoWidget(),
+      body: Column(
+        children: [
+          const BannerAdWidget(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 200.h,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.black, width: 3),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: _buildVideoWidget(),
+                      ),
+                    ),
+                    10.verticalSpace,
+                    Text(
+                      widget.exercise.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    40.verticalSpace,
+                    _buildTargetedMusclesImage(),
+                    const Text(
+                      "Targeted Muscles",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    10.verticalSpace,
+                  ],
                 ),
               ),
-              10.verticalSpace,
-              Text(
-                widget.exercise.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              40.verticalSpace,
-              _buildTargetedMusclesImage(),
-              const Text(
-                "Targeted Muscles",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              10.verticalSpace,
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

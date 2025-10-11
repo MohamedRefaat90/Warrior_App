@@ -2,7 +2,6 @@ import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/provider/predefined_provider.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/Predefined_workouts_gridview.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/Predefined_workouts_listview.dart';
-import 'package:Warrior/features/Predefined_workouts/presentation/widgets/empty_Predefined_workoutlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,7 +36,6 @@ class _PredefinedWorkoutScreenState
         actions: [
           IconButton(
             onPressed: () {
-              // Toggle between list and grid view using Riverpod v3 Notifier
               ref.read(viewModeProvider.notifier).toggle();
             },
             icon: Icon(
@@ -53,7 +51,6 @@ class _PredefinedWorkoutScreenState
       ),
       body: predefinedState.when(
         data: (workouts) {
-          // Switch between list and grid based on view mode
           return viewMode == WorkoutViewMode.list
               ? PredefinedWorkoutsListView(workouts)
               : PredefinedWorkoutsGridView(workouts);

@@ -1,11 +1,10 @@
-import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/dio.dart';
+import 'package:Warrior/core/services/app_open_ad_manager.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
-import 'package:Warrior/core/services/secure_storage_handler.dart';
+import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
-import 'package:Warrior/features/Home/data/models/app_version.dart';
 import 'package:Warrior/firebase_options.dart';
 import 'package:Warrior/routing.dart';
 import 'package:cached_video_player_plus/util/migration_utils.dart';
@@ -16,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 /// Firebase background message handler
@@ -170,7 +170,11 @@ abstract class AppServices {
 
   static Future<void> _initializeServices() async {
     const List<String> criticalServices = ['SharedPref', 'Dio', 'Hive'];
-    const List<String> nonCriticalServices = ['Connectivity', 'Routing'];
+    const List<String> nonCriticalServices = [
+      'Connectivity',
+      'Routing',
+      'AdMob'
+    ];
 
     // Initialize critical services first
     for (final serviceName in criticalServices) {
@@ -184,6 +188,13 @@ abstract class AppServices {
             break;
           case 'Hive':
             await HiveManager.init();
+            break;
+          case 'AdMob':
+            await MobileAds.instance.initialize();
+            // Preload the first interstitial ad
+            InterstitialAdManager.instance.preloadAd();
+            // Initialize app open ad manager
+            AppOpenAdManager.instance.initialize();
             break;
         }
         TalkerService.info('$serviceName initialized successfully', 'SERVICES');

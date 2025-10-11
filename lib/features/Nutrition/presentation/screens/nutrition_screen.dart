@@ -1,3 +1,4 @@
+import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,7 +16,12 @@ class _NutritionScreenState extends ConsumerState<NutritionScreen> {
       appBar: AppBar(
         title: const Text('NutritionScreen'),
       ),
-      body: Container(),
+      body: const Column(
+        children: [
+          NativeAdWidget(),
+          Expanded(child: Center(child: Text('Coming Soon'))),
+        ],
+      ),
     );
   }
 }

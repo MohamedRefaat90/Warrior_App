@@ -1,5 +1,6 @@
 ﻿import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/services/app_open_ad_manager.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/core/services/talker_service.dart';
@@ -13,9 +14,6 @@ import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
-
-// Set to true when you need to test different screen sizes
-const bool _useDevicePreview = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +40,17 @@ void main() async {
   );
 }
 
+// Set to true when you need to test different screen sizes
+const bool _useDevicePreview = false;
+
+/// Root widget that sets up the app structure
+class Warrior extends ConsumerStatefulWidget {
+  const Warrior({super.key});
+
+  @override
+  ConsumerState<Warrior> createState() => _WarriorState();
+}
+
 /// Main app widget with Riverpod and Sentry integration
 class WarriorApp extends StatelessWidget {
   const WarriorApp({super.key});
@@ -55,49 +64,6 @@ class WarriorApp extends StatelessWidget {
       child: SentryWidget(
         child: Warrior(),
       ),
-    );
-  }
-}
-
-/// Root widget that sets up the app structure
-class Warrior extends ConsumerWidget {
-  const Warrior({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Initialize connectivity checker
-    ConnectivityChecker.initialize(ref);
-
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, child) {
-        return OKToast(
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              MaterialApp.router(
-                title: 'Warrior',
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: const Color.fromARGB(255, 168, 11, 11),
-                  ),
-                  useMaterial3: true,
-                ),
-                routerConfig: RoutersManager.router,
-                // DevicePreview configuration
-                locale:
-                    _useDevicePreview ? DevicePreview.locale(context) : null,
-                builder: _useDevicePreview ? DevicePreview.appBuilder : null,
-              ),
-              // Sync indicator overlay
-              const _SyncIndicator(),
-            ],
-          ),
-        );
-      },
     );
   }
 }
@@ -139,5 +105,65 @@ class _SyncIndicator extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+class _WarriorState extends ConsumerState<Warrior> with WidgetsBindingObserver {
+  @override
+  Widget build(BuildContext context) {
+    // Initialize connectivity checker
+    ConnectivityChecker.initialize(ref);
+
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        return OKToast(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              MaterialApp.router(
+                title: 'Warrior',
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: const Color.fromARGB(255, 168, 11, 11),
+                  ),
+                  useMaterial3: true,
+                ),
+                routerConfig: RoutersManager.router,
+                // DevicePreview configuration
+                locale:
+                    _useDevicePreview ? DevicePreview.locale(context) : null,
+                builder: _useDevicePreview ? DevicePreview.appBuilder : null,
+              ),
+              // Sync indicator overlay
+              const _SyncIndicator(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Show app open ad when app resumes
+    if (state == AppLifecycleState.resumed) {
+      AppOpenAdManager.instance.showAdIfAvailable();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/Predefined_workout_card.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,25 @@ class _PredefinedWorkoutsListViewState
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: ListView.builder(
-          itemCount: widget.workouts.length,
+          shrinkWrap: true,
+          itemCount: widget.workouts.length + 1, // +1 for native ad
           itemBuilder: (context, index) {
+            // Show native ad in the middle (after 3rd item)
+            if (index == 3 && widget.workouts.length > 3) {
+              return const NativeAdWidget();
+            }
+
+            // Adjust index after native ad
+            final workoutIndex = index > 3 ? index - 1 : index;
+
+            // Don't show item if we're past the end
+            if (workoutIndex >= widget.workouts.length) {
+              return const SizedBox.shrink();
+            }
+
             return PredefinedWorkoutCard(
-              key: Key("$index"),
-              workout: widget.workouts[index],
+              key: Key("$workoutIndex"),
+              workout: widget.workouts[workoutIndex],
             );
           },
         ));

@@ -1,3 +1,4 @@
+import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
@@ -24,15 +25,28 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
-          itemCount: widget.exercises.length,
+          itemCount: widget.exercises.length + 1, // +1 for native ad
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
           itemBuilder: (context, index) {
+            // Show native ad in middle (position 4)
+            if (index == 4 && widget.exercises.length > 4) {
+              return const NativeAdWidget();
+            }
+
+            // Adjust index after native ad
+            final exerciseIndex = index > 4 ? index - 1 : index;
+
+            // Don't show item if we're past the end
+            if (exerciseIndex >= widget.exercises.length) {
+              return const SizedBox.shrink();
+            }
+
             return ExerciseCard(
-              exercise: widget.exercises[index],
+              exercise: widget.exercises[exerciseIndex],
               isComingFromWorkoutScreen:
                   ref.watch(workoutsProvider.notifier).selectMode,
             );

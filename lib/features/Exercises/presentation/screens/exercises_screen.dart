@@ -34,7 +34,7 @@ class ExercisesScreen extends ConsumerWidget {
                 ref.read(workoutsProvider.notifier).selectMode = false;
                 context.pop();
               },
-              icon: Icon(Icons.arrow_back_ios_new)),
+              icon: const Icon(Icons.arrow_back_ios_new)),
           title: Text(
             '${muscle['name']} Exercises',
             style: const TextStyle(

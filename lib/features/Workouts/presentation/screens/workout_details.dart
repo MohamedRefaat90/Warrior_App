@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
@@ -106,7 +107,12 @@ class WorkoutDetails extends ConsumerWidget {
                 ),
               )
             : null,
-        body: WorkoutGridView(updatedWorkout),
+        body: Column(
+          children: [
+            const BannerAdWidget(),
+            Expanded(child: WorkoutGridView(updatedWorkout)),
+          ],
+        ),
       ),
     );
   }

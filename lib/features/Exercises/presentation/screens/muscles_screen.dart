@@ -2,9 +2,10 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
-import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
+import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
@@ -63,78 +64,88 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                     child: const Icon(Icons.logout, color: AppColors.white),
                   )
                 : null,
-        body: ConnectivityChecker.isOnline!
-            ? ref.watch(musclesProvider).when(
-                loading: () => Center(child: const Loader()),
-                data: (muscles) {
-                  HiveManager.saveToHive(HiveManager.musclesBox, muscles);
-                  return MusclesListView(
-                    muscles: muscles,
-                    isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
-                    appendToExistingWorkoutSet:
-                        widget.appendToExistingWorkoutSet,
-                  );
-                },
-                error: (error, stackTrace) =>
-                    ref.read(musclesProvider).isRefreshing
-                        ? Center(child: const Loader())
-                        : Center(
+        body: Column(
+          children: [
+            const BannerAdWidget(),
+            Expanded(
+              child: ConnectivityChecker.isOnline!
+                  ? ref.watch(musclesProvider).when(
+                      loading: () => Center(child: const Loader()),
+                      data: (muscles) {
+                        HiveManager.saveToHive(HiveManager.musclesBox, muscles);
+                        return MusclesListView(
+                          muscles: muscles,
+                          isComingFromWorkoutScreen:
+                              widget.isComingFromWorkoutScreen,
+                          appendToExistingWorkoutSet:
+                              widget.appendToExistingWorkoutSet,
+                        );
+                      },
+                      error: (error, stackTrace) =>
+                          ref.read(musclesProvider).isRefreshing
+                              ? Center(child: const Loader())
+                              : Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Something went wrong!'),
+                                      ElevatedButton(
+                                        onPressed: () =>
+                                            ref.refresh(musclesProvider),
+                                        child: Text('Refresh'),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                  : ValueListenableBuilder(
+                      valueListenable: HiveManager.musclesBox.listenable(),
+                      builder: (context, Box<MuscleModel> box, _) {
+                        if (box.values.isEmpty) {
+                          return Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Something went wrong!'),
-                                ElevatedButton(
-                                  onPressed: () => ref.refresh(musclesProvider),
-                                  child: Text('Refresh'),
+                                Icon(
+                                  Icons.wifi_off,
+                                  size: 64,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'No muscles available offline',
+                                  style: TextStyle(
+                                      fontFamily: "poppins",
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Please go online to download muscle groups',
+                                  style: TextStyle(
+                                      fontFamily: "poppins",
+                                      fontSize: 16,
+                                      color: Colors.grey[600]),
+                                  textAlign: TextAlign.center,
                                 ),
                               ],
                             ),
-                          ))
-            : ValueListenableBuilder(
-                valueListenable: HiveManager.musclesBox.listenable(),
-                builder: (context, Box<MuscleModel> box, _) {
-                  if (box.values.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.wifi_off,
-                            size: 64,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'No muscles available offline',
-                            style: TextStyle(
-                                fontFamily: "poppins",
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Please go online to download muscle groups',
-                            style: TextStyle(
-                                fontFamily: "poppins",
-                                fontSize: 16,
-                                color: Colors.grey[600]),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    );
-                  }
+                          );
+                        }
 
-                  final muscles = box.values.toList();
-                  return MusclesListView(
-                    muscles: muscles,
-                    isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
-                    appendToExistingWorkoutSet:
-                        widget.appendToExistingWorkoutSet,
-                  );
-                },
-              ),
+                        final muscles = box.values.toList();
+                        return MusclesListView(
+                          muscles: muscles,
+                          isComingFromWorkoutScreen:
+                              widget.isComingFromWorkoutScreen,
+                          appendToExistingWorkoutSet:
+                              widget.appendToExistingWorkoutSet,
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

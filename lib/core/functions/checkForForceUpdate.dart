@@ -24,35 +24,40 @@ void checkForForceUpdate(WidgetRef ref, BuildContext context) async {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          backgroundColor: AppColors.white,
-          title: const Text(
-            'Update Available',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Lottie.asset(AppAssets.newUpdate),
-              10.verticalSpace,
-              const Text(
-                'A new version of the app is available. Please update to continue.',
-                textAlign: TextAlign.center,
+        builder: (context) => PopScope(
+          canPop: false,
+          child: AlertDialog(
+            backgroundColor: AppColors.white,
+            title: const Text(
+              'Update Available',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Lottie.asset(AppAssets.newUpdate),
+                10.verticalSpace,
+                const Text(
+                  'A new version of the app is available. Please update to continue.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            actions: [
+              CustomBTN(
+                widget: const Text('Update Now'),
+                color: AppColors.primaryColor,
+                padding: 12,
+                width: double.infinity,
+                press: () async {
+                  await AppServices.inAppReview.openStoreListing();
+                  SharedPref.setString(
+                      StorageKeys.appVersion, currentAppVersion.version ?? '');
+                },
               ),
             ],
           ),
-          actions: [
-            CustomBTN(
-              widget: const Text('Update Now'),
-              color: AppColors.primaryColor,
-              padding: 12,
-              width: double.infinity,
-              press: () async {
-                await AppServices.inAppReview.openStoreListing();
-              },
-            ),
-          ],
         ),
       );
     }

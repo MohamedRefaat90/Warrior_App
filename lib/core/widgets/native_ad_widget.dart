@@ -25,10 +25,28 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
       return const SizedBox.shrink();
     }
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      height: 300,
-      child: AdWidget(ad: _ad!),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Use the available width from parent constraints
+        final availableWidth = constraints.maxWidth;
+        final availableHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : 300.0; // Default height if infinite
+
+        return Container(
+          width: availableWidth,
+          height: availableHeight,
+          clipBehavior: Clip.hardEdge,
+          decoration: const BoxDecoration(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: availableWidth,
+              maxHeight: availableHeight,
+            ),
+            child: AdWidget(ad: _ad!),
+          ),
+        );
+      },
     );
   }
 

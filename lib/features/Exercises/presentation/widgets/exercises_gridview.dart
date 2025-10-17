@@ -22,35 +22,66 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
   @override
   Widget build(BuildContext context) {
     ref.watch(workoutsProvider);
+
+    // Split exercises: first 4, then the rest
+    final firstFourExercises = widget.exercises.take(4).toList();
+    final remainingExercises =
+        widget.exercises.length > 4 ? widget.exercises.skip(4).toList() : [];
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: GridView.builder(
-          itemCount: widget.exercises.length + 1, // +1 for native ad
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+      child: CustomScrollView(
+        slivers: [
+          // First grid with up to 4 exercises
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return ExerciseCard(
+                  exercise: firstFourExercises[index],
+                  isComingFromWorkoutScreen:
+                      ref.watch(workoutsProvider.notifier).selectMode,
+                );
+              },
+              childCount: firstFourExercises.length,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
           ),
-          itemBuilder: (context, index) {
-            // Show native ad in middle (position 4)
-            if (index == 4 && widget.exercises.length > 4) {
-              return const NativeAdWidget();
-            }
-
-            // Adjust index after native ad
-            final exerciseIndex = index > 4 ? index - 1 : index;
-
-            // Don't show item if we're past the end
-            if (exerciseIndex >= widget.exercises.length) {
-              return const SizedBox.shrink();
-            }
-
-            return ExerciseCard(
-              exercise: widget.exercises[exerciseIndex],
-              isComingFromWorkoutScreen:
-                  ref.watch(workoutsProvider.notifier).selectMode,
-            );
-          }),
+          // Native ad after first 4 items (full width)
+          if (widget.exercises.length > 4)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  height: 300,
+                  child: const NativeAdWidget(),
+                ),
+              ),
+            ),
+          // Remaining exercises in grid
+          if (remainingExercises.isNotEmpty)
+            SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return ExerciseCard(
+                    exercise: remainingExercises[index],
+                    isComingFromWorkoutScreen:
+                        ref.watch(workoutsProvider.notifier).selectMode,
+                  );
+                },
+                childCount: remainingExercises.length,
+              ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+            ),
+        ],
+      ),
     );
   }
 

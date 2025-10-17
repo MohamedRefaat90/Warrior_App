@@ -53,7 +53,6 @@ class HomeRepo {
       if (response.statusCode == 200) {
         AppVersion appVersion =
             AppVersion.fromMap(response.data as Map<String, dynamic>);
-        SharedPref.setString(StorageKeys.appVersion, appVersion.version ?? '');
         TalkerService.info(
             'App version fetched: ${appVersion.version}', 'HOME-REPO');
         return appVersion;

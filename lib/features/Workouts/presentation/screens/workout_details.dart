@@ -1,13 +1,16 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
+import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/workout_gridview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 class WorkoutDetails extends ConsumerWidget {
   final WorkoutSetModel workout;
@@ -70,6 +73,25 @@ class WorkoutDetails extends ConsumerWidget {
                 fontFamily: "Kings", fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              tooltip: 'Share workout',
+              icon: const Icon(Icons.share),
+              onPressed: () async {
+                try {
+                  final url = await ref
+                      .read(workoutRepo)
+                      .createShareLink(updatedWorkout);
+                  await SharePlus.instance
+                      .share(ShareParams(text: 'Check out my workout: $url'));
+                } catch (e) {
+                  // No toast util here; keep silent or add your preferred UX.
+                  TalkerService.error('Error sharing workout',
+                      'WORKOUT_DETAILS', e, StackTrace.current);
+                }
+              },
+            ),
+          ],
         ),
         bottomNavigationBar: workoutNotifier.selectMode
             ? Padding(

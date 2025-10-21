@@ -8,7 +8,7 @@ bool isContainSpecailChar = false;
 bool isPassMatchConfirmPass = false;
 bool isObsecured = true;
 
-checkLengthOfPassword(String password) {
+void checkLengthOfPassword(String password) {
   if (password.length >= 8) {
     isPassLengthLargerThan8 = true;
   } else {
@@ -16,7 +16,7 @@ checkLengthOfPassword(String password) {
   }
 }
 
-checkPasswordContainLowerChar(String password) {
+void checkPasswordContainLowerChar(String password) {
   if (password.contains(RegExp(r"[a-z]"))) {
     isContainLowerChar = true;
   } else {
@@ -24,7 +24,7 @@ checkPasswordContainLowerChar(String password) {
   }
 }
 
-checkPasswordContainSpecialChar(String password) {
+void checkPasswordContainSpecialChar(String password) {
   if (password.contains(RegExp(r"(?=.*?[!@#\$&*~])"))) {
     isContainSpecailChar = true;
   } else {
@@ -32,7 +32,7 @@ checkPasswordContainSpecialChar(String password) {
   }
 }
 
-checkPasswordContainUpperChar(String password) {
+void checkPasswordContainUpperChar(String password) {
   if (password.contains(RegExp(r"[A-Z]"))) {
     isContainUpperChar = true;
   } else {
@@ -40,7 +40,7 @@ checkPasswordContainUpperChar(String password) {
   }
 }
 
-checkPasswordContainNum(String password) {
+void checkPasswordContainNum(String password) {
   if (password.contains(RegExp(r"[0-9]"))) {
     isContainNum = true;
   } else {

@@ -1,10 +1,10 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
-import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/presentation/screens/forget_password_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/login_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/reset_password_screen.dart';
@@ -22,6 +22,7 @@ import 'package:Warrior/features/Predefined_workouts/presentation/screen/predefi
 import 'package:Warrior/features/Predefined_workouts/presentation/screen/predefined_workout_screen.dart';
 import 'package:Warrior/features/Supplements/presentation/screens/supplements_screen.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
+import 'package:Warrior/features/Workouts/presentation/screens/shared_workout_import_screen.dart';
 import 'package:Warrior/features/Workouts/presentation/screens/workout_details.dart';
 import 'package:Warrior/features/Workouts/presentation/screens/workouts_screen.dart';
 import 'package:Warrior/features/onboarding/screens/onboarding_screen.dart';
@@ -159,6 +160,31 @@ class RoutersManager {
       name: AppRouters.workoutDetails,
       pageBuilder: (context, state) => CustomTransition(
         child: WorkoutDetails(state.extra as WorkoutSetModel),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: '/w/:code',
+      name: 'shared-workout',
+      redirect: (context, state) async {
+        // Check if user is logged in
+        final token = await SecureStorageHandler.read(key: StorageKeys.token);
+        final code = state.pathParameters['code'];
+
+        // If not logged in, redirect to login with the code stored
+        if (token == null || token.isEmpty) {
+          // Store the code to redirect after login
+          await SharedPref.setString('pending_shared_workout', code ?? '');
+          return AppRouters.login;
+        }
+
+        // User is logged in, allow access
+        return null;
+      },
+      pageBuilder: (context, state) => CustomTransition(
+        child: SharedWorkoutImportScreen(
+          code: state.pathParameters['code']!,
+        ),
         transitionType: PageTransitionType.fade,
       ),
     ),

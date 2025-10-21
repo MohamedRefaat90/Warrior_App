@@ -16,7 +16,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/routers.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
-  const WorkoutScreen({super.key});
+  const WorkoutScreen({
+    super.key,
+  });
 
   @override
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
@@ -109,6 +111,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
             : null,
         appBar: AppBar(
           centerTitle: true,
+          leading:
+              BackButton(onPressed: () => context.goNamed(AppRouters.home)),
           title: Text('Your Workouts',
               style: TextStyle(
                   fontFamily: 'kings',

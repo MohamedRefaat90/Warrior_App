@@ -1,5 +1,6 @@
 class ApisUrl {
   static const String baseurl = "https://warrior.up.railway.app/";
+  static const String localhost = "http://192.168.0.106:8000/";
   static const String login = "auth/Login/";
   static const String logout = "auth/Logout/";
   static const String forgetPassword = "auth/forget-password/";

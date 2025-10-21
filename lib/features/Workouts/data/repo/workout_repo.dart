@@ -1,6 +1,8 @@
 import 'package:Warrior/core/constants/apis_url.dart';
+import 'package:Warrior/core/network/api_error_handler.dart';
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +15,46 @@ class WorkoutRepo {
   final Dio dio;
 
   WorkoutRepo(this.dio);
+
+  /// Creates a backend-driven share link for a workout set and returns the URL.
+  ///
+  /// POSTs a compact payload to the server and expects `{ code, url }` back.
+  Future<String> createShareLink(WorkoutSetModel workoutSet) async {
+    try {
+      final payload = {
+        'name': workoutSet.name,
+        'description': workoutSet.description,
+        'workout_items': workoutSet.workoutItems
+                ?.map((e) => {
+                      'exercise_id': e.exercise.id,
+                      'last_weight': e.lastWeight,
+                    })
+                .toList() ??
+            [],
+      };
+
+      final Response response = await dio
+          .post('${ApisUrl.workouts}${workoutSet.id}/share/', data: payload);
+
+      // Be resilient to different envelope shapes.
+      final data = response.data;
+      if (data is Map && data['share_url'] is String) {
+        return data['share_url'] as String;
+      }
+      if (data is Map &&
+          data['data'] is Map &&
+          data['data']['share_url'] is String) {
+        return data['data']['share_url'] as String;
+      }
+
+      TalkerService.error(
+          'Unexpected response from share endpoint', 'WORKOUT_REPO');
+      throw StateError('Unexpected response from share endpoint');
+    } on DioException catch (e) {
+      TalkerService.error('createShareLink failed', 'WORKOUT_REPO', e);
+      rethrow;
+    }
+  }
 
   Future<void> createWorkoutSet(WorkoutSetModel workoutSet) async {
     try {
@@ -37,6 +79,69 @@ class WorkoutRepo {
       await dio.delete("${ApisUrl.workouts}/$workoutID/");
     } on DioException {
       rethrow;
+    }
+  }
+
+  Future<WorkoutSetModel> fetchSharedWorkout(String code) async {
+    try {
+      final Response response = await dio.get('${ApisUrl.workouts}share/$code');
+      final Map<String, dynamic> body;
+
+      // Extract data from response envelope
+      if (response.data is Map && (response.data as Map)['data'] is Map) {
+        body = (response.data as Map)['data'] as Map<String, dynamic>;
+      } else {
+        throw StateError('Unexpected response for fetchSharedWorkout');
+      }
+
+      final List<dynamic> items = (body['workout_items'] as List?) ?? [];
+
+      final mappedItems = items.map((raw) {
+        final map = (raw as Map).cast<String, dynamic>();
+
+        // Parse the full exercise object from backend
+        final exerciseData = map['exercise'] as Map<String, dynamic>?;
+        final ExerciseModel exercise;
+
+        if (exerciseData != null) {
+          // Map backend response to ExerciseModel
+          exercise = ExerciseModel(
+            id: (exerciseData['id'] as num?)?.toInt() ?? 0,
+            name: (exerciseData['name'] as String?) ?? '',
+            description: (exerciseData['description'] as String?) ?? '',
+            image: (exerciseData['image'] as String?) ?? '',
+            video: (exerciseData['video'] as String?) ?? '',
+            targetedMuscles: (exerciseData['targetedMuscles'] as String?) ?? '',
+            muscleID: (exerciseData['muscle'] as num?)?.toInt() ?? 0,
+            muscle: (exerciseData['muscle_name'] as String?) ?? '',
+            equipmentType: exerciseData['equipment_type'] as String?,
+          );
+        } else {
+          // Fallback: create minimal exercise if not provided
+          exercise = ExerciseModel(
+            id: 0,
+            name: 'Unknown Exercise',
+            description: '',
+            image: '',
+            video: '',
+            targetedMuscles: '',
+            muscleID: 0,
+            muscle: '',
+            equipmentType: null,
+          );
+        }
+
+        return WorkoutItemModel(exercise: exercise, lastWeight: 0);
+      }).toList();
+
+      return WorkoutSetModel(
+        name: (body['name'] as String?) ?? 'Shared Workout',
+        description: (body['description'] as String?) ?? '',
+        workoutItems: mappedItems,
+      );
+    } on DioException catch (e) {
+      TalkerService.error('fetchSharedWorkout failed', 'WORKOUT_REPO', e);
+      throw ErrorHandler.handle(e);
     }
   }
 

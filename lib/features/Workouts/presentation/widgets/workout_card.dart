@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
@@ -38,7 +39,7 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(
-                  widget.workout.name!,
+                  widget.workout.name!.capitalizeWord(),
                   style: TextStyle(
                     fontSize: 17.sp,
                     fontWeight: FontWeight.bold,

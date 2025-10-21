@@ -1,6 +1,5 @@
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
-import 'package:Warrior/features/Workouts/presentation/widgets/empty_workout_exercises.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

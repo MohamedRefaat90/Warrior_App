@@ -1,10 +1,7 @@
 import 'package:Warrior/core/constants/apis_url.dart';
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/dio.dart';
-import 'package:Warrior/core/services/services.dart';
-import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Home/data/models/app_version.dart';
 import 'package:Warrior/features/Home/data/models/category_item.dart';

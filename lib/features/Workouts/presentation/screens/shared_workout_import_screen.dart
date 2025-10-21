@@ -1,0 +1,246 @@
+import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/network/api_error_handler.dart';
+import 'package:Warrior/core/widgets/banner_ad_widget.dart';
+import 'package:Warrior/core/widgets/custom_btn.dart';
+import 'package:Warrior/core/widgets/loader.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
+import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
+import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
+import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:oktoast/oktoast.dart';
+
+/// Provider family to fetch a shared workout by code
+final sharedWorkoutProvider =
+    FutureProvider.family<WorkoutSetModel, String>((ref, code) async {
+  return ref.watch(workoutRepo).fetchSharedWorkout(code);
+});
+
+class SharedWorkoutImportScreen extends ConsumerWidget {
+  final String code;
+  const SharedWorkoutImportScreen({super.key, required this.code});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sharedWorkoutAsync = ref.watch(sharedWorkoutProvider(code));
+    final workoutNotifier = ref.read(workoutsProvider.notifier);
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop == false) {
+          // Navigate to home instead of popping (prevents app close)
+          context.go(AppRouters.home);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              // Navigate to home instead of popping
+              context.go(AppRouters.home);
+            },
+          ),
+          title: sharedWorkoutAsync.when(
+            data: (workout) => Text(
+              workout.name.capitalizeWord(),
+              style: const TextStyle(
+                fontFamily: "Kings",
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            error: (_, __) => null,
+            loading: () => null,
+          ),
+          centerTitle: true,
+        ),
+        bottomNavigationBar: sharedWorkoutAsync.when(
+          data: (workout) => Padding(
+            padding: const EdgeInsets.all(10),
+            child: ref.watch(workoutsProvider).isLoading
+                ? const SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: Loader(),
+                  )
+                : CustomBTN(
+                    widget: const Text('Add to my workouts'),
+                    color: AppColors.primaryColor,
+                    press: () async {
+                      // Store workout name for success message
+                      final workoutName = workout.name;
+
+                      // Fill and create the workout
+                      workoutNotifier.fillNewWorkout(
+                        name: workout.name,
+                        description: workout.description,
+                        workoutItems: workout.workoutItems,
+                      );
+                      await workoutNotifier.createWorkoutSet();
+
+                      // Show success toast
+                      if (context.mounted) {
+                        showToast(
+                          'Workout "${workoutName.capitalizeWord()}" added successfully!',
+                          duration: const Duration(seconds: 3),
+                          position: ToastPosition.bottom,
+                          backgroundColor:
+                              const Color.fromARGB(255, 89, 167, 91),
+                          radius: 8.0,
+                          textStyle: const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white,
+                          ),
+                        );
+
+                        // Navigate to workouts screen
+                        context.pushReplacement(AppRouters.workouts);
+                      }
+                    },
+                  ),
+          ),
+          loading: () => null,
+          error: (_, __) => null,
+        ),
+        body: sharedWorkoutAsync.when(
+          data: (workout) => _WorkoutContent(workout: workout),
+          loading: () => const Center(child: Loader()),
+          error: (error, stack) {
+            // Extract error message from ErrorHandler
+            String errorMessage = 'Something went wrong';
+            if (error is ErrorHandler) {
+              errorMessage = error.apiErrorModel.message ?? errorMessage;
+            }
+
+            return _ErrorView(
+              onRetry: () => ref.invalidate(sharedWorkoutProvider(code)),
+              errorMessage: errorMessage,
+            );
+          },
+          skipLoadingOnRefresh: false,
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  final VoidCallback onRetry;
+  final String errorMessage;
+
+  const _ErrorView({
+    required this.onRetry,
+    required this.errorMessage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text(
+              errorMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Please try again',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            const SizedBox(height: 24),
+            CustomBTN(
+              widget: const Text('Retry'),
+              width: 150.w,
+              padding: 10,
+              radius: 8,
+              color: AppColors.primaryColor,
+              press: onRetry,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WorkoutContent extends StatelessWidget {
+  final WorkoutSetModel workout;
+
+  const _WorkoutContent({required this.workout});
+
+  @override
+  Widget build(BuildContext context) {
+    // Check if workout has no exercises
+    if (workout.workoutItems == null || workout.workoutItems!.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.fitness_center, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'No exercises in this workout',
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        const BannerAdWidget(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0.8),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Exercise grid view
+                  GridView.builder(
+                    itemCount: workout.workoutItems!.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 15,
+                      childAspectRatio: 0.9,
+                    ),
+                    itemBuilder: (context, index) {
+                      final WorkoutItemModel workoutExercise =
+                          workout.workoutItems![index];
+                      return ExerciseCard(
+                        exercise: workoutExercise.exercise,
+                        isComingFromWorkoutScreen: false,
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -1,10 +1,8 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/functions/snakbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
-import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';

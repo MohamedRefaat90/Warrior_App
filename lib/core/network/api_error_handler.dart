@@ -1,6 +1,56 @@
 import 'package:Warrior/core/network/api_error_model.dart';
 import 'package:dio/dio.dart';
 
+/// Extract user-friendly error message from API response
+ApiErrorModel _extractApiErrorMessage(DioException error) {
+  final response = error.response;
+  final statusCode = response?.statusCode ?? ResponseCode.defaultError;
+
+  // Try to extract message from response data
+  String? message;
+  try {
+    if (response?.data != null) {
+      final data = response!.data;
+
+      if (data is Map) {
+        // Try multiple common message keys
+        message =
+            data['message'] ?? data['error'] ?? data['detail'] ?? data['msg'];
+      } else if (data is String) {
+        message = data;
+      }
+    }
+  } catch (_) {
+    // If extraction fails, use default based on status code
+  }
+
+  // If we got a message from API, use it
+  if (message != null && message.isNotEmpty) {
+    return ApiErrorModel(code: statusCode, message: message);
+  }
+
+  // Otherwise, use status code-based fallback
+  return _getStatusCodeFailure(statusCode);
+}
+
+/// Get appropriate error based on HTTP status code
+ApiErrorModel _getStatusCodeFailure(int statusCode) {
+  switch (statusCode) {
+    case ResponseCode.badRequest:
+      return DataSource.badRequest.getFailure();
+    case ResponseCode.unauthorized:
+      return DataSource.unauthorized.getFailure();
+    case ResponseCode.forbidden:
+      return DataSource.forbidden.getFailure();
+    case ResponseCode.notFound:
+      return DataSource.notFound.getFailure();
+    case ResponseCode.internalServerError:
+      return DataSource.internalServerError.getFailure();
+    default:
+      return DataSource.defaultError.getFailure();
+  }
+}
+
 ApiErrorModel _handleError(DioException error) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
@@ -10,23 +60,13 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.receiveTimeout:
       return DataSource.receiveTimeout.getFailure();
     case DioExceptionType.badResponse:
-      if (error.response != null &&
-          error.response?.data != null &&
-          error.response?.data['message'] != null) {
-        // Use the `message` from the custom response
-        return ApiErrorModel(
-          code: error.response?.statusCode ?? ResponseCode.defaultError,
-          message: error.response?.data['message'],
-        );
-      } else {
-        return DataSource.defaultError.getFailure();
-      }
+      return _extractApiErrorMessage(error);
     case DioExceptionType.unknown:
       return DataSource.defaultError.getFailure();
     case DioExceptionType.cancel:
       return DataSource.cancel.getFailure();
     case DioExceptionType.connectionError:
-      return DataSource.defaultError.getFailure();
+      return DataSource.noInternetConnection.getFailure();
     case DioExceptionType.badCertificate:
       return DataSource.defaultError.getFailure();
   }

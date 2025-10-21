@@ -2,7 +2,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
-flushBar(BuildContext context,
+void flushBar(BuildContext context,
     {String? message,
     FlushbarPosition? position,
     EdgeInsets? margin,

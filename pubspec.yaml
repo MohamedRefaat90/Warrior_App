@@ -70,6 +70,7 @@ dev_dependencies:
   mocktail: ^1.0.3
   network_image_mock: ^2.1.1
   sentry_dart_plugin: ^3.1.1
+  analyzer: ^6.4.1
 
 flutter:
   uses-material-design: true

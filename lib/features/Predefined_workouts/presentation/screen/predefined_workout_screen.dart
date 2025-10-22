@@ -1,7 +1,6 @@
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/provider/predefined_provider.dart';
-import 'package:Warrior/features/Predefined_workouts/presentation/widgets/Predefined_workouts_gridview.dart';
-import 'package:Warrior/features/Predefined_workouts/presentation/widgets/Predefined_workouts_listview.dart';
+import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_groups_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,8 +17,8 @@ class _PredefinedWorkoutScreenState
     extends ConsumerState<PredefinedWorkoutsScreen> {
   @override
   Widget build(BuildContext context) {
-    final predefinedState = ref.watch(predefinedProvider);
-    final viewMode = ref.watch(viewModeProvider);
+    // Watch the grouped workouts provider instead of flat list
+    final groupedWorkoutsState = ref.watch(groupedWorkoutsProvider);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -33,27 +32,27 @@ class _PredefinedWorkoutScreenState
             fontSize: 28.sp,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ref.read(viewModeProvider.notifier).toggle();
-            },
-            icon: Icon(
-              viewMode == WorkoutViewMode.list
-                  ? Icons.grid_view
-                  : Icons.view_list,
-            ),
-            tooltip: viewMode == WorkoutViewMode.list
-                ? 'Switch to Grid View'
-                : 'Switch to List View',
-          ),
-        ],
+        // View mode toggle removed since we're using grouped view
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       ref.read(viewModeProvider.notifier).toggle();
+        //     },
+        //     icon: Icon(
+        //       viewMode == WorkoutViewMode.list
+        //           ? Icons.grid_view
+        //           : Icons.view_list,
+        //     ),
+        //     tooltip: viewMode == WorkoutViewMode.list
+        //         ? 'Switch to Grid View'
+        //         : 'Switch to List View',
+        //   ),
+        // ],
       ),
-      body: predefinedState.when(
-        data: (workouts) {
-          return viewMode == WorkoutViewMode.list
-              ? PredefinedWorkoutsListView(workouts)
-              : PredefinedWorkoutsGridView(workouts);
+      body: groupedWorkoutsState.when(
+        data: (workoutGroups) {
+          // Use the new grouped view with domain entities
+          return WorkoutGroupsView(workoutGroups: workoutGroups);
         },
         loading: () => const Loader(),
         error: (error, stackTrace) => Center(
@@ -66,8 +65,8 @@ class _PredefinedWorkoutScreenState
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  // Refresh the provider
-                  ref.invalidate(predefinedProvider);
+                  // Refresh the grouped workouts provider
+                  ref.invalidate(groupedWorkoutsProvider);
                 },
                 child: const Text('Retry'),
               ),

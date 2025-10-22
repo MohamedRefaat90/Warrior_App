@@ -60,13 +60,14 @@ class WorkoutSetModelAdapter extends TypeAdapter<WorkoutSetModel> {
       createdAt: fields[3] as DateTime?,
       updatedAt: fields[4] as DateTime?,
       workoutItems: (fields[5] as List?)?.cast<WorkoutItemModel>(),
+      group: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkoutSetModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -78,7 +79,9 @@ class WorkoutSetModelAdapter extends TypeAdapter<WorkoutSetModel> {
       ..writeByte(4)
       ..write(obj.updatedAt)
       ..writeByte(5)
-      ..write(obj.workoutItems);
+      ..write(obj.workoutItems)
+      ..writeByte(6)
+      ..write(obj.group);
   }
 
   @override

@@ -89,6 +89,8 @@ class WorkoutSetModel extends HiveObject {
   final DateTime? updatedAt;
   @HiveField(5)
   final List<WorkoutItemModel>? workoutItems;
+  @HiveField(6)
+  final String? group;
 
   WorkoutSetModel({
     this.id,
@@ -97,10 +99,11 @@ class WorkoutSetModel extends HiveObject {
     this.createdAt,
     this.updatedAt,
     this.workoutItems,
+    this.group,
   });
 
-  factory WorkoutSetModel.fromJson(String source) =>
-      WorkoutSetModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory WorkoutSetModel.fromJson(String source) =>
+  //     WorkoutSetModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory WorkoutSetModel.fromMap(Map<String, dynamic> map) {
     try {
@@ -131,6 +134,7 @@ class WorkoutSetModel extends HiveObject {
         createdAt: _parseDateTime(map['created_at']),
         updatedAt: _parseDateTime(map['updated_at']),
         workoutItems: workoutItems,
+        group: map['group'] as String? ?? '',
       );
     } catch (e) {
       // If all else fails, return a minimal valid object
@@ -152,6 +156,7 @@ class WorkoutSetModel extends HiveObject {
     String? description,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? group,
     List<WorkoutItemModel>? workoutItems,
   }) {
     return WorkoutSetModel(
@@ -160,6 +165,7 @@ class WorkoutSetModel extends HiveObject {
       description: description ?? this.description,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      group: group ?? this.group,
       workoutItems: workoutItems ?? this.workoutItems,
     );
   }

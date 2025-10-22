@@ -12,6 +12,7 @@ abstract class AppAssets {
   static const String workout = "assets/images/home/workout.png";
   static const String supplements = "assets/images/home/Supplements.png";
   static const String nutrition = "assets/images/home/nutrition.png";
+  static const String calculator = "assets/images/home/Calculator.png";
 
   // ========================== ANIMATIONS ==========================
   static const String trainer = "assets/animation/Trainer.json";

@@ -10,4 +10,5 @@ class StorageKeys {
   static String numberOfWorkouts = 'numberOfWorkouts';
   static String isRating = 'isRating';
   static String appVersion = 'appVersion';
+  static String caloriesCalculatorData = 'caloriesCalculatorData';
 }

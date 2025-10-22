@@ -12,6 +12,8 @@ import 'package:Warrior/features/Auth/presentation/screens/reset_success.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_screen.dart';
 import 'package:Warrior/features/Auth/presentation/screens/signup_success.dart';
 import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dart';
+import 'package:Warrior/features/CaloriesCalculator/presentation/screens/calories_calculator_screen.dart';
+import 'package:Warrior/features/CaloriesCalculator/presentation/screens/calories_results_screen.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
@@ -217,6 +219,22 @@ class RoutersManager {
       name: AppRouters.nutrition,
       pageBuilder: (context, state) => CustomTransition(
         child: const NutritionScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.caloriesCalculator,
+      name: AppRouters.caloriesCalculator,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const CaloriesCalculatorScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.caloriesResults,
+      name: AppRouters.caloriesResults,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const CaloriesResultsScreen(),
         transitionType: PageTransitionType.fade,
       ),
     ),

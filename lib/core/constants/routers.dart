@@ -18,4 +18,6 @@ abstract class AppRouters {
   static const String supplements = '/supplements';
   static const String nutrition = '/nutrition';
   static const String predefinedWorkouts = '/predefinedWorkouts';
+  static const String caloriesCalculator = '/caloriesCalculator';
+  static const String caloriesResults = '/caloriesResults';
 }

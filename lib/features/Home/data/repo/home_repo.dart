@@ -30,6 +30,11 @@ class HomeRepo {
       image: AppAssets.dumbbell,
       navigateTo: AppRouters.predefinedWorkouts,
     ),
+    CategoryItem(
+      title: "Calories Calculator",
+      image: AppAssets.calculator,
+      navigateTo: AppRouters.caloriesCalculator,
+    ),
     // CategoryItem(
     //   title: "Supplements",
     //   image: AppAssets.supplements,

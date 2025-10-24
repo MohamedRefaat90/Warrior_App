@@ -1,8 +1,6 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
-import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/services/services.dart';
-import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Home/presentation/provider/home_provider.dart';
@@ -10,15 +8,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 void checkForForceUpdate(WidgetRef ref, BuildContext context) async {
   try {
-    final appVersion = SharedPref.getString(StorageKeys.appVersion) ?? '';
+    // Get the actual installed app version from pubspec.yaml
+    final packageInfo = await PackageInfo.fromPlatform();
+    final installedVersion = packageInfo.version;
 
+    // Get the required version from API
     final currentAppVersion = await ref.read(homeProvider).getAppVersion();
     final isForceUpdate = currentAppVersion?.is_force_update ?? false;
-    if (appVersion.isNotEmpty &&
-        appVersion != currentAppVersion!.version &&
+    final requiredVersion = currentAppVersion?.version ?? '';
+
+    TalkerService.info(
+      'Version Check - Installed: $installedVersion, Required: $requiredVersion, Force Update: $isForceUpdate',
+      'HOME',
+    );
+
+    // Compare installed version with required version
+    if (installedVersion != requiredVersion &&
         isForceUpdate &&
         context.mounted) {
       showDialog(
@@ -52,8 +61,6 @@ void checkForForceUpdate(WidgetRef ref, BuildContext context) async {
                 width: double.infinity,
                 press: () async {
                   await AppServices.inAppReview.openStoreListing();
-                  SharedPref.setString(
-                      StorageKeys.appVersion, currentAppVersion.version ?? '');
                 },
               ),
             ],

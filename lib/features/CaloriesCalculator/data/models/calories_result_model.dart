@@ -16,25 +16,6 @@ class CaloriesResultModel {
     required this.weeklyGoalKg,
   });
 
-  /// Get calorie deficit/surplus per day
-  double get dailyCalorieAdjustment {
-    return dailyCaloricNeeds - tdee;
-  }
-
-  /// Get goal description
-  String get goalDescription {
-    switch (goal) {
-      case 'weight_loss':
-        return 'Weight Loss';
-      case 'maintain':
-        return 'Maintain Weight';
-      case 'muscle_gain':
-        return 'Muscle Gain';
-      default:
-        return 'Unknown Goal';
-    }
-  }
-
   /// Get weekly goal description
   String get weeklyGoalDescription {
     if (goal == 'maintain') return 'Maintain current weight';

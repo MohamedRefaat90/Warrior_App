@@ -12,7 +12,10 @@ import 'package:lottie/lottie.dart';
 void checkAndShowReviewDialog(BuildContext context) {
   final numberOfWorkouts = SharedPref.getInt(StorageKeys.numberOfWorkouts) ?? 0;
   final isRating = SharedPref.getBool(StorageKeys.isRating) ?? false;
-
+  TalkerService.warning(
+    'Check Review Dialog - Number of Workouts: $numberOfWorkouts, Is Rating: $isRating',
+    'HOME',
+  );
   if (numberOfWorkouts == 3 && !isRating) {
     showDialog(
       context: context,

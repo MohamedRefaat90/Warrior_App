@@ -7,6 +7,7 @@ import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/loader.dart';
+import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
@@ -101,35 +102,10 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                       valueListenable: HiveManager.musclesBox.listenable(),
                       builder: (context, Box<MuscleModel> box, _) {
                         if (box.values.isEmpty) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.wifi_off,
-                                  size: 64,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(height: 16),
-                                Text(
-                                  'No muscles available offline',
-                                  style: TextStyle(
-                                      fontFamily: "poppins",
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Please go online to download muscle groups',
-                                  style: TextStyle(
-                                      fontFamily: "poppins",
-                                      fontSize: 16,
-                                      color: Colors.grey[600]),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
+                          return OfflineView(
+                            title: 'No muscles available offline',
+                            subtitle:
+                                'Please go online to download muscle groups',
                           );
                         }
 

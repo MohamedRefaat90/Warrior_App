@@ -1,4 +1,6 @@
+import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/widgets/loader.dart';
+import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/provider/predefined_provider.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_groups_view.dart';
 import 'package:flutter/material.dart';
@@ -25,55 +27,81 @@ class _PredefinedWorkoutScreenState
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Your Workouts',
+          'Predefined Workouts',
           style: TextStyle(
             fontFamily: 'kings',
             fontWeight: FontWeight.bold,
             fontSize: 28.sp,
           ),
         ),
-        // View mode toggle removed since we're using grouped view
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       ref.read(viewModeProvider.notifier).toggle();
-        //     },
-        //     icon: Icon(
-        //       viewMode == WorkoutViewMode.list
-        //           ? Icons.grid_view
-        //           : Icons.view_list,
-        //     ),
-        //     tooltip: viewMode == WorkoutViewMode.list
-        //         ? 'Switch to Grid View'
-        //         : 'Switch to List View',
-        //   ),
-        // ],
       ),
       body: groupedWorkoutsState.when(
         data: (workoutGroups) {
+          // Check if the list is empty
+          if (workoutGroups.isEmpty) {
+            return OfflineView(
+              title: 'No predefined workouts available offline',
+              subtitle: 'Please go online to download it',
+            );
+          }
           // Use the new grouped view with domain entities
           return WorkoutGroupsView(workoutGroups: workoutGroups);
         },
         loading: () => const Loader(),
-        error: (error, stackTrace) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 48, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('something went wrong'),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Refresh the grouped workouts provider
-                  ref.invalidate(groupedWorkoutsProvider);
-                },
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
-        ),
+        error: (error, stackTrace) {
+          final isOffline = ConnectivityChecker.isOnline == false;
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isOffline ? Icons.wifi_off : Icons.error_outline,
+                  size: 48,
+                  color: isOffline ? Colors.orange : Colors.red,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  isOffline ? 'You are offline' : 'Something went wrong',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32.w),
+                  child: Text(
+                    isOffline
+                        ? 'No cached workouts available. Connect to the internet to download workouts.'
+                        : 'Failed to load predefined workouts',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                ElevatedButton(
+                  onPressed: () {
+                    // Refresh the grouped workouts provider
+                    ref.invalidate(groupedWorkoutsProvider);
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
+  }
+
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.invalidate(groupedWorkoutsProvider, asReload: true);
+    });
+    super.initState();
   }
 }

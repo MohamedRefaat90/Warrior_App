@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/functions/snakbar.dart';
+import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -10,6 +10,7 @@ import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart'
 import 'package:Warrior/features/Auth/presentation/widgets/go_to_signup.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/google_button.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/login_with.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -120,7 +121,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (current.isSuccess) {
         context.goNamed(AppRouters.home);
       } else if (current.errorMessage != null) {
-        showSnackBar(
+        showErrorFlushbar(
+          position: FlushbarPosition.BOTTOM,
           context,
           current.errorMessage!
                   .contains("The connection errored: Failed host lookup:")

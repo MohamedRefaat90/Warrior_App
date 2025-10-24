@@ -1,4 +1,4 @@
-import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_row.dart';
+import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_grid.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -56,7 +56,7 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
         leading: Container(
           padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-            color: widget.iconColor.withOpacity(0.1),
+            color: widget.iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: Icon(
@@ -75,7 +75,7 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
         children: [
           Padding(
             padding: EdgeInsets.all(12.w),
-            child: WorkoutRow(workouts: widget.workouts),
+            child: WorkoutGrid(workouts: widget.workouts),
           ),
         ],
       ),

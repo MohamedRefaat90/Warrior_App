@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -8,6 +9,7 @@ import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/empty_workoutlist.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/workouts_listview.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +18,13 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/routers.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
+  final bool? showSuccessMessage;
+  final String? workoutName;
+
   const WorkoutScreen({
     super.key,
+    this.showSuccessMessage,
+    this.workoutName,
   });
 
   @override
@@ -143,5 +150,25 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     Future.microtask(() {
       ref.read(workoutsProvider.notifier).getWorkoutSets();
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Show success flushbar after the widget is built
+    if (widget.showSuccessMessage == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          showSuccessFlushbar(
+            context,
+            position: FlushbarPosition.BOTTOM,
+            widget.workoutName != null
+                ? 'Workout (${widget.workoutName}) added successfully!'
+                    .capitalizeWord()
+                : 'Workout added successfully!'.capitalizeWord(),
+          );
+        }
+      });
+    }
   }
 }

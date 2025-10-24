@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -27,8 +28,6 @@ class CaloriesCalculatorScreen extends ConsumerStatefulWidget {
 
 class _CaloriesCalculatorScreenState
     extends ConsumerState<CaloriesCalculatorScreen> {
-  final _formKey = GlobalKey<FormState>();
-
   // Controllers
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
@@ -75,7 +74,10 @@ class _CaloriesCalculatorScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calories Calculator'),
+        title: const Text(
+          'Calories Calculator',
+          style: TextStyle(fontFamily: 'kings', fontWeight: FontWeight.w900),
+        ),
         centerTitle: true,
         actions: [
           if (state.hasCalculated)
@@ -90,206 +92,172 @@ class _CaloriesCalculatorScreenState
           ? const Center(child: Loader())
           : SingleChildScrollView(
               padding: EdgeInsets.all(20.w),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header Section
-                    Center(child: const CalculatorHeaderCard()),
-                    SizedBox(height: 30.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header Section
+                  Center(child: const CalculatorHeaderCard()),
+                  SizedBox(height: 30.h),
 
-                    // Basic Info Section
-                    const SectionTitle(title: 'Basic Information'),
-                    SizedBox(height: 15.h),
-                    InputCard(
-                      label: 'Weight',
-                      hint: 'Enter weight',
-                      suffix: 'kg',
-                      controller: _weightController,
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) return 'Required';
-                        final weight = double.tryParse(value!);
-                        if (weight == null || weight <= 0) {
-                          return 'Enter valid weight';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    InputCard(
-                      label: 'Height',
-                      hint: 'Enter height',
-                      suffix: 'cm',
-                      controller: _heightController,
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) return 'Required';
-                        final height = double.tryParse(value!);
-                        if (height == null || height <= 0) {
-                          return 'Enter valid height';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    InputCard(
-                      label: 'Age',
-                      hint: 'Enter age',
-                      suffix: 'years',
-                      controller: _ageController,
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) return 'Required';
-                        final age = int.tryParse(value!);
-                        if (age == null || age <= 0 || age > 120) {
-                          return 'Enter valid age';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 30.h),
+                  // Basic Info Section
+                  const SectionTitle(title: 'Basic Information'),
+                  SizedBox(height: 15.h),
+                  InputCard(
+                    label: 'Weight',
+                    hint: 'Enter weight',
+                    suffix: 'kg',
+                    controller: _weightController,
+                  ),
+                  SizedBox(height: 15.h),
+                  InputCard(
+                    label: 'Height',
+                    hint: 'Enter height',
+                    suffix: 'cm',
+                    controller: _heightController,
+                  ),
+                  SizedBox(height: 15.h),
+                  InputCard(
+                    label: 'Age',
+                    hint: 'Enter age',
+                    suffix: 'years',
+                    controller: _ageController,
+                  ),
+                  SizedBox(height: 30.h),
 
-                    // Gender Selection
-                    const SectionTitle(title: 'Gender'),
-                    SizedBox(height: 15.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GenderSelectionCard(
-                            icon: Icons.male,
-                            label: 'Male',
-                            isSelected: _selectedGender == 'male',
-                            onTap: () =>
-                                setState(() => _selectedGender = 'male'),
-                          ),
+                  // Gender Selection
+                  const SectionTitle(title: 'Gender'),
+                  SizedBox(height: 15.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GenderSelectionCard(
+                          icon: Icons.male,
+                          label: 'Male',
+                          isSelected: _selectedGender == 'male',
+                          onTap: () => setState(() => _selectedGender = 'male'),
                         ),
-                        SizedBox(width: 15.w),
-                        Expanded(
-                          child: GenderSelectionCard(
-                            icon: Icons.female,
-                            label: 'Female',
-                            isSelected: _selectedGender == 'female',
-                            onTap: () =>
-                                setState(() => _selectedGender = 'female'),
-                          ),
+                      ),
+                      SizedBox(width: 15.w),
+                      Expanded(
+                        child: GenderSelectionCard(
+                          icon: Icons.female,
+                          label: 'Female',
+                          isSelected: _selectedGender == 'female',
+                          onTap: () =>
+                              setState(() => _selectedGender = 'female'),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 30.h),
-
-                    // Activity Level
-                    const SectionTitle(title: 'Activity Level'),
-                    SizedBox(height: 15.h),
-                    ..._activityLevels.map((level) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 12.h),
-                        child: ActivityLevelItem(
-                          value: level['value']!,
-                          label: level['label']!,
-                          description: level['desc']!,
-                          isSelected: _selectedActivityLevel == level['value'],
-                          onTap: () {
-                            setState(
-                                () => _selectedActivityLevel = level['value']!);
-                          },
-                        ),
-                      );
-                    }),
-                    SizedBox(height: 30.h),
-
-                    // Goal Selection
-                    const SectionTitle(title: 'Your Goal'),
-                    SizedBox(height: 15.h),
-                    GoalCard(
-                      icon: Icons.trending_down,
-                      title: 'Weight Loss',
-                      subtitle: 'Lose weight gradually',
-                      value: 'weight_loss',
-                      isSelected: _selectedGoal == 'weight_loss',
-                      color: Colors.orange,
-                      onTap: () =>
-                          setState(() => _selectedGoal = 'weight_loss'),
-                    ),
-                    SizedBox(height: 12.h),
-                    GoalCard(
-                      icon: Icons.trending_flat,
-                      title: 'Maintain Weight',
-                      subtitle: 'Keep current weight',
-                      value: 'maintain',
-                      isSelected: _selectedGoal == 'maintain',
-                      color: Colors.blue,
-                      onTap: () => setState(() => _selectedGoal = 'maintain'),
-                    ),
-                    SizedBox(height: 12.h),
-                    GoalCard(
-                      icon: Icons.trending_up,
-                      title: 'Muscle Gain',
-                      subtitle: 'Build muscle mass',
-                      value: 'muscle_gain',
-                      isSelected: _selectedGoal == 'muscle_gain',
-                      color: Colors.green,
-                      onTap: () =>
-                          setState(() => _selectedGoal = 'muscle_gain'),
-                    ),
-                    SizedBox(height: 30.h),
-
-                    // Weekly Goal (only if not maintain)
-                    if (_selectedGoal != 'maintain') ...[
-                      const SectionTitle(title: 'Weekly Goal'),
-                      SizedBox(height: 15.h),
-                      WeeklyGoalItem(
-                        goal: 0.25,
-                        isSelected: _selectedWeeklyGoal == 0.25,
-                        action:
-                            _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                        onTap: () => setState(() => _selectedWeeklyGoal = 0.25),
                       ),
-                      SizedBox(height: 12.h),
-                      WeeklyGoalItem(
-                        goal: 0.5,
-                        isSelected: _selectedWeeklyGoal == 0.5,
-                        action:
-                            _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                        onTap: () => setState(() => _selectedWeeklyGoal = 0.5),
-                      ),
-                      SizedBox(height: 12.h),
-                      WeeklyGoalItem(
-                        goal: 0.75,
-                        isSelected: _selectedWeeklyGoal == 0.75,
-                        action:
-                            _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                        onTap: () => setState(() => _selectedWeeklyGoal = 0.75),
-                      ),
-                      SizedBox(height: 12.h),
-                      WeeklyGoalItem(
-                        goal: 1.0,
-                        isSelected: _selectedWeeklyGoal == 1.0,
-                        action:
-                            _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                        onTap: () => setState(() => _selectedWeeklyGoal = 1.0),
-                      ),
-                      SizedBox(height: 30.h),
                     ],
+                  ),
+                  SizedBox(height: 30.h),
 
-                    // Calculate Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: CustomBTN(
-                        press: _handleCalculate,
-                        color: AppColors.primaryColor,
-                        radius: 15.r,
-                        widget: Text(
-                          'Calculate',
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),
+                  // Activity Level
+                  const SectionTitle(title: 'Activity Level'),
+                  SizedBox(height: 15.h),
+                  ..._activityLevels.map((level) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: ActivityLevelItem(
+                        value: level['value']!,
+                        label: level['label']!,
+                        description: level['desc']!,
+                        isSelected: _selectedActivityLevel == level['value'],
+                        onTap: () {
+                          setState(
+                              () => _selectedActivityLevel = level['value']!);
+                        },
+                      ),
+                    );
+                  }),
+                  SizedBox(height: 30.h),
+
+                  // Goal Selection
+                  const SectionTitle(title: 'Your Goal'),
+                  SizedBox(height: 15.h),
+                  GoalCard(
+                    icon: Icons.trending_down,
+                    title: 'Weight Loss',
+                    subtitle: 'Lose weight gradually',
+                    value: 'weight_loss',
+                    isSelected: _selectedGoal == 'weight_loss',
+                    color: Colors.orange,
+                    onTap: () => setState(() => _selectedGoal = 'weight_loss'),
+                  ),
+                  SizedBox(height: 12.h),
+                  GoalCard(
+                    icon: Icons.trending_flat,
+                    title: 'Maintain Weight',
+                    subtitle: 'Keep current weight',
+                    value: 'maintain',
+                    isSelected: _selectedGoal == 'maintain',
+                    color: Colors.blue,
+                    onTap: () => setState(() => _selectedGoal = 'maintain'),
+                  ),
+                  SizedBox(height: 12.h),
+                  GoalCard(
+                    icon: Icons.trending_up,
+                    title: 'Muscle Gain',
+                    subtitle: 'Build muscle mass',
+                    value: 'muscle_gain',
+                    isSelected: _selectedGoal == 'muscle_gain',
+                    color: Colors.green,
+                    onTap: () => setState(() => _selectedGoal = 'muscle_gain'),
+                  ),
+                  SizedBox(height: 30.h),
+
+                  // Weekly Goal (only if not maintain)
+                  if (_selectedGoal != 'maintain') ...[
+                    const SectionTitle(title: 'Weekly Goal'),
+                    SizedBox(height: 15.h),
+                    WeeklyGoalItem(
+                      goal: 0.25,
+                      isSelected: _selectedWeeklyGoal == 0.25,
+                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                      onTap: () => setState(() => _selectedWeeklyGoal = 0.25),
+                    ),
+                    SizedBox(height: 12.h),
+                    WeeklyGoalItem(
+                      goal: 0.5,
+                      isSelected: _selectedWeeklyGoal == 0.5,
+                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                      onTap: () => setState(() => _selectedWeeklyGoal = 0.5),
+                    ),
+                    SizedBox(height: 12.h),
+                    WeeklyGoalItem(
+                      goal: 0.75,
+                      isSelected: _selectedWeeklyGoal == 0.75,
+                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                      onTap: () => setState(() => _selectedWeeklyGoal = 0.75),
+                    ),
+                    SizedBox(height: 12.h),
+                    WeeklyGoalItem(
+                      goal: 1.0,
+                      isSelected: _selectedWeeklyGoal == 1.0,
+                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                      onTap: () => setState(() => _selectedWeeklyGoal = 1.0),
+                    ),
+                    SizedBox(height: 30.h),
+                  ],
+
+                  // Calculate Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomBTN(
+                      press: _handleCalculate,
+                      color: AppColors.primaryColor,
+                      radius: 15.r,
+                      widget: Text(
+                        'Calculate',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.h),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 20.h),
+                ],
               ),
             ),
     );
@@ -313,7 +281,30 @@ class _CaloriesCalculatorScreenState
   }
 
   void _handleCalculate() {
-    if (_formKey.currentState!.validate()) {
+    // Validate weight
+    final weightError =
+        UserDataModel.validateWeightInput(_weightController.text);
+    if (weightError != null) {
+      showValidationErrorFlushbar(context, weightError);
+      return;
+    }
+
+    // Validate height
+    final heightError =
+        UserDataModel.validateHeightInput(_heightController.text);
+    if (heightError != null) {
+      showValidationErrorFlushbar(context, heightError);
+      return;
+    }
+
+    // Validate age
+    final ageError = UserDataModel.validateAgeInput(_ageController.text);
+    if (ageError != null) {
+      showValidationErrorFlushbar(context, ageError);
+      return;
+    }
+
+    try {
       final userData = UserDataModel(
         weight: double.parse(_weightController.text),
         height: double.parse(_heightController.text),
@@ -326,7 +317,10 @@ class _CaloriesCalculatorScreenState
 
       ref.read(caloriesCalculatorProvider.notifier).calculate(userData);
       TalkerService.info('Navigating to results', 'CALORIES_CALCULATOR');
+      showSuccessFlushbar(context, 'Calculation completed successfully! 🎉');
       context.pushNamed(AppRouters.caloriesResults);
+    } catch (e) {
+      showErrorFlushbar(context, 'Failed to calculate: ${e.toString()}');
     }
   }
 

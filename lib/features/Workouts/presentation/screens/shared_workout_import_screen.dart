@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/api_error_handler.dart';
+import 'package:Warrior/core/widgets/add_workout.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oktoast/oktoast.dart';
 
 /// Provider family to fetch a shared workout by code
 final sharedWorkoutProvider =
@@ -62,50 +62,8 @@ class SharedWorkoutImportScreen extends ConsumerWidget {
           centerTitle: true,
         ),
         bottomNavigationBar: sharedWorkoutAsync.when(
-          data: (workout) => Padding(
-            padding: const EdgeInsets.all(10),
-            child: ref.watch(workoutsProvider).isLoading
-                ? const SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Loader(),
-                  )
-                : CustomBTN(
-                    widget: const Text('Add to my workouts'),
-                    color: AppColors.primaryColor,
-                    press: () async {
-                      // Store workout name for success message
-                      final workoutName = workout.name;
-
-                      // Fill and create the workout
-                      workoutNotifier.fillNewWorkout(
-                        name: workout.name,
-                        description: workout.description,
-                        workoutItems: workout.workoutItems,
-                      );
-                      await workoutNotifier.createWorkoutSet();
-
-                      // Show success toast
-                      if (context.mounted) {
-                        showToast(
-                          'Workout "${workoutName.capitalizeWord()}" added successfully!',
-                          duration: const Duration(seconds: 3),
-                          position: ToastPosition.bottom,
-                          backgroundColor:
-                              const Color.fromARGB(255, 89, 167, 91),
-                          radius: 8.0,
-                          textStyle: const TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.white,
-                          ),
-                        );
-
-                        // Navigate to workouts screen
-                        context.pushReplacement(AppRouters.workouts);
-                      }
-                    },
-                  ),
-          ),
+          data: (workout) =>
+              AddWorkoutBtn(workout: workout, workoutNotifier: workoutNotifier),
           loading: () => null,
           error: (_, __) => null,
         ),
@@ -114,7 +72,7 @@ class SharedWorkoutImportScreen extends ConsumerWidget {
           loading: () => const Center(child: Loader()),
           error: (error, stack) {
             // Extract error message from ErrorHandler
-            String errorMessage = 'Something went wrong';
+            String errorMessage = 'Something went wrong'.capitalizeWord();
             if (error is ErrorHandler) {
               errorMessage = error.apiErrorModel.message ?? errorMessage;
             }
@@ -159,8 +117,8 @@ class _ErrorView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Please try again',
+            Text(
+              'Please try again'.capitalizeWord(),
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
@@ -196,7 +154,7 @@ class _WorkoutContent extends StatelessWidget {
             Icon(Icons.fitness_center, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
-              'No exercises in this workout',
+              'No exercises in this workout'.capitalizeWord(),
               style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
           ],

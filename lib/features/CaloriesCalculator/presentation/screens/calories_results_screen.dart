@@ -76,7 +76,10 @@ class CaloriesResultsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Results'),
+        title: const Text(
+          'Your Results',
+          style: TextStyle(fontFamily: 'kings', fontWeight: FontWeight.w900),
+        ),
         centerTitle: true,
         actions: [
           IconButton(

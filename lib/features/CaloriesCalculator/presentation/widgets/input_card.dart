@@ -8,7 +8,7 @@ class InputCard extends StatelessWidget {
   final String hint;
   final String suffix;
   final TextEditingController controller;
-  final String? Function(String?) validator;
+  final String? Function(String?)? validator;
 
   const InputCard({
     super.key,
@@ -16,7 +16,7 @@ class InputCard extends StatelessWidget {
     required this.hint,
     required this.suffix,
     required this.controller,
-    required this.validator,
+    this.validator,
   });
 
   @override

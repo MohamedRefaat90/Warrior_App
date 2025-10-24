@@ -53,16 +53,6 @@ class CaloriesCalculatorNotifier extends Notifier<CaloriesCalculatorState> {
     }
   }
 
-  /// Clear error message
-  void clearError() {
-    state = state.copyWith(clearError: true);
-  }
-
-  /// Recalculate with updated data
-  Future<void> recalculate(UserDataModel userData) async {
-    await calculate(userData);
-  }
-
   /// Reset calculator (clear all data)
   Future<void> reset() async {
     try {

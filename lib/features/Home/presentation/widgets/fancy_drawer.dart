@@ -10,13 +10,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 
-class FancyDrawer extends ConsumerWidget {
+class FancyDrawer extends ConsumerStatefulWidget {
   const FancyDrawer({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FancyDrawer> createState() => _FancyDrawerState();
+}
+
+class _FancyDrawerState extends ConsumerState<FancyDrawer> {
+  String _version = 'Loading...';
+
+  @override
+  Widget build(BuildContext context) {
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
@@ -239,7 +247,7 @@ class FancyDrawer extends ConsumerWidget {
                             Padding(
                               padding: EdgeInsets.only(bottom: 20.h),
                               child: Text(
-                                'Version 1.0.0',
+                                _version,
                                 style: TextStyle(
                                   color: AppColors.white.withValues(alpha: 0.6),
                                   fontSize: 11.sp,
@@ -259,5 +267,18 @@ class FancyDrawer extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _version = 'Version ${packageInfo.version}';
+    });
   }
 }

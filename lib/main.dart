@@ -30,12 +30,19 @@ void main() async {
       options.environment = kDebugMode ? 'development' : 'production';
     },
     appRunner: () => runApp(
-      kDebugMode && _useDevicePreview
-          ? DevicePreview(
-              enabled: true,
-              builder: (context) => const WarriorApp(),
-            )
-          : const WarriorApp(),
+      ProviderScope(
+        observers: [
+          TalkerRiverpodObserver(talker: TalkerService.instance),
+        ],
+        child: SentryWidget(
+          child: kDebugMode
+              ? DevicePreview(
+                  enabled: true,
+                  builder: (context) => const WarriorApp(),
+                )
+              : const WarriorApp(),
+        ),
+      ),
     ),
   );
 }
@@ -43,29 +50,12 @@ void main() async {
 // Set to true when you need to test different screen sizes
 const bool _useDevicePreview = false;
 
-/// Root widget that sets up the app structure
-class Warrior extends ConsumerStatefulWidget {
-  const Warrior({super.key});
-
-  @override
-  ConsumerState<Warrior> createState() => _WarriorState();
-}
-
-/// Main app widget with Riverpod and Sentry integration
-class WarriorApp extends StatelessWidget {
+/// Main app widget with Riverpod, Sentry integration, and lifecycle management
+class WarriorApp extends ConsumerStatefulWidget {
   const WarriorApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      observers: [
-        TalkerRiverpodObserver(talker: TalkerService.instance),
-      ],
-      child: SentryWidget(
-        child: Warrior(),
-      ),
-    );
-  }
+  ConsumerState<WarriorApp> createState() => _WarriorAppState();
 }
 
 /// Sync status indicator widget
@@ -108,7 +98,8 @@ class _SyncIndicator extends ConsumerWidget {
   }
 }
 
-class _WarriorState extends ConsumerState<Warrior> with WidgetsBindingObserver {
+class _WarriorAppState extends ConsumerState<WarriorApp>
+    with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     // Initialize connectivity checker

@@ -55,8 +55,6 @@ class HomeRepo {
       if (response.statusCode == 200) {
         AppVersion appVersion =
             AppVersion.fromMap(response.data as Map<String, dynamic>);
-        TalkerService.info(
-            'App version fetched: ${appVersion.version}', 'HOME-REPO');
         return appVersion;
       }
     } catch (e) {

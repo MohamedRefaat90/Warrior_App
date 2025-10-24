@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Predefined_workouts/domain/entities/workout_group.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_group_tile.dart';
@@ -27,14 +24,6 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
 
   @override
   Widget build(BuildContext context) {
-    // Save data to Hive if empty (save all workouts from all groups)
-    if (HiveManager.workoutsBox.isEmpty) {
-      log("Save New Data To Hive");
-      final allWorkouts =
-          widget.workoutGroups.expand((group) => group.workouts).toList();
-      HiveManager.saveToHive(HiveManager.predefinedWorkoutsBox, allWorkouts);
-    }
-
     if (widget.workoutGroups.isEmpty) {
       return Center(
         child: Text(
@@ -105,7 +94,7 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
       Colors.purple,
       Colors.orange,
       Colors.red,
-      Colors.amber,
+      const Color.fromARGB(255, 22, 218, 224),
     ];
     return colors[index % colors.length];
   }

@@ -153,7 +153,10 @@ class RoutersManager {
       path: AppRouters.workouts,
       name: AppRouters.workouts,
       pageBuilder: (context, state) => CustomTransition(
-        child: const WorkoutScreen(),
+        child: WorkoutScreen(
+          showSuccessMessage: (state.extra as Map?)?['showSuccessMessage'],
+          workoutName: (state.extra as Map?)?['workoutName'],
+        ),
         transitionType: PageTransitionType.fade,
       ),
     ),

@@ -18,12 +18,12 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/routers.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
-  final bool? showSuccessMessage;
+  bool? showSuccessMessage;
   final String? workoutName;
 
-  const WorkoutScreen({
+  WorkoutScreen({
     super.key,
-    this.showSuccessMessage,
+    required this.showSuccessMessage,
     this.workoutName,
   });
 
@@ -167,6 +167,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                     .capitalizeWord()
                 : 'Workout added successfully!'.capitalizeWord(),
           );
+          widget.showSuccessMessage = false;
         }
       });
     }

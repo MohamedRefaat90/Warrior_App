@@ -205,7 +205,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 grams: macros.proteinGrams,
                 calories: macros.proteinCalories,
                 percentage: macros.proteinPercentage,
-                color: Colors.blue,
+                color: Color.fromARGB(255, 238, 31, 31),
               ),
             ),
             SizedBox(height: 12.h),
@@ -231,14 +231,6 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 percentage: macros.fatsPercentage,
                 color: Colors.orange,
               ),
-            ),
-            SizedBox(height: 25.h),
-
-            // Info Section
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 800),
-              child: const InfoSection(),
             ),
             SizedBox(height: 25.h),
 

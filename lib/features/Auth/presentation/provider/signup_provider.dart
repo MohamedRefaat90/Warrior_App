@@ -2,7 +2,6 @@ import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final signupProvider =
@@ -67,18 +66,11 @@ class SignupNotifier extends Notifier<ProviderStates> {
       state = ProviderStates(isSuccess: true);
       TalkerService.info(
           'Signup successful for user: ${email.toLowerCase().trim()}', 'AUTH');
-    } on DioException catch (e) {
-      // Safely extract error message
-      final errorMsg = e.response?.data?["message"] as String? ??
-          e.message ??
-          'Registration failed';
+    } catch (e) {
+      final errorMsg = e.toString().replaceFirst('Exception: ', '');
       state = ProviderStates(errorMessage: errorMsg);
       TalkerService.error(
           'Signup failed for user: ${email.toLowerCase().trim()}', 'AUTH', e);
-    } catch (e) {
-      final errorMessage = 'Registration failed: ${e.toString()}';
-      state = ProviderStates(errorMessage: errorMessage);
-      TalkerService.error('Signup unexpected error', 'AUTH', e);
     }
   }
 }

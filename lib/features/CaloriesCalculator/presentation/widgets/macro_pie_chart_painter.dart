@@ -52,7 +52,7 @@ class _MacroPieChartState extends State<MacroPieChart> {
         sections: [
           // Protein section
           PieChartSectionData(
-            color: Colors.blue,
+            color: const Color.fromARGB(255, 238, 31, 31),
             value: widget.proteinPercent,
             title: '${widget.proteinPercent.toStringAsFixed(0)}%',
             radius: touchedIndex == 0 ? 110.r : 100.r,
@@ -70,9 +70,9 @@ class _MacroPieChartState extends State<MacroPieChart> {
             badgeWidget: touchedIndex == 0
                 ? _buildBadge(
                     'Protein\n${widget.proteinGrams.toStringAsFixed(0)}g',
-                    Colors.blue)
+                    Color.fromARGB(255, 238, 31, 31))
                 : null,
-            badgePositionPercentageOffset: 1.3,
+            badgePositionPercentageOffset: -0.5,
           ),
           // Carbs section
           PieChartSectionData(
@@ -95,7 +95,7 @@ class _MacroPieChartState extends State<MacroPieChart> {
                 ? _buildBadge('Carbs\n${widget.carbsGrams.toStringAsFixed(0)}g',
                     Colors.green)
                 : null,
-            badgePositionPercentageOffset: 1.3,
+            badgePositionPercentageOffset: -0.5,
           ),
           // Fats section
           PieChartSectionData(
@@ -118,12 +118,12 @@ class _MacroPieChartState extends State<MacroPieChart> {
                 ? _buildBadge('Fats\n${widget.fatsGrams.toStringAsFixed(0)}g',
                     Colors.orange)
                 : null,
-            badgePositionPercentageOffset: 1.3,
+            badgePositionPercentageOffset: -0.5,
           ),
         ],
       ),
-      swapAnimationDuration: const Duration(milliseconds: 750),
-      swapAnimationCurve: Curves.easeInOutCubic,
+      duration: const Duration(milliseconds: 750),
+      curve: Curves.easeInOutCubic,
     );
   }
 

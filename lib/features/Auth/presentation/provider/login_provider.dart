@@ -7,7 +7,6 @@ import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final loginProvider =
@@ -54,17 +53,10 @@ class LoginNotifier extends Notifier<ProviderStates> {
 
       state = ProviderStates(isSuccess: true);
       TalkerService.info('Google login successful', 'AUTH');
-    } on DioException catch (e) {
-      // Safely extract error message from response
-      final errorMsg = e.response?.data?["message"] as String? ??
-          e.message ??
-          'Network error occurred';
+    } catch (e) {
+      final errorMsg = e.toString().replaceFirst('Exception: ', '');
       state = ProviderStates(errorMessage: errorMsg);
       TalkerService.error('Google login failed', 'AUTH', e);
-    } catch (e) {
-      final errorMessage = 'Sign-in failed: ${e.toString()}';
-      state = ProviderStates(errorMessage: errorMessage);
-      TalkerService.error('Google login unexpected error', 'AUTH', e);
     }
   }
 
@@ -100,18 +92,11 @@ class LoginNotifier extends Notifier<ProviderStates> {
       state = ProviderStates(isSuccess: true);
       TalkerService.info(
           'Login successful for user: ${email.toLowerCase().trim()}', 'AUTH');
-    } on DioException catch (e) {
-      // Safely extract error message from response
-      final errorMsg = e.response?.data?["message"] as String? ??
-          e.message ??
-          'Network error occurred';
+    } catch (e) {
+      final errorMsg = e.toString().replaceFirst('Exception: ', '');
       state = ProviderStates(errorMessage: errorMsg);
       TalkerService.error(
           'Login failed for user: ${email.toLowerCase().trim()}', 'AUTH', e);
-    } catch (e) {
-      final errorMessage = 'Sign-in failed: ${e.toString()}';
-      state = ProviderStates(errorMessage: errorMessage);
-      TalkerService.error('Login unexpected error', 'AUTH', e);
     }
   }
 

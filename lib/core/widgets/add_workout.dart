@@ -48,7 +48,7 @@ class AddWorkoutBtn extends ConsumerWidget {
                     AppRouters.workouts,
                     extra: {
                       'showSuccessMessage': true,
-                      'workoutName': workoutName,
+                      'workoutName': workoutName.capitalizeWord(),
                     },
                   );
                 }

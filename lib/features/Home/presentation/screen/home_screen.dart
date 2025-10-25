@@ -1,4 +1,5 @@
-﻿import 'package:Warrior/core/functions/checkAndShowReviewDialog.dart';
+﻿import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/functions/checkAndShowReviewDialog.dart';
 import 'package:Warrior/core/functions/checkForForceUpdate.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
@@ -21,8 +22,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
-        centerTitle: true,
+        leading: Builder(
+          builder: (context) => IconButton(
+            padding: EdgeInsets.only(left: 16.w),
+            icon: Stack(
+              alignment: Alignment.center,
+              children: [
+                Transform.rotate(
+                  angle: -0.80,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Transform.rotate(
+                      angle: 0.80,
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
       ),
       drawer: const FancyDrawer(),
       body: SafeArea(

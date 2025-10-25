@@ -7,6 +7,7 @@ import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/password_validation_rules.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -106,13 +107,17 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   @override
   void initState() {
+    super.initState();
     ref.listenManual(resetPasswordProvider, (previous, current) {
       if (current.isSuccess) {
         context.goNamed(AppRouters.resetSuccess);
       } else if (current.errorMessage != null) {
-        flushBar(context, message: current.errorMessage!);
+        showErrorFlushbar(
+          context,
+          position: FlushbarPosition.BOTTOM,
+          current.errorMessage!,
+        );
       }
     });
-    super.initState();
   }
 }

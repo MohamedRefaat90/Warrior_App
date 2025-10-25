@@ -25,7 +25,7 @@ class FancyDrawerItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(20.r),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10.w),
-        padding: EdgeInsets.all(10.w),
+        padding: EdgeInsets.symmetric(vertical: 5.w, horizontal: 10.w),
         decoration: BoxDecoration(
           color: AppColors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20.r),

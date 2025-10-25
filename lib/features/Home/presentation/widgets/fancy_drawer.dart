@@ -178,7 +178,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                         ),
                         child: Column(
                           children: [
-                            SizedBox(height: 25.h),
+                            SizedBox(height: 15.h),
                             FancyDrawerItem(
                               icon: Icons.share_rounded,
                               title: 'Share App',
@@ -261,7 +261,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
             ],
           ),
         ),

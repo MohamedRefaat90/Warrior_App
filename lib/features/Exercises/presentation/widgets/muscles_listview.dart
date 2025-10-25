@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
@@ -78,8 +79,14 @@ class MusclesListView extends ConsumerWidget {
                       // HiveManager.workoutsBox.add(workoutNotifier.newWorkout);
 
                       if (context.mounted) {
-                        context.pop(); // Pop muscles screen
-                        context.pop(); // Return to workouts screen
+                        context.pushReplacementNamed(
+                          AppRouters.workouts,
+                          extra: {
+                            'showSuccessMessage': true,
+                            'workoutName': workoutNotifier.newWorkout.name
+                                .capitalizeWord(),
+                          },
+                        );
                       }
                     } else {
                       await workoutNotifier

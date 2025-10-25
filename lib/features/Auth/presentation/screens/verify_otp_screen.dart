@@ -1,9 +1,9 @@
 import 'package:Warrior/core/constants/assets.dart';
-import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/features/Auth/presentation/provider/verify_otp_provider.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/otp_fileds.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,14 +55,17 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
 
   @override
   void initState() {
+    super.initState();
     ref.listenManual<ProviderStates>(otpProvider, (previous, current) {
       if (current.isSuccess) {
         context.goNamed(AppRouters.newPassword, extra: widget.email);
       } else if (current.errorMessage != null) {
-        flushBar(context,
-            message: current.errorMessage!, color: AppColors.primaryColor!);
+        showErrorFlushbar(
+          context,
+          position: FlushbarPosition.BOTTOM,
+          current.errorMessage!,
+        );
       }
     });
-    super.initState();
   }
 }

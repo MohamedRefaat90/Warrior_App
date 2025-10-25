@@ -1,8 +1,9 @@
 import 'package:Warrior/core/constants/apis_url.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
+import 'package:Warrior/core/network/api_error_handler.dart';
 import 'package:Warrior/core/network/dio.dart';
-import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
@@ -36,10 +37,13 @@ class AuthRepo {
       TalkerService.info('Password reset email sent successfully', 'AUTH_REPO');
     } on DioException catch (e) {
       TalkerService.error('Network error in forgetPassword', 'AUTH_REPO', e);
-      rethrow;
+      final String errorMessage =
+          ErrorHandler.handle(e).apiErrorModel.message ??
+              "Failed to send password reset email";
+      throw Exception(errorMessage);
     } catch (e) {
       TalkerService.error('Unexpected error in forgetPassword', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("An unexpected error occurred: ${e.toString()}");
     }
   }
 
@@ -76,19 +80,21 @@ class AuthRepo {
 
       final user = UserModel.fromMap(userData);
       TalkerService.info(
-          'Google sign-in successful for user: ${user.email ?? "unknown"}',
-          'AUTH_REPO');
+          'Google sign-in successful for user: ${user.email}', 'AUTH_REPO');
 
       return user;
     } on DioException catch (e) {
       TalkerService.error('Network error in googleSignIn', 'AUTH_REPO', e);
-      rethrow;
+      final String errorMessage =
+          ErrorHandler.handle(e).apiErrorModel.message ??
+              "Google sign-in failed";
+      throw Exception(errorMessage);
     } on PlatformException catch (e) {
       TalkerService.error('Platform error in googleSignIn', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("Platform error: ${e.message ?? 'Unknown error'}");
     } catch (e) {
       TalkerService.error('Unexpected error in googleSignIn', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("An unexpected error occurred: ${e.toString()}");
     }
   }
 
@@ -140,16 +146,18 @@ class AuthRepo {
 
       final user = UserModel.fromMap(userData);
       TalkerService.info(
-          'Login successful for user: ${user.email ?? "unknown"}', 'AUTH_REPO');
+          'Login successful for user: ${user.email}', 'AUTH_REPO');
 
       return user;
     } on DioException catch (e) {
       TalkerService.error(
           'Network error in login for: ${email.trim()}', 'AUTH_REPO', e);
-      rethrow;
+      final String errorMessage =
+          ErrorHandler.handle(e).apiErrorModel.message ?? "Login failed";
+      throw Exception(errorMessage);
     } catch (e) {
       TalkerService.error('Unexpected error in login', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("An unexpected error occurred: ${e.toString()}");
     }
   }
 
@@ -165,10 +173,12 @@ class AuthRepo {
       TalkerService.info('Logout successful', 'AUTH_REPO');
     } on DioException catch (e) {
       TalkerService.error('Network error during logout', 'AUTH_REPO', e);
-      rethrow;
+      final String errorMessage =
+          ErrorHandler.handle(e).apiErrorModel.message ?? "Logout failed";
+      throw Exception(errorMessage);
     } catch (e) {
       TalkerService.error('Error during logout', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("An unexpected error occurred: ${e.toString()}");
     }
   }
 
@@ -204,10 +214,13 @@ class AuthRepo {
       TalkerService.info('Password reset successful', 'AUTH_REPO');
     } on DioException catch (e) {
       TalkerService.error('Network error in resetPassword', 'AUTH_REPO', e);
-      rethrow;
+      final String errorMessage =
+          ErrorHandler.handle(e).apiErrorModel.message ??
+              "Password reset failed";
+      throw Exception(errorMessage);
     } catch (e) {
       TalkerService.error('Unexpected error in resetPassword', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("An unexpected error occurred: ${e.toString()}");
     }
   }
 
@@ -249,10 +262,12 @@ class AuthRepo {
       TalkerService.info('Account created successfully', 'AUTH_REPO');
     } on DioException catch (e) {
       TalkerService.error('Network error in signup', 'AUTH_REPO', e);
-      rethrow;
+      final String errorMessage =
+          ErrorHandler.handle(e).apiErrorModel.message ?? "Sign up failed";
+      throw Exception(errorMessage);
     } catch (e) {
       TalkerService.error('Unexpected error in signup', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("An unexpected error occurred: ${e.toString()}");
     }
   }
 
@@ -292,10 +307,13 @@ class AuthRepo {
       TalkerService.info('OTP verification successful', 'AUTH_REPO');
     } on DioException catch (e) {
       TalkerService.error('Network error in verifyOTP', 'AUTH_REPO', e);
-      rethrow;
+      final String errorMessage =
+          ErrorHandler.handle(e).apiErrorModel.message ??
+              "OTP verification failed";
+      throw Exception(errorMessage);
     } catch (e) {
       TalkerService.error('Unexpected error in verifyOTP', 'AUTH_REPO', e);
-      rethrow;
+      throw Exception("An unexpected error occurred: ${e.toString()}");
     }
   }
 

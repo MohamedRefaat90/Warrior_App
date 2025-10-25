@@ -1,12 +1,13 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
-import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/features/Auth/presentation/provider/signup_provider.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/password_validation_rules.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -123,24 +124,27 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   @override
-  void initState() {
-    ref.listenManual(signupProvider, (previous, current) {
-      if (current.isSuccess) {
-        context.goNamed(AppRouters.signupSuccess);
-      } else if (current.errorMessage != null) {
-        flushBar(context,
-            message: current.errorMessage!, color: Colors.redAccent);
-      }
-    });
-    super.initState();
-  }
-
-  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
     resetFlagFields();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listenManual(signupProvider, (previous, current) {
+      if (current.isSuccess) {
+        context.goNamed(AppRouters.signupSuccess);
+      } else if (current.errorMessage != null) {
+        showErrorFlushbar(
+          context,
+          position: FlushbarPosition.BOTTOM,
+          current.errorMessage!,
+        );
+      }
+    });
   }
 }

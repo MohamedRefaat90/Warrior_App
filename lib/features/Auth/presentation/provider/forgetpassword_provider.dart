@@ -1,7 +1,6 @@
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final forgetPasswordProvider =
@@ -33,20 +32,13 @@ class ForgetPasswordNotifier extends Notifier<ProviderStates> {
       TalkerService.info(
           'Password reset request sent for: ${email.toLowerCase().trim()}',
           'AUTH');
-    } on DioException catch (e) {
-      // Safely extract error message
-      final errorMsg = e.response?.data?["message"] as String? ??
-          e.message ??
-          'Failed to send password reset email';
+    } catch (e) {
+      final errorMsg = e.toString().replaceFirst('Exception: ', '');
       state = ProviderStates(errorMessage: errorMsg);
       TalkerService.error(
           'Forget password failed for: ${email.toLowerCase().trim()}',
           'AUTH',
           e);
-    } catch (e) {
-      final errorMessage = 'Password reset failed: ${e.toString()}';
-      state = ProviderStates(errorMessage: errorMessage);
-      TalkerService.error('Forget password unexpected error', 'AUTH', e);
     }
   }
 

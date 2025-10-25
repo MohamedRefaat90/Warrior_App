@@ -5,6 +5,7 @@ import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +28,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ProviderStates = ref.watch(forgetPasswordProvider);
+    final providerStates = ref.watch(forgetPasswordProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forget Password'),
@@ -38,6 +39,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomTextField(
                     placeholderText: "Email",
@@ -46,7 +48,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                     validator: (value) => emailValidator(value!.trim())),
                 30.verticalSpace,
                 CustomBTN(
-                    widget: ProviderStates.isLoading
+                    widget: providerStates.isLoading
                         ? const BtnLoader()
                         : const Text("Send Email"),
                     color: AppColors.primaryColor,
@@ -60,10 +62,14 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                             .forgetPassword(emailController.text);
 
                         if (context.mounted) {
-                          if (ProviderStates.isSuccess) {
-                          } else if (ProviderStates.errorMessage != null) {
-                            flushBar(context,
-                                message: ProviderStates.errorMessage!);
+                          if (providerStates.isSuccess) {
+                            // Success will navigate via listener
+                          } else if (providerStates.errorMessage != null) {
+                            showErrorFlushbar(
+                              position: FlushbarPosition.BOTTOM,
+                              context,
+                              providerStates.errorMessage!,
+                            );
                           }
                         }
                       }
@@ -73,12 +79,6 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
           )),
     );
   }
-
-  // @override
-  // void dispose() {
-  //   ref.read(authProvider.notifier).resetState();
-  //   super.dispose();
-  // }
 
   @override
   void initState() {

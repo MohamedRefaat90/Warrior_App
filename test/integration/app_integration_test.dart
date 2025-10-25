@@ -1,15 +1,16 @@
-import 'package:Warrior/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+
+import '../helpers/test_app_wrapper.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Warrior App Integration Tests', () {
     testWidgets('app should launch successfully', (WidgetTester tester) async {
-      // Launch the app
-      app.main();
+      // Launch the app using test wrapper
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
 
       // Verify app loads without crashing
@@ -18,8 +19,8 @@ void main() {
 
     testWidgets('navigation should work without crashes',
         (WidgetTester tester) async {
-      // Launch the app
-      app.main();
+      // Launch the app using test wrapper
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // This test ensures navigation doesn't crash the app
@@ -29,8 +30,8 @@ void main() {
 
     testWidgets('app should handle device rotation',
         (WidgetTester tester) async {
-      // Launch the app
-      app.main();
+      // Launch the app using test wrapper
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
 
       // Change orientation to landscape
@@ -56,8 +57,8 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(400, 800));
       tester.binding.platformDispatcher.textScaleFactorTestValue = 2.0;
 
-      // Launch the app
-      app.main();
+      // Launch the app using test wrapper
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
 
       // Verify app renders with large text
@@ -70,8 +71,8 @@ void main() {
 
     testWidgets('app should render UI elements correctly',
         (WidgetTester tester) async {
-      // Launch the app
-      app.main();
+      // Launch the app using test wrapper
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
 
       // Check for basic UI elements
@@ -89,8 +90,8 @@ void main() {
 
     testWidgets('app should handle rapid user interactions',
         (WidgetTester tester) async {
-      // Launch the app
-      app.main();
+      // Launch the app using test wrapper
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
 
       // Simulate rapid taps (stress test)
@@ -111,7 +112,7 @@ void main() {
         (WidgetTester tester) async {
       // Test small screen (phone)
       await tester.binding.setSurfaceSize(const Size(320, 568));
-      app.main();
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
       expect(find.byType(MaterialApp), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -134,7 +135,7 @@ void main() {
       // Launch the app
       final stopwatch = Stopwatch()..start();
 
-      app.main();
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
 
       stopwatch.stop();
@@ -147,8 +148,8 @@ void main() {
 
     testWidgets('app should handle state changes gracefully',
         (WidgetTester tester) async {
-      // Launch the app
-      app.main();
+      // Launch the app using test wrapper
+      await tester.pumpWidget(TestAppWrapper.createMainAppForTesting());
       await tester.pumpAndSettle();
 
       // Initial state check

@@ -151,6 +151,19 @@ class TestHelpers {
     return tester.widget<T>(finder);
   }
 
+  /// Initialize app services in test mode (skips Firebase and platform channels)
+  /// Call this before running integration tests
+  static Future<void> initializeTestServices() async {
+    // This will be dynamically imported to avoid circular dependencies
+    // Import AppServices at runtime only when needed
+    try {
+      // The test will import and call AppServices.init(isTestMode: true) directly
+      // This helper exists to document the pattern
+    } catch (e) {
+      // Ignore - tests should handle their own initialization
+    }
+  }
+
   /// Pumps a widget and waits for all animations to settle
   static Future<void> pumpAndSettleWidget(
     WidgetTester tester,

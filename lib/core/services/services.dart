@@ -1,8 +1,6 @@
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/dio.dart';
-import 'package:Warrior/core/services/app_open_ad_manager.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
-import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/firebase_options.dart';
@@ -15,7 +13,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 /// Firebase background message handler
@@ -29,25 +26,39 @@ abstract class AppServices {
   static final InAppReview inAppReview = InAppReview.instance;
   // static late AppVersion appVersion;
 
-  static Future<void> init() async {
+  /// Initialize app services
+  ///
+  /// Set [isTestMode] to true when running tests to skip platform-specific
+  /// initialization (Firebase, FCM, notifications, etc.)
+  static Future<void> init({bool isTestMode = false}) async {
     try {
       TalkerService.init();
 
       TalkerService.info('Starting app services initialization', 'SERVICES');
 
-      // Set preferred orientations
-      await _setPreferredOrientations();
+      if (!isTestMode) {
+        // Set preferred orientations
+        await _setPreferredOrientations();
 
-      // Initialize Firebase first (for Crashlytics)
-      await _initializeFirebase();
+        // Initialize Firebase first (for Crashlytics)
+        await _initializeFirebase();
 
-      // Setup error handlers
-      _setupErrorHandlers();
+        // Setup error handlers
+        _setupErrorHandlers();
+      } else {
+        TalkerService.info(
+            'Running in test mode - skipping native initialization',
+            'SERVICES');
+        // Set a test FCM token to avoid null reference errors
+        fcmToken = 'test_fcm_token_12345';
+      }
 
       // Initialize other services
-      await _initializeServices();
+      await _initializeServices(isTestMode: isTestMode);
 
-      await migrateCachedVideoDataToSharedPreferences();
+      if (!isTestMode) {
+        await migrateCachedVideoDataToSharedPreferences();
+      }
 
       TalkerService.info(
           'App services initialization completed successfully', 'SERVICES');
@@ -55,16 +66,18 @@ abstract class AppServices {
       TalkerService.error(
           'Failed to initialize app services', 'SERVICES', e, stackTrace);
 
-      // Send to Crashlytics if available
-      try {
-        await FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          fatal: true,
-          information: ['App Services Initialization Failed'],
-        );
-      } catch (_) {
-        // Ignore Crashlytics errors during initialization
+      // Send to Crashlytics if available (not in test mode)
+      if (!isTestMode) {
+        try {
+          await FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            fatal: true,
+            information: ['App Services Initialization Failed'],
+          );
+        } catch (_) {
+          // Ignore Crashlytics errors during initialization
+        }
       }
 
       rethrow;
@@ -168,13 +181,18 @@ abstract class AppServices {
     }
   }
 
-  static Future<void> _initializeServices() async {
-    const List<String> criticalServices = ['SharedPref', 'Dio', 'Hive'];
-    const List<String> nonCriticalServices = [
-      'Connectivity',
-      'Routing',
-      'AdMob'
-    ];
+  static Future<void> _initializeServices({bool isTestMode = false}) async {
+    // In test mode, skip services that require platform channels
+    final List<String> criticalServices = isTestMode
+        ? [] // Skip all critical services in test mode
+        : ['SharedPref', 'Dio', 'Hive'];
+
+    final List<String> nonCriticalServices = isTestMode
+        ? [] // Skip all non-critical services in test mode
+        : [
+            'Connectivity',
+            'Routing',
+          ];
 
     // Initialize critical services first
     for (final serviceName in criticalServices) {
@@ -188,13 +206,6 @@ abstract class AppServices {
             break;
           case 'Hive':
             await HiveManager.init();
-            break;
-          case 'AdMob':
-            await MobileAds.instance.initialize();
-            // Preload the first interstitial ad
-            InterstitialAdManager.instance.preloadAd();
-            // Initialize app open ad manager
-            AppOpenAdManager.instance.initialize();
             break;
         }
         TalkerService.info('$serviceName initialized successfully', 'SERVICES');
@@ -228,6 +239,12 @@ abstract class AppServices {
           TalkerService.info('Using fallback route: /home', 'SERVICES');
         }
       }
+    }
+
+    // Set fallback route in test mode
+    if (isTestMode) {
+      initialLocation = '/home';
+      TalkerService.info('Test mode: Using fallback route /home', 'SERVICES');
     }
   }
 

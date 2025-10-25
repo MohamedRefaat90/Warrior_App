@@ -22,11 +22,16 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: stable
+    
+    - name: Accept Android SDK licenses
+      run: yes | sdkmanager --licenses || true
+    
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: "3.2.3"
         bundler-cache: true
         working-directory: android
+    
     - run: flutter pub get
     - name: Generate release notes
       id: release_notes

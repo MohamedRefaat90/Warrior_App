@@ -23,8 +23,19 @@ jobs:
       with:
         channel: stable
     
-    - name: Accept Android SDK licenses
-      run: yes | sdkmanager --licenses || true
+    - name: Setup Android SDK and accept licenses
+      run: |
+        # Set ANDROID_SDK_ROOT environment variable
+        export ANDROID_SDK_ROOT=$ANDROID_HOME
+        
+        # Accept all SDK licenses
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        
+        # Install NDK version 28.0.12433566 if not present
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;28.0.12433566" || true
+        
+        # Accept licenses again after NDK installation
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
     
     - uses: ruby/setup-ruby@v1
       with:

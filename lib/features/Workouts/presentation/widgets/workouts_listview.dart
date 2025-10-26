@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -31,6 +32,28 @@ class _WorkoutsListviewState extends ConsumerState<WorkoutsListview> {
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: ReorderableListView.builder(
         itemCount: widget.workouts.length,
+        proxyDecorator: (child, index, animation) {
+          // Better drag visual feedback
+          return AnimatedBuilder(
+            animation: animation,
+            builder: (context, child) {
+              final double animValue =
+                  Curves.easeInOut.transform(animation.value);
+              final double elevation = lerpDouble(0, 6, animValue)!;
+              final double scale = lerpDouble(1.0, 1.02, animValue)!;
+              return Transform.scale(
+                scale: scale,
+                child: Material(
+                  elevation: elevation,
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                  child: child,
+                ),
+              );
+            },
+            child: child,
+          );
+        },
         itemBuilder: (context, index) {
           return WorkoutCard(
             key: Key("$index"),

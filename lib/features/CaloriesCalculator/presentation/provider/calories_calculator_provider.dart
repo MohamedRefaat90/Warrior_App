@@ -5,8 +5,8 @@ import 'package:Warrior/features/CaloriesCalculator/data/repo/calories_calculato
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for calories calculator state management
-final caloriesCalculatorProvider =
-    NotifierProvider<CaloriesCalculatorNotifier, CaloriesCalculatorState>(
+final caloriesCalculatorProvider = NotifierProvider.autoDispose<
+    CaloriesCalculatorNotifier, CaloriesCalculatorState>(
   CaloriesCalculatorNotifier.new,
 );
 

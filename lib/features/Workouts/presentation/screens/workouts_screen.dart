@@ -18,10 +18,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/routers.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
-  bool? showSuccessMessage;
+  final bool? showSuccessMessage;
   final String? workoutName;
 
-  WorkoutScreen({
+  const WorkoutScreen({
     super.key,
     required this.showSuccessMessage,
     this.workoutName,
@@ -32,13 +32,48 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 }
 
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
+  // Controllers must be declared as instance variables and disposed
+  late final TextEditingController _nameController;
+  late final TextEditingController _descriptionController;
+  late final GlobalKey<FormState> _formKey;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers once
+    _nameController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _formKey = GlobalKey<FormState>();
+
+    // Show success flushbar after the widget is built (only once per navigation)
+    if (widget.showSuccessMessage == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          showSuccessFlushbar(
+            context,
+            position: FlushbarPosition.BOTTOM,
+            widget.workoutName != null
+                ? 'Workout (${widget.workoutName}) added successfully!'
+                    .capitalizeWord()
+                : 'Workout added successfully!'.capitalizeWord(),
+          );
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // Clean up controllers
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final workoutState = ref.watch(workoutsProvider);
     final workoutNotifier = ref.watch(workoutsProvider.notifier);
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController descriptionController = TextEditingController();
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Scaffold(
         resizeToAvoidBottomInset: true,
         floatingActionButton: workoutNotifier.createWorkoutBtnState()
@@ -48,20 +83,23 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 padding: 12,
                 radius: 8,
                 press: () {
+                  // Clear previous text before showing dialog
+                  _nameController.clear();
+                  _descriptionController.clear();
                   showAdaptiveDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text('Create Workout Set'),
+                          title: const Text('Create Workout Set'),
                           content: Form(
-                            key: formKey,
+                            key: _formKey,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 CustomTextField(
                                     placeholderText: 'Workout Name Set',
                                     isObscure: false,
-                                    textEditingController: nameController,
+                                    textEditingController: _nameController,
                                     validator: (value) => value!.isEmpty
                                         ? 'workout set name is required'
                                             .capitalizeWord()
@@ -69,7 +107,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                 SizedBox(height: 10.h),
                                 CustomTextField(
                                     textEditingController:
-                                        descriptionController,
+                                        _descriptionController,
                                     isTextArea: true,
                                     isObscure: false,
                                     placeholderText: 'Description'),
@@ -81,11 +119,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('Cancel')),
+                                child: const Text('Cancel')),
                             Consumer(
                               builder: (context, ref, child) => TextButton(
                                   onPressed: () {
-                                    if (formKey.currentState!.validate()) {
+                                    if (_formKey.currentState!.validate()) {
                                       // Close the dialog first
                                       Navigator.of(context).pop();
 
@@ -94,9 +132,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                         onAdDismissed: () {
                                           // Navigate after ad is dismissed
                                           workoutNotifier.fillNewWorkout(
-                                              name: nameController.text,
+                                              name: _nameController.text,
                                               description:
-                                                  descriptionController.text,
+                                                  _descriptionController.text,
                                               workoutItems: []);
                                           context.pushNamed(AppRouters.muscles,
                                               extra: {
@@ -109,7 +147,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                       );
                                     }
                                   },
-                                  child: Text('Create')),
+                                  child: const Text('Create')),
                             ),
                           ],
                         );
@@ -136,8 +174,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                       ? const EmptyWorkoutList()
                       : WorkoutsListview(
                           workoutNotifier.workoutList,
-                          nameController,
-                          descriptionController,
+                          _nameController,
+                          _descriptionController,
                         ),
             ),
           ],
@@ -150,26 +188,5 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     Future.microtask(() {
       ref.read(workoutsProvider.notifier).getWorkoutSets();
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Show success flushbar after the widget is built
-    if (widget.showSuccessMessage == true) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          showSuccessFlushbar(
-            context,
-            position: FlushbarPosition.BOTTOM,
-            widget.workoutName != null
-                ? 'Workout (${widget.workoutName}) added successfully!'
-                    .capitalizeWord()
-                : 'Workout added successfully!'.capitalizeWord(),
-          );
-          widget.showSuccessMessage = false;
-        }
-      });
-    }
   }
 }

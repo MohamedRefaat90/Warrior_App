@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/functions/validators.dart';
 
 final resetPasswordProvider =
-    NotifierProvider<ResetPasswordNotifier, ProviderStates>(
+    NotifierProvider.autoDispose<ResetPasswordNotifier, ProviderStates>(
         ResetPasswordNotifier.new);
 
 class ResetPasswordNotifier extends Notifier<ProviderStates> {

@@ -27,10 +27,11 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   @override
   Widget build(BuildContext context) {
     final workoutsNotifier = ref.read(workoutsProvider.notifier);
-    return GestureDetector(
-      onTap: () =>
-          context.pushNamed(AppRouters.exerciseDetails, extra: widget.exercise),
-      child: Card(
+    return RepaintBoundary(
+      child: GestureDetector(
+        onTap: () => context.pushNamed(AppRouters.exerciseDetails,
+            extra: widget.exercise),
+        child: Card(
           elevation: 5,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Stack(
@@ -42,7 +43,12 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   CachedNetworkImage(
                     imageUrl: widget.exercise.image,
                     height: 120.h,
-                    placeholder: (context, url) => CustomLoadingWidget(),
+                    // memCacheHeight: 200,
+                    // memCacheWidth: 200,
+                    // maxHeightDiskCache: 300,
+                    // maxWidthDiskCache: 300,
+                    fadeInDuration: const Duration(milliseconds: 200),
+                    placeholder: (context, url) => const CustomLoadingWidget(),
                     errorWidget: (context, url, error) {
                       // First check if it's a local file path
                       if (widget.exercise.image.startsWith('/') ||
@@ -51,11 +57,11 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                           File(widget.exercise.image),
                           height: 120.h,
                           errorBuilder: (context, error, stackTrace) =>
-                              Icon(Icons.image_not_supported, size: 50),
+                              const Icon(Icons.image_not_supported, size: 50),
                         );
                       } else {
                         // If not a valid local path, show placeholder
-                        return Icon(Icons.fitness_center, size: 50);
+                        return const Icon(Icons.fitness_center, size: 50);
                       }
                     },
                   ),
@@ -95,7 +101,9 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   ),
                 ),
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 

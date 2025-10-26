@@ -5,7 +5,8 @@ import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final signupProvider =
-    NotifierProvider<SignupNotifier, ProviderStates>(SignupNotifier.new);
+    NotifierProvider.autoDispose<SignupNotifier, ProviderStates>(
+        SignupNotifier.new);
 
 class SignupNotifier extends Notifier<ProviderStates> {
   late AuthRepo _authRepo;

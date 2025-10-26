@@ -4,7 +4,8 @@ import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final otpProvider =
-    NotifierProvider<VerifyOTPProvider, ProviderStates>(VerifyOTPProvider.new);
+    NotifierProvider.autoDispose<VerifyOTPProvider, ProviderStates>(
+        VerifyOTPProvider.new);
 
 class VerifyOTPProvider extends Notifier<ProviderStates> {
   late AuthRepo _authRepo;

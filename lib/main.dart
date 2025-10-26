@@ -1,4 +1,4 @@
-﻿import 'package:Warrior/core/constants/assets.dart';
+import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/app_open_ad_manager.dart';
 import 'package:Warrior/core/services/services.dart';
@@ -147,6 +147,12 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _precacheAssets();
+  }
+
+  @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -156,5 +162,55 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  /// Precache frequently used asset images for better performance
+  Future<void> _precacheAssets() async {
+    try {
+      // Precache home screen category images
+      await Future.wait([
+        precacheImage(
+          const AssetImage('assets/images/home/Aps.png'),
+          context,
+        ),
+        precacheImage(
+          const AssetImage('assets/images/home/workout.png'),
+          context,
+        ),
+        precacheImage(
+          const AssetImage('assets/images/home/Calculator.png'),
+          context,
+        ),
+        precacheImage(
+          const AssetImage('assets/images/home/Supplements.png'),
+          context,
+        ),
+        precacheImage(
+          const AssetImage('assets/images/home/nutrition.png'),
+          context,
+        ),
+        // Precache onboarding images
+        precacheImage(
+          const AssetImage('assets/images/onboarding/1.webp'),
+          context,
+        ),
+        precacheImage(
+          const AssetImage('assets/images/onboarding/2.webp'),
+          context,
+        ),
+        precacheImage(
+          const AssetImage('assets/images/onboarding/3.webp'),
+          context,
+        ),
+        precacheImage(
+          const AssetImage('assets/splash.png'),
+          context,
+        ),
+      ]);
+
+      TalkerService.info('Assets precached successfully', 'PERFORMANCE');
+    } catch (e) {
+      TalkerService.warning('Failed to precache some assets', 'PERFORMANCE', e);
+    }
   }
 }

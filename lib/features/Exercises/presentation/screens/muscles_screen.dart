@@ -71,7 +71,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
             Expanded(
               child: ConnectivityChecker.isOnline!
                   ? ref.watch(musclesProvider).when(
-                      loading: () => Center(child: const Loader()),
+                      loading: () => const Center(child: Loader()),
                       data: (muscles) {
                         HiveManager.saveToHive(HiveManager.musclesBox, muscles);
                         return MusclesListView(
@@ -84,7 +84,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen> {
                       },
                       error: (error, stackTrace) =>
                           ref.read(musclesProvider).isRefreshing
-                              ? Center(child: const Loader())
+                              ? const Center(child: Loader())
                               : Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,

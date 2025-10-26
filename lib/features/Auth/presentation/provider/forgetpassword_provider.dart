@@ -4,7 +4,7 @@ import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final forgetPasswordProvider =
-    NotifierProvider<ForgetPasswordNotifier, ProviderStates>(
+    NotifierProvider.autoDispose<ForgetPasswordNotifier, ProviderStates>(
         ForgetPasswordNotifier.new);
 
 class ForgetPasswordNotifier extends Notifier<ProviderStates> {

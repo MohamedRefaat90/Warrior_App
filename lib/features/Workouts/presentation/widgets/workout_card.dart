@@ -26,182 +26,185 @@ class _WorkoutCardState extends ConsumerState<WorkoutCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.pushNamed(AppRouters.workoutDetails, extra: widget.workout);
-      },
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  widget.workout.name!.capitalizeWord(),
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'poppins',
+    return RepaintBoundary(
+      child: GestureDetector(
+        onTap: () {
+          context.pushNamed(AppRouters.workoutDetails, extra: widget.workout);
+        },
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    widget.workout.name!.capitalizeWord(),
+                    style: TextStyle(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'poppins',
+                    ),
+                  ),
+                  SizedBox(
+                    width: 0.6.sw,
+                    child: Text(widget.workout.description!,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "${widget.workout.workoutItems!.length} ",
+                        style: TextStyle(
+                            fontSize: 15.sp, fontWeight: FontWeight.bold),
+                      ),
+                      Icon(Icons.fitness_center, size: 15.sp),
+                    ],
+                  ),
+                ]),
+                SizedBox(
+                  height: 70.h,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: CustomBTN(
+                          widget: Icon(Icons.edit, size: 15.sp),
+                          color: Colors.green,
+                          radius: 0,
+                          padding: 13,
+                          splashColor: AppColors.white,
+                          press: () {
+                            showAdaptiveDialog(
+                                context: context,
+                                builder: (context) {
+                                  nameController = TextEditingController(
+                                      text: widget.workout.name);
+                                  descriptionController = TextEditingController(
+                                      text: widget.workout.description);
+                                  return AlertDialog(
+                                    title: Text('Edit Workout Set'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CustomTextField(
+                                          textEditingController: nameController,
+                                          isObscure: false,
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        CustomTextField(
+                                            textEditingController:
+                                                descriptionController,
+                                            isTextArea: true,
+                                            isObscure: false,
+                                            placeholderText: 'Description'),
+                                      ],
+                                    ),
+                                    actions: [
+                                      Consumer(
+                                        builder: (context, ref, child) =>
+                                            TextButton(
+                                                onPressed: () async {
+                                                  await ref
+                                                      .read(workoutsProvider
+                                                          .notifier)
+                                                      .updateWorkoutSet(widget
+                                                          .workout
+                                                          .copyWith(
+                                                              name:
+                                                                  nameController!
+                                                                      .text,
+                                                              description:
+                                                                  descriptionController!
+                                                                      .text));
+                                                  if (context.mounted) {
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                },
+                                                child: ref
+                                                        .watch(workoutsProvider)
+                                                        .isLoading
+                                                    ? BtnLoader(
+                                                        color: AppColors
+                                                            .primaryColor)
+                                                    : Text('Edit')),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomBTN(
+                          widget: Icon(Icons.delete, size: 15.sp),
+                          color: Colors.red,
+                          radius: 0,
+                          padding: 13,
+                          splashColor: AppColors.white,
+                          press: () {
+                            showAdaptiveDialog(
+                                context: context,
+                                builder: (context) {
+                                  nameController = TextEditingController(
+                                      text: widget.workout.name);
+                                  descriptionController = TextEditingController(
+                                      text: widget.workout.description);
+                                  return AlertDialog(
+                                    title: Text.rich(
+                                        maxLines: 1,
+                                        TextSpan(children: [
+                                          TextSpan(text: "Delete "),
+                                          TextSpan(
+                                              text: widget.workout.name,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                overflow: TextOverflow.ellipsis,
+                                              ))
+                                        ]),
+                                        overflow: TextOverflow.ellipsis),
+                                    content: Text(
+                                        'Are you sure you want to delete this workout set ?'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Cancel')),
+                                      Consumer(
+                                        builder: (context, ref, child) =>
+                                            TextButton(
+                                                onPressed: () async {
+                                                  ref
+                                                      .read(workoutsProvider
+                                                          .notifier)
+                                                      .deleteWorkoutSet(
+                                                          widget.workout.id!,
+                                                          widget.index);
+
+                                                  if (context.mounted) {
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                },
+                                                child: ref
+                                                        .watch(workoutsProvider)
+                                                        .isLoading
+                                                    ? BtnLoader(
+                                                        color: AppColors
+                                                            .primaryColor)
+                                                    : Text('Sure')),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(
-                  width: 0.6.sw,
-                  child: Text(widget.workout.description!,
-                      overflow: TextOverflow.ellipsis),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "${widget.workout.workoutItems!.length} ",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold),
-                    ),
-                    Icon(Icons.fitness_center, size: 15.sp),
-                  ],
-                ),
-              ]),
-              SizedBox(
-                height: 70.h,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: CustomBTN(
-                        widget: Icon(Icons.edit, size: 15.sp),
-                        color: Colors.green,
-                        radius: 0,
-                        padding: 13,
-                        splashColor: AppColors.white,
-                        press: () {
-                          showAdaptiveDialog(
-                              context: context,
-                              builder: (context) {
-                                nameController = TextEditingController(
-                                    text: widget.workout.name);
-                                descriptionController = TextEditingController(
-                                    text: widget.workout.description);
-                                return AlertDialog(
-                                  title: Text('Edit Workout Set'),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CustomTextField(
-                                        textEditingController: nameController,
-                                        isObscure: false,
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      CustomTextField(
-                                          textEditingController:
-                                              descriptionController,
-                                          isTextArea: true,
-                                          isObscure: false,
-                                          placeholderText: 'Description'),
-                                    ],
-                                  ),
-                                  actions: [
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          TextButton(
-                                              onPressed: () async {
-                                                await ref
-                                                    .read(workoutsProvider
-                                                        .notifier)
-                                                    .updateWorkoutSet(
-                                                        widget.workout.copyWith(
-                                                            name:
-                                                                nameController!
-                                                                    .text,
-                                                            description:
-                                                                descriptionController!
-                                                                    .text));
-                                                if (context.mounted) {
-                                                  Navigator.of(context).pop();
-                                                }
-                                              },
-                                              child: ref
-                                                      .watch(workoutsProvider)
-                                                      .isLoading
-                                                  ? BtnLoader(
-                                                      color: AppColors
-                                                          .primaryColor)
-                                                  : Text('Edit')),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomBTN(
-                        widget: Icon(Icons.delete, size: 15.sp),
-                        color: Colors.red,
-                        radius: 0,
-                        padding: 13,
-                        splashColor: AppColors.white,
-                        press: () {
-                          showAdaptiveDialog(
-                              context: context,
-                              builder: (context) {
-                                nameController = TextEditingController(
-                                    text: widget.workout.name);
-                                descriptionController = TextEditingController(
-                                    text: widget.workout.description);
-                                return AlertDialog(
-                                  title: Text.rich(
-                                      maxLines: 1,
-                                      TextSpan(children: [
-                                        TextSpan(text: "Delete "),
-                                        TextSpan(
-                                            text: widget.workout.name,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              overflow: TextOverflow.ellipsis,
-                                            ))
-                                      ]),
-                                      overflow: TextOverflow.ellipsis),
-                                  content: Text(
-                                      'Are you sure you want to delete this workout set ?'),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Cancel')),
-                                    Consumer(
-                                      builder: (context, ref, child) =>
-                                          TextButton(
-                                              onPressed: () async {
-                                                ref
-                                                    .read(workoutsProvider
-                                                        .notifier)
-                                                    .deleteWorkoutSet(
-                                                        widget.workout.id!,
-                                                        widget.index);
-
-                                                if (context.mounted) {
-                                                  Navigator.of(context).pop();
-                                                }
-                                              },
-                                              child: ref
-                                                      .watch(workoutsProvider)
-                                                      .isLoading
-                                                  ? BtnLoader(
-                                                      color: AppColors
-                                                          .primaryColor)
-                                                  : Text('Sure')),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

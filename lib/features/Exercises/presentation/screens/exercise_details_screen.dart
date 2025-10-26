@@ -85,7 +85,16 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
   }
 
   @override
+  void deactivate() {
+    // Pause video when navigating away to stop buffering
+    _player?.controller.pause();
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
+    // Pause first to stop buffering, then dispose
+    _player?.controller.pause();
     _player?.dispose();
     super.dispose();
   }
@@ -101,6 +110,11 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       imageUrl: widget.exercise.targetedMuscles,
       width: 200.w,
       alignment: Alignment.center,
+      memCacheWidth: 300,
+      memCacheHeight: 300,
+      maxWidthDiskCache: 400,
+      maxHeightDiskCache: 400,
+      fadeInDuration: const Duration(milliseconds: 200),
       placeholder: (context, url) => const CustomLoadingWidget(),
       errorWidget: (context, url, error) {
         TalkerService.warning(

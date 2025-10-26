@@ -10,7 +10,8 @@ import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final loginProvider =
-    NotifierProvider<LoginNotifier, ProviderStates>(LoginNotifier.new);
+    NotifierProvider.autoDispose<LoginNotifier, ProviderStates>(
+        LoginNotifier.new);
 
 class LoginNotifier extends Notifier<ProviderStates> {
   late AuthRepo _authRepo;
@@ -19,6 +20,7 @@ class LoginNotifier extends Notifier<ProviderStates> {
   @override
   ProviderStates build() {
     _authRepo = ref.read(authRepo);
+    ref.keepAlive();
     return ProviderStates();
   }
 

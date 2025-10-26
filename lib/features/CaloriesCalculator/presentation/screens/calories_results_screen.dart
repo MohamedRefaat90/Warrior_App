@@ -1,7 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/provider/calories_calculator_provider.dart';
-import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/info_section.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/macro_pie_chart_painter.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/macro_row.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/main_calories_card.dart';

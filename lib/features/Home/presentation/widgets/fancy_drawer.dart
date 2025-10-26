@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/services/services.dart';
@@ -55,8 +53,8 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.white.withValues(alpha: 0.3),
-                          blurRadius: 40,
-                          spreadRadius: 20,
+                          blurRadius: 25,
+                          spreadRadius: 10,
                         ),
                       ],
                     ),
@@ -163,104 +161,99 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30.r),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.white.withValues(alpha: 0.2),
-                              AppColors.white.withValues(alpha: 0.1),
-                            ],
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 15.h),
-                            FancyDrawerItem(
-                              icon: Icons.share_rounded,
-                              title: 'Share App',
-                              subtitle: 'Spread the warrior spirit',
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.blue.shade400,
-                                  Colors.purple.shade400,
-                                ],
-                              ),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                await SharePlus.instance.share(ShareParams(
-                                  text:
-                                      'Check out the Warrior App for amazing workout routines! Download it here: https://play.google.com/store/apps/details?id=com.warrior90.app',
-                                ));
-                                TalkerService.info(
-                                    'User shared the app', 'HOME');
-                              },
-                            ),
-                            SizedBox(height: 16.h),
-                            FancyDrawerItem(
-                              icon: Icons.star_rounded,
-                              title: 'Rate App',
-                              subtitle: 'Support Us ⭐',
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.amber.shade400,
-                                  Colors.orange.shade300,
-                                ],
-                              ),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                await AppServices.inAppReview
-                                    .openStoreListing();
-                                TalkerService.info(
-                                    'User opened rate app', 'HOME');
-                              },
-                            ),
-                            SizedBox(height: 16.h),
-                            FancyDrawerItem(
-                              icon: Icons.logout_rounded,
-                              title: 'Logout',
-                              subtitle: 'Take a rest warrior',
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.red.shade400,
-                                  Colors.orange.shade400,
-                                ],
-                              ),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                await ref.read(loginProvider.notifier).logout();
-                                TalkerService.info(
-                                  'User logged out from home screen',
-                                  'HOME',
-                                );
-                                if (context.mounted) {
-                                  context
-                                      .pushReplacementNamed(AppRouters.login);
-                                }
-                              },
-                            ),
-                            const Spacer(),
-                            // Footer
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 20.h),
-                              child: Text(
-                                _version,
-                                style: TextStyle(
-                                  color: AppColors.white.withValues(alpha: 0.6),
-                                  fontSize: 11.sp,
-                                ),
-                              ),
-                            ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppColors.white.withValues(alpha: 0.25),
+                            AppColors.white.withValues(alpha: 0.15),
                           ],
                         ),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 15.h),
+                          FancyDrawerItem(
+                            icon: Icons.share_rounded,
+                            title: 'Share App',
+                            subtitle: 'Spread the warrior spirit',
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blue.shade400,
+                                Colors.purple.shade400,
+                              ],
+                            ),
+                            onTap: () async {
+                              Navigator.pop(context);
+                              await SharePlus.instance.share(ShareParams(
+                                text:
+                                    'Check out the Warrior App for amazing workout routines! Download it here: https://play.google.com/store/apps/details?id=com.warrior90.app',
+                              ));
+                              TalkerService.info('User shared the app', 'HOME');
+                            },
+                          ),
+                          SizedBox(height: 16.h),
+                          FancyDrawerItem(
+                            icon: Icons.star_rounded,
+                            title: 'Rate App',
+                            subtitle: 'Support Us ⭐',
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.amber.shade400,
+                                Colors.orange.shade300,
+                              ],
+                            ),
+                            onTap: () async {
+                              Navigator.pop(context);
+                              await AppServices.inAppReview.openStoreListing();
+                              TalkerService.info(
+                                  'User opened rate app', 'HOME');
+                            },
+                          ),
+                          SizedBox(height: 16.h),
+                          FancyDrawerItem(
+                            icon: Icons.logout_rounded,
+                            title: 'Logout',
+                            subtitle: 'Take a rest warrior',
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.red.shade400,
+                                Colors.orange.shade400,
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                              ref.read(loginProvider.notifier).logout();
+                              TalkerService.info(
+                                'User logged out from home screen',
+                                'HOME',
+                              );
+                              if (context.mounted) {
+                                context.pushReplacementNamed(AppRouters.login);
+                              }
+                            },
+                          ),
+                          const Spacer(),
+                          // Footer
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: Text(
+                              _version,
+                              style: TextStyle(
+                                color: AppColors.white.withValues(alpha: 0.6),
+                                fontSize: 11.sp,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
+
               SizedBox(height: 10.h),
             ],
           ),

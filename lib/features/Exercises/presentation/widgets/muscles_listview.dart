@@ -79,14 +79,7 @@ class MusclesListView extends ConsumerWidget {
                       // HiveManager.workoutsBox.add(workoutNotifier.newWorkout);
 
                       if (context.mounted) {
-                        context.pushReplacementNamed(
-                          AppRouters.workouts,
-                          extra: {
-                            'showSuccessMessage': true,
-                            'workoutName': workoutNotifier.newWorkout.name
-                                .capitalizeWord(),
-                          },
-                        );
+                        context.pushReplacementNamed(AppRouters.workouts);
                       }
                     } else {
                       await workoutNotifier

@@ -19,6 +19,10 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
   bool selectMode = false;
 
+  // Success message state
+  bool shouldShowSuccessMessage = false;
+  String? successWorkoutName;
+
   WorkoutSetModel newWorkout = WorkoutSetModel(
     name: '',
     description: '',
@@ -37,6 +41,12 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     if (state.errorMessage != null) {
       state = ProviderStates();
     }
+  }
+
+  /// Consume the success message (call after showing it)
+  void consumeSuccessMessage() {
+    shouldShowSuccessMessage = false;
+    successWorkoutName = null;
   }
 
   bool createWorkoutBtnState() {
@@ -96,6 +106,9 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
         // Step 3: Update workout list
         workoutList = HiveManager.workoutsBox.values.toList();
       }
+
+      // Set success message flag
+      setSuccessMessage(newWorkout.name ?? 'Workout');
 
       state = ProviderStates(isSuccess: true);
     } catch (e, stackTrace) {
@@ -263,6 +276,12 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
       description: '',
       workoutItems: [],
     );
+  }
+
+  /// Set success message to be shown once
+  void setSuccessMessage(String workoutName) {
+    shouldShowSuccessMessage = true;
+    successWorkoutName = workoutName;
   }
 
   void toggleSelectMode() {

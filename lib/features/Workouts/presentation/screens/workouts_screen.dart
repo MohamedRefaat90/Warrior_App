@@ -18,14 +18,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/routers.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
-  final bool? showSuccessMessage;
-  final String? workoutName;
-
-  const WorkoutScreen({
-    super.key,
-    required this.showSuccessMessage,
-    this.workoutName,
-  });
+  const WorkoutScreen({super.key});
 
   @override
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
@@ -36,39 +29,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
   late final GlobalKey<FormState> _formKey;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialize controllers once
-    _nameController = TextEditingController();
-    _descriptionController = TextEditingController();
-    _formKey = GlobalKey<FormState>();
-
-    // Show success flushbar after the widget is built (only once per navigation)
-    if (widget.showSuccessMessage == true) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          showSuccessFlushbar(
-            context,
-            position: FlushbarPosition.BOTTOM,
-            widget.workoutName != null
-                ? 'Workout (${widget.workoutName}) added successfully!'
-                    .capitalizeWord()
-                : 'Workout added successfully!'.capitalizeWord(),
-          );
-        }
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    // Clean up controllers
-    _nameController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +147,40 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     super.didChangeDependencies();
     Future.microtask(() {
       ref.read(workoutsProvider.notifier).getWorkoutSets();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up controllers
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers once
+    _nameController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _formKey = GlobalKey<FormState>();
+
+    // Show success message from provider state (only once)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final workoutNotifier = ref.read(workoutsProvider.notifier);
+        if (workoutNotifier.shouldShowSuccessMessage) {
+          showSuccessFlushbar(
+            context,
+            position: FlushbarPosition.BOTTOM,
+            'Workout (${workoutNotifier.successWorkoutName}) added successfully!'
+                .capitalizeWord(),
+          );
+          // Consume the message so it won't show again
+          workoutNotifier.consumeSuccessMessage();
+        }
+      }
     });
   }
 }

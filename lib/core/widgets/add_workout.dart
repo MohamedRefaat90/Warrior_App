@@ -31,9 +31,6 @@ class AddWorkoutBtn extends ConsumerWidget {
               width: double.infinity,
               color: AppColors.primaryColor,
               press: () async {
-                // Store workout name for success message
-                final workoutName = workout.name;
-
                 // Fill and create the workout
                 workoutNotifier.fillNewWorkout(
                   name: workout.name,
@@ -42,15 +39,9 @@ class AddWorkoutBtn extends ConsumerWidget {
                 );
                 await workoutNotifier.createWorkoutSet();
 
-                // Navigate to workouts screen with success flag
+                // Navigate to workouts screen (success message is handled by provider)
                 if (context.mounted) {
-                  context.pushReplacement(
-                    AppRouters.workouts,
-                    extra: {
-                      'showSuccessMessage': true,
-                      'workoutName': workoutName.capitalizeWord(),
-                    },
-                  );
+                  context.pushReplacement(AppRouters.workouts);
                 }
               },
             ),

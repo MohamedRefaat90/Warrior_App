@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 /// Firebase background message handler
@@ -376,3 +377,10 @@ abstract class AppServices {
     }
   }
 }
+
+final config = RequestConfiguration(
+  tagForChildDirectedTreatment:
+      TagForChildDirectedTreatment.unspecified, // مش موجه للأطفال
+  maxAdContentRating:
+      MaxAdContentRating.pg, // إعلانات محترمة ومناسبة للمراهقين وما فوق
+);

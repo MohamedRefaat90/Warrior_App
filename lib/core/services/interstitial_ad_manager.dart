@@ -1,3 +1,4 @@
+import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -41,6 +42,8 @@ class InterstitialAdManager {
     if (_isLoaded || _isLoading) return;
 
     _isLoading = true;
+    await MobileAds.instance.updateRequestConfiguration(config);
+    await MobileAds.instance.initialize();
     TalkerService.info('Loading interstitial ad', 'INTERSTITIAL_AD');
 
     await InterstitialAd.load(

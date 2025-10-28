@@ -1,3 +1,4 @@
+import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -18,7 +19,11 @@ class AppOpenAdManager {
       ? 'ca-app-pub-3940256099942544/9257395921'
       : 'ca-app-pub-7417773148722475/1584778167';
 
-  void initialize() => loadAd();
+  Future<void> initialize() async {
+    await MobileAds.instance.updateRequestConfiguration(config);
+    await MobileAds.instance.initialize();
+    loadAd();
+  }
 
   Future<void> loadAd() async {
     if (_isLoaded || _isLoading) return;

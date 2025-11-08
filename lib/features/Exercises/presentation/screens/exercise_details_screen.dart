@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
@@ -21,45 +20,109 @@ class ExerciseDetailsScreen extends StatefulWidget {
   State<ExerciseDetailsScreen> createState() => _ExerciseDetailsScreenState();
 }
 
-class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
+class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen>
+    with SingleTickerProviderStateMixin {
   CachedVideoPlayerPlus? _player;
   bool _isVideoInitialized = false;
   bool _hasVideoError = false;
   String? _videoErrorMessage;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          const BannerAdWidget(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(10.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _ExerciseVideoPlayer(
-                      player: _player,
-                      isInitialized: _isVideoInitialized,
-                      hasError: _hasVideoError,
-                      errorMessage: _videoErrorMessage,
-                    ),
-                    SizedBox(height: 10.h),
-                    _ExerciseTitle(name: widget.exercise.name),
-                    SizedBox(height: 40.h),
-                    _TargetedMusclesImage(
-                      imageUrl: widget.exercise.targetedMuscles,
-                    ),
-                    SizedBox(height: 10.h),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: EdgeInsets.all(8.w),
+          decoration: BoxDecoration(
+            color: isDark
+                ? Colors.black.withOpacity(0.5)
+                : Colors.white.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: isDark ? Colors.white : Colors.black87,
+              size: 20,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [
+                    const Color(0xFF1a1a2e),
+                    const Color(0xFF16213e),
+                    const Color(0xFF0f3460),
+                  ]
+                : [
+                    const Color(0xFFf5f7fa),
+                    const Color(0xFFe8ecf1),
+                    const Color(0xFFdde3ea),
                   ],
+          ),
+        ),
+        child: Column(
+          children: [
+            const BannerAdWidget(),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 20.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 60.h),
+                          _ExerciseVideoPlayer(
+                            player: _player,
+                            isInitialized: _isVideoInitialized,
+                            hasError: _hasVideoError,
+                            errorMessage: _videoErrorMessage,
+                          ),
+                          SizedBox(height: 24.h),
+                          _ExerciseTitle(name: widget.exercise.name),
+                          SizedBox(height: 32.h),
+                          _TargetedMusclesSection(
+                            imageUrl: widget.exercise.targetedMuscles,
+                          ),
+                          SizedBox(height: 24.h),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -72,6 +135,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
   @override
   void dispose() {
+    _animationController.dispose();
     _player?.controller.pause();
     _player?.dispose();
     super.dispose();
@@ -81,6 +145,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
   void initState() {
     super.initState();
     _initializeVideoPlayer();
+    _setupAnimations();
   }
 
   void _initializeLocalVideo() {
@@ -209,6 +274,32 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       }
     }
   }
+
+  void _setupAnimations() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    _animationController.forward();
+  }
 }
 
 class _ExerciseTitle extends StatelessWidget {
@@ -218,15 +309,52 @@ class _ExerciseTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      name,
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontFamily: 'Poppins',
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [
+                  Colors.deepPurple.withOpacity(0.3),
+                  Colors.blue.withOpacity(0.2),
+                ]
+              : [
+                  Colors.white.withOpacity(0.9),
+                  Colors.white.withOpacity(0.7),
+                ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.05),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.deepPurple.withOpacity(0.2)
+                : Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Text(
+        name,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: isDark ? Colors.white : Colors.black87,
+          letterSpacing: 0.5,
+          height: 1.3,
+        ),
       ),
     );
   }
@@ -247,16 +375,66 @@ class _ExerciseVideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200.h,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.black, width: 3),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: _buildVideoContent(),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Hero(
+      tag: 'exercise_video',
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [
+                    Colors.deepPurple.withOpacity(0.3),
+                    Colors.blue.withOpacity(0.2),
+                  ]
+                : [
+                    Colors.white,
+                    Colors.grey.shade50,
+                  ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.deepPurple.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.15),
+              blurRadius: 30,
+              offset: const Offset(0, 10),
+              spreadRadius: -5,
+            ),
+            BoxShadow(
+              color: isDark
+                  ? Colors.blue.withOpacity(0.2)
+                  : Colors.black.withOpacity(0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: _buildVideoContent(),
+            ),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withOpacity(0.1)
+                        : Colors.black.withOpacity(0.05),
+                    width: 1.5,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -307,26 +485,54 @@ class _ImagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      width: 200.w,
-      height: 150.h,
-      color: Colors.grey[200],
-      child: const Column(
+      width: 220.w,
+      height: 180.h,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  Colors.grey.shade800,
+                  Colors.grey.shade900,
+                ]
+              : [
+                  Colors.grey.shade100,
+                  Colors.grey.shade200,
+                ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.image_not_supported, size: 48, color: Colors.grey),
-          SizedBox(height: 8),
-          Text('Image not available'),
+          Icon(
+            Icons.image_not_supported_rounded,
+            size: 48,
+            color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            'Image not available',
+            style: TextStyle(
+              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _TargetedMusclesImage extends StatelessWidget {
+class _TargetedMusclesSection extends StatelessWidget {
   final String imageUrl;
 
-  const _TargetedMusclesImage({required this.imageUrl});
+  const _TargetedMusclesSection({required this.imageUrl});
 
   bool get _isNetworkUrl {
     return imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
@@ -334,37 +540,107 @@ class _TargetedMusclesImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _isNetworkUrl
-            ? CachedNetworkImage(
-                imageUrl: imageUrl,
-                width: 200.w,
-                alignment: Alignment.center,
-                memCacheWidth: 300,
-                memCacheHeight: 300,
-                maxWidthDiskCache: 400,
-                maxHeightDiskCache: 400,
-                fadeInDuration: const Duration(milliseconds: 200),
-                placeholder: (context, url) => const CustomLoadingWidget(),
-                errorWidget: (context, url, error) =>
-                    _ImageErrorWidget(imageUrl: imageUrl),
-              )
-            : Image.file(
-                File(imageUrl),
-                width: 200.w,
-                errorBuilder: (context, error, stackTrace) =>
-                    const _ImagePlaceholder(),
-              ),
-        const SizedBox(height: 8),
-        const Text(
-          'Targeted Muscles',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  Colors.deepPurple.withOpacity(0.2),
+                  Colors.blue.withOpacity(0.15),
+                ]
+              : [
+                  Colors.white.withOpacity(0.9),
+                  Colors.white.withOpacity(0.6),
+                ],
         ),
-      ],
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.05),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.deepPurple.withOpacity(0.2)
+                : Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.fitness_center_rounded,
+                color: isDark ? Colors.deepPurpleAccent : Colors.deepPurple,
+                size: 24,
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                'Targeted Muscles',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          Container(
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.white.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.black.withOpacity(0.03),
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: _isNetworkUrl
+                  ? CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      width: 220.w,
+                      alignment: Alignment.center,
+                      memCacheWidth: 300,
+                      memCacheHeight: 300,
+                      maxWidthDiskCache: 400,
+                      maxHeightDiskCache: 400,
+                      fadeInDuration: const Duration(milliseconds: 300),
+                      placeholder: (context, url) => SizedBox(
+                        width: 220.w,
+                        height: 180.h,
+                        child: const CustomLoadingWidget(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          _ImageErrorWidget(imageUrl: imageUrl),
+                    )
+                  : Image.file(
+                      File(imageUrl),
+                      width: 220.w,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const _ImagePlaceholder(),
+                    ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -376,21 +652,60 @@ class _VideoErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      color: Colors.grey[200],
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  Colors.red.withOpacity(0.2),
+                  Colors.redAccent.withOpacity(0.1),
+                ]
+              : [
+                  Colors.red.shade50,
+                  Colors.red.shade100,
+                ],
+        ),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: Colors.red),
-          const SizedBox(height: 8),
-          const Text('Video Error'),
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? Colors.red.withOpacity(0.2)
+                  : Colors.white.withOpacity(0.7),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.error_outline_rounded,
+              size: 48,
+              color: isDark ? Colors.redAccent : Colors.red.shade700,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            'Video Error',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.red.shade900,
+            ),
+          ),
           if (errorMessage != null) ...[
-            const SizedBox(height: 4),
+            SizedBox(height: 8.h),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Text(
                 errorMessage!,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isDark ? Colors.white70 : Colors.red.shade700,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),

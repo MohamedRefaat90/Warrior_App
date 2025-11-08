@@ -120,6 +120,7 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
                 theme: ThemeData(
                   colorScheme: ColorScheme.fromSeed(
                     seedColor: const Color.fromARGB(255, 168, 11, 11),
+                    brightness: Brightness.light,
                   ),
                   useMaterial3: true,
                 ),

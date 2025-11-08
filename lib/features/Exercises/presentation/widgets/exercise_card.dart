@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/download_indicator.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -100,6 +101,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                     },
                   ),
                 ),
+              // Download indicator banner
+              DownloadIndicatorBanner(exercise: widget.exercise),
             ],
           ),
         ),

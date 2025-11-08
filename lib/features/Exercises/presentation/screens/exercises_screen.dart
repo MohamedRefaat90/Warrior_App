@@ -1,8 +1,9 @@
 import 'package:Warrior/core/network/connectivity.dart';
-import 'package:Warrior/core/services/cache_manager.dart';
+import 'package:Warrior/core/providers/cache_provider.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/download_progress_indicator.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercises_gridview.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
@@ -46,12 +47,22 @@ class ExercisesScreen extends ConsumerWidget {
             ? ref.watch(muscleExerciseProvider(muscle['id'])).when(
                 loading: () => const Loader(),
                 data: (exercises) {
-                  DataManager.preloadAndSaveData(
-                      HiveManager.exercisesBox, exercises);
-                  return ExercisesGridView(
-                      exercises: exercises,
-                      isComingFromWorkoutScreen:
-                          isComingFromWorkoutScreen ?? false);
+                  // Start async caching without blocking UI
+                  ref
+                      .read(cacheProgressProvider.notifier)
+                      .startCaching(exercises: exercises);
+
+                  return Stack(
+                    children: [
+                      ExercisesGridView(
+                        exercises: exercises,
+                        isComingFromWorkoutScreen:
+                            isComingFromWorkoutScreen ?? false,
+                      ),
+                      // Global progress indicator overlay
+                      const DownloadProgressIndicator(),
+                    ],
+                  );
                 },
                 error: (error, stackTrace) => Center(
                       child: Column(

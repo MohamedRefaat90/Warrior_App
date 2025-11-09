@@ -171,6 +171,11 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     state = ProviderStates(isSuccess: true);
   }
 
+  /// Notify listeners that workout items have changed
+  void notifyWorkoutItemsChanged() {
+    state = ProviderStates(isSuccess: true);
+  }
+
   void fillNewWorkout({
     String? name,
     String? description,

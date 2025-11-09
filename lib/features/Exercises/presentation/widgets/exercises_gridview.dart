@@ -22,7 +22,7 @@ class ExercisesGridView extends ConsumerStatefulWidget {
 class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
   @override
   Widget build(BuildContext context) {
-    ref.watch(workoutsProvider);
+    final isSelectMode = widget.isComingFromWorkoutScreen == true;
 
     // Split exercises: first 4, then the rest
     final firstFourExercises = widget.exercises.take(4).toList();
@@ -39,8 +39,7 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
               (context, index) {
                 return ExerciseCard(
                   exercise: firstFourExercises[index],
-                  isComingFromWorkoutScreen:
-                      ref.watch(workoutsProvider.notifier).selectMode,
+                  isComingFromWorkoutScreen: isSelectMode,
                 );
               },
               childCount: firstFourExercises.length,
@@ -69,8 +68,7 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
                 (context, index) {
                   return ExerciseCard(
                     exercise: remainingExercises[index],
-                    isComingFromWorkoutScreen:
-                        ref.watch(workoutsProvider.notifier).selectMode,
+                    isComingFromWorkoutScreen: isSelectMode,
                   );
                 },
                 childCount: remainingExercises.length,

@@ -108,51 +108,65 @@ class ExercisesScreen extends ConsumerWidget {
                       ],
                     ),
                   )
-                : () {
-                    final filteredExercises = HiveManager.exercisesBox.values
-                        .where((exercise) => exercise.muscleID == muscle['id'])
-                        .toList();
-
-                    if (filteredExercises.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.fitness_center,
-                              size: 64,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              "No ${muscle['name']} exercises available offline",
-                              style: TextStyle(
-                                  fontFamily: "poppins",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "Go online to get ${muscle['name']} exercises",
-                              style: TextStyle(
-                                  fontFamily: "poppins",
-                                  fontSize: 16,
-                                  color: Colors.grey[600]),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    return ExercisesGridView(
-                      exercises: filteredExercises,
-                      isComingFromWorkoutScreen:
-                          isComingFromWorkoutScreen ?? false,
-                    );
-                  }(),
+                : _OfflineExercisesView(
+                    muscle: muscle,
+                    isComingFromWorkoutScreen:
+                        isComingFromWorkoutScreen ?? false,
+                  ),
       ),
+    );
+  }
+}
+
+class _OfflineExercisesView extends ConsumerWidget {
+  final Map muscle;
+  final bool isComingFromWorkoutScreen;
+
+  const _OfflineExercisesView({
+    required this.muscle,
+    required this.isComingFromWorkoutScreen,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filteredExercises = HiveManager.exercisesBox.values
+        .where((exercise) => exercise.muscleID == muscle['id'])
+        .toList();
+
+    if (filteredExercises.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.fitness_center,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              "No ${muscle['name']} exercises available offline",
+              style: TextStyle(
+                  fontFamily: "poppins",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Go online to get ${muscle['name']} exercises",
+              style: TextStyle(
+                  fontFamily: "poppins", fontSize: 16, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ExercisesGridView(
+      exercises: filteredExercises,
+      isComingFromWorkoutScreen: isComingFromWorkoutScreen,
     );
   }
 }

@@ -27,7 +27,9 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   bool isSelected = false;
   @override
   Widget build(BuildContext context) {
+    final selectMode = widget.isComingFromWorkoutScreen == true;
     final workoutsNotifier = ref.read(workoutsProvider.notifier);
+
     return RepaintBoundary(
       child: GestureDetector(
         onTap: () => context.pushNamed(AppRouters.exerciseDetails,
@@ -77,8 +79,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   ),
                 ],
               ),
-              if (widget.isComingFromWorkoutScreen! &&
-                  ref.watch(workoutsProvider.notifier).selectMode)
+              if (selectMode)
                 Positioned(
                   top: 0,
                   left: 0,
@@ -89,15 +90,16 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                         isSelected = value!;
                       });
 
-                      isSelected
-                          ? workoutsNotifier.newWorkout.workoutItems!
-                              .add(WorkoutItemModel(
-                              exercise: widget.exercise,
-                              lastWeight: 0,
-                            ))
-                          : workoutsNotifier.newWorkout.workoutItems!
-                              .removeWhere(
-                                  (e) => e.exercise.id == widget.exercise.id);
+                      if (isSelected) {
+                        workoutsNotifier.newWorkout.workoutItems!
+                            .add(WorkoutItemModel(
+                          exercise: widget.exercise,
+                          lastWeight: 0,
+                        ));
+                      } else {
+                        workoutsNotifier.newWorkout.workoutItems!.removeWhere(
+                            (e) => e.exercise.id == widget.exercise.id);
+                      }
                     },
                   ),
                 ),

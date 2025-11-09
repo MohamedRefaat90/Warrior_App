@@ -83,12 +83,18 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                           press: () async {
                             final newWeight = await showModalBottomSheet<num>(
                                 context: context,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                  ),
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height * 0.7,
                                 ),
+                                // shape: const RoundedRectangleBorder(
+                                //   borderRadius: BorderRadius.only(
+                                //     topLeft: Radius.circular(20),
+                                //     topRight: Radius.circular(20),
+                                //   ),
+                                // ),
                                 builder: (context) => LastWeightSelector(
                                     workoutID: widget.workout.id!,
                                     workoutExercise: workoutExercise));

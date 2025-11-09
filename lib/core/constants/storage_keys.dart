@@ -10,4 +10,5 @@ class StorageKeys {
   static String numberOfWorkouts = 'numberOfWorkouts';
   static String isRating = 'isRating';
   static String caloriesCalculatorData = 'caloriesCalculatorData';
+  static String isGridView = 'isGridView';
 }

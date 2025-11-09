@@ -14,31 +14,34 @@ class OfflineView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.wifi_off,
-            size: 64,
-            color: Colors.grey,
-          ),
-          SizedBox(height: 16),
-          Text(
-            title.capitalizeWord(),
-            style: TextStyle(
-                fontFamily: "poppins",
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 8),
-          Text(
-            subtitle.capitalizeWord(),
-            style: TextStyle(
-                fontFamily: "poppins", fontSize: 16, color: Colors.grey[600]),
-            textAlign: TextAlign.center,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 1),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.wifi_off,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              title.capitalizeWord(),
+              style: TextStyle(
+                  fontFamily: "poppins",
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 8),
+            Text(
+              subtitle.capitalizeWord(),
+              style: TextStyle(
+                  fontFamily: "poppins", fontSize: 16, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

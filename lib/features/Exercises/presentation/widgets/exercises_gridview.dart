@@ -1,3 +1,4 @@
+import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
@@ -51,7 +52,7 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
             ),
           ),
           // Native ad after first 4 items (full width)
-          if (widget.exercises.length > 4)
+          if (widget.exercises.length > 4 && ConnectivityChecker.isOnline!)
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),

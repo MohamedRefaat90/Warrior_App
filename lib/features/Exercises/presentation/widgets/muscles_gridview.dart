@@ -1,0 +1,182 @@
+import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/grid_muscle_card.dart';
+import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+class MusclesGridView extends ConsumerWidget {
+  final List<MuscleModel> muscles;
+  final bool? isComingFromWorkoutScreen;
+  final bool? appendToExistingWorkoutSet;
+
+  const MusclesGridView({
+    super.key,
+    required this.muscles,
+    this.isComingFromWorkoutScreen,
+    this.appendToExistingWorkoutSet,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final workoutNotifier = ref.read(workoutsProvider.notifier);
+    final workoutProviderState = ref.watch(workoutsProvider);
+    final primaryColor = Color.fromARGB(255, 19, 67, 139);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.85,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemCount: muscles.length - 1,
+              itemBuilder: (context, index) {
+                final muscle = muscles[index];
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: Duration(milliseconds: 300 + (index * 50)),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, child) {
+                    return Transform.scale(
+                      scale: value,
+                      child: Opacity(
+                        opacity: value,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: GridMuscleCard(
+                      muscle: muscle,
+                      isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                      isDark: isDark,
+                      primaryColor: primaryColor),
+                );
+              },
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: GridMuscleCard(
+                  muscle: muscles.last,
+                  isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                  isDark: isDark,
+                  primaryColor: primaryColor),
+            ),
+            const SizedBox(height: 16),
+            if (isComingFromWorkoutScreen == true &&
+                (workoutNotifier.newWorkout.workoutItems == null ||
+                    workoutNotifier.newWorkout.workoutItems!.isEmpty))
+              Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.red.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.warning_rounded, color: Colors.red.shade700),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        "You must add at least one exercise",
+                        style: TextStyle(
+                          color: Colors.red.shade700,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            const SizedBox(height: 12),
+            if (isComingFromWorkoutScreen ?? false)
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      primaryColor,
+                      primaryColor.withOpacity(0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: primaryColor.withOpacity(0.4),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: (workoutNotifier.newWorkout.workoutItems == null ||
+                            workoutNotifier.newWorkout.workoutItems!.isEmpty)
+                        ? null
+                        : () async {
+                            if (!appendToExistingWorkoutSet!) {
+                              await workoutNotifier.createWorkoutSet();
+                              if (context.mounted) {
+                                context
+                                    .pushReplacementNamed(AppRouters.workouts);
+                              }
+                            } else {
+                              await workoutNotifier
+                                  .updateWorkoutSet(workoutNotifier.newWorkout);
+                              if (context.mounted) {
+                                context.pop();
+                              }
+                            }
+                          },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Center(
+                        child: workoutProviderState.isLoading
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                appendToExistingWorkoutSet!
+                                    ? "Update Your Workout Set"
+                                    : "Finish Your Workout Set",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+}

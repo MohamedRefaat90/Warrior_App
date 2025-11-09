@@ -1,3 +1,4 @@
+import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Predefined_workouts/domain/entities/workout_group.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_group_tile.dart';
@@ -38,7 +39,7 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
       itemCount: widget.workoutGroups.length,
       separatorBuilder: (context, index) {
         // Show native ad after the first group
-        if (index == 0) {
+        if (index == 0 && ConnectivityChecker.isOnline!) {
           return Column(
             children: [
               SizedBox(height: 16.h),

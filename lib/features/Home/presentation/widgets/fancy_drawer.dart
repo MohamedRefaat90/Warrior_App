@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/features/Home/presentation/widgets/animated_toggle_switcher.dart';
 import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart';
 import 'package:Warrior/features/Home/presentation/widgets/fancy_drawer_item.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 30.h),
+              // SizedBox(height: 30.h),
               // Premium Logo Section with Glow Effect
               Stack(
                 alignment: Alignment.center,
@@ -91,7 +92,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   ),
                 ],
               ),
-              SizedBox(height: 10.h),
+              // SizedBox(height: 10.h),
               // Animated Title
               ShaderMask(
                 shaderCallback: (bounds) => LinearGradient(
@@ -118,7 +119,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   ),
                 ),
               ),
-              SizedBox(height: 8.h),
+              // SizedBox(height: 8.h),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
                 decoration: BoxDecoration(
@@ -139,7 +140,43 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
+              // Theme Switcher Section
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 12.w),
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: AppColors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: AppColors.white.withValues(alpha: 0.3),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withValues(alpha: 0.1),
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Dark Mode',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const AnimatedToggleSwitcher()
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.h),
               // Glass Menu Items
               Expanded(
                 child: Container(
@@ -238,7 +275,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                           const Spacer(),
                           // Footer
                           Padding(
-                            padding: EdgeInsets.only(bottom: 20.h),
+                            padding: EdgeInsets.only(bottom: 10.h),
                             child: Text(
                               _version,
                               style: TextStyle(

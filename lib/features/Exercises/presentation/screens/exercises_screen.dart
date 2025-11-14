@@ -1,5 +1,4 @@
 import 'package:Warrior/core/network/connectivity.dart';
-import 'package:Warrior/core/providers/cache_provider.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
@@ -47,11 +46,8 @@ class ExercisesScreen extends ConsumerWidget {
             ? ref.watch(muscleExerciseProvider(muscle['id'])).when(
                 loading: () => const Loader(),
                 data: (exercises) {
-                  // Start async caching without blocking UI
-                  ref
-                      .read(cacheProgressProvider.notifier)
-                      .startCaching(exercises: exercises);
-
+                  // Exercises are already being cached from muscles screen
+                  // Just display them
                   return Stack(
                     children: [
                       ExercisesGridView(
@@ -59,7 +55,7 @@ class ExercisesScreen extends ConsumerWidget {
                         isComingFromWorkoutScreen:
                             isComingFromWorkoutScreen ?? false,
                       ),
-                      // Global progress indicator overlay
+                      // Keep indicator to show ongoing cache progress
                       const DownloadProgressIndicator(),
                     ],
                   );

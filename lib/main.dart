@@ -4,6 +4,8 @@ import 'package:Warrior/core/services/app_open_ad_manager.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/theme/app_theme.dart';
+import 'package:Warrior/core/theme/theme_provider.dart';
 import 'package:Warrior/routing.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
@@ -105,6 +107,9 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
     // Initialize connectivity checker
     ConnectivityChecker.initialize(ref);
 
+    // Watch theme mode from provider
+    final themeMode = ref.watch(themeModeProvider);
+
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
@@ -117,13 +122,9 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
               MaterialApp.router(
                 title: 'Warrior',
                 debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: const Color.fromARGB(255, 168, 11, 11),
-                    brightness: Brightness.light,
-                  ),
-                  useMaterial3: true,
-                ),
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeMode,
                 routerConfig: RoutersManager.router,
                 // DevicePreview configuration
                 locale:

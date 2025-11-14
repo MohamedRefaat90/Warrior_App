@@ -90,8 +90,9 @@ class CacheProgressNotifier extends Notifier<CacheProgress> {
   /// Start caching exercises
   Future<void> startCaching({
     required List<ExerciseModel> exercises,
+    bool force = false,
   }) async {
-    if (state.status == CacheStatus.downloading) {
+    if (state.status == CacheStatus.downloading && !force) {
       // Already downloading, skip
       return;
     }

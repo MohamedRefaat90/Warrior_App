@@ -73,7 +73,7 @@ class FancyDrawerItem extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 9.sp,
                       color: AppColors.white.withValues(alpha: 0.8),
                     ),
                   ),

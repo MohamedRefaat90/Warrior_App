@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/providers/cache_provider.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
@@ -9,7 +10,9 @@ import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
+import 'package:Warrior/features/Exercises/data/repo/exercises_repo.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/download_progress_indicator.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/error_card.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_gridview.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
@@ -19,6 +22,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+class MusclesContent extends StatelessWidget {
+  final List<MuscleModel> muscles;
+  final bool isGridView;
+  final bool isComingFromWorkoutScreen;
+  final bool appendToExistingWorkoutSet;
+  const MusclesContent(
+      {super.key,
+      required this.muscles,
+      required this.isGridView,
+      required this.isComingFromWorkoutScreen,
+      required this.appendToExistingWorkoutSet});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 400),
+      switchInCurve: Curves.easeInOut,
+      switchOutCurve: Curves.easeInOut,
+      transitionBuilder: (child, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
+            child: child,
+          ),
+        );
+      },
+      child: Container(
+        key: ValueKey(isGridView),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(32),
+            topRight: Radius.circular(32),
+          ),
+        ),
+        child: isGridView
+            ? MusclesGridView(
+                muscles: muscles,
+                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+              )
+            : MusclesListView(
+                muscles: muscles,
+                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+              ),
+      ),
+    );
+  }
+}
 
 class MusclesScreen extends ConsumerStatefulWidget {
   final bool isComingFromWorkoutScreen;
@@ -110,6 +164,13 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                                   data: (muscles) {
                                     HiveManager.saveToHive(
                                         HiveManager.musclesBox, muscles);
+
+                                    // Start caching all exercises in the background
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      _startCachingAllExercises(ref, muscles);
+                                    });
+
                                     return MusclesContent(
                                         muscles: muscles,
                                         isGridView: _isGridView,
@@ -150,6 +211,8 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                   ),
                 ],
               ),
+              // Global progress indicator
+              const DownloadProgressIndicator(),
             ],
           ),
         ),
@@ -208,55 +271,24 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
       }
     });
   }
-}
 
-class MusclesContent extends StatelessWidget {
-  final List<MuscleModel> muscles;
-  final bool isGridView;
-  final bool isComingFromWorkoutScreen;
-  final bool appendToExistingWorkoutSet;
-  const MusclesContent(
-      {super.key,
-      required this.muscles,
-      required this.isGridView,
-      required this.isComingFromWorkoutScreen,
-      required this.appendToExistingWorkoutSet});
+  /// Start caching all exercises for all muscles in the background
+  Future<void> _startCachingAllExercises(
+    WidgetRef ref,
+    List<MuscleModel> muscles,
+  ) async {
+    try {
+      final muscleIds = muscles.map((m) => m.id).toList();
+      final allExercises =
+          await ref.read(exercisesRepo).getAllExercises(muscleIds: muscleIds);
 
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
-      switchInCurve: Curves.easeInOut,
-      switchOutCurve: Curves.easeInOut,
-      transitionBuilder: (child, animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(
-            scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
-            child: child,
-          ),
-        );
-      },
-      child: Container(
-        key: ValueKey(isGridView),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(32),
-            topRight: Radius.circular(32),
-          ),
-        ),
-        child: isGridView
-            ? MusclesGridView(
-                muscles: muscles,
-                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-              )
-            : MusclesListView(
-                muscles: muscles,
-                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-              ),
-      ),
-    );
+      if (allExercises.isNotEmpty) {
+        ref
+            .read(cacheProgressProvider.notifier)
+            .startCaching(exercises: allExercises);
+      }
+    } catch (e) {
+      TalkerService.error('Failed to start caching all exercises', 'CACHE', e);
+    }
   }
 }

@@ -96,14 +96,32 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
   @override
   void deactivate() {
-    _player?.controller.pause();
+    try {
+      if (_player != null && _isVideoInitialized) {
+        _player!.controller.pause();
+      }
+    } catch (e) {
+      TalkerService.warning(
+        'Error pausing video in deactivate',
+        'EXERCISE_DETAILS',
+      );
+    }
     super.deactivate();
   }
 
   @override
   void dispose() {
-    _player?.controller.pause();
-    _player?.dispose();
+    try {
+      if (_player != null && _isVideoInitialized) {
+        _player!.controller.pause();
+      }
+      _player?.dispose();
+    } catch (e) {
+      TalkerService.warning(
+        'Error disposing video player',
+        'EXERCISE_DETAILS',
+      );
+    }
     super.dispose();
   }
 
@@ -123,16 +141,24 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       );
 
       _player!.initialize().then((_) {
-        if (mounted) {
+        if (mounted && _player != null) {
           setState(() => _isVideoInitialized = true);
-          _player!.controller
-            ..setVolume(0)
-            ..play()
-            ..setLooping(true);
-          TalkerService.info(
-            'Local video initialized successfully',
-            'EXERCISE_DETAILS',
-          );
+          try {
+            _player!.controller
+              ..setVolume(0)
+              ..play()
+              ..setLooping(true);
+            TalkerService.info(
+              'Local video initialized successfully',
+              'EXERCISE_DETAILS',
+            );
+          } catch (e) {
+            TalkerService.error(
+              'Error configuring local video after initialization',
+              'EXERCISE_DETAILS',
+              e,
+            );
+          }
         }
       }).catchError((error) {
         TalkerService.error(
@@ -176,16 +202,24 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       );
 
       _player!.initialize().then((_) {
-        if (mounted) {
+        if (mounted && _player != null) {
           setState(() => _isVideoInitialized = true);
-          _player!.controller
-            ..setVolume(0)
-            ..play()
-            ..setLooping(true);
-          TalkerService.info(
-            'Network video initialized successfully',
-            'EXERCISE_DETAILS',
-          );
+          try {
+            _player!.controller
+              ..setVolume(0)
+              ..play()
+              ..setLooping(true);
+            TalkerService.info(
+              'Network video initialized successfully',
+              'EXERCISE_DETAILS',
+            );
+          } catch (e) {
+            TalkerService.error(
+              'Error configuring network video after initialization',
+              'EXERCISE_DETAILS',
+              e,
+            );
+          }
         }
       }).catchError((error) {
         TalkerService.error(
@@ -364,10 +398,19 @@ class _ExerciseVideoPlayer extends StatelessWidget {
       return const Center(child: CustomLoadingWidget());
     }
 
-    return AspectRatio(
-      aspectRatio: player!.controller.value.aspectRatio,
-      child: VideoPlayer(player!.controller),
-    );
+    // Additional safety check for controller initialization
+    try {
+      final controller = player!.controller;
+      final aspectRatio = controller.value.aspectRatio;
+
+      return AspectRatio(
+        aspectRatio: aspectRatio,
+        child: VideoPlayer(controller),
+      );
+    } catch (e) {
+      // If controller is not properly initialized, show loading
+      return const Center(child: CustomLoadingWidget());
+    }
   }
 }
 

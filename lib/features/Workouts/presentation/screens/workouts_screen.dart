@@ -220,7 +220,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               },
               child: Padding(
                 padding: EdgeInsets.only(bottom: 12.h),
-                child: WorkoutsListview(
+                child: WorkoutsListView(
                   workoutNotifier.workoutList,
                   _nameController,
                   _descriptionController,
@@ -236,7 +236,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   void _showCreateWorkoutDialog(BuildContext context) {
     final workoutNotifier = ref.watch(workoutsProvider.notifier);
-
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     _nameController.clear();
     _descriptionController.clear();
 
@@ -289,9 +289,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                     SizedBox(width: 12.w),
                     Expanded(
                       child: Text(
-                        'Create Workout Set',
+                        'New Workout Set',
                         style: TextStyle(
-                          fontSize: 20.sp,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -308,9 +308,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                         Text(
                           'Workout Name',
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey[700],
+                            color: isDark ? AppColors.white : AppColors.black,
                           ),
                         ),
                         SizedBox(height: 8.h),
@@ -326,9 +326,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                         Text(
                           'Description (Optional)',
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey[700],
+                            color: isDark ? AppColors.white : AppColors.black,
                           ),
                         ),
                         SizedBox(height: 8.h),

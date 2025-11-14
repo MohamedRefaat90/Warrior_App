@@ -5,16 +5,20 @@ import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/weight_chip.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+const double _maxWeightValue = 999;
+
 class LastWeightSelector extends ConsumerStatefulWidget {
   final WorkoutItemModel workoutExercise;
-  final int workoutID;
+  final WorkoutSetModel workout;
+
   const LastWeightSelector({
     super.key,
     required this.workoutExercise,
-    required this.workoutID,
+    required this.workout,
   });
 
   @override
@@ -29,6 +33,7 @@ class LastWeightSelectorState extends ConsumerState<LastWeightSelector>
   late final AnimationController _animationController;
   late final Animation<double> _fadeAnimation;
   bool _isCustomWeightSelected = false;
+  String? _validationError;
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +76,31 @@ class LastWeightSelectorState extends ConsumerState<LastWeightSelector>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader(context, isDark, colorScheme),
-              Expanded(
-                child: _buildWeightList(isMachine),
+              _WeightSelectorHeader(
+                exerciseName: widget.workoutExercise.exercise.name,
+                lastWeight: widget.workoutExercise.lastWeight,
+                equipmentType: equipmentType ?? "free",
               ),
-              _buildCustomWeightSection(
-                  context, isDark, colorScheme, isMachine),
-              _buildActionButton(context, colorScheme),
+              Expanded(
+                child: _WeightList(
+                  isMachine: isMachine,
+                  selectedWeight: _isCustomWeightSelected ? -1 : selectedWeight,
+                  onWeightSelected: _updateWeight,
+                ),
+              ),
+              _CustomWeightInput(
+                controller: _customWeightController,
+                focusNode: _customWeightFocusNode,
+                isMachine: isMachine,
+                isDark: isDark,
+                isSelected: _isCustomWeightSelected,
+                validationError: _validationError,
+                onTap: _selectCustomWeight,
+                onChanged: _updateCustomWeight,
+              ),
+              _UpdateWeightButton(
+                onPressed: _handleUpdateWeight,
+              ),
             ],
           ),
         ),
@@ -113,30 +136,390 @@ class LastWeightSelectorState extends ConsumerState<LastWeightSelector>
     _animationController.forward();
   }
 
-  void selectCustomWeight() {
+  void _handleUpdateWeight() {
+    // Validate before updating
+    if (_validationError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_validationError!),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    ref.read(workoutsProvider.notifier).updateLastWeight(
+          widget.workout.id,
+          widget.workoutExercise.exercise.id,
+          selectedWeight,
+          workout: widget.workout,
+        );
+    Navigator.pop(context, selectedWeight);
+  }
+
+  void _selectCustomWeight() {
     setState(() {
       _isCustomWeightSelected = true;
     });
   }
 
-  void updateCustomWeight(String value) {
+  void _updateCustomWeight(String value) {
     final weight = num.tryParse(value);
-    if (weight != null && weight > 0) {
+
+    if (weight == null || value.isEmpty) {
       setState(() {
-        selectedWeight = weight;
+        _validationError = null;
       });
+      return;
     }
+
+    if (weight <= 0) {
+      setState(() {
+        _validationError = 'Weight must be greater than 0';
+      });
+      return;
+    }
+
+    if (weight > _maxWeightValue) {
+      setState(() {
+        _validationError = 'Weight cannot exceed $_maxWeightValue';
+      });
+      return;
+    }
+
+    setState(() {
+      selectedWeight = weight;
+      _validationError = null;
+    });
   }
 
-  void updateWeight(num weight) {
+  void _updateWeight(num weight) {
     setState(() {
       selectedWeight = weight;
       _isCustomWeightSelected = false;
       _customWeightController.clear();
+      _validationError = null;
     });
   }
+}
 
-  Widget _buildActionButton(BuildContext context, ColorScheme colorScheme) {
+/// Badge showing the current/last weight
+class _CurrentWeightIndicator extends StatelessWidget {
+  final num lastWeight;
+  final String equipmentType;
+
+  const _CurrentWeightIndicator({
+    required this.lastWeight,
+    required this.equipmentType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.history_rounded,
+            color: Colors.white,
+            size: 16.sp,
+          ),
+          SizedBox(width: 6.w),
+          Text(
+            "Last: $lastWeight ${equipmentType == "machine" ? "Bar" : "KG"}",
+            style: TextStyle(
+              fontFamily: "poppins",
+              fontWeight: FontWeight.w600,
+              fontSize: 12.sp,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Header for custom weight section
+class _CustomWeightHeader extends StatelessWidget {
+  final bool isDark;
+
+  const _CustomWeightHeader({required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            Icons.edit_rounded,
+            color: AppColors.primaryColor,
+            size: 18.sp,
+          ),
+        ),
+        SizedBox(width: 10.w),
+        Text(
+          "Custom Weight",
+          style: TextStyle(
+            fontFamily: "poppins",
+            fontWeight: FontWeight.w700,
+            fontSize: 14.sp,
+            color: isDark ? Colors.white : Colors.grey.shade800,
+            letterSpacing: 0.3,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Custom weight input field
+class _CustomWeightInput extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final bool isMachine;
+  final bool isDark;
+  final bool isSelected;
+  final String? validationError;
+  final VoidCallback onTap;
+  final void Function(String) onChanged;
+
+  const _CustomWeightInput({
+    required this.controller,
+    required this.focusNode,
+    required this.isMachine,
+    required this.isDark,
+    required this.isSelected,
+    required this.validationError,
+    required this.onTap,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+      padding: EdgeInsets.all(8.w),
+      decoration: BoxDecoration(
+        color: isDark ? colorScheme.surface : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: validationError != null
+              ? Colors.red
+              : isSelected
+                  ? AppColors.primaryColor.withOpacity(0.5)
+                  : Colors.grey.shade200,
+          width: isSelected || validationError != null ? 2 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: validationError != null
+                ? Colors.red.withOpacity(0.15)
+                : isSelected
+                    ? AppColors.primaryColor.withOpacity(0.15)
+                    : Colors.black.withOpacity(0.05),
+            blurRadius: isSelected ? 12 : 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CustomWeightHeader(isDark: isDark),
+          SizedBox(height: 12.h),
+          _CustomWeightTextField(
+            controller: controller,
+            focusNode: focusNode,
+            isMachine: isMachine,
+            isDark: isDark,
+            isSelected: isSelected,
+            hasError: validationError != null,
+            onTap: onTap,
+            onChanged: onChanged,
+          ),
+          if (validationError != null) ...[
+            SizedBox(height: 8.h),
+            _ValidationErrorText(error: validationError!),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Text field for custom weight input
+class _CustomWeightTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final bool isMachine;
+  final bool isDark;
+  final bool isSelected;
+  final bool hasError;
+  final VoidCallback onTap;
+  final void Function(String) onChanged;
+
+  const _CustomWeightTextField({
+    required this.controller,
+    required this.focusNode,
+    required this.isMachine,
+    required this.isDark,
+    required this.isSelected,
+    required this.hasError,
+    required this.onTap,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      focusNode: focusNode,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+      ],
+      onTap: onTap,
+      onChanged: onChanged,
+      style: TextStyle(
+        fontFamily: "poppins",
+        fontWeight: FontWeight.w600,
+        fontSize: 16.sp,
+      ),
+      decoration: InputDecoration(
+        hintText: "Enter weight value",
+        hintStyle: TextStyle(
+          fontFamily: "poppins",
+          fontSize: 12.sp,
+          color: Colors.grey.shade400,
+        ),
+        suffixIcon: _WeightUnitBadge(isMachine: isMachine),
+        filled: true,
+        fillColor: isDark
+            ? Colors.grey.shade800.withOpacity(0.3)
+            : Colors.grey.shade50,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: hasError
+                ? Colors.red.withOpacity(0.3)
+                : isSelected
+                    ? AppColors.primaryColor.withOpacity(0.3)
+                    : Colors.transparent,
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: hasError ? Colors.red : AppColors.primaryColor,
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Colors.red,
+            width: 2,
+          ),
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 14.h,
+        ),
+      ),
+    );
+  }
+}
+
+/// Icon displayed in the header
+class _HeaderIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Icon(
+        Icons.fitness_center_rounded,
+        color: Colors.white,
+        size: 24.sp,
+      ),
+    );
+  }
+}
+
+/// Title section in the header
+class _HeaderTitle extends StatelessWidget {
+  final String exerciseName;
+
+  const _HeaderTitle({required this.exerciseName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Select Weight",
+          style: TextStyle(
+            fontFamily: "poppins",
+            fontWeight: FontWeight.w600,
+            fontSize: 12.sp,
+            color: Colors.white.withOpacity(0.9),
+            letterSpacing: 0.5,
+          ),
+        ),
+        SizedBox(height: 2.h),
+        Text(
+          exerciseName,
+          style: TextStyle(
+            fontFamily: "poppins",
+            fontWeight: FontWeight.bold,
+            fontSize: 16.sp,
+            color: Colors.white,
+            letterSpacing: 0.3,
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+}
+
+/// Update weight button at the bottom
+class _UpdateWeightButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const _UpdateWeightButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -176,263 +559,58 @@ class LastWeightSelectorState extends ConsumerState<LastWeightSelector>
         width: double.infinity,
         radius: 12,
         color: AppColors.primaryColor,
-        press: () {
-          ref.read(workoutsProvider.notifier).updateLastWeight(
-                widget.workoutID,
-                widget.workoutExercise.exercise.id,
-                selectedWeight,
-              );
-          Navigator.pop(context, selectedWeight);
-        },
+        press: onPressed,
       ),
     );
   }
+}
 
-  Widget _buildCurrentWeightIndicator() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.3),
-          width: 1,
+/// Validation error message text
+class _ValidationErrorText extends StatelessWidget {
+  final String error;
+
+  const _ValidationErrorText({required this.error});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          Icons.error_outline,
+          color: Colors.red,
+          size: 16.sp,
         ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.history_rounded,
-            color: Colors.white,
-            size: 16.sp,
-          ),
-          SizedBox(width: 6.w),
-          Text(
-            "Last: ${widget.workoutExercise.lastWeight} ${widget.workoutExercise.exercise.equipmentType == "machine" ? "Bar" : "KG"}",
+        SizedBox(width: 6.w),
+        Expanded(
+          child: Text(
+            error,
             style: TextStyle(
               fontFamily: "poppins",
-              fontWeight: FontWeight.w600,
               fontSize: 12.sp,
-              color: Colors.white,
+              color: Colors.red,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCustomWeightSection(
-    BuildContext context,
-    bool isDark,
-    ColorScheme colorScheme,
-    bool isMachine,
-  ) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-      padding: EdgeInsets.all(8.w),
-      decoration: BoxDecoration(
-        color: isDark ? colorScheme.surface : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: _isCustomWeightSelected
-              ? AppColors.primaryColor!.withOpacity(0.5)
-              : Colors.grey.shade200,
-          width: _isCustomWeightSelected ? 2 : 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: _isCustomWeightSelected
-                ? AppColors.primaryColor!.withOpacity(0.15)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: _isCustomWeightSelected ? 12 : 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor!.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.edit_rounded,
-                  color: AppColors.primaryColor,
-                  size: 18.sp,
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                "Custom Weight",
-                style: TextStyle(
-                  fontFamily: "poppins",
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14.sp,
-                  color: isDark ? Colors.white : Colors.grey.shade800,
-                  letterSpacing: 0.3,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          TextField(
-            controller: _customWeightController,
-            focusNode: _customWeightFocusNode,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onTap: selectCustomWeight,
-            onChanged: updateCustomWeight,
-            style: TextStyle(
-              fontFamily: "poppins",
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
-            ),
-            decoration: InputDecoration(
-              hintText: "Enter weight value",
-              hintStyle: TextStyle(
-                fontFamily: "poppins",
-                fontSize: 14.sp,
-                color: Colors.grey.shade400,
-              ),
-              suffixIcon: Container(
-                margin: const EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor!.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  isMachine ? "Bar" : "KG",
-                  style: TextStyle(
-                    fontFamily: "poppins",
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13.sp,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ),
-              filled: true,
-              fillColor: isDark
-                  ? Colors.grey.shade800.withOpacity(0.3)
-                  : Colors.grey.shade50,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: _isCustomWeightSelected
-                      ? AppColors.primaryColor!.withOpacity(0.3)
-                      : Colors.transparent,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppColors.primaryColor!,
-                  width: 2,
-                ),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
+}
 
-  Widget _buildHeader(
-    BuildContext context,
-    bool isDark,
-    ColorScheme colorScheme,
-  ) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primaryColor!,
-            AppColors.primaryColor!.withOpacity(0.8),
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryColor!.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.fitness_center_rounded,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Select Weight",
-                        style: TextStyle(
-                          fontFamily: "poppins",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12.sp,
-                          color: Colors.white.withOpacity(0.9),
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        widget.workoutExercise.exercise.name,
-                        style: TextStyle(
-                          fontFamily: "poppins",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.sp,
-                          color: Colors.white,
-                          letterSpacing: 0.3,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _buildCurrentWeightIndicator(),
-        ],
-      ),
-    );
-  }
+/// List of predefined weights
+class _WeightList extends StatelessWidget {
+  final bool isMachine;
+  final num selectedWeight;
+  final void Function(num) onWeightSelected;
 
-  Widget _buildWeightList(bool isMachine) {
+  const _WeightList({
+    required this.isMachine,
+    required this.selectedWeight,
+    required this.onWeightSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       itemCount:
@@ -449,11 +627,95 @@ class LastWeightSelectorState extends ConsumerState<LastWeightSelector>
                 ? (weight as MachineWeights).weight
                 : (weight as FreeWeights).weight,
             type: weight,
-            lastWeight: _isCustomWeightSelected ? -1 : selectedWeight,
-            onWeightSelected: updateWeight,
+            lastWeight: selectedWeight,
+            onWeightSelected: onWeightSelected,
           ),
         );
       },
+    );
+  }
+}
+
+/// Header widget showing exercise name and last weight
+class _WeightSelectorHeader extends StatelessWidget {
+  final String exerciseName;
+  final num lastWeight;
+  final String equipmentType;
+
+  const _WeightSelectorHeader({
+    required this.exerciseName,
+    required this.lastWeight,
+    required this.equipmentType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryColor,
+            AppColors.primaryColor.withOpacity(0.8),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryColor.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                _HeaderIcon(),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: _HeaderTitle(exerciseName: exerciseName),
+                ),
+              ],
+            ),
+          ),
+          _CurrentWeightIndicator(
+            lastWeight: lastWeight,
+            equipmentType: equipmentType,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Badge showing the weight unit (KG or Bar)
+class _WeightUnitBadge extends StatelessWidget {
+  final bool isMachine;
+
+  const _WeightUnitBadge({required this.isMachine});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        isMachine ? "Bar" : "KG",
+        style: TextStyle(
+          fontFamily: "poppins",
+          fontWeight: FontWeight.bold,
+          fontSize: 13.sp,
+          color: AppColors.primaryColor,
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -25,6 +24,8 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -32,10 +33,12 @@ class GoalCard extends StatelessWidget {
         curve: Curves.easeInOut,
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : AppColors.white,
+          color:
+              isSelected ? color.withValues(alpha: 0.1) : colorScheme.surface,
           borderRadius: BorderRadius.circular(15.r),
           border: Border.all(
-            color: isSelected ? color : AppColors.black.withValues(alpha: 0.1),
+            color:
+                isSelected ? color : colorScheme.outline.withValues(alpha: 0.3),
             width: 2,
           ),
           boxShadow: isSelected
@@ -74,7 +77,7 @@ class GoalCard extends StatelessWidget {
                       fontSize: 15.sp,
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.w600,
-                      color: AppColors.black,
+                      color: colorScheme.onSurface,
                     ),
                     child: Text(title),
                   ),
@@ -83,7 +86,7 @@ class GoalCard extends StatelessWidget {
                     subtitle,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.black.withValues(alpha: 0.6),
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],

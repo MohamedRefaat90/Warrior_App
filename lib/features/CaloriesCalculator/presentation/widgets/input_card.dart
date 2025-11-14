@@ -21,13 +21,16 @@ class InputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(15.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
+            color: colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -37,21 +40,29 @@ class InputCard extends StatelessWidget {
         controller: controller,
         keyboardType: TextInputType.number,
         validator: validator,
+        style: TextStyle(color: colorScheme.onSurface),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
           suffixText: suffix,
+          labelStyle:
+              TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
+          hintStyle:
+              TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.5)),
           suffixStyle: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
+            color: colorScheme.primary,
           ),
-          border: OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(
+              color: isDark ? AppColors.darkSecondary : AppColors.black,
+              width: 1,
+            ),
           ),
           filled: true,
-          fillColor: AppColors.white,
+          fillColor: colorScheme.surface,
           contentPadding: EdgeInsets.symmetric(
             horizontal: 20.w,
             vertical: 18.h,

@@ -171,11 +171,6 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     state = ProviderStates(isSuccess: true);
   }
 
-  /// Notify listeners that workout items have changed
-  void notifyWorkoutItemsChanged() {
-    state = ProviderStates(isSuccess: true);
-  }
-
   void fillNewWorkout({
     String? name,
     String? description,
@@ -232,6 +227,11 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
         state = ProviderStates(errorMessage: 'Failed to load workouts');
       }
     }
+  }
+
+  /// Notify listeners that workout items have changed
+  void notifyWorkoutItemsChanged() {
+    state = ProviderStates(isSuccess: true);
   }
 
   Future<void> reorderWorkoutsList(List<WorkoutSetModel> workouts) async {
@@ -300,21 +300,31 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     state = ProviderStates(isSuccess: true);
   }
 
-  Future<void> updateLastWeight(
-      int workoutID, int exerciseID, num weight) async {
+  /// Updates last weight for a workout exercise
+  /// Works for both online workouts (with ID) and offline workouts (without ID)
+  Future<void> updateLastWeight(int? workoutID, int exerciseID, num weight,
+      {WorkoutSetModel? workout}) async {
     try {
       // Validate inputs
-      if (workoutID <= 0 || exerciseID <= 0 || weight < 0) {
-        state =
-            ProviderStates(errorMessage: 'Invalid workout or exercise data');
+      if (exerciseID <= 0 || weight < 0) {
+        state = ProviderStates(errorMessage: 'Invalid exercise data or weight');
         TalkerService.warning(
-            'Invalid data for weight update: workout=$workoutID, exercise=$exerciseID, weight=$weight',
+            'Invalid data for weight update: exercise=$exerciseID, weight=$weight',
             'WORKOUT');
         return;
       }
 
-      if (_isOnline) {
-        // Online: Update on server
+      // For offline workouts without ID, we need the workout object
+      if (workoutID == null && workout == null) {
+        state = ProviderStates(
+            errorMessage: 'Either workoutID or workout object is required');
+        TalkerService.warning(
+            'Missing both workoutID and workout object', 'WORKOUT');
+        return;
+      }
+
+      if (_isOnline && workoutID != null && workoutID > 0) {
+        // Online: Update on server (only if workout has a server ID)
         state = ProviderStates(isLoading: true);
         await _workoutRepo.updateLastWeight(workoutID, exerciseID, weight);
         updateLastWeightLocal(workoutID, exerciseID, weight);
@@ -322,32 +332,87 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
             'Weight updated online: workout=$workoutID, exercise=$exerciseID, weight=$weight',
             'WORKOUT');
       } else {
-        // Offline: Track for later sync
-        final workout = workoutList.firstWhere(
-          (workout) => workout.id == workoutID,
-          orElse: () => throw Exception('Workout not found'),
-        );
+        // Offline or workout without server ID
+        if (workoutID != null && workoutID > 0) {
+          // Offline workout with ID: Track for later sync
+          final workoutObj = workoutList.firstWhere(
+            (w) => w.id == workoutID,
+            orElse: () => throw Exception('Workout not found'),
+          );
 
-        await HiveManager.addPendingOperation(PendingOperation(
-          entityType: 'workout_weight',
-          operationType: SyncOperationType.update,
-          workout: workout,
-          exerciseId: exerciseID,
-          weight: weight,
-          timestamp: DateTime.now(),
-        ));
+          await HiveManager.addPendingOperation(PendingOperation(
+            entityType: 'workout_weight',
+            operationType: SyncOperationType.update,
+            workout: workoutObj,
+            exerciseId: exerciseID,
+            weight: weight,
+            timestamp: DateTime.now(),
+          ));
 
-        // Update local Hive data
-        updateLastWeightLocal(workoutID, exerciseID, weight);
-        TalkerService.info(
-            'Weight update queued for sync: workout=$workoutID, exercise=$exerciseID, weight=$weight',
-            'WORKOUT');
+          // Update local Hive data
+          updateLastWeightLocal(workoutID, exerciseID, weight);
+          TalkerService.info(
+              'Weight update queued for sync: workout=$workoutID, exercise=$exerciseID, weight=$weight',
+              'WORKOUT');
+        } else {
+          // Offline workout without ID: Update directly using workout object
+          updateLastWeightForOfflineWorkout(workout!, exerciseID, weight);
+          TalkerService.info(
+              'Weight updated for offline workout without ID: exercise=$exerciseID, weight=$weight',
+              'WORKOUT');
+        }
       }
 
       state = ProviderStates(isSuccess: true);
     } catch (e, stackTrace) {
       TalkerService.error(
           'Failed to update last weight', 'WORKOUT', e, stackTrace);
+      state = ProviderStates(
+          errorMessage: 'Failed to update weight: ${e.toString()}');
+    }
+  }
+
+  /// Updates last weight for offline workouts that don't have an ID yet
+  Future<void> updateLastWeightForOfflineWorkout(
+      WorkoutSetModel workout, int exerciseID, num weight) async {
+    try {
+      // Find the workout in Hive by comparing object references
+      final index = HiveManager.workoutsBox.values
+          .toList()
+          .indexWhere((element) => element == workout);
+
+      if (index < 0) {
+        throw Exception('Workout not found in local storage');
+      }
+
+      final storedWorkout = HiveManager.workoutsBox.getAt(index);
+      if (storedWorkout == null) {
+        throw Exception('Workout data is null');
+      }
+
+      final exerciseIndex = storedWorkout.workoutItems?.indexWhere(
+            (element) => element.exercise.id == exerciseID,
+          ) ??
+          -1;
+
+      if (exerciseIndex < 0) {
+        throw Exception('Exercise not found in workout');
+      }
+
+      storedWorkout.workoutItems![exerciseIndex].lastWeight = weight;
+      await HiveManager.workoutsBox.putAt(index, storedWorkout);
+
+      // Update the workout list
+      workoutList = HiveManager.workoutsBox.values.toList();
+
+      TalkerService.info(
+          'Local weight updated for offline workout: exercise=$exerciseID, weight=$weight',
+          'WORKOUT');
+
+      state = ProviderStates(isSuccess: true);
+    } catch (e, stackTrace) {
+      TalkerService.error('Failed to update local weight for offline workout',
+          'WORKOUT', e, stackTrace);
       state = ProviderStates(
           errorMessage: 'Failed to update weight: ${e.toString()}');
     }

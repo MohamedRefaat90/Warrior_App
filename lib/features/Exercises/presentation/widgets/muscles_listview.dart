@@ -22,42 +22,35 @@ class MusclesListView extends ConsumerWidget {
     final workoutNotifier = ref.read(workoutsProvider.notifier);
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
-                children: [
-                  ListView.separated(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => MuscleTile(
-                            muscle: muscles[index],
-                            isComingFromWorkoutScreen:
-                                isComingFromWorkoutScreen,
-                          ),
-                      separatorBuilder: (context, index) => 5.verticalSpace,
-                      itemCount: muscles.length),
-                  10.verticalSpace,
-                  if (isComingFromWorkoutScreen == true &&
-                      (workoutNotifier.newWorkout.workoutItems == null ||
-                          workoutNotifier.newWorkout.workoutItems!.isEmpty))
-                    Text(
-                      "you must add at least one exercise".capitalizeWord(),
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w800),
+        child: Column(
+          children: [
+            ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => MuscleTile(
+                      muscle: muscles[index],
+                      isComingFromWorkoutScreen: isComingFromWorkoutScreen,
                     ),
-                  5.verticalSpace,
-                  if (isComingFromWorkoutScreen ?? false)
-                    FinishBTN(
-                        primaryColor: AppColors.primaryColor!,
-                        appendToExistingWorkoutSet: appendToExistingWorkoutSet),
-                  10.verticalSpace,
-                ],
+                separatorBuilder: (context, index) => 5.verticalSpace,
+                itemCount: muscles.length),
+            5.verticalSpace,
+            if (isComingFromWorkoutScreen == true &&
+                (workoutNotifier.newWorkout.workoutItems == null ||
+                    workoutNotifier.newWorkout.workoutItems!.isEmpty))
+              Text(
+                "you must add at least one exercise".capitalizeWord(),
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w800),
               ),
-            ],
-          ),
+            5.verticalSpace,
+            if (isComingFromWorkoutScreen ?? false)
+              FinishBTN(
+                  primaryColor: AppColors.primaryColor,
+                  appendToExistingWorkoutSet: appendToExistingWorkoutSet),
+            5.verticalSpace,
+          ],
         ));
   }
 }

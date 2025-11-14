@@ -9,20 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class WorkoutsListview extends ConsumerStatefulWidget {
+class WorkoutsListView extends ConsumerStatefulWidget {
   final List<WorkoutSetModel> workouts;
   final TextEditingController nameController;
   final TextEditingController descriptionController;
 
-  const WorkoutsListview(
+  const WorkoutsListView(
       this.workouts, this.nameController, this.descriptionController,
       {super.key});
 
   @override
-  ConsumerState<WorkoutsListview> createState() => _WorkoutsListviewState();
+  ConsumerState<WorkoutsListView> createState() => _WorkoutsListViewState();
 }
 
-class _WorkoutsListviewState extends ConsumerState<WorkoutsListview> {
+class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
   @override
   Widget build(BuildContext context) {
     return ReorderableListView.builder(
@@ -132,26 +132,13 @@ class _WorkoutsListviewState extends ConsumerState<WorkoutsListview> {
             index: index,
           ),
           // Drag handle - positioned at top left corner
-          Positioned(
-            left: 12.w,
-            top: 12.h,
+          Center(
             child: ReorderableDragStartListener(
               index: index,
-              child: Container(
-                padding: EdgeInsets.all(6.w),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Icon(
-                  Icons.drag_handle,
-                  color: Colors.grey[600],
-                  size: 18.sp,
-                ),
+              child: Icon(
+                Icons.drag_handle,
+                color: Colors.grey[600],
+                size: 25.sp,
               ),
             ),
           ),

@@ -97,6 +97,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && widget.isComingFromWorkoutScreen == true) {
@@ -106,13 +107,13 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: const Text(
+          title: Text(
             'Muscles',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: "Kings",
               fontSize: 32,
-              color: Colors.black,
+              color: isDark ? Colors.white : Colors.black,
               letterSpacing: 1.2,
             ),
           ),
@@ -132,7 +133,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                       ? Icons.view_list_rounded
                       : Icons.grid_view_rounded,
                   key: ValueKey(_isGridView),
-                  color: AppColors.primaryColor!,
+                  color: AppColors.primaryColor,
                 ),
               ),
               onPressed: () {

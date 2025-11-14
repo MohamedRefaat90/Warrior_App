@@ -13,11 +13,13 @@ import 'package:go_router/go_router.dart';
 class EnhancedWorkoutCard extends ConsumerStatefulWidget {
   final WorkoutSetModel workout;
   final int index;
+  final int? reorderIndex;
 
   const EnhancedWorkoutCard({
     super.key,
     required this.workout,
     required this.index,
+    this.reorderIndex,
   });
 
   @override

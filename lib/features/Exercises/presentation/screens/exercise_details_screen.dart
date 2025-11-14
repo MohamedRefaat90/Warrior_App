@@ -31,10 +31,10 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF121212) : const Color(0xFFf5f5f5),
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -289,15 +289,19 @@ class _ExerciseTitle extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primaryColor!.withOpacity(0.3),
+          color: isDark
+              ? AppColors.darkSecondary.withOpacity(0.3)
+              : AppColors.primaryColor!.withOpacity(0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor!.withOpacity(0.2),
+            color: isDark
+                ? AppColors.darkSecondary.withOpacity(0.2)
+                : AppColors.primaryColor!.withOpacity(0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -309,10 +313,15 @@ class _ExerciseTitle extends StatelessWidget {
             padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  AppColors.primaryColor!,
-                  AppColors.red!,
-                ],
+                colors: isDark
+                    ? [
+                        AppColors.darkSecondary,
+                        AppColors.darkPrimary,
+                      ]
+                    : [
+                        AppColors.primaryColor!,
+                        AppColors.red!,
+                      ],
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -367,15 +376,19 @@ class _ExerciseVideoPlayer extends StatelessWidget {
         maxHeight: 280.h,
       ),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.primaryColor!.withOpacity(0.3),
+          color: isDark
+              ? AppColors.darkSecondary.withOpacity(0.3)
+              : AppColors.primaryColor!.withOpacity(0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor!.withOpacity(0.2),
+            color: isDark
+                ? AppColors.darkSecondary.withOpacity(0.2)
+                : AppColors.primaryColor!.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 8),
             spreadRadius: -4,
@@ -496,15 +509,19 @@ class _TargetedMusclesSection extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.primaryColor!.withOpacity(0.3),
+          color: isDark
+              ? AppColors.darkSecondary.withOpacity(0.3)
+              : AppColors.primaryColor!.withOpacity(0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor!.withOpacity(0.15),
+            color: isDark
+                ? AppColors.darkSecondary.withOpacity(0.15)
+                : AppColors.primaryColor!.withOpacity(0.15),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -519,10 +536,15 @@ class _TargetedMusclesSection extends StatelessWidget {
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      AppColors.primaryColor!,
-                      AppColors.red!,
-                    ],
+                    colors: isDark
+                        ? [
+                            AppColors.darkSecondary,
+                            AppColors.darkPrimary,
+                          ]
+                        : [
+                            AppColors.primaryColor!,
+                            AppColors.red!,
+                          ],
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),

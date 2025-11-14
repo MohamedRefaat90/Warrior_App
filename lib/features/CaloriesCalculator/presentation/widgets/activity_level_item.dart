@@ -21,6 +21,7 @@ class ActivityLevelItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: GestureDetector(
@@ -32,7 +33,9 @@ class ActivityLevelItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? AppColors.primaryColor!.withValues(alpha: 0.1)
-                : AppColors.white,
+                : isDarkMode
+                    ? AppColors.darkSurface
+                    : AppColors.white,
             borderRadius: BorderRadius.circular(15.r),
             border: Border.all(
               color: isSelected
@@ -61,7 +64,9 @@ class ActivityLevelItem extends StatelessWidget {
                       : Icons.radio_button_unchecked,
                   color: isSelected
                       ? AppColors.primaryColor
-                      : AppColors.black.withValues(alpha: 0.3),
+                      : isDarkMode
+                          ? AppColors.white.withValues(alpha: 0.5)
+                          : AppColors.black.withValues(alpha: 0.3),
                 ),
               ),
               SizedBox(width: 15.w),
@@ -75,7 +80,7 @@ class ActivityLevelItem extends StatelessWidget {
                         fontSize: 15.sp,
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.w600,
-                        color: AppColors.black,
+                        color: isDarkMode ? AppColors.white : AppColors.black,
                       ),
                       child: Text(label),
                     ),
@@ -84,7 +89,9 @@ class ActivityLevelItem extends StatelessWidget {
                       description,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: AppColors.black.withValues(alpha: 0.6),
+                        color: isDarkMode
+                            ? AppColors.white.withValues(alpha: 0.6)
+                            : AppColors.black.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

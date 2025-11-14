@@ -19,24 +19,27 @@ class WeightChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isSelected = weight == lastWeight;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ChoiceChip(
-      selected: isSelected,
-      onSelected: (value) {
-        if (value) {
-          onWeightSelected(weight);
-        }
-      },
-      selectedColor: AppColors.green,
-      labelPadding: const EdgeInsets.symmetric(horizontal: 50),
-      label: Text.rich(
-        TextSpan(
+        selected: isSelected,
+        onSelected: (value) {
+          if (value) {
+            onWeightSelected(weight);
+          }
+        },
+        selectedColor: AppColors.green,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 50),
+        label: Text.rich(
+          TextSpan(
             children: [
               TextSpan(text: "$weight "),
               TextSpan(text: type is MachineWeights ? "bar" : "kg"),
             ],
             style: TextStyle(
-                color: isSelected ? AppColors.white : AppColors.black)),
-      ),
-    );
+                color: isDark
+                    ? AppColors.white
+                    : (isSelected ? AppColors.white : AppColors.black)),
+          ),
+        ));
   }
 }

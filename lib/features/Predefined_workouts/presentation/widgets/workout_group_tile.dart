@@ -1,3 +1,4 @@
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_grid.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
       elevation: 2,
       // Change card color based on expansion state
@@ -43,8 +45,10 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
             ? BorderSide(color: widget.iconColor, width: 1.w)
             : BorderSide.none,
       ),
+
       child: ExpansionTile(
         initiallyExpanded: false,
+        tilePadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
         onExpansionChanged: (expanded) {
           setState(() {
             _isExpanded = expanded;
@@ -70,6 +74,7 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
+            color: isDark && _isExpanded ? AppColors.black : AppColors.white,
           ),
         ),
         children: [

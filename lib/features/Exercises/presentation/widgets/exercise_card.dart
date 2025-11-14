@@ -46,10 +46,6 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   CachedNetworkImage(
                     imageUrl: widget.exercise.image,
                     height: 120.h,
-                    // memCacheHeight: 200,
-                    // memCacheWidth: 200,
-                    // maxHeightDiskCache: 300,
-                    // maxWidthDiskCache: 300,
                     fadeInDuration: const Duration(milliseconds: 200),
                     placeholder: (context, url) => const CustomLoadingWidget(),
                     errorWidget: (context, url, error) {

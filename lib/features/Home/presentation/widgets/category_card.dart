@@ -1,3 +1,4 @@
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/features/Home/data/models/category_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,18 +13,21 @@ class CategoryCard extends StatelessWidget {
       child: GestureDetector(
         onTap: () => context.pushNamed(category.navigateTo),
         child: Card(
-          elevation: 5,
+          elevation: 10,
+          shadowColor: AppColors.black.withAlpha(250),
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Column(
               children: [
                 Image.asset(
                   category.image,
-                  height: 90.h,
+                  width: 90.w,
+                  height: 70.h,
                 ),
+                7.verticalSpace,
                 Text(category.title,
                     style: TextStyle(
-                        fontSize: 13.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
                         fontFamily: "poppins")),
               ],

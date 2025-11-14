@@ -19,7 +19,7 @@ class SectionTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: 18.sp,
           fontWeight: FontWeight.bold,
-          color: Colors.black87,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
     );

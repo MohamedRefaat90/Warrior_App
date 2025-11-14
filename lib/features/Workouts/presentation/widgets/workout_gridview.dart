@@ -54,9 +54,9 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                       ),
                     ),
                     Positioned(
-                        width: 95.w,
-                        height: 20.h,
-                        bottom: -5.h,
+                        width: 105.w,
+                        height: 22.h,
+                        bottom: -7.h,
                         right: 33.w,
                         child: CustomBTN(
                           widget: Text.rich(
@@ -96,7 +96,7 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                                 //   ),
                                 // ),
                                 builder: (context) => LastWeightSelector(
-                                    workoutID: widget.workout.id!,
+                                    workout: widget.workout,
                                     workoutExercise: workoutExercise));
 
                             if (newWeight != null) {

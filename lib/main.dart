@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
 
@@ -22,6 +23,14 @@ void main() async {
 
   // Initialize app services
   await AppServices.init();
+
+  // Initialize Open Food Facts API
+  OpenFoodAPIConfiguration.userAgent =
+      UserAgent(name: 'Warrior App', version: '1.1.0', system: 'Flutter');
+  OpenFoodAPIConfiguration.globalLanguages = [
+    OpenFoodFactsLanguage.ENGLISH,
+    OpenFoodFactsLanguage.ARABIC,
+  ];
 
   // Initialize Sentry and run app
   await SentryFlutter.init(

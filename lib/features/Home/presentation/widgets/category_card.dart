@@ -9,29 +9,27 @@ class CategoryCard extends StatelessWidget {
   const CategoryCard({super.key, required this.category});
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: GestureDetector(
-        onTap: () => context.pushNamed(category.navigateTo),
-        child: Card(
-          elevation: 10,
-          shadowColor: AppColors.black.withAlpha(250),
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              children: [
-                Image.asset(
-                  category.image,
-                  width: 90.w,
-                  height: 70.h,
-                ),
-                7.verticalSpace,
-                Text(category.title,
-                    style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "poppins")),
-              ],
-            ),
+    return GestureDetector(
+      onTap: () => context.pushNamed(category.navigateTo),
+      child: Card(
+        elevation: 10,
+        shadowColor: AppColors.black.withAlpha(250),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              Image.asset(
+                category.image,
+                width: 90.w,
+                height: category.title == "Food Search" ? 70.h : 70.h,
+              ),
+              7.verticalSpace,
+              Text(category.title,
+                  style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "poppins")),
+            ],
           ),
         ),
       ),

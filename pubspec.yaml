@@ -60,6 +60,10 @@ dependencies:
   package_info_plus: ^9.0.0
   flutter_animate: ^4.5.0
   skeletonizer: ^2.1.0+1
+  openfoodfacts: ^3.27.0
+  mobile_scanner: ^5.0.0
+  flutter_staggered_animations: ^1.1.1
+  image_picker: ^1.0.7
   
 dev_dependencies:
   build_runner: null

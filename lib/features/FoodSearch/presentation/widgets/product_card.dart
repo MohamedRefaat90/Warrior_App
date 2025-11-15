@@ -1,0 +1,113 @@
+import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+/// Compact product card for lists
+class ProductCard extends ConsumerWidget {
+  final FoodProductModel product;
+
+  const ProductCard({super.key, required this.product});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorite = ref.watch(isFavoriteProvider(product.barcode));
+
+    return Card(
+      elevation: 8,
+      shadowColor: Colors.black.withValues(alpha: 0.5),
+      // color: const Color.fromARGB(26, 221, 215, 215),
+      child: InkWell(
+        onTap: () {
+          context.pushNamed(
+            AppRouters.productDetails,
+            extra: product,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Product image with favorite button
+              Stack(
+                children: [
+                  Center(
+                    child: ProductImageWidget(
+                      imageUrl: product.imageFrontUrl ?? product.imageUrl,
+                      width: double.infinity,
+                      height: 120,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      icon: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: () {
+                        ref
+                            .read(favoritesProvider.notifier)
+                            .toggleFavorite(product);
+                      },
+                    ),
+                  ),
+                  if (product.nutriScore != null)
+                    Positioned(
+                      bottom: 4,
+                      left: 4,
+                      child: NutritionScoreBadge(
+                        nutriScore: product.nutriScore,
+                        size: 32,
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              // Product name
+              Text(
+                product.productName ?? 'Unknown Product',
+                style: Theme.of(context).textTheme.titleSmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              // Brand
+              if (product.brands != null)
+                Text(
+                  product.brands!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              const SizedBox(height: 4),
+              // Quantity
+              if (product.quantity != null)
+                Text(
+                  product.quantity!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.5),
+                      ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

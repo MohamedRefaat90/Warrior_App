@@ -15,6 +15,16 @@ import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dar
 import 'package:Warrior/features/CaloriesCalculator/presentation/screens/calories_calculator_screen.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/screens/calories_results_screen.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/advanced_search_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/barcode_scanner_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/favorites_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/food_search_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/nutrition_guide_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/product_comparison_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/product_details_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/product_form_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/search_history_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
@@ -235,6 +245,88 @@ class RoutersManager {
       name: AppRouters.caloriesResults,
       pageBuilder: (context, state) => CustomTransition(
         child: const CaloriesResultsScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.foodSearch,
+      name: AppRouters.foodSearch,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const FoodSearchScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.barcodeScanner,
+      name: AppRouters.barcodeScanner,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const BarcodeScannerScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.productDetails,
+      name: AppRouters.productDetails,
+      pageBuilder: (context, state) => CustomTransition(
+        child: ProductDetailsScreen(product: state.extra as FoodProductModel),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.advancedSearch,
+      name: AppRouters.advancedSearch,
+      pageBuilder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final initialQuery = extra?['query'] as String?;
+        return CustomTransition(
+          child: AdvancedSearchScreen(initialQuery: initialQuery),
+          transitionType: PageTransitionType.fade,
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouters.favorites,
+      name: AppRouters.favorites,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const FavoritesScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.searchHistory,
+      name: AppRouters.searchHistory,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const SearchHistoryScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.productComparison,
+      name: AppRouters.productComparison,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const ProductComparisonScreen(),
+        transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.productForm,
+      name: AppRouters.productForm,
+      pageBuilder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        return CustomTransition(
+          child: ProductFormScreen(
+            product: extra?['product'] as FoodProductModel?,
+            barcode: extra?['barcode'] as String?,
+          ),
+          transitionType: PageTransitionType.fade,
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouters.nutritionGuide,
+      name: AppRouters.nutritionGuide,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const NutritionGuideScreen(),
         transitionType: PageTransitionType.fade,
       ),
     ),

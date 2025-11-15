@@ -35,6 +35,11 @@ class HomeRepo {
       image: AppAssets.calculator,
       navigateTo: AppRouters.caloriesCalculator,
     ),
+    CategoryItem(
+      title: "Food Search",
+      image: AppAssets.foodSearch,
+      navigateTo: AppRouters.foodSearch,
+    ),
     // CategoryItem(
     //   title: "Supplements",
     //   image: AppAssets.supplements,

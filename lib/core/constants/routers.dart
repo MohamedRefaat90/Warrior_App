@@ -20,4 +20,15 @@ abstract class AppRouters {
   static const String predefinedWorkouts = '/predefinedWorkouts';
   static const String caloriesCalculator = '/caloriesCalculator';
   static const String caloriesResults = '/caloriesResults';
+
+  // Food Search routes
+  static const String foodSearch = '/foodSearch';
+  static const String barcodeScanner = '/barcodeScanner';
+  static const String productDetails = '/productDetails';
+  static const String advancedSearch = '/advancedSearch';
+  static const String favorites = '/favorites';
+  static const String searchHistory = '/searchHistory';
+  static const String productComparison = '/productComparison';
+  static const String productForm = '/productForm';
+  static const String nutritionGuide = '/nutritionGuide';
 }

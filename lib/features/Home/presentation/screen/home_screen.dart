@@ -71,18 +71,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     crossAxisSpacing: 10,
                     childAspectRatio: 1.2,
                   ),
-                  itemCount: ref.read(homeProvider).categoryItems.length,
+                  itemCount: ref.read(homeProvider).categoryItems.length - 1,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return CategoryCard(
-                      category: ref.read(homeProvider).categoryItems[index],
-                    );
+                        category: ref.read(homeProvider).categoryItems[index]);
                   },
                 ),
-                // SizedBox(height: 0.01.sh),
-                // CategoryCard(
-                //   category: ref.read(homeProvider).categoryItems[2],
-                // ),
+                SizedBox(height: 0.01.sh),
+                SizedBox(
+                  width: 175.w,
+                  height: 120.h,
+                  child: CategoryCard(
+                      category: ref.read(homeProvider).categoryItems.last),
+                ),
                 const Spacer(),
                 SizedBox(width: 1.sw, child: const BannerAdWidget()),
               ],

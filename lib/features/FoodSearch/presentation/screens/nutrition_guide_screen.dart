@@ -1,3 +1,4 @@
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,7 +10,7 @@ class NutritionGuideScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Understanding Food Scores'),
+        title: Text(context.l10n.understandingFoodScores),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -38,7 +39,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   ),
                   16.verticalSpace,
                   Text(
-                    'Make Better Food Choices',
+                    context.l10n.makeBetterFoodChoices,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -46,7 +47,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   ),
                   8.verticalSpace,
                   Text(
-                    'Learn about the scores that help you understand food quality',
+                    context.l10n.learnAboutScores,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context)
                               .colorScheme
@@ -62,27 +63,26 @@ class NutritionGuideScreen extends StatelessWidget {
             // Nutri-Score Section
             _buildScoreSection(
               context,
-              title: 'Nutri-Score',
+              title: context.l10n.nutriScoreLong,
               icon: Icons.favorite,
               iconColor: Colors.red,
-              description:
-                  'A nutrition quality indicator that rates foods from A (best) to E (worst) based on their nutritional value.',
+              description: context.l10n.nutriScoreDescription,
               howItWorks: [
-                'Considers positive nutrients: fiber, protein, fruits & vegetables',
-                'Considers negative nutrients: calories, saturated fat, sugar, salt',
-                'The balance determines the final score',
+                context.l10n.nutriScorePoint1,
+                context.l10n.nutriScorePoint2,
+                context.l10n.nutriScorePoint3,
               ],
               scoreExamples: [
-                _ScoreExample('A', Colors.green, 'Excellent nutritional quality',
-                    'Vegetables, fruits, whole grains'),
-                _ScoreExample('B', Colors.lightGreen,
-                    'Good nutritional quality', 'Yogurt, fish, nuts'),
-                _ScoreExample('C', Colors.yellow, 'Average nutritional quality',
-                    'Bread, pasta, some cereals'),
-                _ScoreExample('D', Colors.orange, 'Poor nutritional quality',
-                    'Cookies, cakes, processed foods'),
-                _ScoreExample('E', Colors.red, 'Very poor nutritional quality',
-                    'Soft drinks, chips, candy'),
+                _ScoreExample('A', Colors.green, context.l10n.excellentQuality,
+                    context.l10n.scoreAExamples),
+                _ScoreExample('B', Colors.lightGreen, context.l10n.goodQuality,
+                    context.l10n.scoreBExamples),
+                _ScoreExample('C', Colors.yellow, context.l10n.averageQuality,
+                    context.l10n.scoreCExamples),
+                _ScoreExample('D', Colors.orange, context.l10n.poorQuality,
+                    context.l10n.scoreDExamples),
+                _ScoreExample('E', Colors.red, context.l10n.veryPoorQuality,
+                    context.l10n.scoreEExamples),
               ],
             ),
 
@@ -91,26 +91,31 @@ class NutritionGuideScreen extends StatelessWidget {
             // NOVA Group Section
             _buildScoreSection(
               context,
-              title: 'NOVA Classification',
+              title: context.l10n.novaClassification,
               icon: Icons.science,
               iconColor: Colors.blue,
-              description:
-                  'A food classification system based on the extent and purpose of food processing.',
+              description: context.l10n.novaDescription,
               howItWorks: [
-                'Group 1: Unprocessed or minimally processed foods',
-                'Group 2: Processed culinary ingredients',
-                'Group 3: Processed foods',
-                'Group 4: Ultra-processed foods',
+                context.l10n.novaGroup1,
+                context.l10n.novaGroup2,
+                context.l10n.novaGroup3,
+                context.l10n.novaGroup4,
               ],
               scoreExamples: [
-                _ScoreExample('1', Colors.green, 'Unprocessed/Minimally',
-                    'Fresh fruits, vegetables, meat, eggs'),
-                _ScoreExample('2', Colors.lightGreen, 'Culinary Ingredients',
-                    'Oils, butter, sugar, salt'),
-                _ScoreExample('3', Colors.orange, 'Processed Foods',
-                    'Canned vegetables, cheese, bread'),
-                _ScoreExample('4', Colors.red, 'Ultra-Processed',
-                    'Soft drinks, instant noodles, packaged snacks'),
+                _ScoreExample(
+                    '1',
+                    Colors.green,
+                    context.l10n.unprocessedMinimal,
+                    context.l10n.nova1Examples),
+                _ScoreExample(
+                    '2',
+                    Colors.lightGreen,
+                    context.l10n.culinaryIngredients,
+                    context.l10n.nova2Examples),
+                _ScoreExample('3', Colors.orange, context.l10n.processedFoods,
+                    context.l10n.nova3Examples),
+                _ScoreExample('4', Colors.red, context.l10n.ultraProcessed,
+                    context.l10n.nova4Examples),
               ],
             ),
 
@@ -119,28 +124,27 @@ class NutritionGuideScreen extends StatelessWidget {
             // Eco-Score Section
             _buildScoreSection(
               context,
-              title: 'Eco-Score',
+              title: context.l10n.ecoScore,
               icon: Icons.eco,
               iconColor: Colors.green,
-              description:
-                  'An environmental impact indicator that rates foods from A (best) to E (worst) based on their ecological footprint.',
+              description: context.l10n.ecoScoreDescription,
               howItWorks: [
-                'Considers production methods and origin',
-                'Evaluates transportation and packaging',
-                'Accounts for environmental policies',
-                'Measures carbon footprint and biodiversity impact',
+                context.l10n.ecoPoint1,
+                context.l10n.ecoPoint2,
+                context.l10n.ecoPoint3,
+                context.l10n.ecoPoint4,
               ],
               scoreExamples: [
-                _ScoreExample('A', Colors.green, 'Very low environmental impact',
-                    'Local organic vegetables'),
-                _ScoreExample('B', Colors.lightGreen,
-                    'Low environmental impact', 'Seasonal fruits, legumes'),
-                _ScoreExample('C', Colors.yellow, 'Moderate environmental impact',
-                    'Dairy products, poultry'),
-                _ScoreExample('D', Colors.orange, 'High environmental impact',
-                    'Imported foods, red meat'),
-                _ScoreExample('E', Colors.red, 'Very high environmental impact',
-                    'Air-freighted foods, intensive farming'),
+                _ScoreExample('A', Colors.green, context.l10n.veryLowImpact,
+                    context.l10n.ecoAExamples),
+                _ScoreExample('B', Colors.lightGreen, context.l10n.lowImpact,
+                    context.l10n.ecoBExamples),
+                _ScoreExample('C', Colors.yellow, context.l10n.moderateImpact,
+                    context.l10n.ecoCExamples),
+                _ScoreExample('D', Colors.orange, context.l10n.highImpact,
+                    context.l10n.ecoDExamples),
+                _ScoreExample('E', Colors.red, context.l10n.veryHighImpact,
+                    context.l10n.ecoEExamples),
               ],
             ),
 
@@ -159,11 +163,12 @@ class NutritionGuideScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.lightbulb_outline,
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
                       12.horizontalSpace,
                       Text(
-                        'Quick Tips',
+                        context.l10n.quickTips,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context)
@@ -174,13 +179,11 @@ class NutritionGuideScreen extends StatelessWidget {
                     ],
                   ),
                   16.verticalSpace,
-                  _buildTip(context, 'Aim for Nutri-Score A or B products'),
-                  _buildTip(context, 'Choose NOVA Group 1 or 2 when possible'),
-                  _buildTip(context, 'Prefer Eco-Score A or B for the planet'),
-                  _buildTip(context,
-                      'Read ingredient lists, not just scores'),
-                  _buildTip(context,
-                      'Balance is key - variety in your diet matters'),
+                  _buildTip(context, context.l10n.tip1),
+                  _buildTip(context, context.l10n.tip2),
+                  _buildTip(context, context.l10n.tip3),
+                  _buildTip(context, context.l10n.tip4),
+                  _buildTip(context, context.l10n.tip5),
                 ],
               ),
             ),
@@ -188,97 +191,6 @@ class NutritionGuideScreen extends StatelessWidget {
             32.verticalSpace,
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildScoreSection(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required Color iconColor,
-    required String description,
-    required List<String> howItWorks,
-    required List<_ScoreExample> scoreExamples,
-  }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title with icon
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: iconColor, size: 32.w),
-              ),
-              16.horizontalSpace,
-              Expanded(
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ),
-            ],
-          ),
-          16.verticalSpace,
-
-          // Description
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  height: 1.5,
-                ),
-          ),
-          24.verticalSpace,
-
-          // How it works
-          Text(
-            'How it works:',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          12.verticalSpace,
-          ...howItWorks.map((point) => Padding(
-                padding: EdgeInsets.only(bottom: 8.h),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.check_circle,
-                      size: 20.w,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    12.horizontalSpace,
-                    Expanded(
-                      child: Text(
-                        point,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-          24.verticalSpace,
-
-          // Score examples
-          Text(
-            'Score Guide:',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          16.verticalSpace,
-          ...scoreExamples.map((example) => _buildScoreCard(context, example)),
-        ],
       ),
     );
   }
@@ -344,6 +256,97 @@ class NutritionGuideScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildScoreSection(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color iconColor,
+    required String description,
+    required List<String> howItWorks,
+    required List<_ScoreExample> scoreExamples,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title with icon
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: iconColor, size: 32.w),
+              ),
+              16.horizontalSpace,
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          16.verticalSpace,
+
+          // Description
+          Text(
+            description,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  height: 1.5,
+                ),
+          ),
+          24.verticalSpace,
+
+          // How it works
+          Text(
+            context.l10n.howItWorks,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          12.verticalSpace,
+          ...howItWorks.map((point) => Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      size: 20.w,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    12.horizontalSpace,
+                    Expanded(
+                      child: Text(
+                        point,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          24.verticalSpace,
+
+          // Score examples
+          Text(
+            context.l10n.scoreGuide,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          16.verticalSpace,
+          ...scoreExamples.map((example) => _buildScoreCard(context, example)),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTip(BuildContext context, String tip) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
@@ -378,4 +381,3 @@ class _ScoreExample {
 
   _ScoreExample(this.score, this.color, this.label, this.examples);
 }
-

@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/search_history_provider.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -25,7 +26,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Barcode'),
+        title: Text('scanBarcode'.tr(context)),
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
@@ -139,18 +140,18 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
         final shouldAdd = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Product Not Found'),
+            title: Text('productNotFound'.tr(context)),
             content: const Text(
               'This product is not in our database yet. Would you like to add it to help the community?',
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: Text('cancel'.tr(context)),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('Add Product'),
+                child: Text('addProduct'.tr(context)),
               ),
             ],
           ),
@@ -187,7 +188,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Enter Barcode'),
+        title: Text('enterBarcode'.tr(context)),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
@@ -199,7 +200,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr(context)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -213,7 +214,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
                 );
               }
             },
-            child: const Text('Search'),
+            child: Text('search'.tr(context)),
           ),
         ],
       ),

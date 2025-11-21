@@ -12,4 +12,5 @@ class StorageKeys {
   static String caloriesCalculatorData = 'caloriesCalculatorData';
   static String isGridView = 'isGridView';
   static String themeMode = 'themeMode';
+  static String locale = 'locale';
 }

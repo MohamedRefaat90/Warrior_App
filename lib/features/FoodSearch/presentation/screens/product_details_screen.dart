@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
@@ -91,17 +92,17 @@ class Labels extends StatelessWidget {
                 children: [
                   if (product.isVegan == true)
                     Chip(
-                      label: const Text('Vegan'),
+                      label: Text('vegan'.tr(context)),
                       backgroundColor: Colors.green[100],
                     ),
                   if (product.isVegetarian == true)
                     Chip(
-                      label: const Text('Vegetarian'),
+                      label: Text('vegetarian'.tr(context)),
                       backgroundColor: Colors.green[100],
                     ),
                   if (product.palmOilFree == true)
                     Chip(
-                      label: const Text('Palm Oil Free'),
+                      label: Text('palmOilFree'.tr(context)),
                       backgroundColor: Colors.green[100],
                     ),
                 ],
@@ -272,7 +273,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                             NutritionScoreShield(
                                 nutriScore: product.nutriScore),
                             const SizedBox(height: 4),
-                            Text('Nutri-Score',
+                            Text('nutriScore'.tr(context),
                                 style: Theme.of(context).textTheme.bodySmall),
                           ],
                         ),

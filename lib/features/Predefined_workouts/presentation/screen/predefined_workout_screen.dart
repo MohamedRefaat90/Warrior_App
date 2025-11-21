@@ -1,3 +1,4 @@
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/core/widgets/offline_view.dart';
@@ -87,7 +88,7 @@ class _PredefinedWorkoutScreenState
                     // Refresh the grouped workouts provider
                     ref.invalidate(groupedWorkoutsProvider);
                   },
-                  child: const Text('Retry'),
+                  child: Text('retry'.tr(context)),
                 ),
               ],
             ),

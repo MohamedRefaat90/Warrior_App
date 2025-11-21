@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/onboarding/data/onboarding_data.dart';
@@ -61,7 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         (currentIndex == 2)
             ? CustomBTN(
-                widget: const Text('Let\'s Begin '),
+                widget: Text('letsBegin'.tr(context)),
                 color: AppColors.black,
                 padding: 15,
                 width: 0.5.sw,
@@ -77,7 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 count: onboardingItems.length,
                 effect: WormEffect(
                     dotColor: AppColors.black,
-                    activeDotColor: AppColors.primaryColor!),
+                    activeDotColor: AppColors.primaryColor),
               ),
         30.verticalSpace
       ],

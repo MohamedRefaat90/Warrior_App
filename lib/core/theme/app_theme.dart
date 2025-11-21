@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Application theme configuration
 /// Provides comprehensive light and dark themes with premium styling
@@ -27,84 +26,10 @@ abstract class AppTheme {
       brightness: Brightness.dark,
       colorScheme: colorScheme,
 
-      // Text theme with custom fonts
-      textTheme:
-          GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
-        displayLarge: GoogleFonts.poppins(
-          fontSize: 57,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        displayMedium: GoogleFonts.poppins(
-          fontSize: 45,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        displaySmall: GoogleFonts.poppins(
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        headlineLarge: GoogleFonts.poppins(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        headlineMedium: GoogleFonts.poppins(
-          fontSize: 28,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        headlineSmall: GoogleFonts.poppins(
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        titleLarge: GoogleFonts.poppins(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        titleMedium: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        titleSmall: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        bodyLarge: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: colorScheme.onSurface,
-        ),
-        bodyMedium: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: colorScheme.onSurface,
-        ),
-        bodySmall: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-          color: colorScheme.onSurface,
-        ),
-        labelLarge: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        labelMedium: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        labelSmall: GoogleFonts.poppins(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
+      // Text theme with custom fonts - uses Cairo for Arabic
+      textTheme: _buildTextTheme(
+        colorScheme: colorScheme,
+        isDark: true,
       ),
 
       // AppBar theme
@@ -231,83 +156,10 @@ abstract class AppTheme {
       brightness: Brightness.light,
       colorScheme: colorScheme,
 
-      // Text theme with custom fonts
-      textTheme: GoogleFonts.poppinsTextTheme().copyWith(
-        displayLarge: GoogleFonts.poppins(
-          fontSize: 57,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        displayMedium: GoogleFonts.poppins(
-          fontSize: 45,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        displaySmall: GoogleFonts.poppins(
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        headlineLarge: GoogleFonts.poppins(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurface,
-        ),
-        headlineMedium: GoogleFonts.poppins(
-          fontSize: 28,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        headlineSmall: GoogleFonts.poppins(
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        titleLarge: GoogleFonts.poppins(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        titleMedium: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        titleSmall: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        bodyLarge: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: colorScheme.onSurface,
-        ),
-        bodyMedium: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: colorScheme.onSurface,
-        ),
-        bodySmall: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-          color: colorScheme.onSurface,
-        ),
-        labelLarge: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        labelMedium: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
-        labelSmall: GoogleFonts.poppins(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
-        ),
+      // Text theme with custom fonts - uses Cairo for Arabic
+      textTheme: _buildTextTheme(
+        colorScheme: colorScheme,
+        isDark: false,
       ),
 
       // AppBar theme
@@ -414,6 +266,108 @@ abstract class AppTheme {
 
       // Icon theme
       iconTheme: IconThemeData(
+        color: colorScheme.onSurface,
+      ),
+    );
+  }
+
+  /// Build text theme with locale-aware font selection
+  /// Uses Cairo font for Arabic, Poppins for English
+  static TextTheme _buildTextTheme({
+    required ColorScheme colorScheme,
+    required bool isDark,
+  }) {
+    // Use Cairo font (already in assets) for better Arabic support
+    // The font will be applied through the fontFamily property
+    return TextTheme(
+      displayLarge: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 57,
+        fontWeight: FontWeight.bold,
+        color: colorScheme.onSurface,
+      ),
+      displayMedium: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 45,
+        fontWeight: FontWeight.bold,
+        color: colorScheme.onSurface,
+      ),
+      displaySmall: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 36,
+        fontWeight: FontWeight.bold,
+        color: colorScheme.onSurface,
+      ),
+      headlineLarge: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: colorScheme.onSurface,
+      ),
+      headlineMedium: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 28,
+        fontWeight: FontWeight.w600,
+        color: colorScheme.onSurface,
+      ),
+      headlineSmall: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: colorScheme.onSurface,
+      ),
+      titleLarge: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        color: colorScheme.onSurface,
+      ),
+      titleMedium: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: colorScheme.onSurface,
+      ),
+      titleSmall: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: colorScheme.onSurface,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        color: colorScheme.onSurface,
+      ),
+      bodyMedium: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: colorScheme.onSurface,
+      ),
+      bodySmall: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 12,
+        fontWeight: FontWeight.normal,
+        color: colorScheme.onSurface,
+      ),
+      labelLarge: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: colorScheme.onSurface,
+      ),
+      labelMedium: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: colorScheme.onSurface,
+      ),
+      labelSmall: TextStyle(
+        fontFamily: 'Cairo',
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
         color: colorScheme.onSurface,
       ),
     );

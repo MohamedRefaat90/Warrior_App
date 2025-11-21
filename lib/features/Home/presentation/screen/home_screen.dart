@@ -61,7 +61,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const BannerAdWidget(),
+                // const BannerAdWidget(),
                 const Spacer(),
                 GridView.builder(
                   shrinkWrap: true,

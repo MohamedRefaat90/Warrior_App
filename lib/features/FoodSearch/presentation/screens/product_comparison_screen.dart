@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
@@ -18,7 +19,7 @@ class ProductComparisonScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Compare Products'),
+        title: Text('compareProducts'.tr(context)),
         actions: [
           if (comparisonProducts.isNotEmpty)
             IconButton(
@@ -50,50 +51,42 @@ class ProductComparisonScreen extends ConsumerWidget {
                 context.pushNamed(AppRouters.advancedSearch);
               },
               icon: const Icon(Icons.add),
-              label: const Text('Add Product'),
+              label: Text('addProduct'.tr(context)),
             )
           : null,
     );
   }
 
-  Widget _buildSingleProductView(
+  Widget _buildComparisonSection(
     BuildContext context,
-    FoodProductModel product,
-    WidgetRef ref,
+    String title,
+    List<Widget> values,
   ) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).dividerColor,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
         children: [
-          ProductImageWidget(
-            imageUrl: product.imageFrontUrl ?? product.imageUrl,
-            width: 150,
-            height: 150,
+          Expanded(
+            flex: 2,
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
           ),
-          16.verticalSpace,
-          Text(
-            product.productName ?? 'Unknown Product',
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-          8.verticalSpace,
-          Text(
-            'Add more products to compare',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
-                ),
-          ),
-          24.verticalSpace,
-          ElevatedButton.icon(
-            onPressed: () {
-              context.pushNamed(AppRouters.advancedSearch);
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('Add Another Product'),
-          ),
+          ...values.map((value) => Expanded(
+                flex: 3,
+                child: Center(child: value),
+              )),
         ],
       ),
     );
@@ -127,7 +120,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             products
                 .map((p) => p.nutriScore != null
                     ? NutritionScoreBadge(nutriScore: p.nutriScore, size: 50)
-                    : const Text('N/A'))
+                    : Text('na'.tr(context)))
                 .toList(),
           ),
           _buildComparisonSection(
@@ -135,7 +128,9 @@ class ProductComparisonScreen extends ConsumerWidget {
             'NOVA Group',
             products
                 .map((p) => Text(
-                      p.novaGroup != null ? 'Group ${p.novaGroup}' : 'N/A',
+                      p.novaGroup != null
+                          ? 'Group ${p.novaGroup}'
+                          : 'na'.tr(context),
                       style: Theme.of(context).textTheme.titleMedium,
                     ))
                 .toList(),
@@ -146,7 +141,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             products
                 .map((p) => p.ecoscore != null
                     ? EcoscoreWidget(ecoscore: p.ecoscore, size: 50)
-                    : const Text('N/A'))
+                    : Text('na'.tr(context)))
                 .toList(),
           ),
 
@@ -167,7 +162,8 @@ class ProductComparisonScreen extends ConsumerWidget {
               context,
               'Energy (kcal)',
               products
-                  .map((p) => p.nutritionValues?.energyKcal?.toStringAsFixed(0) ??
+                  .map((p) =>
+                      p.nutritionValues?.energyKcal?.toStringAsFixed(0) ??
                       'N/A')
                   .toList(),
             ),
@@ -264,7 +260,9 @@ class ProductComparisonScreen extends ConsumerWidget {
             'Vegetarian',
             products
                 .map((p) => Icon(
-                      p.isVegetarian == true ? Icons.check_circle : Icons.cancel,
+                      p.isVegetarian == true
+                          ? Icons.check_circle
+                          : Icons.cancel,
                       color: p.isVegetarian == true ? Colors.green : Colors.red,
                       size: 30,
                     ))
@@ -283,112 +281,6 @@ class ProductComparisonScreen extends ConsumerWidget {
           ),
 
           32.verticalSpace,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductHeader(
-    BuildContext context,
-    FoodProductModel product,
-    WidgetRef ref,
-  ) {
-    return Card(
-      margin: EdgeInsets.all(4.w),
-      child: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ProductImageWidget(
-                imageUrl: product.imageFrontUrl ?? product.imageUrl,
-                width: 80,
-                height: 80,
-              ),
-              8.verticalSpace,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: Text(
-                  product.productName ?? 'Unknown',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (product.brands != null) ...[
-                4.verticalSpace,
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: Text(
-                    product.brands!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.6),
-                        ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ],
-          ),
-          Positioned(
-            top: 4,
-            right: 4,
-            child: IconButton(
-              icon: const Icon(Icons.close, size: 20),
-              onPressed: () {
-                ref
-                    .read(comparisonProvider.notifier)
-                    .removeProduct(product.barcode);
-              },
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildComparisonSection(
-    BuildContext context,
-    String title,
-    List<Widget> values,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-          ...values
-              .map((value) => Expanded(
-                    flex: 3,
-                    child: Center(child: value),
-                  ))
-              .toList(),
         ],
       ),
     );
@@ -477,6 +369,116 @@ class ProductComparisonScreen extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _buildProductHeader(
+    BuildContext context,
+    FoodProductModel product,
+    WidgetRef ref,
+  ) {
+    return Card(
+      margin: EdgeInsets.all(4.w),
+      child: Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ProductImageWidget(
+                imageUrl: product.imageFrontUrl ?? product.imageUrl,
+                width: 80,
+                height: 80,
+              ),
+              8.verticalSpace,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Text(
+                  product.productName ?? 'Unknown',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (product.brands != null) ...[
+                4.verticalSpace,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                  child: Text(
+                    product.brands!,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                        ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ],
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: IconButton(
+              icon: const Icon(Icons.close, size: 20),
+              onPressed: () {
+                ref
+                    .read(comparisonProvider.notifier)
+                    .removeProduct(product.barcode);
+              },
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSingleProductView(
+    BuildContext context,
+    FoodProductModel product,
+    WidgetRef ref,
+  ) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ProductImageWidget(
+            imageUrl: product.imageFrontUrl ?? product.imageUrl,
+            width: 150,
+            height: 150,
+          ),
+          16.verticalSpace,
+          Text(
+            product.productName ?? 'Unknown Product',
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+          8.verticalSpace,
+          Text(
+            'Add more products to compare',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
+                ),
+          ),
+          24.verticalSpace,
+          ElevatedButton.icon(
+            onPressed: () {
+              context.pushNamed(AppRouters.advancedSearch);
+            },
+            icon: const Icon(Icons.add),
+            label: Text('addAnotherProduct'.tr(context)),
+          ),
+        ],
+      ),
+    );
+  }
 }
-
-

@@ -1,3 +1,4 @@
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/advanced_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
@@ -22,33 +23,13 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
   bool _showFilters = false;
 
   @override
-  void initState() {
-    super.initState();
-    // Pre-fill search query if provided
-    if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
-      _searchController.text = widget.initialQuery!;
-      // Trigger search after frame is built
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(advancedSearchProvider.notifier).updateQuery(widget.initialQuery!);
-        ref.read(advancedSearchProvider.notifier).performSearch();
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final searchState = ref.watch(advancedSearchProvider);
     final searchNotifier = ref.read(advancedSearchProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Advanced Search'),
+        title: Text('advancedSearch'.tr(context)),
         actions: [
           if (searchState.hasActiveFilters)
             IconButton(
@@ -174,7 +155,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                                     strokeWidth: 2),
                               )
                             : const Icon(Icons.search),
-                        label: const Text('Search'),
+                        label: Text('search'.tr(context)),
                       ),
                     ),
                   ],
@@ -204,8 +185,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                             label: Text(score),
                             selected: isSelected,
                             onSelected: (selected) {
-                              searchNotifier.setNutriScore(
-                                  selected ? score : null);
+                              searchNotifier
+                                  .setNutriScore(selected ? score : null);
                             },
                             backgroundColor: _getNutriScoreColor(score)
                                 .withValues(alpha: 0.2),
@@ -243,15 +224,14 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                       Column(
                         children: [
                           SwitchListTile(
-                            title: const Text('Vegan Only'),
+                            title: Text('veganOnly'.tr(context)),
                             value: searchState.veganOnly,
                             onChanged: (_) => searchNotifier.toggleVegan(),
                           ),
                           SwitchListTile(
-                            title: const Text('Vegetarian Only'),
+                            title: Text('vegetarianOnly'.tr(context)),
                             value: searchState.vegetarianOnly,
-                            onChanged: (_) =>
-                                searchNotifier.toggleVegetarian(),
+                            onChanged: (_) => searchNotifier.toggleVegetarian(),
                           ),
                           SwitchListTile(
                             title: const Text('Palm Oil Free'),
@@ -284,8 +264,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                           return FilterChip(
                             label: Text(allergen),
                             selected: isSelected,
-                            onSelected: (_) =>
-                                searchNotifier.toggleAllergen(allergen.toLowerCase()),
+                            onSelected: (_) => searchNotifier
+                                .toggleAllergen(allergen.toLowerCase()),
                           );
                         }).toList(),
                       ),
@@ -305,6 +285,28 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Pre-fill search query if provided
+    if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
+      _searchController.text = widget.initialQuery!;
+      // Trigger search after frame is built
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref
+            .read(advancedSearchProvider.notifier)
+            .updateQuery(widget.initialQuery!);
+        ref.read(advancedSearchProvider.notifier).performSearch();
+      });
+    }
   }
 
   Widget _buildFilterSection(String title, Widget content) {
@@ -331,15 +333,15 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
     if (searchState.errorMessage != null) {
       return ErrorStateWidget(
         message: searchState.errorMessage!,
-        onRetry: () => ref.read(advancedSearchProvider.notifier).performSearch(),
+        onRetry: () =>
+            ref.read(advancedSearchProvider.notifier).performSearch(),
       );
     }
 
     if (searchState.results.isEmpty) {
       return EmptyStateWidget(
         title: 'No Results',
-        message:
-            'No results found.\nTry adjusting your search or filters.',
+        message: 'No results found.\nTry adjusting your search or filters.',
         icon: Icons.search_off,
       );
     }
@@ -360,6 +362,17 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
     );
   }
 
+  int _getActiveFilterCount(AdvancedSearchState state) {
+    int count = 0;
+    if (state.selectedNutriScore != null) count++;
+    if (state.selectedNovaGroup != null) count++;
+    if (state.veganOnly) count++;
+    if (state.vegetarianOnly) count++;
+    if (state.palmOilFree) count++;
+    count += state.excludedAllergens.length;
+    return count;
+  }
+
   Color _getNutriScoreColor(String score) {
     switch (score.toUpperCase()) {
       case 'A':
@@ -376,16 +389,4 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
         return Colors.grey;
     }
   }
-
-  int _getActiveFilterCount(AdvancedSearchState state) {
-    int count = 0;
-    if (state.selectedNutriScore != null) count++;
-    if (state.selectedNovaGroup != null) count++;
-    if (state.veganOnly) count++;
-    if (state.vegetarianOnly) count++;
-    if (state.palmOilFree) count++;
-    count += state.excludedAllergens.length;
-    return count;
-  }
 }
-

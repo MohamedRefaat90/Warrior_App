@@ -1,4 +1,4 @@
-import 'package:Warrior/core/theme/theme_provider.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,14 +10,14 @@ class AnimatedToggleSwitcher extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
+    final themeMode = ref.watch(appSettingsProvider.select((s) => s.themeMode));
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
             MediaQuery.of(context).platformBrightness == Brightness.dark);
 
     return GestureDetector(
       onTap: () {
-        ref.read(themeModeProvider.notifier).toggleTheme();
+        ref.read(appSettingsProvider.notifier).toggleTheme();
       },
       child: Container(
         width: 70.w,

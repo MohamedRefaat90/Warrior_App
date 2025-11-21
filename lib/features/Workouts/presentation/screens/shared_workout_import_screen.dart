@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/api_error_handler.dart';
 import 'package:Warrior/core/widgets/add_workout.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
@@ -49,7 +50,7 @@ class SharedWorkoutImportScreen extends ConsumerWidget {
           ),
           title: sharedWorkoutAsync.when(
             data: (workout) => Text(
-              workout.name.capitalizeWord(),
+              workout.name!.capitalizeWord(),
               style: const TextStyle(
                 fontFamily: "Kings",
                 fontSize: 30,
@@ -124,7 +125,7 @@ class _ErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             CustomBTN(
-              widget: const Text('Retry'),
+              widget: Text('retry'.tr(context)),
               width: 150.w,
               padding: 10,
               radius: 8,

@@ -29,7 +29,7 @@ def flutterVersionName = flutter.versionName
 android {
     namespace = "com.warrior90.app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "28.0.12433566"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

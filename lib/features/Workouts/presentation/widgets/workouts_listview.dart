@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
@@ -75,7 +76,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
           ),
           SizedBox(height: 4.h),
           Text(
-            'Delete',
+            'delete'.tr(context),
             style: TextStyle(
               color: Colors.white,
               fontSize: 12.sp,
@@ -169,7 +170,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
               ),
             ),
             SizedBox(width: 12.w),
-            const Expanded(child: Text('Delete Workout?')),
+            Expanded(child: Text('deleteWorkout'.tr(context))),
           ],
         ),
         content: const Text(
@@ -178,7 +179,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr(context)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -194,7 +195,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
                 borderRadius: BorderRadius.circular(12.r),
               ),
             ),
-            child: const Text('Delete'),
+            child: Text('delete'.tr(context)),
           ),
         ],
       ),

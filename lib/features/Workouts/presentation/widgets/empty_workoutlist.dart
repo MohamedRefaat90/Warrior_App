@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
@@ -27,42 +28,6 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOut,
-      ),
-    );
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _descriptionController.dispose();
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,14 +60,14 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              AppColors.primaryColor!.withOpacity(0.2),
-                              AppColors.primaryColor!.withOpacity(0.05),
+                              AppColors.primaryColor.withOpacity(0.2),
+                              AppColors.primaryColor.withOpacity(0.05),
                             ],
                           ),
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryColor!.withOpacity(0.2),
+                              color: AppColors.primaryColor.withOpacity(0.2),
                               blurRadius: 30,
                               spreadRadius: 5,
                             ),
@@ -176,7 +141,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       elevation: 8,
-                      shadowColor: AppColors.primaryColor!.withOpacity(0.4),
+                      shadowColor: AppColors.primaryColor.withOpacity(0.4),
                     ),
                   ),
                 ),
@@ -187,10 +152,10 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                   decoration: BoxDecoration(
                     color: isDark
                         ? Colors.grey[900]
-                        : AppColors.primaryColor!.withOpacity(0.05),
+                        : AppColors.primaryColor.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: AppColors.primaryColor!.withOpacity(0.2),
+                      color: AppColors.primaryColor.withOpacity(0.2),
                       width: 1,
                     ),
                   ),
@@ -221,6 +186,42 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    _animationController.forward();
   }
 
   void _showCreateDialog(BuildContext context) {
@@ -264,7 +265,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                     Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor!.withOpacity(0.1),
+                        color: AppColors.primaryColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Icon(
@@ -274,8 +275,8 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                       ),
                     ),
                     SizedBox(width: 12.w),
-                    const Expanded(
-                      child: Text('Create Workout Set'),
+                    Expanded(
+                      child: Text('createWorkoutSet'.tr(context)),
                     ),
                   ],
                 ),
@@ -326,7 +327,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
+                    child: Text('cancel'.tr(context)),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -359,7 +360,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: const Text('Create'),
+                    child: Text('create'.tr(context)),
                   ),
                 ],
               ),
@@ -370,4 +371,3 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
     );
   }
 }
-

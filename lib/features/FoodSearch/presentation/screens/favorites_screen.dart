@@ -1,3 +1,4 @@
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
@@ -14,7 +15,7 @@ class FavoritesScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Favorites'),
+        title: Text('favorites'.tr(context)),
         actions: [
           if (favorites.isNotEmpty)
             IconButton(
@@ -47,4 +48,3 @@ class FavoritesScreen extends ConsumerWidget {
     );
   }
 }
-

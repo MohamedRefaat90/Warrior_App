@@ -1,0 +1,428 @@
+{
+  "@@locale": "en",
+  "appTitle": "Warrior",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Label for dark mode setting"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Label for language setting"
+  },
+  "unleashYourPower": "💪 Unleash Your Power",
+  "@unleashYourPower": {
+    "description": "Tagline in drawer header"
+  },
+  "shareApp": "Share App",
+  "@shareApp": {
+    "description": "Share app menu item"
+  },
+  "spreadTheWarriorSpirit": "Spread the warrior spirit",
+  "@spreadTheWarriorSpirit": {
+    "description": "Subtitle for share app"
+  },
+  "rateApp": "Rate App",
+  "@rateApp": {
+    "description": "Rate app menu item"
+  },
+  "supportUs": "Support Us ⭐",
+  "@supportUs": {
+    "description": "Subtitle for rate app"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout menu item"
+  },
+  "takeARest": "Take a rest warrior",
+  "@takeARest": {
+    "description": "Subtitle for logout"
+  },
+  "version": "Version",
+  "@version": {
+    "description": "Version label in drawer footer"
+  },
+  "shareAppMessage": "Check out the Warrior App for amazing workout routines! Download it here: https://play.google.com/store/apps/details?id=com.warrior90.app",
+  "@shareAppMessage": {
+    "description": "Message shown when sharing the app"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings section label"
+  },
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  "arabic": "Arabic",
+  "@arabic": {
+    "description": "Arabic language option"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit button text"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+  "create": "Create",
+  "@create": {
+    "description": "Create button text"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  "start": "Start",
+  "@start": {
+    "description": "Start button text"
+  },
+  "comingSoon": "Coming Soon",
+  "@comingSoon": {
+    "description": "Coming soon placeholder text"
+  },
+  "createWorkoutSet": "Create Workout Set",
+  "@createWorkoutSet": {
+    "description": "Create workout set button text"
+  },
+  "editWorkoutSet": "Edit Workout Set",
+  "@editWorkoutSet": {
+    "description": "Edit workout set dialog title"
+  },
+  "searchHistory": "Search History",
+  "@searchHistory": {
+    "description": "Search history screen title"
+  },
+  "clearHistory": "Clear History",
+  "@clearHistory": {
+    "description": "Clear history button text"
+  },
+  "supplementsScreen": "Supplements",
+  "@supplementsScreen": {
+    "description": "Supplements screen title"
+  },
+  "nutritionScreen": "Nutrition",
+  "@nutritionScreen": {
+    "description": "Nutrition screen title"
+  },
+  "deleteWorkout": "Delete Workout?",
+  "@deleteWorkout": {
+    "description": "Delete workout confirmation"
+  },
+  "letsBegin": "Let's Begin",
+  "@letsBegin": {
+    "description": "Onboarding begin button"
+  },
+  "scanBarcode": "Scan Barcode",
+  "@scanBarcode": {
+    "description": "Scan barcode screen title"
+  },
+  "productNotFound": "Product Not Found",
+  "@productNotFound": {
+    "description": "Product not found message"
+  },
+  "addProduct": "Add Product",
+  "@addProduct": {
+    "description": "Add product button"
+  },
+  "enterBarcode": "Enter Barcode",
+  "@enterBarcode": {
+    "description": "Enter barcode dialog title"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Search button text"
+  },
+  "understandingFoodScores": "Understanding Food Scores",
+  "@understandingFoodScores": {
+    "description": "Food scores guide title"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear button text"
+  },
+  "vegan": "Vegan",
+  "@vegan": {
+    "description": "Vegan label"
+  },
+  "vegetarian": "Vegetarian",
+  "@vegetarian": {
+    "description": "Vegetarian label"
+  },
+  "palmOilFree": "Palm Oil Free",
+  "@palmOilFree": {
+    "description": "Palm oil free label"
+  },
+  "nutriScore": "Nutri-Score",
+  "@nutriScore": {
+    "description": "Nutri-Score label"
+  },
+  "foodSearch": "Food Search",
+  "@foodSearch": {
+    "description": "Food search screen title"
+  },
+  "scan": "Scan",
+  "@scan": {
+    "description": "Scan button text"
+  },
+  "compareProducts": "Compare Products",
+  "@compareProducts": {
+    "description": "Compare products screen title"
+  },
+  "addAnotherProduct": "Add Another Product",
+  "@addAnotherProduct": {
+    "description": "Add another product button"
+  },
+  "na": "N/A",
+  "@na": {
+    "description": "Not available abbreviation"
+  },
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Favorites screen title"
+  },
+  "advancedSearch": "Advanced Search",
+  "@advancedSearch": {
+    "description": "Advanced search screen title"
+  },
+  "veganOnly": "Vegan Only",
+  "@veganOnly": {
+    "description": "Vegan only filter"
+  },
+  "vegetarianOnly": "Vegetarian Only",
+  "@vegetarianOnly": {
+    "description": "Vegetarian only filter"
+  },
+  "makeBetterFoodChoices": "Make Better Food Choices",
+  "@makeBetterFoodChoices": {
+    "description": "Nutrition guide hero title"
+  },
+  "learnAboutScores": "Learn about the scores that help you understand food quality",
+  "@learnAboutScores": {
+    "description": "Nutrition guide hero subtitle"
+  },
+  "nutriScoreLong": "Nutri-Score",
+  "@nutriScoreLong": {
+    "description": "Nutri-Score section title"
+  },
+  "nutriScoreDescription": "A nutrition quality indicator that rates foods from A (best) to E (worst) based on their nutritional value.",
+  "@nutriScoreDescription": {
+    "description": "Nutri-Score description"
+  },
+  "howItWorks": "How it works:",
+  "@howItWorks": {
+    "description": "How it works section title"
+  },
+  "nutriScorePoint1": "Considers positive nutrients: fiber, protein, fruits & vegetables",
+  "@nutriScorePoint1": {
+    "description": "Nutri-Score explanation point 1"
+  },
+  "nutriScorePoint2": "Considers negative nutrients: calories, saturated fat, sugar, salt",
+  "@nutriScorePoint2": {
+    "description": "Nutri-Score explanation point 2"
+  },
+  "nutriScorePoint3": "The balance determines the final score",
+  "@nutriScorePoint3": {
+    "description": "Nutri-Score explanation point 3"
+  },
+  "scoreGuide": "Score Guide:",
+  "@scoreGuide": {
+    "description": "Score guide section title"
+  },
+  "excellentQuality": "Excellent nutritional quality",
+  "@excellentQuality": {
+    "description": "Score A description"
+  },
+  "scoreAExamples": "Vegetables, fruits, whole grains",
+  "@scoreAExamples": {
+    "description": "Score A examples"
+  },
+  "goodQuality": "Good nutritional quality",
+  "@goodQuality": {
+    "description": "Score B description"
+  },
+  "scoreBExamples": "Yogurt, fish, nuts",
+  "@scoreBExamples": {
+    "description": "Score B examples"
+  },
+  "averageQuality": "Average nutritional quality",
+  "@averageQuality": {
+    "description": "Score C description"
+  },
+  "scoreCExamples": "Bread, pasta, some cereals",
+  "@scoreCExamples": {
+    "description": "Score C examples"
+  },
+  "poorQuality": "Poor nutritional quality",
+  "@poorQuality": {
+    "description": "Score D description"
+  },
+  "scoreDExamples": "Cookies, cakes, processed foods",
+  "@scoreDExamples": {
+    "description": "Score D examples"
+  },
+  "veryPoorQuality": "Very poor nutritional quality",
+  "@veryPoorQuality": {
+    "description": "Score E description"
+  },
+  "scoreEExamples": "Soft drinks, chips, candy",
+  "@scoreEExamples": {
+    "description": "Score E examples"
+  },
+  "novaClassification": "NOVA Classification",
+  "@novaClassification": {
+    "description": "NOVA section title"
+  },
+  "novaDescription": "A food classification system based on the extent and purpose of food processing.",
+  "@novaDescription": {
+    "description": "NOVA description"
+  },
+  "novaGroup1": "Group 1: Unprocessed or minimally processed foods",
+  "@novaGroup1": {
+    "description": "NOVA group 1 description"
+  },
+  "novaGroup2": "Group 2: Processed culinary ingredients",
+  "@novaGroup2": {
+    "description": "NOVA group 2 description"
+  },
+  "novaGroup3": "Group 3: Processed foods",
+  "@novaGroup3": {
+    "description": "NOVA group 3 description"
+  },
+  "novaGroup4": "Group 4: Ultra-processed foods",
+  "@novaGroup4": {
+    "description": "NOVA group 4 description"
+  },
+  "unprocessedMinimal": "Unprocessed/Minimally",
+  "@unprocessedMinimal": {
+    "description": "NOVA group 1 label"
+  },
+  "nova1Examples": "Fresh fruits, vegetables, meat, eggs",
+  "@nova1Examples": {
+    "description": "NOVA group 1 examples"
+  },
+  "culinaryIngredients": "Culinary Ingredients",
+  "@culinaryIngredients": {
+    "description": "NOVA group 2 label"
+  },
+  "nova2Examples": "Oils, butter, sugar, salt",
+  "@nova2Examples": {
+    "description": "NOVA group 2 examples"
+  },
+  "processedFoods": "Processed Foods",
+  "@processedFoods": {
+    "description": "NOVA group 3 label"
+  },
+  "nova3Examples": "Canned vegetables, cheese, bread",
+  "@nova3Examples": {
+    "description": "NOVA group 3 examples"
+  },
+  "ultraProcessed": "Ultra-Processed",
+  "@ultraProcessed": {
+    "description": "NOVA group 4 label"
+  },
+  "nova4Examples": "Soft drinks, instant noodles, packaged snacks",
+  "@nova4Examples": {
+    "description": "NOVA group 4 examples"
+  },
+  "ecoScore": "Eco-Score",
+  "@ecoScore": {
+    "description": "Eco-Score section title"
+  },
+  "ecoScoreDescription": "An environmental impact indicator that rates foods from A (best) to E (worst) based on their ecological footprint.",
+  "@ecoScoreDescription": {
+    "description": "Eco-Score description"
+  },
+  "ecoPoint1": "Considers production methods and origin",
+  "@ecoPoint1": {
+    "description": "Eco-Score explanation point 1"
+  },
+  "ecoPoint2": "Evaluates transportation and packaging",
+  "@ecoPoint2": {
+    "description": "Eco-Score explanation point 2"
+  },
+  "ecoPoint3": "Accounts for environmental policies",
+  "@ecoPoint3": {
+    "description": "Eco-Score explanation point 3"
+  },
+  "ecoPoint4": "Measures carbon footprint and biodiversity impact",
+  "@ecoPoint4": {
+    "description": "Eco-Score explanation point 4"
+  },
+  "veryLowImpact": "Very low environmental impact",
+  "@veryLowImpact": {
+    "description": "Eco-Score A description"
+  },
+  "ecoAExamples": "Local organic vegetables",
+  "@ecoAExamples": {
+    "description": "Eco-Score A examples"
+  },
+  "lowImpact": "Low environmental impact",
+  "@lowImpact": {
+    "description": "Eco-Score B description"
+  },
+  "ecoBExamples": "Seasonal fruits, legumes",
+  "@ecoBExamples": {
+    "description": "Eco-Score B examples"
+  },
+  "moderateImpact": "Moderate environmental impact",
+  "@moderateImpact": {
+    "description": "Eco-Score C description"
+  },
+  "ecoCExamples": "Dairy products, poultry",
+  "@ecoCExamples": {
+    "description": "Eco-Score C examples"
+  },
+  "highImpact": "High environmental impact",
+  "@highImpact": {
+    "description": "Eco-Score D description"
+  },
+  "ecoDExamples": "Imported foods, red meat",
+  "@ecoDExamples": {
+    "description": "Eco-Score D examples"
+  },
+  "veryHighImpact": "Very high environmental impact",
+  "@veryHighImpact": {
+    "description": "Eco-Score E description"
+  },
+  "ecoEExamples": "Air-freighted foods, intensive farming",
+  "@ecoEExamples": {
+    "description": "Eco-Score E examples"
+  },
+  "quickTips": "Quick Tips",
+  "@quickTips": {
+    "description": "Tips section title"
+  },
+  "tip1": "Aim for Nutri-Score A or B products",
+  "@tip1": {
+    "description": "Tip 1"
+  },
+  "tip2": "Choose NOVA Group 1 or 2 when possible",
+  "@tip2": {
+    "description": "Tip 2"
+  },
+  "tip3": "Prefer Eco-Score A or B for the planet",
+  "@tip3": {
+    "description": "Tip 3"
+  },
+  "tip4": "Read ingredient lists, not just scores",
+  "@tip4": {
+    "description": "Tip 4"
+  },
+  "tip5": "Balance is key - variety in your diet matters",
+  "@tip5": {
+    "description": "Tip 5"
+  }
+}
+

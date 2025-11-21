@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -365,7 +366,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr(context)),
           ),
           Consumer(
             builder: (context, ref, child) => ElevatedButton(
@@ -386,7 +387,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
               ),
               child: ref.watch(workoutsProvider).isLoading
                   ? BtnLoader(color: Colors.white)
-                  : const Text('Delete'),
+                  : Text('delete'.tr(context)),
             ),
           ),
         ],
@@ -419,7 +420,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
               ),
             ),
             SizedBox(width: 12.w),
-            const Text('Edit Workout Set'),
+            Text('editWorkoutSet'.tr(context)),
           ],
         ),
         content: Column(
@@ -442,7 +443,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr(context)),
           ),
           Consumer(
             builder: (context, ref, child) => ElevatedButton(
@@ -466,7 +467,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
               ),
               child: ref.watch(workoutsProvider).isLoading
                   ? BtnLoader(color: Colors.white)
-                  : const Text('Save'),
+                  : Text('save'.tr(context)),
             ),
           ),
         ],

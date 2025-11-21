@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 CustomBTN(
-                  widget: const Text("Start"),
+                  widget: Text('start'.tr(context)),
                   press: () => context.goNamed(AppRouters.onboarding),
                   padding: 15,
                   width: 150,

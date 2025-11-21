@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
@@ -17,7 +18,7 @@ class FoodSearchScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Food Search'),
+        title: Text('foodSearch'.tr(context)),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -106,7 +107,7 @@ class FoodSearchScreen extends ConsumerWidget {
                           context.pushNamed(AppRouters.nutritionGuide);
                         },
                         icon: const Icon(Icons.school_outlined),
-                        label: const Text('Understanding Food Scores'),
+                        label: Text('understandingFoodScores'.tr(context)),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor:
@@ -161,7 +162,7 @@ class FoodSearchScreen extends ConsumerWidget {
           context.pushNamed(AppRouters.barcodeScanner);
         },
         icon: const Icon(Icons.qr_code_scanner),
-        label: const Text('Scan'),
+        label: Text('scan'.tr(context)),
       ),
     );
   }

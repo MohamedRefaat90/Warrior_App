@@ -1,0 +1,428 @@
+{
+  "@@locale": "ar",
+  "appTitle": "المحارب",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "darkMode": "الوضع الغامق",
+  "@darkMode": {
+    "description": "Label for dark mode setting"
+  },
+  "language": "اللغة",
+  "@language": {
+    "description": "Label for language setting"
+  },
+  "unleashYourPower": "💪 طلّع قوتك",
+  "@unleashYourPower": {
+    "description": "Tagline in drawer header"
+  },
+  "shareApp": "شارك التطبيق",
+  "@shareApp": {
+    "description": "Share app menu item"
+  },
+  "spreadTheWarriorSpirit": "انشر روح المحارب",
+  "@spreadTheWarriorSpirit": {
+    "description": "Subtitle for share app"
+  },
+  "rateApp": "قيّم التطبيق",
+  "@rateApp": {
+    "description": "Rate app menu item"
+  },
+  "supportUs": "ادعمنا ⭐",
+  "@supportUs": {
+    "description": "Subtitle for rate app"
+  },
+  "logout": "اخرج",
+  "@logout": {
+    "description": "Logout menu item"
+  },
+  "takeARest": "خد راحتك يا محارب",
+  "@takeARest": {
+    "description": "Subtitle for logout"
+  },
+  "version": "الإصدار",
+  "@version": {
+    "description": "Version label in drawer footer"
+  },
+  "shareAppMessage": "اكتشف تطبيق المحارب وخلي تمارينك أحسن! حمّله من هنا: https://play.google.com/store/apps/details?id=com.warrior90.app",
+  "@shareAppMessage": {
+    "description": "Message shown when sharing the app"
+  },
+  "settings": "الإعدادات",
+  "@settings": {
+    "description": "Settings section label"
+  },
+  "english": "إنجليزي",
+  "@english": {
+    "description": "English language option"
+  },
+  "arabic": "عربي",
+  "@arabic": {
+    "description": "Arabic language option"
+  },
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "delete": "امسح",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "edit": "تعديل",
+  "@edit": {
+    "description": "Edit button text"
+  },
+  "save": "احفظ",
+  "@save": {
+    "description": "Save button text"
+  },
+  "create": "إنشاء",
+  "@create": {
+    "description": "Create button text"
+  },
+  "retry": "حاول تاني",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  "start": "ابدأ",
+  "@start": {
+    "description": "Start button text"
+  },
+  "comingSoon": "قريباً",
+  "@comingSoon": {
+    "description": "Coming soon placeholder text"
+  },
+  "createWorkoutSet": "إنشاء مجموعة تمارين",
+  "@createWorkoutSet": {
+    "description": "Create workout set button text"
+  },
+  "editWorkoutSet": "تعديل مجموعة التمارين",
+  "@editWorkoutSet": {
+    "description": "Edit workout set dialog title"
+  },
+  "searchHistory": "سجل البحث",
+  "@searchHistory": {
+    "description": "Search history screen title"
+  },
+  "clearHistory": "امسح السجل",
+  "@clearHistory": {
+    "description": "Clear history button text"
+  },
+  "supplementsScreen": "المكملات",
+  "@supplementsScreen": {
+    "description": "Supplements screen title"
+  },
+  "nutritionScreen": "التغذية",
+  "@nutritionScreen": {
+    "description": "Nutrition screen title"
+  },
+  "deleteWorkout": "حذف التمرين؟",
+  "@deleteWorkout": {
+    "description": "Delete workout confirmation"
+  },
+  "letsBegin": "يلا نبدأ",
+  "@letsBegin": {
+    "description": "Onboarding begin button"
+  },
+  "scanBarcode": "افحص الباركود",
+  "@scanBarcode": {
+    "description": "Scan barcode screen title"
+  },
+  "productNotFound": "المنتج مش موجود",
+  "@productNotFound": {
+    "description": "Product not found message"
+  },
+  "addProduct": "ضيف منتج",
+  "@addProduct": {
+    "description": "Add product button"
+  },
+  "enterBarcode": "اكتب الباركود",
+  "@enterBarcode": {
+    "description": "Enter barcode dialog title"
+  },
+  "search": "بحث",
+  "@search": {
+    "description": "Search button text"
+  },
+  "understandingFoodScores": "افهم تقييمات الأكل",
+  "@understandingFoodScores": {
+    "description": "Food scores guide title"
+  },
+  "clear": "امسح",
+  "@clear": {
+    "description": "Clear button text"
+  },
+  "vegan": "نباتي",
+  "@vegan": {
+    "description": "Vegan label"
+  },
+  "vegetarian": "نباتي (يتناول منتجات الألبان)",
+  "@vegetarian": {
+    "description": "Vegetarian label"
+  },
+  "palmOilFree": "من غير زيت النخيل",
+  "@palmOilFree": {
+    "description": "Palm oil free label"
+  },
+  "nutriScore": "التقييم الغذائي",
+  "@nutriScore": {
+    "description": "Nutri-Score label"
+  },
+  "foodSearch": "البحث عن الطعام",
+  "@foodSearch": {
+    "description": "Food search screen title"
+  },
+  "scan": "امسح",
+  "@scan": {
+    "description": "Scan button text"
+  },
+  "compareProducts": "قارن المنتجات",
+  "@compareProducts": {
+    "description": "Compare products screen title"
+  },
+  "addAnotherProduct": "ضيف منتج تاني",
+  "@addAnotherProduct": {
+    "description": "Add another product button"
+  },
+  "na": "مش متوفر",
+  "@na": {
+    "description": "Not available abbreviation"
+  },
+  "favorites": "المفضلة",
+  "@favorites": {
+    "description": "Favorites screen title"
+  },
+  "advancedSearch": "بحث متقدم",
+  "@advancedSearch": {
+    "description": "Advanced search screen title"
+  },
+  "veganOnly": "نباتي بس",
+  "@veganOnly": {
+    "description": "Vegan only filter"
+  },
+  "vegetarianOnly": "نباتي بس (ألبان)",
+  "@vegetarianOnly": {
+    "description": "Vegetarian only filter"
+  },
+  "makeBetterFoodChoices": "اختار أكلك صح",
+  "@makeBetterFoodChoices": {
+    "description": "Nutrition guide hero title"
+  },
+  "learnAboutScores": "اعرف التقييمات اللي هتساعدك تفهم جودة الأكل",
+  "@learnAboutScores": {
+    "description": "Nutrition guide hero subtitle"
+  },
+  "nutriScoreLong": "التقييم الغذائي",
+  "@nutriScoreLong": {
+    "description": "Nutri-Score section title"
+  },
+  "nutriScoreDescription": "مؤشر لجودة التغذية بيصنف الأكل من A (الأحسن) لـ E (الأسوأ) على حسب قيمته الغذائية.",
+  "@nutriScoreDescription": {
+    "description": "Nutri-Score description"
+  },
+  "howItWorks": "ازاي بيشتغل:",
+  "@howItWorks": {
+    "description": "How it works section title"
+  },
+  "nutriScorePoint1": "بياخد في الاعتبار العناصر الغذائية الكويسة: الألياف، البروتين، الفواكه والخضار",
+  "@nutriScorePoint1": {
+    "description": "Nutri-Score explanation point 1"
+  },
+  "nutriScorePoint2": "بياخد في الاعتبار العناصر الغذائية الوحشة: السعرات، الدهون المشبعة، السكر، الملح",
+  "@nutriScorePoint2": {
+    "description": "Nutri-Score explanation point 2"
+  },
+  "nutriScorePoint3": "التوازن هو اللي بيحدد النتيجة النهائية",
+  "@nutriScorePoint3": {
+    "description": "Nutri-Score explanation point 3"
+  },
+  "scoreGuide": "دليل التقييم:",
+  "@scoreGuide": {
+    "description": "Score guide section title"
+  },
+  "excellentQuality": "جودة غذائية ممتازة",
+  "@excellentQuality": {
+    "description": "Score A description"
+  },
+  "scoreAExamples": "الخضار، الفواكه، الحبوب الكاملة",
+  "@scoreAExamples": {
+    "description": "Score A examples"
+  },
+  "goodQuality": "جودة غذائية كويسة",
+  "@goodQuality": {
+    "description": "Score B description"
+  },
+  "scoreBExamples": "الزبادي، السمك، المكسرات",
+  "@scoreBExamples": {
+    "description": "Score B examples"
+  },
+  "averageQuality": "جودة غذائية متوسطة",
+  "@averageQuality": {
+    "description": "Score C description"
+  },
+  "scoreCExamples": "العيش، المكرونة، بعض الحبوب",
+  "@scoreCExamples": {
+    "description": "Score C examples"
+  },
+  "poorQuality": "جودة غذائية ضعيفة",
+  "@poorQuality": {
+    "description": "Score D description"
+  },
+  "scoreDExamples": "البسكويت، الكيك، الأكل المصنّع",
+  "@scoreDExamples": {
+    "description": "Score D examples"
+  },
+  "veryPoorQuality": "جودة غذائية وحشة جداً",
+  "@veryPoorQuality": {
+    "description": "Score E description"
+  },
+  "scoreEExamples": "المشروبات الغازية، الشيبسي، الحلويات",
+  "@scoreEExamples": {
+    "description": "Score E examples"
+  },
+  "novaClassification": "تصنيف NOVA",
+  "@novaClassification": {
+    "description": "NOVA section title"
+  },
+  "novaDescription": "نظام تصنيف الأكل على أساس قد إيه معالج.",
+  "@novaDescription": {
+    "description": "NOVA description"
+  },
+  "novaGroup1": "المجموعة 1: أكل طبيعي أو معالج بالحد الأدنى",
+  "@novaGroup1": {
+    "description": "NOVA group 1 description"
+  },
+  "novaGroup2": "المجموعة 2: مكونات الطبخ المعالجة",
+  "@novaGroup2": {
+    "description": "NOVA group 2 description"
+  },
+  "novaGroup3": "المجموعة 3: أكل معالج",
+  "@novaGroup3": {
+    "description": "NOVA group 3 description"
+  },
+  "novaGroup4": "المجموعة 4: أكل معالج جداً",
+  "@novaGroup4": {
+    "description": "NOVA group 4 description"
+  },
+  "unprocessedMinimal": "طبيعي/معالج بالحد الأدنى",
+  "@unprocessedMinimal": {
+    "description": "NOVA group 1 label"
+  },
+  "nova1Examples": "الفواكه الطازة، الخضار، اللحمة، البيض",
+  "@nova1Examples": {
+    "description": "NOVA group 1 examples"
+  },
+  "culinaryIngredients": "مكونات الطبخ",
+  "@culinaryIngredients": {
+    "description": "NOVA group 2 label"
+  },
+  "nova2Examples": "الزيوت، الزبدة، السكر، الملح",
+  "@nova2Examples": {
+    "description": "NOVA group 2 examples"
+  },
+  "processedFoods": "أكل معالج",
+  "@processedFoods": {
+    "description": "NOVA group 3 label"
+  },
+  "nova3Examples": "الخضار المعلب، الجبنة، العيش",
+  "@nova3Examples": {
+    "description": "NOVA group 3 examples"
+  },
+  "ultraProcessed": "معالج جداً",
+  "@ultraProcessed": {
+    "description": "NOVA group 4 label"
+  },
+  "nova4Examples": "المشروبات الغازية، النودلز السريع، السناكس المعبأة",
+  "@nova4Examples": {
+    "description": "NOVA group 4 examples"
+  },
+  "ecoScore": "التقييم البيئي",
+  "@ecoScore": {
+    "description": "Eco-Score section title"
+  },
+  "ecoScoreDescription": "مؤشر للتأثير البيئي بيصنف الأكل من A (الأحسن) لـ E (الأسوأ) على حسب أثره على البيئة.",
+  "@ecoScoreDescription": {
+    "description": "Eco-Score description"
+  },
+  "ecoPoint1": "بياخد في الاعتبار طرق الإنتاج والمصدر",
+  "@ecoPoint1": {
+    "description": "Eco-Score explanation point 1"
+  },
+  "ecoPoint2": "بيقيّم النقل والتعبئة",
+  "@ecoPoint2": {
+    "description": "Eco-Score explanation point 2"
+  },
+  "ecoPoint3": "بيحسب السياسات البيئية",
+  "@ecoPoint3": {
+    "description": "Eco-Score explanation point 3"
+  },
+  "ecoPoint4": "بيقيس البصمة الكربونية وتأثير التنوع البيولوجي",
+  "@ecoPoint4": {
+    "description": "Eco-Score explanation point 4"
+  },
+  "veryLowImpact": "تأثير بيئي قليل جداً",
+  "@veryLowImpact": {
+    "description": "Eco-Score A description"
+  },
+  "ecoAExamples": "الخضار العضوي المحلي",
+  "@ecoAExamples": {
+    "description": "Eco-Score A examples"
+  },
+  "lowImpact": "تأثير بيئي قليل",
+  "@lowImpact": {
+    "description": "Eco-Score B description"
+  },
+  "ecoBExamples": "الفواكه الموسمية، البقوليات",
+  "@ecoBExamples": {
+    "description": "Eco-Score B examples"
+  },
+  "moderateImpact": "تأثير بيئي متوسط",
+  "@moderateImpact": {
+    "description": "Eco-Score C description"
+  },
+  "ecoCExamples": "منتجات الألبان، الفراخ",
+  "@ecoCExamples": {
+    "description": "Eco-Score C examples"
+  },
+  "highImpact": "تأثير بيئي عالي",
+  "@highImpact": {
+    "description": "Eco-Score D description"
+  },
+  "ecoDExamples": "الأكل المستورد، اللحمة الحمرا",
+  "@ecoDExamples": {
+    "description": "Eco-Score D examples"
+  },
+  "veryHighImpact": "تأثير بيئي عالي جداً",
+  "@veryHighImpact": {
+    "description": "Eco-Score E description"
+  },
+  "ecoEExamples": "الأكل المنقول بالطيارات، الزراعة المكثفة",
+  "@ecoEExamples": {
+    "description": "Eco-Score E examples"
+  },
+  "quickTips": "نصايح سريعة",
+  "@quickTips": {
+    "description": "Tips section title"
+  },
+  "tip1": "استهدف منتجات التقييم الغذائي A أو B",
+  "@tip1": {
+    "description": "Tip 1"
+  },
+  "tip2": "اختار المجموعة 1 أو 2 من NOVA لما تقدر",
+  "@tip2": {
+    "description": "Tip 2"
+  },
+  "tip3": "فضّل التقييم البيئي A أو B عشان الكوكب",
+  "@tip3": {
+    "description": "Tip 3"
+  },
+  "tip4": "اقرا قايمة المكونات، مش التقييمات بس",
+  "@tip4": {
+    "description": "Tip 4"
+  },
+  "tip5": "التوازن هو المفتاح - التنوع في أكلك مهم",
+  "@tip5": {
+    "description": "Tip 5"
+  }
+}
+

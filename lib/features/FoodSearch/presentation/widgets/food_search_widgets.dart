@@ -1,7 +1,33 @@
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+/// Allergen chip widget
+class AllergenChip extends StatelessWidget {
+  final String allergen;
+
+  const AllergenChip({super.key, required this.allergen});
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      avatar: const Icon(Icons.warning_amber_rounded,
+          size: 16, color: Colors.white),
+      label: Text(
+        allergen,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      backgroundColor: Colors.red[700],
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+    );
+  }
+}
 
 /// Eco-Score widget with leaf icon
 class EcoscoreWidget extends StatelessWidget {
@@ -58,31 +84,6 @@ class EcoscoreWidget extends StatelessWidget {
       default:
         return Colors.grey;
     }
-  }
-}
-
-/// Allergen chip widget
-class AllergenChip extends StatelessWidget {
-  final String allergen;
-
-  const AllergenChip({super.key, required this.allergen});
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      avatar: const Icon(Icons.warning_amber_rounded,
-          size: 16, color: Colors.white),
-      label: Text(
-        allergen,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      backgroundColor: Colors.red[700],
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-    );
   }
 }
 
@@ -195,7 +196,7 @@ class ErrorStateWidget extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: Text('retry'.tr(context)),
               ),
             ],
           ],

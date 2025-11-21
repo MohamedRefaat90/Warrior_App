@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -97,7 +98,7 @@ class WorkoutDetails extends ConsumerWidget {
             ? Padding(
                 padding: const EdgeInsets.all(10),
                 child: CustomBTN(
-                  widget: Text("Delete"),
+                  widget: Text('delete'.tr(context)),
                   color: AppColors.primaryColor,
                   press: () {
                     if (workoutNotifier.newWorkout.workoutItems == null ||

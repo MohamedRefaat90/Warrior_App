@@ -16,6 +16,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 
+final config = RequestConfiguration(
+  tagForChildDirectedTreatment:
+      TagForChildDirectedTreatment.unspecified, // مش موجه للأطفال
+  maxAdContentRating:
+      MaxAdContentRating.pg, // إعلانات محترمة ومناسبة للمراهقين وما فوق
+);
+
 /// Firebase background message handler
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
@@ -119,6 +126,12 @@ abstract class AppServices {
   }
 
   static Future<void> _initializeFirebase() async {
+    // Skip Firebase on web to avoid initialization issues
+    if (kIsWeb) {
+      TalkerService.info('Skipping Firebase on web platform', 'SERVICES');
+      return;
+    }
+
     try {
       FirebaseMessaging.onBackgroundMessage(
           _firebaseMessagingBackgroundHandler);
@@ -377,10 +390,3 @@ abstract class AppServices {
     }
   }
 }
-
-final config = RequestConfiguration(
-  tagForChildDirectedTreatment:
-      TagForChildDirectedTreatment.unspecified, // مش موجه للأطفال
-  maxAdContentRating:
-      MaxAdContentRating.pg, // إعلانات محترمة ومناسبة للمراهقين وما فوق
-);

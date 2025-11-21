@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/features/FoodSearch/data/models/search_history_model.dart';
 import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/search_history_provider.dart';
@@ -25,7 +26,7 @@ class _SearchHistoryScreenState extends ConsumerState<SearchHistoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search History'),
+        title: Text('searchHistory'.tr(context)),
         actions: [
           if (history.isNotEmpty)
             IconButton(
@@ -34,17 +35,17 @@ class _SearchHistoryScreenState extends ConsumerState<SearchHistoryScreen> {
                 final confirmed = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Clear History'),
+                    title: Text('clearHistory'.tr(context)),
                     content: const Text(
                         'Are you sure you want to clear all search history?'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancel'),
+                        child: Text('cancel'.tr(context)),
                       ),
                       ElevatedButton(
                         onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Clear'),
+                        child: Text('clear'.tr(context)),
                       ),
                     ],
                   ),

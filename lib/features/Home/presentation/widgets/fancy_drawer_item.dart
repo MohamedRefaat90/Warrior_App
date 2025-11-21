@@ -37,8 +37,8 @@ class FancyDrawerItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 50.w,
-              height: 50.w,
+              width: 40.w,
+              height: 40.w,
               decoration: BoxDecoration(
                 gradient: gradient,
                 borderRadius: BorderRadius.circular(15.r),
@@ -67,14 +67,6 @@ class FancyDrawerItem extends StatelessWidget {
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 9.sp,
-                      color: AppColors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],

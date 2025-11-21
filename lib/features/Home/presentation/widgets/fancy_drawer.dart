@@ -1,10 +1,12 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/talker_service.dart';
-import 'package:Warrior/features/Home/presentation/widgets/animated_toggle_switcher.dart';
 import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart';
 import 'package:Warrior/features/Home/presentation/widgets/fancy_drawer_item.dart';
+import 'package:Warrior/features/Home/presentation/widgets/logo_section.dart';
+import 'package:Warrior/features/Home/presentation/widgets/settings_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,9 +33,9 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.primaryColor!,
-              AppColors.red!,
-              AppColors.primaryColor!.withValues(alpha: 0.7),
+              AppColors.primaryColor,
+              AppColors.red,
+              AppColors.primaryColor.withValues(alpha: 0.7),
             ],
           ),
         ),
@@ -42,56 +44,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
             children: [
               // SizedBox(height: 30.h),
               // Premium Logo Section with Glow Effect
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Glow effect
-                  Container(
-                    width: 180.w,
-                    height: 180.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.white.withValues(alpha: 0.3),
-                          blurRadius: 25,
-                          spreadRadius: 10,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Logo Container
-                  Container(
-                    width: 150.w,
-                    height: 150.w,
-                    padding: EdgeInsets.all(0.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.black.withValues(alpha: 0.2),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/splash.png',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.fitness_center,
-                            size: 80.sp,
-                            color: AppColors.primaryColor,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              LogoSection(),
               // SizedBox(height: 10.h),
               // Animated Title
               ShaderMask(
@@ -131,7 +84,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   ),
                 ),
                 child: Text(
-                  '💪 Unleash Your Power',
+                  context.l10n.unleashYourPower,
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 13.sp,
@@ -141,44 +94,13 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                 ),
               ),
               SizedBox(height: 10.h),
-              // Theme Switcher Section
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 12.w),
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: AppColors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(
-                    color: AppColors.white.withValues(alpha: 0.3),
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.black.withValues(alpha: 0.1),
-                      blurRadius: 15,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Dark Mode',
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const AnimatedToggleSwitcher()
-                  ],
-                ),
-              ),
-              SizedBox(height: 16.h),
+              // Settings Section - ExpansionTile
+              SettingsSection(),
+              SizedBox(height: 8.h),
               // Glass Menu Items
-              Expanded(
+              Flexible(
+                fit: FlexFit.loose,
+                flex: 3,
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 12.w),
                   decoration: BoxDecoration(
@@ -210,12 +132,14 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                         ),
                       ),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 15.h),
+                          SizedBox(height: 10.h),
                           FancyDrawerItem(
                             icon: Icons.share_rounded,
-                            title: 'Share App',
-                            subtitle: 'Spread the warrior spirit',
+                            title: context.l10n.shareApp,
+                            subtitle: context.l10n.spreadTheWarriorSpirit,
                             gradient: LinearGradient(
                               colors: [
                                 Colors.blue.shade400,
@@ -225,17 +149,16 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                             onTap: () async {
                               Navigator.pop(context);
                               await SharePlus.instance.share(ShareParams(
-                                text:
-                                    'Check out the Warrior App for amazing workout routines! Download it here: https://play.google.com/store/apps/details?id=com.warrior90.app',
+                                text: context.l10n.shareAppMessage,
                               ));
                               TalkerService.info('User shared the app', 'HOME');
                             },
                           ),
-                          SizedBox(height: 16.h),
+                          SizedBox(height: 8.h),
                           FancyDrawerItem(
                             icon: Icons.star_rounded,
-                            title: 'Rate App',
-                            subtitle: 'Support Us ⭐',
+                            title: context.l10n.rateApp,
+                            subtitle: context.l10n.supportUs,
                             gradient: LinearGradient(
                               colors: [
                                 Colors.amber.shade400,
@@ -249,11 +172,11 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                                   'User opened rate app', 'HOME');
                             },
                           ),
-                          SizedBox(height: 16.h),
+                          SizedBox(height: 8.h),
                           FancyDrawerItem(
                             icon: Icons.logout_rounded,
-                            title: 'Logout',
-                            subtitle: 'Take a rest warrior',
+                            title: context.l10n.logout,
+                            subtitle: context.l10n.takeARest,
                             gradient: LinearGradient(
                               colors: [
                                 Colors.red.shade400,
@@ -272,10 +195,10 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                               }
                             },
                           ),
-                          const Spacer(),
+                          // const Spacer(),
                           // Footer
                           Padding(
-                            padding: EdgeInsets.only(bottom: 10.h),
+                            padding: EdgeInsets.only(top: 10.h, bottom: 5.h),
                             child: Text(
                               _version,
                               style: TextStyle(
@@ -291,7 +214,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                 ),
               ),
 
-              SizedBox(height: 10.h),
+              // Spacer(),
             ],
           ),
         ),
@@ -307,8 +230,10 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
 
   Future<void> _loadVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      _version = 'Version ${packageInfo.version}';
-    });
+    if (mounted) {
+      setState(() {
+        _version = '${context.l10n.version} ${packageInfo.version}';
+      });
+    }
   }
 }

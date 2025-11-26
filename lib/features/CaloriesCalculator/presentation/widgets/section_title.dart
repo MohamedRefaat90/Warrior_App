@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Section title widget for organizing content sections
@@ -12,14 +13,16 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15, bottom: 10),
+      padding: EdgeInsets.only(
+        top: context.mediumSpacing,
+        bottom: context.smallSpacing,
+      ),
       child: Text(
         title,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
       ),
     );
   }

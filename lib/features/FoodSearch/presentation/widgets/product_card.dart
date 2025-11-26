@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
@@ -29,7 +30,7 @@ class ProductCard extends ConsumerWidget {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: context.cardPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,7 +41,8 @@ class ProductCard extends ConsumerWidget {
                     child: ProductImageWidget(
                       imageUrl: product.imageFrontUrl ?? product.imageUrl,
                       width: double.infinity,
-                      height: 120,
+                      height: ResponsiveUtils.value(context,
+                          mobile: 120.0, tablet: 140.0, desktop: 160.0),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -70,7 +72,7 @@ class ProductCard extends ConsumerWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: context.smallSpacing),
               // Product name
               Text(
                 product.productName ?? 'Unknown Product',
@@ -78,7 +80,7 @@ class ProductCard extends ConsumerWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: context.smallSpacing / 2),
               // Brand
               if (product.brands != null)
                 Text(
@@ -92,7 +94,7 @@ class ProductCard extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-              const SizedBox(height: 4),
+              SizedBox(height: context.smallSpacing / 2),
               // Quantity
               if (product.quantity != null)
                 Text(

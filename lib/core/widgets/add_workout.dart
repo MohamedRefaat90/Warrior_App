@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -19,12 +20,22 @@ class AddWorkoutBtn extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(context.smallSpacing),
       child: ref.watch(workoutsProvider).isLoading
-          ? const SizedBox(
-              height: 50,
-              width: 50,
-              child: Loader(),
+          ? SizedBox(
+              height: ResponsiveUtils.value<double>(
+                context,
+                mobile: 50,
+                tablet: 60,
+                desktop: 70,
+              ),
+              width: ResponsiveUtils.value<double>(
+                context,
+                mobile: 50,
+                tablet: 60,
+                desktop: 70,
+              ),
+              child: const Loader(),
             )
           : CustomBTN(
               widget: Text('Add to my workouts'.capitalizeWord()),

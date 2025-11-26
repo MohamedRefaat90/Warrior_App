@@ -14,31 +14,48 @@ class SignupSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Lottie.asset(AppAssets.trainer, height: 400),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: ResponsiveUtils.maxContentWidth,
+          ),
+          child: Padding(
+            padding: context.screenPadding,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Lottie.asset(AppAssets.trainer,
+                      height: ResponsiveUtils.value<double>(
+                        context,
+                        mobile: 350,
+                        tablet: 400,
+                        desktop: 450,
+                      )),
+                ),
+                SizedBox(height: context.mediumSpacing),
+                Text(
+                  'welcome warrior you can join the battle now 💪'.capitalizeWord(),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                SizedBox(height: context.mediumSpacing),
+                CustomBTN(
+                    widget: const Text("Login"),
+                    color: AppColors.primaryColor,
+                    padding: 15,
+                    width: ResponsiveUtils.value<double>(
+                      context,
+                      mobile: context.screenWidth * 0.5,
+                      tablet: 200,
+                      desktop: 220,
+                    ),
+                    press: () => context.goNamed(AppRouters.login)),
+              ],
             ),
-            const SizedBox(height: 20),
-            Text(
-              'welcome warrior you can join the battle now 💪'.capitalizeWord(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Poppins"),
-            ),
-            const SizedBox(height: 20),
-            CustomBTN(
-                widget: const Text("Login"),
-                color: AppColors.primaryColor,
-                padding: 15,
-                width: context.screenWidth * 0.4,
-                press: () => context.goNamed(AppRouters.login)),
-          ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/download_indicator.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -35,7 +36,9 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
             extra: widget.exercise),
         child: Card(
           elevation: 5,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(context.responsiveBorderRadius)),
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -44,7 +47,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                 children: [
                   CachedNetworkImage(
                     imageUrl: widget.exercise.image,
-                    height: 120,
+                    height: ResponsiveUtils.value(context,
+                        mobile: 120.0, tablet: 140.0, desktop: 160.0),
                     fadeInDuration: const Duration(milliseconds: 200),
                     placeholder: (context, url) => const CustomLoadingWidget(),
                     errorWidget: (context, url, error) {
@@ -53,7 +57,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                           widget.exercise.image.contains(':\\')) {
                         return Image.file(
                           File(widget.exercise.image),
-                          height: 120,
+                          height: ResponsiveUtils.value(context,
+                              mobile: 120.0, tablet: 140.0, desktop: 160.0),
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(Icons.image_not_supported, size: 50),
                         );
@@ -64,7 +69,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: context.smallSpacing),
                     child: Text(
                       widget.exercise.name,
                       textAlign: TextAlign.center,

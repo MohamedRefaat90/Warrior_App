@@ -34,49 +34,64 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
         title: const Text('Forget Password'),
         centerTitle: true,
       ),
-      body: Form(
-          key: formKey,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomTextField(
-                    placeholderText: "Email",
-                    textEditingController: emailController,
-                    isObscure: false,
-                    validator: (value) => emailValidator(value!.trim())),
-                const SizedBox(height: 30),
-                CustomBTN(
-                    widget: providerStates.isLoading
-                        ? const BtnLoader()
-                        : const Text("Send Email"),
-                    color: AppColors.primaryColor,
-                    padding: 15,
-                    splashColor: AppColors.black,
-                    width: context.screenWidth * 0.4,
-                    press: () async {
-                      if (formKey.currentState!.validate()) {
-                        await ref
-                            .read(forgetPasswordProvider.notifier)
-                            .forgetPassword(emailController.text);
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: context.screenPadding,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: ResponsiveUtils.maxContentWidth,
+              ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomTextField(
+                        placeholderText: "Email",
+                        textEditingController: emailController,
+                        isObscure: false,
+                        validator: (value) => emailValidator(value!.trim())),
+                    SizedBox(height: context.largeSpacing),
+                    CustomBTN(
+                        widget: providerStates.isLoading
+                            ? const BtnLoader()
+                            : const Text("Send Email"),
+                        color: AppColors.primaryColor,
+                        padding: 15,
+                        splashColor: AppColors.black,
+                        width: ResponsiveUtils.value<double>(
+                          context,
+                          mobile: context.screenWidth * 0.5,
+                          tablet: 200,
+                          desktop: 220,
+                        ),
+                        press: () async {
+                          if (formKey.currentState!.validate()) {
+                            await ref
+                                .read(forgetPasswordProvider.notifier)
+                                .forgetPassword(emailController.text);
 
-                        if (context.mounted) {
-                          if (providerStates.isSuccess) {
-                            // Success will navigate via listener
-                          } else if (providerStates.errorMessage != null) {
-                            showErrorFlushbar(
-                              position: FlushbarPosition.BOTTOM,
-                              context,
-                              providerStates.errorMessage!,
-                            );
+                            if (context.mounted) {
+                              if (providerStates.isSuccess) {
+                                // Success will navigate via listener
+                              } else if (providerStates.errorMessage != null) {
+                                showErrorFlushbar(
+                                  position: FlushbarPosition.BOTTOM,
+                                  context,
+                                  providerStates.errorMessage!,
+                                );
+                              }
+                            }
                           }
-                        }
-                      }
-                    }),
-              ],
+                        }),
+                  ],
+                ),
+              ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 

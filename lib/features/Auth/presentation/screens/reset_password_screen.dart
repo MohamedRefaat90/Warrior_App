@@ -36,61 +36,75 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.goNamed(AppRouters.login)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Form(
-          key: formKey,
-          autovalidateMode: AutovalidateMode.always,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Enter your new password".capitalizeWord(),
-                style: TextStyle(fontSize: 15),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: context.screenPadding,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: ResponsiveUtils.maxContentWidth,
               ),
-              const SizedBox(height: 20),
-              CustomTextField(
-                  textEditingController: passwordController,
-                  placeholderText: 'New Password',
-                  isObscure: true,
-                  onChange: (password) => ref
-                      .read(resetPasswordProvider.notifier)
-                      .passwordValidator(password),
-                  // validator: (value) => passwordValidator(value ?? ""),
-                  isPassword: true),
-              const SizedBox(height: 10),
-              PasswordValidationRules(),
-              const SizedBox(height: 10),
-              CustomTextField(
-                  textEditingController: confirmPasswordController,
-                  validator: (value) =>
-                      confirmPasswordvalidator(value!, passwordController.text),
-                  placeholderText: 'Confirm Password',
-                  isObscure: true,
-                  isPassword: true),
-              const SizedBox(height: 20),
-              CustomBTN(
-                  widget: providerStates.isLoading
-                      ? const BtnLoader()
-                      : const Text("Reset Password"),
-                  color: AppColors.black,
-                  padding: 15,
-                  width: context.screenWidth * 0.4,
-                  splashColor: AppColors.primaryColor,
-                  press: () async {
-                    ResetPasswordNotifier resetNotifier =
-                        ref.read(resetPasswordProvider.notifier);
+              child: Form(
+                key: formKey,
+                autovalidateMode: AutovalidateMode.always,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Enter your new password".capitalizeWord(),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    SizedBox(height: context.mediumSpacing),
+                    CustomTextField(
+                        textEditingController: passwordController,
+                        placeholderText: 'New Password',
+                        isObscure: true,
+                        onChange: (password) => ref
+                            .read(resetPasswordProvider.notifier)
+                            .passwordValidator(password),
+                        isPassword: true),
+                    SizedBox(height: context.smallSpacing),
+                    PasswordValidationRules(),
+                    SizedBox(height: context.smallSpacing),
+                    CustomTextField(
+                        textEditingController: confirmPasswordController,
+                        validator: (value) => confirmPasswordvalidator(
+                            value!, passwordController.text),
+                        placeholderText: 'Confirm Password',
+                        isObscure: true,
+                        isPassword: true),
+                    SizedBox(height: context.mediumSpacing),
+                    CustomBTN(
+                        widget: providerStates.isLoading
+                            ? const BtnLoader()
+                            : const Text("Reset Password"),
+                        color: AppColors.black,
+                        padding: 15,
+                        width: ResponsiveUtils.value<double>(
+                          context,
+                          mobile: context.screenWidth * 0.5,
+                          tablet: 200,
+                          desktop: 220,
+                        ),
+                        splashColor: AppColors.primaryColor,
+                        press: () async {
+                          ResetPasswordNotifier resetNotifier =
+                              ref.read(resetPasswordProvider.notifier);
 
-                    if (formKey.currentState!.validate() &&
-                        resetNotifier.validatePassword()) {
-                      await ref
-                          .read(resetPasswordProvider.notifier)
-                          .resetPassword(
-                              email: widget.email,
-                              password: passwordController.text);
-                    }
-                  }),
-            ],
+                          if (formKey.currentState!.validate() &&
+                              resetNotifier.validatePassword()) {
+                            await ref
+                                .read(resetPasswordProvider.notifier)
+                                .resetPassword(
+                                    email: widget.email,
+                                    password: passwordController.text);
+                          }
+                        }),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),

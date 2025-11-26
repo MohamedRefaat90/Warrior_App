@@ -1,5 +1,6 @@
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/download_progress_indicator.dart';
@@ -37,8 +38,10 @@ class ExercisesScreen extends ConsumerWidget {
               icon: const Icon(Icons.arrow_back_ios_new)),
           title: Text(
             '${muscle['name']} Exercises',
-            style: const TextStyle(
-                fontFamily: "Kings", fontSize: 30, fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .headlineMedium
+                ?.copyWith(fontFamily: "Kings", fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),
@@ -80,25 +83,30 @@ class ExercisesScreen extends ConsumerWidget {
                       children: [
                         Icon(
                           Icons.wifi_off,
-                          size: 64,
+                          size: ResponsiveUtils.iconSize(context,
+                              mobile: 64, tablet: 80, desktop: 96),
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: context.mediumSpacing),
                         Text(
                           "No exercises available offline",
-                          style: TextStyle(
-                              fontFamily: "poppins",
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(
+                                  fontFamily: "poppins",
+                                  fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: context.smallSpacing),
                         Text(
                           "Please go online to download exercises",
-                          style: TextStyle(
-                              fontFamily: "poppins",
-                              fontSize: 16,
-                              color: Colors.grey[600]),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  fontFamily: "poppins",
+                                  color: Colors.grey[600]),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -136,16 +144,15 @@ class _OfflineExercisesView extends ConsumerWidget {
           children: [
             Icon(
               Icons.fitness_center,
-              size: 64,
+              size: ResponsiveUtils.iconSize(context,
+                  mobile: 64, tablet: 80, desktop: 96),
               color: Colors.grey,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: context.mediumSpacing),
             Text(
               "No ${muscle['name']} exercises available offline",
-              style: TextStyle(
-                  fontFamily: "poppins",
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontFamily: "poppins", fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 8),

@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,10 +9,10 @@ class ErrorCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Container(
-        margin: const EdgeInsets.all(24),
-        padding: const EdgeInsets.all(32),
+        margin: EdgeInsets.all(context.largeSpacing),
+        padding: EdgeInsets.all(context.extraLargeSpacing),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(context.largeSpacing),
           gradient: LinearGradient(
             colors: [
               Colors.red.shade400.withOpacity(0.1),
@@ -28,27 +29,26 @@ class ErrorCard extends ConsumerWidget {
           children: [
             Icon(
               Icons.error_outline_rounded,
-              size: 64,
+              size: context.largeIconSize,
               color: Colors.red.shade400,
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: context.mediumSpacing),
+            Text(
               'Something went wrong!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: context.largeSpacing),
             ElevatedButton.icon(
               onPressed: () => ref.invalidate(musclesProvider, asReload: true),
               icon: const Icon(Icons.refresh_rounded),
               label: const Text('Try Again'),
               style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: ResponsiveUtils.buttonPadding(context),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius:
+                      BorderRadius.circular(context.responsiveBorderRadius),
                 ),
                 elevation: 8,
               ),

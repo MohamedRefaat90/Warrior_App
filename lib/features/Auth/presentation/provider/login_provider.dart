@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
@@ -7,6 +5,7 @@ import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final loginProvider =
@@ -77,7 +76,7 @@ class LoginNotifier extends Notifier<ProviderStates> {
         email.toLowerCase().trim(),
         password,
         AppServices.fcmToken ?? '',
-        Platform.isAndroid ? 'android' : 'ios',
+        _getPlatformName(),
       );
 
       // Save device token if available
@@ -123,6 +122,21 @@ class LoginNotifier extends Notifier<ProviderStates> {
       state = ProviderStates();
     } catch (e) {
       TalkerService.error('Error during logout', 'AUTH', e);
+    }
+  }
+
+  /// Returns the platform name for the API (web-safe)
+  String _getPlatformName() {
+    if (kIsWeb) {
+      return 'web';
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return 'android';
+      case TargetPlatform.iOS:
+        return 'ios';
+      default:
+        return 'unknown';
     }
   }
 }

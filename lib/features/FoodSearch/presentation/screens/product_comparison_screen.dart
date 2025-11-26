@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
@@ -62,7 +63,10 @@ class ProductComparisonScreen extends ConsumerWidget {
     List<Widget> values,
   ) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: EdgeInsets.symmetric(
+        vertical: context.smallSpacing,
+        horizontal: context.mediumSpacing,
+      ),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -101,7 +105,8 @@ class ProductComparisonScreen extends ConsumerWidget {
         children: [
           // Product headers
           SizedBox(
-            height: 200,
+            height: ResponsiveUtils.value(context,
+                mobile: 200.0, tablet: 220.0, desktop: 240.0),
             child: Row(
               children: products
                   .map((product) => Expanded(

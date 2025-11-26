@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/image_error.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
@@ -32,10 +33,11 @@ class GridMuscleCard extends StatelessWidget {
           'isComingFromWorkoutScreen': isComingFromWorkoutScreen,
         },
       ),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(context.responsiveBorderRadius + 8),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius:
+              BorderRadius.circular(context.responsiveBorderRadius + 8),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -51,7 +53,7 @@ class GridMuscleCard extends StatelessWidget {
           ),
           border: Border.all(
             // color: primaryColor.withOpacity(0.3),
-            color: AppColors.primaryColor!.withOpacity(0.3),
+            color: AppColors.primaryColor.withOpacity(0.3),
             width: 1.5,
           ),
         ),
@@ -64,13 +66,16 @@ class GridMuscleCard extends StatelessWidget {
               flex: 3,
               fit: FlexFit.loose,
               child: Container(
-                margin: const EdgeInsets.all(12),
-                constraints: const BoxConstraints(
-                  maxHeight: 120,
-                  minHeight: 80,
+                margin: EdgeInsets.all(context.smallSpacing),
+                constraints: BoxConstraints(
+                  maxHeight: ResponsiveUtils.value(context,
+                      mobile: 120.0, tablet: 140.0, desktop: 160.0),
+                  minHeight: ResponsiveUtils.value(context,
+                      mobile: 80.0, tablet: 100.0, desktop: 120.0),
                 ),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius:
+                      BorderRadius.circular(context.responsiveBorderRadius + 4),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -81,7 +86,8 @@ class GridMuscleCard extends StatelessWidget {
                   ),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius:
+                      BorderRadius.circular(context.responsiveBorderRadius + 4),
                   child: CachedNetworkImage(
                     imageUrl: muscle.image,
                     fit: BoxFit.cover,
@@ -93,14 +99,13 @@ class GridMuscleCard extends StatelessWidget {
             ),
             // Muscle name
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: EdgeInsets.symmetric(horizontal: context.smallSpacing),
               child: Text(
                 muscle.name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

@@ -31,7 +31,7 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0.8),
+      padding: EdgeInsets.symmetric(horizontal: context.smallSpacing),
       child: CustomScrollView(
         slivers: [
           SliverGrid(
@@ -54,10 +54,25 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                       ),
                     ),
                     Positioned(
-                        width: 105,
-                        height: 22,
+                        width: ResponsiveUtils.value<double>(
+                          context,
+                          mobile: 105,
+                          tablet: 120,
+                          desktop: 130,
+                        ),
+                        height: ResponsiveUtils.value<double>(
+                          context,
+                          mobile: 22,
+                          tablet: 26,
+                          desktop: 28,
+                        ),
                         bottom: -7,
-                        right: 33,
+                        right: ResponsiveUtils.value<double>(
+                          context,
+                          mobile: 33,
+                          tablet: 40,
+                          desktop: 50,
+                        ),
                         child: CustomBTN(
                           widget: Text.rich(
                             TextSpan(children: [
@@ -75,7 +90,7 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
                             ]),
-                            style: TextStyle(fontSize: 9),
+                            style: Theme.of(context).textTheme.labelSmall,
                           ),
                           radius: 4,
                           color: AppColors.green,
@@ -113,13 +128,13 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
             ),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ResponsiveUtils.getGridColumns(context),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 15,
+              crossAxisSpacing: context.smallSpacing,
+              mainAxisSpacing: context.mediumSpacing,
               childAspectRatio: 0.9,
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 20),
+            child: SizedBox(height: context.mediumSpacing),
           ),
         ],
       ),

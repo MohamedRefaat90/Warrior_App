@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -76,9 +77,10 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
             context.pushNamed(AppRouters.workoutDetails, extra: widget.workout);
           },
           child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
+            margin: EdgeInsets.only(bottom: context.smallSpacing),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius:
+                  BorderRadius.circular(context.responsiveBorderRadius + 4),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -116,7 +118,8 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
               ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius:
+                  BorderRadius.circular(context.responsiveBorderRadius + 4),
               child: Stack(
                 children: [
                   // Accent gradient bar

@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +25,10 @@ class PredefinedWorkoutCard extends StatelessWidget {
         child: Card(
           clipBehavior: Clip.antiAlias,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.smallSpacing,
+              vertical: context.smallSpacing / 2,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,24 +38,29 @@ class PredefinedWorkoutCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'poppins',
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: context.smallSpacing),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "${workout.workoutItems!.length} ",
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    Icon(
+                      Icons.fitness_center,
+                      size: ResponsiveUtils.iconSize(
+                        context,
+                        mobile: 13,
+                        tablet: 15,
+                        desktop: 17,
                       ),
                     ),
-                    Icon(Icons.fitness_center, size: 13),
                   ],
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Predefined_workouts/domain/entities/workout_group.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_group_tile.dart';
@@ -28,26 +29,26 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
       return Center(
         child: Text(
           'No workout groups available',
-          style: const TextStyle(fontSize: 16),
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       );
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: context.screenPadding,
       itemCount: widget.workoutGroups.length,
       separatorBuilder: (context, index) {
         // Show native ad after the first group
         if (index == 0 && ConnectivityChecker.isOnline!) {
           return Column(
             children: [
-              const SizedBox(height: 16),
+              SizedBox(height: context.mediumSpacing),
               const NativeAdWidget(),
-              const SizedBox(height: 16),
+              SizedBox(height: context.mediumSpacing),
             ],
           );
         }
-        return const SizedBox(height: 16);
+        return SizedBox(height: context.mediumSpacing);
       },
       itemBuilder: (context, index) {
         final group = widget.workoutGroups[index];

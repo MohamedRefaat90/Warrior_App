@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
@@ -26,15 +27,15 @@ class Allergens extends StatelessWidget {
                 'Allergens',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               Wrap(
-                spacing: 8,
-                runSpacing: 8,
+                spacing: context.smallSpacing,
+                runSpacing: context.smallSpacing,
                 children: product.allergens!
                     .map((allergen) => AllergenChip(allergen: allergen))
                     .toList(),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: context.largeSpacing),
             ],
           )
         : const SizedBox.shrink();
@@ -56,12 +57,12 @@ class Ingredients extends StatelessWidget {
                 'Ingredients',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               Text(
                 product.ingredients!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: context.largeSpacing),
             ],
           )
         : const SizedBox.shrink();
@@ -85,10 +86,10 @@ class Labels extends StatelessWidget {
                 'Labels',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               Wrap(
-                spacing: 8,
-                runSpacing: 8,
+                spacing: context.smallSpacing,
+                runSpacing: context.smallSpacing,
                 children: [
                   if (product.isVegan == true)
                     Chip(
@@ -128,7 +129,7 @@ class NutritionFacts extends StatelessWidget {
                 'Nutrition Facts (per 100g)',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.energyKcal != null)
                 NutritionProgressBar(
                   label: 'Energy',
@@ -136,35 +137,35 @@ class NutritionFacts extends StatelessWidget {
                   maxValue: 2000,
                   unit: 'kcal',
                 ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.proteins != null)
                 NutritionProgressBar(
                   label: 'Proteins',
                   value: product.nutritionValues!.proteins!,
                   maxValue: 50,
                 ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.carbohydrates != null)
                 NutritionProgressBar(
                   label: 'Carbohydrates',
                   value: product.nutritionValues!.carbohydrates!,
                   maxValue: 275,
                 ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.sugars != null)
                 NutritionProgressBar(
                   label: 'Sugars',
                   value: product.nutritionValues!.sugars!,
                   maxValue: 90,
                 ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.fat != null)
                 NutritionProgressBar(
                   label: 'Fat',
                   value: product.nutritionValues!.fat!,
                   maxValue: 70,
                 ),
-              const SizedBox(height: 24),
+              SizedBox(height: context.largeSpacing),
             ],
           )
         : const SizedBox.shrink();
@@ -189,7 +190,8 @@ class ProductDetailsScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 300,
+            expandedHeight: ResponsiveUtils.value(context,
+                mobile: 300.0, tablet: 350.0, desktop: 400.0),
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Hero(
@@ -197,7 +199,8 @@ class ProductDetailsScreen extends ConsumerWidget {
                 child: ProductImageWidget(
                   imageUrl: product.imageFrontUrl ?? product.imageUrl,
                   width: double.infinity,
-                  height: 300,
+                  height: ResponsiveUtils.value(context,
+                      mobile: 300.0, tablet: 350.0, desktop: 400.0),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -227,100 +230,109 @@ class ProductDetailsScreen extends ConsumerWidget {
             ],
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Product name and brand
-                  Text(
-                    product.productName ?? 'Unknown Product',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  if (product.brands != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      product.brands!,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.6),
-                          ),
-                    ),
-                  ],
-                  if (product.quantity != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      product.quantity!,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                  const SizedBox(height: 24),
-
-                  // Nutrition Scores
-                  Text(
-                    'Nutrition Scores',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: ResponsiveUtils.maxContentWidth,
+                ),
+                child: Padding(
+                  padding: context.screenPadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (product.nutriScore != null)
-                        Column(
-                          children: [
-                            NutritionScoreShield(
-                                nutriScore: product.nutriScore),
-                            const SizedBox(height: 4),
-                            Text('nutriScore'.tr(context),
-                                style: Theme.of(context).textTheme.bodySmall),
-                          ],
+                      // Product name and brand
+                      Text(
+                        product.productName ?? 'Unknown Product',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      if (product.brands != null) ...[
+                        SizedBox(height: context.smallSpacing / 2),
+                        Text(
+                          product.brands!,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.6),
+                                  ),
                         ),
-                      if (product.novaGroup != null)
-                        Column(
-                          children: [
-                            NovaGroupIndicator(
-                              novaGroup: product.novaGroup,
-                              size: 20,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'NOVA ${product.novaGroup}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                      ],
+                      if (product.quantity != null) ...[
+                        SizedBox(height: context.smallSpacing / 2),
+                        Text(
+                          product.quantity!,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                      if (product.ecoscore != null)
-                        Column(
-                          children: [
-                            EcoscoreWidget(
-                              ecoscore: product.ecoscore,
-                              size: 60,
+                      ],
+                      SizedBox(height: context.largeSpacing),
+
+                      // Nutrition Scores
+                      Text(
+                        'Nutrition Scores',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      SizedBox(height: context.smallSpacing),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          if (product.nutriScore != null)
+                            Column(
+                              children: [
+                                NutritionScoreShield(
+                                    nutriScore: product.nutriScore),
+                                SizedBox(height: context.smallSpacing / 2),
+                                Text('nutriScore'.tr(context),
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Eco-Score',
-                              style: Theme.of(context).textTheme.bodySmall,
+                          if (product.novaGroup != null)
+                            Column(
+                              children: [
+                                NovaGroupIndicator(
+                                  novaGroup: product.novaGroup,
+                                  size: 20,
+                                ),
+                                SizedBox(height: context.smallSpacing),
+                                Text(
+                                  'NOVA ${product.novaGroup}',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          if (product.ecoscore != null)
+                            Column(
+                              children: [
+                                EcoscoreWidget(
+                                  ecoscore: product.ecoscore,
+                                  size: 60,
+                                ),
+                                SizedBox(height: context.smallSpacing / 2),
+                                Text(
+                                  'Eco-Score',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: context.largeSpacing),
+
+                      // Nutrition Facts
+                      NutritionFacts(product: product),
+
+                      // Allergens
+                      Allergens(product: product),
+
+                      // Ingredients
+                      Ingredients(product: product),
+
+                      // Labels
+                      Labels(product: product)
                     ],
                   ),
-                  const SizedBox(height: 24),
-
-                  // Nutrition Facts
-                  NutritionFacts(product: product),
-
-                  // Allergens
-                  Allergens(product: product),
-
-                  // Ingredients
-                  Ingredients(product: product),
-
-                  // Labels
-                  Labels(product: product)
-                ],
+                ),
               ),
             ),
           ),

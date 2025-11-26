@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/add_workout.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/Predefined_exercise_gridwiew.dart';
@@ -24,17 +25,26 @@ class PredefinedWorkoutDetails extends ConsumerWidget {
         ),
         title: Text(
           workout.name ?? 'Workout',
-          style: const TextStyle(
-              fontFamily: "Kings", fontSize: 30, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontFamily: "Kings",
+                fontWeight: FontWeight.bold,
+              ),
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          const BannerAdWidget(),
-          Expanded(child: PredefinedExerciseGridView(workout)),
-          AddWorkoutBtn(workout: workout, workoutNotifier: workoutNotifier),
-        ],
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: ResponsiveUtils.maxContentWidth,
+          ),
+          child: Column(
+            children: [
+              const BannerAdWidget(),
+              Expanded(child: PredefinedExerciseGridView(workout)),
+              AddWorkoutBtn(workout: workout, workoutNotifier: workoutNotifier),
+            ],
+          ),
+        ),
       ),
     );
   }

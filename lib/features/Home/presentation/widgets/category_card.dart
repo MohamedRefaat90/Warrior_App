@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Home/data/models/category_item.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,7 @@ class CategoryCard extends StatelessWidget {
         elevation: 10,
         shadowColor: AppColors.black.withAlpha(250),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: context.cardPadding,
           child: LayoutBuilder(
             builder: (context, constraints) {
               return Column(
@@ -27,7 +28,7 @@ class CategoryCard extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: context.smallSpacing),
                   Text(
                     category.title,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(

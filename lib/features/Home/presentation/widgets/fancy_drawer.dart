@@ -3,6 +3,7 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Auth/presentation/provider/login_provider.dart';
 import 'package:Warrior/features/Home/presentation/widgets/fancy_drawer_item.dart';
 import 'package:Warrior/features/Home/presentation/widgets/logo_section.dart';
@@ -135,7 +136,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 10),
+                          SizedBox(height: context.smallSpacing),
                           FancyDrawerItem(
                             icon: Icons.share_rounded,
                             title: context.l10n.shareApp,
@@ -154,7 +155,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                               TalkerService.info('User shared the app', 'HOME');
                             },
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: context.smallSpacing),
                           FancyDrawerItem(
                             icon: Icons.star_rounded,
                             title: context.l10n.rateApp,
@@ -172,7 +173,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                                   'User opened rate app', 'HOME');
                             },
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: context.smallSpacing),
                           FancyDrawerItem(
                             icon: Icons.logout_rounded,
                             title: context.l10n.logout,

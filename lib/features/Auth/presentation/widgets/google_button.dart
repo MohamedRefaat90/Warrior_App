@@ -11,6 +11,7 @@ class GoogleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Consumer(
       builder: (context, ref, child) => MaterialButton(
         onPressed: () async {
@@ -21,7 +22,8 @@ class GoogleButton extends StatelessWidget {
         height: 50,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: AppColors.black)),
+            side: BorderSide(
+                color: isDarkMode ? AppColors.white : AppColors.black)),
         child: SvgPicture.asset(
           AppAssets.googleIcon,
           width: 20,

@@ -53,11 +53,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                   icon: const Icon(Icons.add_rounded, size: 28),
                   label: Text(
                     'New Workout',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
                   ),
                   onPressed: () => _showCreateWorkoutDialog(context),
                 ),

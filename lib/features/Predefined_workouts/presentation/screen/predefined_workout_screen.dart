@@ -1,5 +1,6 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/provider/predefined_provider.dart';
@@ -28,11 +29,10 @@ class _PredefinedWorkoutScreenState
         centerTitle: true,
         title: Text(
           'Predefined Workouts',
-          style: TextStyle(
-            fontFamily: 'kings',
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-          ),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontFamily: 'kings',
+                fontWeight: FontWeight.bold,
+              ),
         ),
       ),
       body: groupedWorkoutsState.when(
@@ -51,45 +51,48 @@ class _PredefinedWorkoutScreenState
         error: (error, stackTrace) {
           final isOffline = ConnectivityChecker.isOnline == false;
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  isOffline ? Icons.wifi_off : Icons.error_outline,
-                  size: 48,
-                  color: isOffline ? Colors.orange : Colors.red,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  isOffline ? 'You are offline' : 'Something went wrong',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: context.screenPadding,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    isOffline ? Icons.wifi_off : Icons.error_outline,
+                    size: ResponsiveUtils.value<double>(
+                      context,
+                      mobile: 48,
+                      tablet: 56,
+                      desktop: 64,
+                    ),
+                    color: isOffline ? Colors.orange : Colors.red,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Text(
+                  SizedBox(height: context.mediumSpacing),
+                  Text(
+                    isOffline ? 'You are offline' : 'Something went wrong',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  SizedBox(height: context.smallSpacing),
+                  Text(
                     isOffline
                         ? 'No cached workouts available. Connect to the internet to download workouts.'
                         : 'Failed to load predefined workouts',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey,
+                        ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Refresh the grouped workouts provider
-                    ref.invalidate(groupedWorkoutsProvider);
-                  },
-                  child: Text('retry'.tr(context)),
-                ),
-              ],
+                  SizedBox(height: context.mediumSpacing),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Refresh the grouped workouts provider
+                      ref.invalidate(groupedWorkoutsProvider);
+                    },
+                    child: Text('retry'.tr(context)),
+                  ),
+                ],
+              ),
             ),
           );
         },

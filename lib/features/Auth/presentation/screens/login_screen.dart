@@ -31,77 +31,63 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final ProviderStates = ref.watch(loginProvider);
+    final isDesktopOrTablet = context.isDesktop || context.isTablet;
+
+    // For desktop/tablet, use a different layout approach
+    if (isDesktopOrTablet) {
+      return Scaffold(
+        body: SafeArea(
+          child: Row(
+            children: [
+              // Left side - banner image
+              Expanded(
+                flex: 1,
+                child: Image.asset(
+                  AppAssets.loginBanar,
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                ),
+              ),
+              // Right side - login form
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: context.screenPadding,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: ResponsiveUtils.maxCardWidth + 100,
+                      ),
+                      child: _buildLoginForm(ProviderStates),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Mobile layout with bottom sheet
+    final bottomSheetHeight = context.screenHeight * 0.66;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       bottomSheet: Container(
-        height: context.screenHeight * 0.66,
+        height: bottomSheetHeight,
         color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                const Text(
-                  "Login",
-                  style: TextStyle(fontFamily: "Poppins", fontSize: 30),
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(
-                    placeholderText: "Email",
-                    isObscure: false,
-                    textEditingController: emailController,
-                    validator: (value) => emailValidator(value!.trim())),
-                const SizedBox(height: 10),
-                CustomTextField(
-                    placeholderText: "password",
-                    textEditingController: passwordController,
-                    isPassword: true,
-                    isObscure: true,
-                    validator: (value) =>
-                        value!.isEmpty ? "Password is required" : null),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                      onPressed: () =>
-                          context.pushNamed(AppRouters.forgetPassword),
-                      style: ButtonStyle(
-                          padding:
-                              WidgetStateProperty.all(const EdgeInsets.all(5))),
-                      child: const Text(
-                        "Forgot Password?",
-                        style: TextStyle(color: AppColors.black),
-                      )),
-                ),
-                const SizedBox(height: 0),
-                CustomBTN(
-                    widget: ProviderStates.isLoading
-                        ? const BtnLoader()
-                        : const Text("Login"),
-                    color: AppColors.primaryColor,
-                    padding: 15,
-                    splashColor: AppColors.black,
-                    width: context.screenWidth * 0.4,
-                    press: () async {
-                      if (formKey.currentState!.validate()) {
-                        await ref.read(loginProvider.notifier).login(
-                            emailController.text, passwordController.text);
-                      }
-                    }),
-                // 10.verticalSpace,
-                // TextButton(
-                //     onPressed: () {
-                //       SharedPref.setBool(StorageKeys.isGuestMode, true);
-                //       context.goNamed(AppRouters.muscles);
-                //     },
-                //     child: Text("Guest Mode")),
-                const SizedBox(height: 15),
-                const LoginWith(),
-                const SizedBox(height: 15),
-                const GoogleButton(),
-                // 10.verticalSpace,
-                const GoToSignup()
-              ],
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.horizontalPadding,
+              vertical: context.smallSpacing,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: ResponsiveUtils.maxCardWidth + 100,
+              ),
+              child: _buildLoginForm(ProviderStates),
             ),
           ),
         ),
@@ -131,5 +117,72 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
       }
     });
+  }
+
+  Widget _buildLoginForm(dynamic providerStates) {
+    return Form(
+      key: formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Login",
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontFamily: "Poppins")),
+          SizedBox(height: context.smallSpacing),
+          CustomTextField(
+              placeholderText: "Email",
+              isObscure: false,
+              textEditingController: emailController,
+              validator: (value) => emailValidator(value!.trim())),
+          SizedBox(height: context.smallSpacing),
+          CustomTextField(
+              placeholderText: "password",
+              textEditingController: passwordController,
+              isPassword: true,
+              isObscure: true,
+              validator: (value) =>
+                  value!.isEmpty ? "Password is required" : null),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+                onPressed: () => context.pushNamed(AppRouters.forgetPassword),
+                style: ButtonStyle(
+                    padding: WidgetStateProperty.all(const EdgeInsets.all(5))),
+                child: const Text(
+                  "Forgot Password?",
+                  style: TextStyle(color: AppColors.black),
+                )),
+          ),
+          CustomBTN(
+              widget: providerStates.isLoading
+                  ? const BtnLoader()
+                  : const Text("Login"),
+              color: AppColors.primaryColor,
+              padding:
+                  ResponsiveUtils.value(context, mobile: 15.0, desktop: 18.0),
+              splashColor: AppColors.black,
+              width: ResponsiveUtils.value(
+                context,
+                mobile: context.screenWidth * 0.4,
+                tablet: 200.0,
+                desktop: 220.0,
+              ),
+              press: () async {
+                if (formKey.currentState!.validate()) {
+                  await ref
+                      .read(loginProvider.notifier)
+                      .login(emailController.text, passwordController.text);
+                }
+              }),
+          SizedBox(height: context.mediumSpacing),
+          const LoginWith(),
+          SizedBox(height: context.mediumSpacing),
+          const GoogleButton(),
+          const GoToSignup()
+        ],
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -12,18 +13,22 @@ class AllergenChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      avatar: const Icon(Icons.warning_amber_rounded,
-          size: 16, color: Colors.white),
+      avatar: Icon(Icons.warning_amber_rounded,
+          size: ResponsiveUtils.iconSize(context,
+              mobile: 16, tablet: 18, desktop: 20),
+          color: Colors.white),
       label: Text(
         allergen,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
       ),
       backgroundColor: Colors.red[700],
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.smallSpacing / 2,
+        vertical: 2,
+      ),
     );
   }
 }
@@ -58,11 +63,10 @@ class EcoscoreWidget extends StatelessWidget {
       child: Center(
         child: Text(
           score,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
         ),
       ),
     );
@@ -107,23 +111,24 @@ class EmptyStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: EdgeInsets.all(context.extraLargeSpacing),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              size: 80,
+              size: ResponsiveUtils.iconSize(context,
+                  mobile: 80, tablet: 100, desktop: 120),
               color:
                   Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.mediumSpacing),
             Text(
               title,
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: context.smallSpacing),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -135,7 +140,7 @@ class EmptyStateWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (onAction != null && actionLabel != null) ...[
-              const SizedBox(height: 24),
+              SizedBox(height: context.largeSpacing),
               ElevatedButton.icon(
                 onPressed: onAction,
                 icon: const Icon(Icons.add),
@@ -164,22 +169,23 @@ class ErrorStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: EdgeInsets.all(context.extraLargeSpacing),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.error_outline,
-              size: 80,
+              size: ResponsiveUtils.iconSize(context,
+                  mobile: 80, tablet: 100, desktop: 120),
               color: Theme.of(context).colorScheme.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.mediumSpacing),
             Text(
               'Oops! Something went wrong',
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: context.smallSpacing),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -191,7 +197,7 @@ class ErrorStateWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
-              const SizedBox(height: 24),
+              SizedBox(height: context.largeSpacing),
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
@@ -215,7 +221,7 @@ class LoadingProductShimmer extends StatelessWidget {
       enabled: true,
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: context.cardPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -223,13 +229,13 @@ class LoadingProductShimmer extends StatelessWidget {
                 height: 100,
                 color: Colors.grey[300],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: context.smallSpacing),
               Container(
                 height: 16,
                 width: double.infinity,
                 color: Colors.grey[300],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: context.smallSpacing / 2),
               Container(
                 height: 14,
                 width: 100,
@@ -281,7 +287,7 @@ class NutritionProgressBar extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: context.smallSpacing / 2),
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(

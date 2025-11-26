@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 class ImageError extends StatelessWidget {
@@ -5,11 +6,16 @@ class ImageError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Icon(
         Icons.warning_rounded,
         color: Colors.amber,
-        size: 50,
+        size: ResponsiveUtils.value<double>(
+          context,
+          mobile: 50,
+          tablet: 60,
+          desktop: 70,
+        ),
       ),
     );
   }

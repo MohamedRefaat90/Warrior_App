@@ -1,4 +1,5 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
@@ -33,12 +34,13 @@ class FavoritesScreen extends ConsumerWidget {
               icon: Icons.favorite_border,
             )
           : GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              padding: context.screenPadding,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ResponsiveUtils.getGridColumns(context,
+                    mobile: 2, tablet: 3, desktop: 4),
                 childAspectRatio: 0.7,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+                crossAxisSpacing: context.smallSpacing,
+                mainAxisSpacing: context.smallSpacing,
               ),
               itemCount: favorites.length,
               itemBuilder: (context, index) {

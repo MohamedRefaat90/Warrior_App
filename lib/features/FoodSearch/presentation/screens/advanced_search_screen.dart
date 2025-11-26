@@ -1,4 +1,5 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/advanced_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
@@ -45,7 +46,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
         children: [
           // Search bar with autocomplete
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: context.screenPadding,
             child: Column(
               children: [
                 // Search field
@@ -64,7 +65,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                           )
                         : null,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius:
+                          BorderRadius.circular(context.responsiveBorderRadius),
                     ),
                   ),
                   onChanged: (value) {
@@ -76,7 +78,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                     }
                   },
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: context.smallSpacing),
                 // Autocomplete suggestions
                 if (_searchController.text.length >= 2)
                   Consumer(
@@ -87,10 +89,15 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         data: (items) {
                           if (items.isEmpty) return const SizedBox.shrink();
                           return Container(
-                            constraints: const BoxConstraints(maxHeight: 200),
+                            constraints: BoxConstraints(
+                                maxHeight: ResponsiveUtils.value(context,
+                                    mobile: 200.0,
+                                    tablet: 250.0,
+                                    desktop: 280.0)),
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(
+                                  context.responsiveBorderRadius),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withValues(alpha: 0.1),
@@ -122,7 +129,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                       );
                     },
                   ),
-                const SizedBox(height: 16),
+                SizedBox(height: context.mediumSpacing),
                 // Filter toggle and search button
                 Row(
                   children: [
@@ -140,7 +147,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                             '${_showFilters ? 'Hide' : 'Show'} Filters ${searchState.hasActiveFilters ? '(${_getActiveFilterCount(searchState)})' : ''}'),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: context.mediumSpacing),
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: searchState.isLoading
@@ -168,7 +175,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
             Expanded(
               flex: 0,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding:
+                    EdgeInsets.symmetric(horizontal: context.mediumSpacing),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -176,7 +184,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                     _buildFilterSection(
                       'Nutri-Score',
                       Wrap(
-                        spacing: 8,
+                        spacing: context.smallSpacing,
                         children: ['A', 'B', 'C', 'D', 'E'].map((score) {
                           final isSelected =
                               searchState.selectedNutriScore == score;
@@ -194,13 +202,13 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         }).toList(),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: context.mediumSpacing),
 
                     // NOVA Group filter
                     _buildFilterSection(
                       'NOVA Group',
                       Wrap(
-                        spacing: 8,
+                        spacing: context.smallSpacing,
                         children: [1, 2, 3, 4].map((group) {
                           final isSelected =
                               searchState.selectedNovaGroup == group;
@@ -215,7 +223,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         }).toList(),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: context.mediumSpacing),
 
                     // Dietary preferences
                     _buildFilterSection(
@@ -241,13 +249,13 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: context.mediumSpacing),
 
                     // Common allergens
                     _buildFilterSection(
                       'Exclude Allergens',
                       Wrap(
-                        spacing: 8,
+                        spacing: context.smallSpacing,
                         children: [
                           'Milk',
                           'Eggs',
@@ -269,7 +277,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         }).toList(),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: context.mediumSpacing),
                   ],
                 ),
               ),
@@ -318,7 +326,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.smallSpacing),
         content,
       ],
     );
@@ -346,11 +354,12 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+      padding: context.screenPadding,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: ResponsiveUtils.getGridColumns(context,
+            mobile: 2, tablet: 3, desktop: 4),
+        crossAxisSpacing: context.smallSpacing,
+        mainAxisSpacing: context.smallSpacing,
         childAspectRatio: 0.7,
       ),
       itemCount: searchState.results.length,

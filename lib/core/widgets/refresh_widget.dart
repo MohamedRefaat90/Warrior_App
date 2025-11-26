@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,23 +12,32 @@ class RefreshWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: context.smallSpacing),
         child: Card(
           elevation: 3,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(10),
-                child: Text("Something went wrong!"),
-              ),
-              CustomBTN(
-                  widget: const Text("Refresh"),
-                  color: Colors.black,
-                  padding: 10,
-                  width: 70,
-                  press: () => ref.refresh(musclesProvider))
-            ],
+          child: Padding(
+            padding: context.cardPadding,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Something went wrong!",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                SizedBox(height: context.smallSpacing),
+                CustomBTN(
+                    widget: const Text("Refresh"),
+                    color: Colors.black,
+                    padding: 10,
+                    width: ResponsiveUtils.value<double>(
+                      context,
+                      mobile: 100,
+                      tablet: 120,
+                      desktop: 140,
+                    ),
+                    press: () => ref.refresh(musclesProvider))
+              ],
+            ),
           ),
         ),
       ),

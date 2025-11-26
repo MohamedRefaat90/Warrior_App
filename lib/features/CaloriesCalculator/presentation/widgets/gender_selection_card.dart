@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Gender selection card widget
@@ -23,10 +24,10 @@ class GenderSelectionCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.symmetric(vertical: context.mediumSpacing),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primaryColor : AppColors.white,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           border: Border.all(
             color: isSelected
                 ? AppColors.primaryColor
@@ -49,19 +50,18 @@ class GenderSelectionCard extends StatelessWidget {
               scale: isSelected ? 1.1 : 1.0,
               child: Icon(
                 icon,
-                size: 40,
+                size: ResponsiveUtils.iconSize(context,
+                    mobile: 40, tablet: 44, desktop: 48),
                 color: isSelected ? AppColors.white : AppColors.black,
               ),
             ),
-            const SizedBox(height: 8),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 300),
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? AppColors.white : AppColors.black,
-              ),
-              child: Text(label),
+            SizedBox(height: context.smallSpacing),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? AppColors.white : AppColors.black,
+                  ),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Auth/presentation/provider/verify_otp_provider.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/otp_fileds.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -26,28 +27,49 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
     ProviderStates providerStates = ref.watch(otpProvider);
     return Scaffold(
         appBar: AppBar(title: const Text('Verify OTP'), centerTitle: true),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            children: [
-              const Text("Enter the OTP sent to your email"),
-              const SizedBox(height: 20),
-              Center(child: RoundedWithShadow(email: widget.email)),
-              const SizedBox(height: 20),
-              OtpTimerButton(
-                onPressed: () async {
-                  await ref.read(otpProvider.notifier).resendOTP(widget.email);
-                },
-                buttonType: ButtonType.text_button,
-                textColor: Colors.blue,
-                backgroundColor: Colors.blue,
-                text: const Text('Resend OTP'),
-                duration: 90,
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: context.screenPadding,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: ResponsiveUtils.maxContentWidth,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Enter the OTP sent to your email",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    SizedBox(height: context.mediumSpacing),
+                    Center(child: RoundedWithShadow(email: widget.email)),
+                    SizedBox(height: context.mediumSpacing),
+                    OtpTimerButton(
+                      onPressed: () async {
+                        await ref
+                            .read(otpProvider.notifier)
+                            .resendOTP(widget.email);
+                      },
+                      buttonType: ButtonType.text_button,
+                      textColor: Colors.blue,
+                      backgroundColor: Colors.blue,
+                      text: const Text('Resend OTP'),
+                      duration: 90,
+                    ),
+                    providerStates.isLoading
+                        ? Lottie.asset(AppAssets.loader,
+                            width: ResponsiveUtils.value<double>(
+                              context,
+                              mobile: 100,
+                              tablet: 120,
+                              desktop: 140,
+                            ))
+                        : const SizedBox(),
+                  ],
+                ),
               ),
-              providerStates.isLoading
-                  ? Lottie.asset(AppAssets.loader, width: 100)
-                  : const SizedBox(),
-            ],
+            ),
           ),
         ));
   }

@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscle_tile.dart';
@@ -20,7 +21,7 @@ class MusclesListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final workoutNotifier = ref.read(workoutsProvider.notifier);
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: EdgeInsets.symmetric(horizontal: context.smallSpacing),
         child: Column(
           children: [
             ListView.separated(
@@ -30,25 +31,26 @@ class MusclesListView extends ConsumerWidget {
                       muscle: muscles[index],
                       isComingFromWorkoutScreen: isComingFromWorkoutScreen,
                     ),
-                separatorBuilder: (context, index) => const SizedBox(height: 5),
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: context.smallSpacing / 2),
                 itemCount: muscles.length),
-            const SizedBox(height: 5),
+            SizedBox(height: context.smallSpacing),
             if (isComingFromWorkoutScreen == true &&
                 (workoutNotifier.newWorkout.workoutItems == null ||
                     workoutNotifier.newWorkout.workoutItems!.isEmpty))
               Text(
                 "you must add at least one exercise".capitalizeWord(),
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w800,
+                    ),
               ),
-            const SizedBox(height: 5),
+            SizedBox(height: context.smallSpacing),
             if (isComingFromWorkoutScreen ?? false)
               FinishBTN(
                   primaryColor: AppColors.primaryColor,
                   appendToExistingWorkoutSet: appendToExistingWorkoutSet),
-            const SizedBox(height: 5),
+            SizedBox(height: context.smallSpacing),
           ],
         ));
   }

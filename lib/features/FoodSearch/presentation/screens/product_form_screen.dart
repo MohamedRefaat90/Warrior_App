@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -200,7 +201,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                           'Image selected: ${_selectedImagePath!.split('/').last}',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: context.smallSpacing),
                       ],
                       OutlinedButton.icon(
                         onPressed: _pickImage,
@@ -209,7 +210,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                             ? 'Change Image'
                             : 'Take Photo'),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: context.smallSpacing),
                       Text(
                         'Tip: Take a clear photo of the product front, ingredients list, and nutrition facts.',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -223,28 +224,29 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: context.extraLargeSpacing),
 
               // Submit button
               ElevatedButton(
                 onPressed: _isLoading ? null : _submitForm,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding:
+                      EdgeInsets.symmetric(vertical: context.mediumSpacing),
                 ),
                 child: _isLoading
-                    ? SizedBox(
+                    ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: const CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Text(
                         widget.product != null
                             ? 'Update Product'
                             : 'Add Product',
-                        style: const TextStyle(fontSize: 16),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.mediumSpacing),
 
               // Disclaimer
               Text(

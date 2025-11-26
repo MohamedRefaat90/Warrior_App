@@ -1,4 +1,5 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Educational screen explaining Nutri-Score, NOVA, and Eco-Score
@@ -13,194 +14,217 @@ class NutritionGuideScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Hero section
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Theme.of(context).colorScheme.primaryContainer,
-                    Theme.of(context).colorScheme.surface,
-                  ],
-                ),
-              ),
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.school_outlined,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.primary,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: ResponsiveUtils.maxContentWidth,
+            ),
+            child: Column(
+              children: [
+                // Hero section
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Theme.of(context).colorScheme.primaryContainer,
+                        Theme.of(context).colorScheme.surface,
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    context.l10n.makeBetterFoodChoices,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    context.l10n.learnAboutScores,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-
-            // Nutri-Score Section
-            _buildScoreSection(
-              context,
-              title: context.l10n.nutriScoreLong,
-              icon: Icons.favorite,
-              iconColor: Colors.red,
-              description: context.l10n.nutriScoreDescription,
-              howItWorks: [
-                context.l10n.nutriScorePoint1,
-                context.l10n.nutriScorePoint2,
-                context.l10n.nutriScorePoint3,
-              ],
-              scoreExamples: [
-                _ScoreExample('A', Colors.green, context.l10n.excellentQuality,
-                    context.l10n.scoreAExamples),
-                _ScoreExample('B', Colors.lightGreen, context.l10n.goodQuality,
-                    context.l10n.scoreBExamples),
-                _ScoreExample('C', Colors.yellow, context.l10n.averageQuality,
-                    context.l10n.scoreCExamples),
-                _ScoreExample('D', Colors.orange, context.l10n.poorQuality,
-                    context.l10n.scoreDExamples),
-                _ScoreExample('E', Colors.red, context.l10n.veryPoorQuality,
-                    context.l10n.scoreEExamples),
-              ],
-            ),
-
-            Divider(height: 48, thickness: 2),
-
-            // NOVA Group Section
-            _buildScoreSection(
-              context,
-              title: context.l10n.novaClassification,
-              icon: Icons.science,
-              iconColor: Colors.blue,
-              description: context.l10n.novaDescription,
-              howItWorks: [
-                context.l10n.novaGroup1,
-                context.l10n.novaGroup2,
-                context.l10n.novaGroup3,
-                context.l10n.novaGroup4,
-              ],
-              scoreExamples: [
-                _ScoreExample(
-                    '1',
-                    Colors.green,
-                    context.l10n.unprocessedMinimal,
-                    context.l10n.nova1Examples),
-                _ScoreExample(
-                    '2',
-                    Colors.lightGreen,
-                    context.l10n.culinaryIngredients,
-                    context.l10n.nova2Examples),
-                _ScoreExample('3', Colors.orange, context.l10n.processedFoods,
-                    context.l10n.nova3Examples),
-                _ScoreExample('4', Colors.red, context.l10n.ultraProcessed,
-                    context.l10n.nova4Examples),
-              ],
-            ),
-
-            Divider(height: 48, thickness: 2),
-
-            // Eco-Score Section
-            _buildScoreSection(
-              context,
-              title: context.l10n.ecoScore,
-              icon: Icons.eco,
-              iconColor: Colors.green,
-              description: context.l10n.ecoScoreDescription,
-              howItWorks: [
-                context.l10n.ecoPoint1,
-                context.l10n.ecoPoint2,
-                context.l10n.ecoPoint3,
-                context.l10n.ecoPoint4,
-              ],
-              scoreExamples: [
-                _ScoreExample('A', Colors.green, context.l10n.veryLowImpact,
-                    context.l10n.ecoAExamples),
-                _ScoreExample('B', Colors.lightGreen, context.l10n.lowImpact,
-                    context.l10n.ecoBExamples),
-                _ScoreExample('C', Colors.yellow, context.l10n.moderateImpact,
-                    context.l10n.ecoCExamples),
-                _ScoreExample('D', Colors.orange, context.l10n.highImpact,
-                    context.l10n.ecoDExamples),
-                _ScoreExample('E', Colors.red, context.l10n.veryHighImpact,
-                    context.l10n.ecoEExamples),
-              ],
-            ),
-
-            // Tips Section
-            Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                  padding: context.cardPadding,
+                  child: Column(
                     children: [
                       Icon(
-                        Icons.lightbulb_outline,
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer,
+                        Icons.school_outlined,
+                        size: context.largeIconSize,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(height: context.mediumSpacing),
                       Text(
-                        context.l10n.quickTips,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
+                        context.l10n.makeBetterFoodChoices,
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: context.smallSpacing),
+                      Text(
+                        context.l10n.learnAboutScores,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .onSecondaryContainer,
+                                  .onSurface
+                                  .withValues(alpha: 0.7),
                             ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  _buildTip(context, context.l10n.tip1),
-                  _buildTip(context, context.l10n.tip2),
-                  _buildTip(context, context.l10n.tip3),
-                  _buildTip(context, context.l10n.tip4),
-                  _buildTip(context, context.l10n.tip5),
-                ],
-              ),
-            ),
+                ),
 
-            const SizedBox(height: 32),
-          ],
+                // Nutri-Score Section
+                _buildScoreSection(
+                  context,
+                  title: context.l10n.nutriScoreLong,
+                  icon: Icons.favorite,
+                  iconColor: Colors.red,
+                  description: context.l10n.nutriScoreDescription,
+                  howItWorks: [
+                    context.l10n.nutriScorePoint1,
+                    context.l10n.nutriScorePoint2,
+                    context.l10n.nutriScorePoint3,
+                  ],
+                  scoreExamples: [
+                    _ScoreExample(
+                        'A',
+                        Colors.green,
+                        context.l10n.excellentQuality,
+                        context.l10n.scoreAExamples),
+                    _ScoreExample('B', Colors.lightGreen,
+                        context.l10n.goodQuality, context.l10n.scoreBExamples),
+                    _ScoreExample(
+                        'C',
+                        Colors.yellow,
+                        context.l10n.averageQuality,
+                        context.l10n.scoreCExamples),
+                    _ScoreExample('D', Colors.orange, context.l10n.poorQuality,
+                        context.l10n.scoreDExamples),
+                    _ScoreExample('E', Colors.red, context.l10n.veryPoorQuality,
+                        context.l10n.scoreEExamples),
+                  ],
+                ),
+
+                Divider(height: context.extraLargeSpacing, thickness: 2),
+
+                // NOVA Group Section
+                _buildScoreSection(
+                  context,
+                  title: context.l10n.novaClassification,
+                  icon: Icons.science,
+                  iconColor: Colors.blue,
+                  description: context.l10n.novaDescription,
+                  howItWorks: [
+                    context.l10n.novaGroup1,
+                    context.l10n.novaGroup2,
+                    context.l10n.novaGroup3,
+                    context.l10n.novaGroup4,
+                  ],
+                  scoreExamples: [
+                    _ScoreExample(
+                        '1',
+                        Colors.green,
+                        context.l10n.unprocessedMinimal,
+                        context.l10n.nova1Examples),
+                    _ScoreExample(
+                        '2',
+                        Colors.lightGreen,
+                        context.l10n.culinaryIngredients,
+                        context.l10n.nova2Examples),
+                    _ScoreExample(
+                        '3',
+                        Colors.orange,
+                        context.l10n.processedFoods,
+                        context.l10n.nova3Examples),
+                    _ScoreExample('4', Colors.red, context.l10n.ultraProcessed,
+                        context.l10n.nova4Examples),
+                  ],
+                ),
+
+                Divider(height: context.extraLargeSpacing, thickness: 2),
+
+                // Eco-Score Section
+                _buildScoreSection(
+                  context,
+                  title: context.l10n.ecoScore,
+                  icon: Icons.eco,
+                  iconColor: Colors.green,
+                  description: context.l10n.ecoScoreDescription,
+                  howItWorks: [
+                    context.l10n.ecoPoint1,
+                    context.l10n.ecoPoint2,
+                    context.l10n.ecoPoint3,
+                    context.l10n.ecoPoint4,
+                  ],
+                  scoreExamples: [
+                    _ScoreExample('A', Colors.green, context.l10n.veryLowImpact,
+                        context.l10n.ecoAExamples),
+                    _ScoreExample('B', Colors.lightGreen,
+                        context.l10n.lowImpact, context.l10n.ecoBExamples),
+                    _ScoreExample('C', Colors.yellow,
+                        context.l10n.moderateImpact, context.l10n.ecoCExamples),
+                    _ScoreExample('D', Colors.orange, context.l10n.highImpact,
+                        context.l10n.ecoDExamples),
+                    _ScoreExample('E', Colors.red, context.l10n.veryHighImpact,
+                        context.l10n.ecoEExamples),
+                  ],
+                ),
+
+                // Tips Section
+                Container(
+                  margin: EdgeInsets.all(context.mediumSpacing),
+                  padding: EdgeInsets.all(context.mediumSpacing),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    borderRadius:
+                        BorderRadius.circular(context.responsiveBorderRadius),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.lightbulb_outline,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                          ),
+                          SizedBox(width: context.smallSpacing),
+                          Text(
+                            context.l10n.quickTips,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer,
+                                ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: context.mediumSpacing),
+                      _buildTip(context, context.l10n.tip1),
+                      _buildTip(context, context.l10n.tip2),
+                      _buildTip(context, context.l10n.tip3),
+                      _buildTip(context, context.l10n.tip4),
+                      _buildTip(context, context.l10n.tip5),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: context.largeSpacing),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildScoreCard(BuildContext context, _ScoreExample example) {
+    final badgeSize = ResponsiveUtils.badgeSize(context);
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: context.smallSpacing),
+      padding: context.cardPadding,
       decoration: BoxDecoration(
         color: example.color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
         border: Border.all(
           color: example.color.withValues(alpha: 0.3),
           width: 1,
@@ -210,8 +234,8 @@ class NutritionGuideScreen extends StatelessWidget {
         children: [
           // Score badge
           Container(
-            width: 48,
-            height: 48,
+            width: badgeSize,
+            height: badgeSize,
             decoration: BoxDecoration(
               color: example.color,
               shape: BoxShape.circle,
@@ -219,14 +243,13 @@ class NutritionGuideScreen extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               example.score,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: context.mediumSpacing),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +288,10 @@ class NutritionGuideScreen extends StatelessWidget {
     required List<_ScoreExample> scoreExamples,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.horizontalPadding,
+        vertical: context.mediumSpacing,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -273,14 +299,20 @@ class NutritionGuideScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(context.smallSpacing),
                 decoration: BoxDecoration(
                   color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(context.responsiveBorderRadius),
                 ),
-                child: Icon(icon, color: iconColor, size: 32),
+                child: Icon(
+                  icon,
+                  color: iconColor,
+                  size: ResponsiveUtils.iconSize(context,
+                      mobile: 32, tablet: 36, desktop: 40),
+                ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: context.mediumSpacing),
               Expanded(
                 child: Text(
                   title,
@@ -291,7 +323,7 @@ class NutritionGuideScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.mediumSpacing),
 
           // Description
           Text(
@@ -300,7 +332,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   height: 1.5,
                 ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: context.largeSpacing),
 
           // How it works
           Text(
@@ -309,9 +341,9 @@ class NutritionGuideScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: context.smallSpacing),
           ...howItWorks.map((point) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: EdgeInsets.only(bottom: context.smallSpacing),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -320,7 +352,7 @@ class NutritionGuideScreen extends StatelessWidget {
                       size: 20,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: context.smallSpacing),
                     Expanded(
                       child: Text(
                         point,
@@ -330,7 +362,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   ],
                 ),
               )),
-          const SizedBox(height: 24),
+          SizedBox(height: context.largeSpacing),
 
           // Score examples
           Text(
@@ -339,7 +371,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.mediumSpacing),
           ...scoreExamples.map((example) => _buildScoreCard(context, example)),
         ],
       ),
@@ -348,7 +380,7 @@ class NutritionGuideScreen extends StatelessWidget {
 
   Widget _buildTip(BuildContext context, String tip) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: context.smallSpacing),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -357,7 +389,7 @@ class NutritionGuideScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSecondaryContainer,
             size: 24,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.smallSpacing),
           Expanded(
             child: Text(
               tip,

@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Goal selection card widget
@@ -30,11 +31,11 @@ class GoalCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(16),
+        padding: context.cardPadding,
         decoration: BoxDecoration(
           color:
               isSelected ? color.withValues(alpha: 0.1) : colorScheme.surface,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           border: Border.all(
             color:
                 isSelected ? color : colorScheme.outline.withValues(alpha: 0.3),
@@ -54,39 +55,42 @@ class GoalCard extends StatelessWidget {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(context.smallSpacing),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: isSelected ? 0.3 : 0.2),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius:
+                    BorderRadius.circular(context.responsiveBorderRadius - 2),
               ),
               child: AnimatedScale(
                 duration: const Duration(milliseconds: 300),
                 scale: isSelected ? 1.1 : 1.0,
-                child: Icon(icon, color: color, size: 24),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: ResponsiveUtils.iconSize(context,
+                      mobile: 24, tablet: 28, desktop: 32),
+                ),
               ),
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: context.mediumSpacing),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 300),
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.w600,
-                      color: colorScheme.onSurface,
-                    ),
-                    child: Text(title),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.w600,
+                          color: colorScheme.onSurface,
+                        ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
                   ),
                 ],
               ),
@@ -97,7 +101,8 @@ class GoalCard extends StatelessWidget {
               child: Icon(
                 Icons.check_circle,
                 color: color,
-                size: 24,
+                size: ResponsiveUtils.iconSize(context,
+                    mobile: 24, tablet: 28, desktop: 32),
               ),
             ),
           ],

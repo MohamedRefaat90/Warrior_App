@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/CaloriesCalculator/data/models/user_data_model.dart';
@@ -90,173 +91,195 @@ class _CaloriesCalculatorScreenState
       body: state.isLoading
           ? const Center(child: Loader())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header Section
-                  Center(child: const CalculatorHeaderCard()),
-                  const SizedBox(height: 30),
-
-                  // Basic Info Section
-                  const SectionTitle(title: 'Basic Information'),
-                  const SizedBox(height: 15),
-                  InputCard(
-                    label: 'Weight',
-                    hint: 'Enter weight',
-                    suffix: 'kg',
-                    controller: _weightController,
+              padding: context.screenPadding,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: ResponsiveUtils.maxContentWidth,
                   ),
-                  const SizedBox(height: 15),
-                  InputCard(
-                    label: 'Height',
-                    hint: 'Enter height',
-                    suffix: 'cm',
-                    controller: _heightController,
-                  ),
-                  const SizedBox(height: 15),
-                  InputCard(
-                    label: 'Age',
-                    hint: 'Enter age',
-                    suffix: 'years',
-                    controller: _ageController,
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Gender Selection
-                  const SectionTitle(title: 'Gender'),
-                  const SizedBox(height: 15),
-                  Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: GenderSelectionCard(
-                          icon: Icons.male,
-                          label: 'Male',
-                          isSelected: _selectedGender == 'male',
-                          onTap: () => setState(() => _selectedGender = 'male'),
-                        ),
+                      // Header Section
+                      Center(child: const CalculatorHeaderCard()),
+                      SizedBox(height: context.largeSpacing),
+
+                      // Basic Info Section
+                      const SectionTitle(title: 'Basic Information'),
+                      SizedBox(height: context.mediumSpacing),
+                      InputCard(
+                        label: 'Weight',
+                        hint: 'Enter weight',
+                        suffix: 'kg',
+                        controller: _weightController,
                       ),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: GenderSelectionCard(
-                          icon: Icons.female,
-                          label: 'Female',
-                          isSelected: _selectedGender == 'female',
+                      SizedBox(height: context.mediumSpacing),
+                      InputCard(
+                        label: 'Height',
+                        hint: 'Enter height',
+                        suffix: 'cm',
+                        controller: _heightController,
+                      ),
+                      SizedBox(height: context.mediumSpacing),
+                      InputCard(
+                        label: 'Age',
+                        hint: 'Enter age',
+                        suffix: 'years',
+                        controller: _ageController,
+                      ),
+                      SizedBox(height: context.largeSpacing),
+
+                      // Gender Selection
+                      const SectionTitle(title: 'Gender'),
+                      SizedBox(height: context.mediumSpacing),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GenderSelectionCard(
+                              icon: Icons.male,
+                              label: 'Male',
+                              isSelected: _selectedGender == 'male',
+                              onTap: () =>
+                                  setState(() => _selectedGender = 'male'),
+                            ),
+                          ),
+                          SizedBox(width: context.mediumSpacing),
+                          Expanded(
+                            child: GenderSelectionCard(
+                              icon: Icons.female,
+                              label: 'Female',
+                              isSelected: _selectedGender == 'female',
+                              onTap: () =>
+                                  setState(() => _selectedGender = 'female'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: context.largeSpacing),
+
+                      // Activity Level
+                      const SectionTitle(title: 'Activity Level'),
+                      SizedBox(height: context.mediumSpacing),
+                      ..._activityLevels.map((level) {
+                        return Padding(
+                          padding:
+                              EdgeInsets.only(bottom: context.smallSpacing),
+                          child: ActivityLevelItem(
+                            value: level['value']!,
+                            label: level['label']!,
+                            description: level['desc']!,
+                            isSelected:
+                                _selectedActivityLevel == level['value'],
+                            onTap: () {
+                              setState(() =>
+                                  _selectedActivityLevel = level['value']!);
+                            },
+                          ),
+                        );
+                      }),
+                      SizedBox(height: context.largeSpacing),
+
+                      // Goal Selection
+                      const SectionTitle(title: 'Your Goal'),
+                      SizedBox(height: context.mediumSpacing),
+                      GoalCard(
+                        icon: Icons.trending_down,
+                        title: 'Weight Loss',
+                        subtitle: 'Lose weight gradually',
+                        value: 'weight_loss',
+                        isSelected: _selectedGoal == 'weight_loss',
+                        color: Colors.orange,
+                        onTap: () =>
+                            setState(() => _selectedGoal = 'weight_loss'),
+                      ),
+                      SizedBox(height: context.smallSpacing),
+                      GoalCard(
+                        icon: Icons.trending_flat,
+                        title: 'Maintain Weight',
+                        subtitle: 'Keep current weight',
+                        value: 'maintain',
+                        isSelected: _selectedGoal == 'maintain',
+                        color: Colors.blue,
+                        onTap: () => setState(() => _selectedGoal = 'maintain'),
+                      ),
+                      SizedBox(height: context.smallSpacing),
+                      GoalCard(
+                        icon: Icons.trending_up,
+                        title: 'Muscle Gain',
+                        subtitle: 'Build muscle mass',
+                        value: 'muscle_gain',
+                        isSelected: _selectedGoal == 'muscle_gain',
+                        color: Colors.green,
+                        onTap: () =>
+                            setState(() => _selectedGoal = 'muscle_gain'),
+                      ),
+                      SizedBox(height: context.largeSpacing),
+
+                      // Weekly Goal (only if not maintain)
+                      if (_selectedGoal != 'maintain') ...[
+                        const SectionTitle(title: 'Weekly Goal'),
+                        SizedBox(height: context.mediumSpacing),
+                        WeeklyGoalItem(
+                          goal: 0.25,
+                          isSelected: _selectedWeeklyGoal == 0.25,
+                          action:
+                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
                           onTap: () =>
-                              setState(() => _selectedGender = 'female'),
+                              setState(() => _selectedWeeklyGoal = 0.25),
+                        ),
+                        SizedBox(height: context.smallSpacing),
+                        WeeklyGoalItem(
+                          goal: 0.5,
+                          isSelected: _selectedWeeklyGoal == 0.5,
+                          action:
+                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                          onTap: () =>
+                              setState(() => _selectedWeeklyGoal = 0.5),
+                        ),
+                        SizedBox(height: context.smallSpacing),
+                        WeeklyGoalItem(
+                          goal: 0.75,
+                          isSelected: _selectedWeeklyGoal == 0.75,
+                          action:
+                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                          onTap: () =>
+                              setState(() => _selectedWeeklyGoal = 0.75),
+                        ),
+                        SizedBox(height: context.smallSpacing),
+                        WeeklyGoalItem(
+                          goal: 1.0,
+                          isSelected: _selectedWeeklyGoal == 1.0,
+                          action:
+                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                          onTap: () =>
+                              setState(() => _selectedWeeklyGoal = 1.0),
+                        ),
+                        SizedBox(height: context.largeSpacing),
+                      ],
+
+                      // Calculate Button
+                      SizedBox(
+                        width: double.infinity,
+                        child: CustomBTN(
+                          press: _handleCalculate,
+                          color: AppColors.primaryColor,
+                          radius: context.responsiveBorderRadius,
+                          widget: Text(
+                            'Calculate',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.white,
+                                ),
+                          ),
                         ),
                       ),
+                      SizedBox(height: context.mediumSpacing),
                     ],
                   ),
-                  const SizedBox(height: 30),
-
-                  // Activity Level
-                  const SectionTitle(title: 'Activity Level'),
-                  const SizedBox(height: 15),
-                  ..._activityLevels.map((level) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: ActivityLevelItem(
-                        value: level['value']!,
-                        label: level['label']!,
-                        description: level['desc']!,
-                        isSelected: _selectedActivityLevel == level['value'],
-                        onTap: () {
-                          setState(
-                              () => _selectedActivityLevel = level['value']!);
-                        },
-                      ),
-                    );
-                  }),
-                  const SizedBox(height: 30),
-
-                  // Goal Selection
-                  const SectionTitle(title: 'Your Goal'),
-                  const SizedBox(height: 15),
-                  GoalCard(
-                    icon: Icons.trending_down,
-                    title: 'Weight Loss',
-                    subtitle: 'Lose weight gradually',
-                    value: 'weight_loss',
-                    isSelected: _selectedGoal == 'weight_loss',
-                    color: Colors.orange,
-                    onTap: () => setState(() => _selectedGoal = 'weight_loss'),
-                  ),
-                  const SizedBox(height: 12),
-                  GoalCard(
-                    icon: Icons.trending_flat,
-                    title: 'Maintain Weight',
-                    subtitle: 'Keep current weight',
-                    value: 'maintain',
-                    isSelected: _selectedGoal == 'maintain',
-                    color: Colors.blue,
-                    onTap: () => setState(() => _selectedGoal = 'maintain'),
-                  ),
-                  const SizedBox(height: 12),
-                  GoalCard(
-                    icon: Icons.trending_up,
-                    title: 'Muscle Gain',
-                    subtitle: 'Build muscle mass',
-                    value: 'muscle_gain',
-                    isSelected: _selectedGoal == 'muscle_gain',
-                    color: Colors.green,
-                    onTap: () => setState(() => _selectedGoal = 'muscle_gain'),
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Weekly Goal (only if not maintain)
-                  if (_selectedGoal != 'maintain') ...[
-                    const SectionTitle(title: 'Weekly Goal'),
-                    const SizedBox(height: 15),
-                    WeeklyGoalItem(
-                      goal: 0.25,
-                      isSelected: _selectedWeeklyGoal == 0.25,
-                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                      onTap: () => setState(() => _selectedWeeklyGoal = 0.25),
-                    ),
-                    const SizedBox(height: 12),
-                    WeeklyGoalItem(
-                      goal: 0.5,
-                      isSelected: _selectedWeeklyGoal == 0.5,
-                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                      onTap: () => setState(() => _selectedWeeklyGoal = 0.5),
-                    ),
-                    const SizedBox(height: 12),
-                    WeeklyGoalItem(
-                      goal: 0.75,
-                      isSelected: _selectedWeeklyGoal == 0.75,
-                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                      onTap: () => setState(() => _selectedWeeklyGoal = 0.75),
-                    ),
-                    const SizedBox(height: 12),
-                    WeeklyGoalItem(
-                      goal: 1.0,
-                      isSelected: _selectedWeeklyGoal == 1.0,
-                      action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
-                      onTap: () => setState(() => _selectedWeeklyGoal = 1.0),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
-
-                  // Calculate Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomBTN(
-                      press: _handleCalculate,
-                      color: AppColors.primaryColor,
-                      radius: 15,
-                      widget: Text(
-                        'Calculate',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                ),
               ),
             ),
     );

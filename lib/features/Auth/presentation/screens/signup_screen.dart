@@ -32,28 +32,37 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     ProviderStates providerStates = ref.watch<ProviderStates>(signupProvider);
+    final isDesktopOrTablet = context.isDesktop || context.isTablet;
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Signup',
-          style: TextStyle(fontFamily: "Poppines", fontSize: 30),
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontFamily: "Poppines",
+              ),
         ),
       ),
-      body: Form(
-          key: formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20)
-                .copyWith(top: 50, bottom: 20),
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Column(
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: context.horizontalPadding)
+                .copyWith(
+                    top: context.mediumSpacing, bottom: context.mediumSpacing),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: ResponsiveUtils.maxCardWidth + 100,
+              ),
+              child: Form(
+                key: formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(height: 15),
+                    SizedBox(height: context.smallSpacing),
                     CustomTextField(
                         placeholderText: "Name",
                         textEditingController: nameController,
@@ -64,13 +73,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           }
                           return null;
                         }),
-                    const SizedBox(height: 10),
+                    SizedBox(height: context.smallSpacing),
                     CustomTextField(
                         placeholderText: "Email",
                         textEditingController: emailController,
                         isObscure: false,
                         validator: (value) => emailValidator(value!.trim())),
-                    const SizedBox(height: 10),
+                    SizedBox(height: context.smallSpacing),
                     CustomTextField(
                       placeholderText: "password",
                       textEditingController: passwordController,
@@ -79,47 +88,62 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       onChange: (password) => ref
                           .read(signupProvider.notifier)
                           .passwordValidator(password),
-                      // validator: (value) => passwordValidator(value!)
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: context.smallSpacing),
                     PasswordValidationRules(),
-                    const SizedBox(height: 10),
+                    SizedBox(height: context.smallSpacing),
                     CustomTextField(
                         placeholderText: "Confirm Password",
                         isObscure: true,
                         isPassword: true,
                         validator: (value) => confirmPasswordvalidator(
                             value!, passwordController.text)),
-                    const SizedBox(height: 40),
-                    CustomBTN(
-                        widget: providerStates.isLoading
-                            ? const BtnLoader()
-                            : const Text("Signup"),
-                        color: AppColors.primaryColor,
-                        padding: 15,
-                        splashColor: AppColors.black,
-                        width: context.screenWidth * 0.4,
-                        press: () {
-                          if (formKey.currentState!.validate() &&
-                              validatePassword()) {
-                            ref.read(signupProvider.notifier).signup(
-                                email: emailController.text,
-                                password: passwordController.text,
-                                username: nameController.text);
-                          }
-                        })
+                    SizedBox(height: context.largeSpacing),
+                    Center(
+                      child: CustomBTN(
+                          widget: providerStates.isLoading
+                              ? const BtnLoader()
+                              : const Text("Signup"),
+                          color: AppColors.primaryColor,
+                          padding: ResponsiveUtils.value(context,
+                              mobile: 15.0, desktop: 18.0),
+                          splashColor: AppColors.black,
+                          width: ResponsiveUtils.value(
+                            context,
+                            mobile: context.screenWidth * 0.4,
+                            tablet: 200.0,
+                            desktop: 220.0,
+                          ),
+                          press: () {
+                            if (formKey.currentState!.validate() &&
+                                validatePassword()) {
+                              ref.read(signupProvider.notifier).signup(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  username: nameController.text);
+                            }
+                          }),
+                    ),
+                    if (!isDesktopOrTablet) ...[
+                      SizedBox(height: context.largeSpacing),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Transform.rotate(
+                          angle: 3.14 / 4,
+                          child: Image.asset(
+                            AppAssets.dumbbell,
+                            width: context.screenWidth * 0.3,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-                Transform.rotate(
-                  angle: 3.14 / 4,
-                  child: Image.asset(
-                    AppAssets.dumbbell,
-                    width: context.screenWidth * 0.35,
-                  ),
-                )
-              ],
+              ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 

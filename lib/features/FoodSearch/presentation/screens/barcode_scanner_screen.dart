@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/search_history_provider.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -57,11 +58,16 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              margin: const EdgeInsets.symmetric(horizontal: 32),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.largeSpacing,
+                vertical: context.mediumSpacing,
+              ),
+              margin:
+                  EdgeInsets.symmetric(horizontal: context.extraLargeSpacing),
               decoration: BoxDecoration(
                 color: Colors.black.withValues(alpha: 0.7),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius:
+                    BorderRadius.circular(context.responsiveBorderRadius),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -69,15 +75,14 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
                   if (_isProcessing)
                     const CircularProgressIndicator(color: Colors.white)
                   else
-                    const Text(
+                    Text(
                       'Position the barcode within the frame',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                          ),
                       textAlign: TextAlign.center,
                     ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.smallSpacing),
                   TextButton.icon(
                     onPressed: () {
                       _showManualInputDialog();

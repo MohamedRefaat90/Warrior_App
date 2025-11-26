@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Header card for the calculator screen
@@ -8,7 +9,7 @@ class CalculatorHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: context.cardPadding,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -18,7 +19,7 @@ class CalculatorHeaderCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius + 4),
         boxShadow: [
           BoxShadow(
             color: AppColors.primaryColor.withValues(alpha: 0.3),
@@ -31,27 +32,26 @@ class CalculatorHeaderCard extends StatelessWidget {
         children: [
           Icon(
             Icons.calculate_rounded,
-            size: 50,
+            size: ResponsiveUtils.iconSize(context,
+                mobile: 50, tablet: 56, desktop: 64),
             color: AppColors.white,
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: context.smallSpacing),
           Text(
             'Calculate Your Daily\nCaloric Needs',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppColors.white,
-            ),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white,
+                ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: context.smallSpacing / 2),
           Text(
             'Get personalized nutrition targets',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13,
-              color: AppColors.white.withValues(alpha: 0.9),
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.white.withValues(alpha: 0.9),
+                ),
           ),
         ],
       ),

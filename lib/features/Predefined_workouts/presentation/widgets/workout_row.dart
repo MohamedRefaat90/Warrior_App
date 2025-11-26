@@ -1,7 +1,6 @@
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/Predefined_workout_card.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// A horizontal row of workout cards (max 3 cards)
 class WorkoutRow extends StatelessWidget {
@@ -17,7 +16,7 @@ class WorkoutRow extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Calculate spacing between cards
-        final spacing = 12.w;
+        const spacing = 12.0;
 
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,

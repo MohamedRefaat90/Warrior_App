@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Header card for the calculator screen
 class CalculatorHeaderCard extends StatelessWidget {
@@ -9,20 +8,20 @@ class CalculatorHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primaryColor!,
-            AppColors.red!,
+            AppColors.primaryColor,
+            AppColors.red,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor!.withValues(alpha: 0.3),
+            color: AppColors.primaryColor.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -32,25 +31,25 @@ class CalculatorHeaderCard extends StatelessWidget {
         children: [
           Icon(
             Icons.calculate_rounded,
-            size: 50.sp,
+            size: 50,
             color: AppColors.white,
           ),
-          SizedBox(height: 10.h),
+          const SizedBox(height: 10),
           Text(
             'Calculate Your Daily\nCaloric Needs',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: AppColors.white,
             ),
           ),
-          SizedBox(height: 5.h),
+          const SizedBox(height: 5),
           Text(
             'Get personalized nutrition targets',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 13.sp,
+              fontSize: 13,
               color: AppColors.white.withValues(alpha: 0.9),
             ),
           ),

@@ -1,4 +1,3 @@
-import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/localization/arb/app_localizations.dart';
 import 'package:Warrior/core/network/connectivity.dart';
@@ -6,6 +5,7 @@ import 'package:Warrior/core/services/app_open_ad_manager.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/theme/app_theme.dart';
 import 'package:Warrior/routing.dart';
 import 'package:device_preview/device_preview.dart';
@@ -13,7 +13,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
@@ -81,10 +80,10 @@ class _SyncIndicator extends ConsumerWidget {
     if (!isSync) return const SizedBox.shrink();
 
     return Container(
-      width: 80.w,
-      height: 25.h,
+      width: 80,
+      height: 25,
       alignment: Alignment.center,
-      margin: EdgeInsets.only(bottom: 70.h),
+      margin: const EdgeInsets.only(bottom: 70),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
         color: Colors.black87,
@@ -121,44 +120,37 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
     // Watch app settings from provider
     final appSettings = ref.watch(appSettingsProvider);
 
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, child) {
-        return OKToast(
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              MaterialApp.router(
-                title: 'Warrior',
-                debugShowCheckedModeBanner: false,
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: appSettings.themeMode,
-                locale: _useDevicePreview
-                    ? DevicePreview.locale(context)
-                    : appSettings.locale,
-                localizationsDelegates: const [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('en'),
-                  Locale('ar'),
-                ],
-                routerConfig: RoutersManager.router,
-                // DevicePreview configuration
-                builder: _useDevicePreview ? DevicePreview.appBuilder : null,
-              ),
-              // Sync indicator overlay
-              const _SyncIndicator(),
+    return OKToast(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          MaterialApp.router(
+            title: 'Warrior',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: appSettings.themeMode,
+            locale: _useDevicePreview
+                ? DevicePreview.locale(context)
+                : appSettings.locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale('ar'),
+            ],
+            routerConfig: RoutersManager.router,
+            // DevicePreview configuration
+            builder: _useDevicePreview ? DevicePreview.appBuilder : null,
           ),
-        );
-      },
+          // Sync indicator overlay
+          const _SyncIndicator(),
+        ],
+      ),
     );
   }
 

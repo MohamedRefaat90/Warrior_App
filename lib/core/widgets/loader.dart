@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 class Loader extends StatelessWidget {
@@ -9,7 +8,7 @@ class Loader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Lottie.asset(AppAssets.loader, width: 150.w),
+      child: Lottie.asset(AppAssets.loader, width: 150),
     );
   }
 }

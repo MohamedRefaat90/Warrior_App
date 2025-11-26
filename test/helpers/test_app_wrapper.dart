@@ -5,7 +5,6 @@ import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TestAppWrapper {
   static Widget createMainAppForTesting() {
@@ -35,28 +34,21 @@ class TestAppWrapper {
 
     return ProviderScope(
       overrides: overrides,
-      child: ScreenUtilInit(
-        designSize: const Size(360, 690),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (_, __) {
-          return MaterialApp(
-            title: 'Warrior Test',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: const Color.fromARGB(255, 168, 11, 11),
+      child: MaterialApp(
+        title: 'Warrior Test',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 168, 11, 11),
+          ),
+          useMaterial3: true,
+        ),
+        home: child ??
+            const Scaffold(
+              body: Center(
+                child: Text('Test App'),
               ),
-              useMaterial3: true,
             ),
-            home: child ??
-                const Scaffold(
-                  body: Center(
-                    child: Text('Test App'),
-                  ),
-                ),
-          );
-        },
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FancyDrawerItem extends StatelessWidget {
   final IconData icon;
@@ -22,13 +21,13 @@ class FancyDrawerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
-        padding: EdgeInsets.symmetric(vertical: 5.w, horizontal: 10.w),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         decoration: BoxDecoration(
           color: AppColors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: AppColors.white.withValues(alpha: 0.3),
             width: 1,
@@ -37,11 +36,11 @@ class FancyDrawerItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 40.w,
-              height: 40.w,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 gradient: gradient,
-                borderRadius: BorderRadius.circular(15.r),
+                borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.black.withValues(alpha: 0.2),
@@ -53,10 +52,10 @@ class FancyDrawerItem extends StatelessWidget {
               child: Icon(
                 icon,
                 color: AppColors.white,
-                size: 24.sp,
+                size: 24,
               ),
             ),
-            SizedBox(width: 16.w),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +63,7 @@ class FancyDrawerItem extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
                     ),
@@ -74,7 +73,7 @@ class FancyDrawerItem extends StatelessWidget {
             ),
             Icon(
               Icons.arrow_forward_ios_rounded,
-              size: 16.sp,
+              size: 16,
               color: AppColors.white.withValues(alpha: 0.7),
             ),
           ],

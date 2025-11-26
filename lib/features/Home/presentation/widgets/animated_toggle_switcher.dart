@@ -1,7 +1,6 @@
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Animated toggle switcher with sun/moon icons
 /// Features smooth transitions, rotation effects, and glow on active state
@@ -20,10 +19,10 @@ class AnimatedToggleSwitcher extends ConsumerWidget {
         ref.read(appSettingsProvider.notifier).toggleTheme();
       },
       child: Container(
-        width: 70.w,
-        height: 35.h,
+        width: 70,
+        height: 35,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
             colors: isDark
                 ? [
@@ -53,9 +52,9 @@ class AnimatedToggleSwitcher extends ConsumerWidget {
               curve: Curves.easeInOut,
               alignment: isDark ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
-                width: 28.w,
-                height: 28.h,
-                margin: EdgeInsets.symmetric(horizontal: 3.w),
+                width: 28,
+                height: 28,
+                margin: const EdgeInsets.symmetric(horizontal: 3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
@@ -84,7 +83,7 @@ class AnimatedToggleSwitcher extends ConsumerWidget {
                     color: isDark
                         ? const Color(0xFF3B82F6)
                         : const Color(0xFFFF9800),
-                    size: 18.sp,
+                    size: 18,
                   ),
                 ),
               ),

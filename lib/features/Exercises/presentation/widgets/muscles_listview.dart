@@ -6,7 +6,6 @@ import 'package:Warrior/features/Exercises/presentation/widgets/muscle_tile.dart
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MusclesListView extends ConsumerWidget {
   final List<MuscleModel> muscles;
@@ -31,9 +30,9 @@ class MusclesListView extends ConsumerWidget {
                       muscle: muscles[index],
                       isComingFromWorkoutScreen: isComingFromWorkoutScreen,
                     ),
-                separatorBuilder: (context, index) => 5.verticalSpace,
+                separatorBuilder: (context, index) => const SizedBox(height: 5),
                 itemCount: muscles.length),
-            5.verticalSpace,
+            const SizedBox(height: 5),
             if (isComingFromWorkoutScreen == true &&
                 (workoutNotifier.newWorkout.workoutItems == null ||
                     workoutNotifier.newWorkout.workoutItems!.isEmpty))
@@ -41,15 +40,15 @@ class MusclesListView extends ConsumerWidget {
                 "you must add at least one exercise".capitalizeWord(),
                 style: TextStyle(
                     color: Colors.red,
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     fontWeight: FontWeight.w800),
               ),
-            5.verticalSpace,
+            const SizedBox(height: 5),
             if (isComingFromWorkoutScreen ?? false)
               FinishBTN(
                   primaryColor: AppColors.primaryColor,
                   appendToExistingWorkoutSet: appendToExistingWorkoutSet),
-            5.verticalSpace,
+            const SizedBox(height: 5),
           ],
         ));
   }

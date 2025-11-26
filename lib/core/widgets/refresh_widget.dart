@@ -2,7 +2,6 @@ import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RefreshWidget extends ConsumerWidget {
   final NotifierProvider provider;
@@ -26,7 +25,7 @@ class RefreshWidget extends ConsumerWidget {
                   widget: const Text("Refresh"),
                   color: Colors.black,
                   padding: 10,
-                  width: 70.w,
+                  width: 70,
                   press: () => ref.refresh(musclesProvider))
             ],
           ),

@@ -10,7 +10,6 @@ import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:Warrior/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -115,32 +114,25 @@ class _WarriorTestAppState extends ConsumerState<WarriorTestApp>
     // Initialize connectivity checker
     ConnectivityChecker.initialize(ref);
 
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, child) {
-        return OKToast(
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              MaterialApp.router(
-                title: 'Warrior',
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: const Color.fromARGB(255, 168, 11, 11),
-                  ),
-                  useMaterial3: true,
-                ),
-                routerConfig: RoutersManager.router,
+    return OKToast(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          MaterialApp.router(
+            title: 'Warrior',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color.fromARGB(255, 168, 11, 11),
               ),
-              // Sync indicator overlay
-              const _SyncIndicator(),
-            ],
+              useMaterial3: true,
+            ),
+            routerConfig: RoutersManager.router,
           ),
-        );
-      },
+          // Sync indicator overlay
+          const _SyncIndicator(),
+        ],
+      ),
     );
   }
 

@@ -13,7 +13,6 @@ import 'package:Warrior/features/Workouts/presentation/widgets/workouts_listview
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
@@ -55,7 +54,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                   label: Text(
                     'New Workout',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.5,
                     ),
@@ -70,7 +69,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         slivers: [
           _buildSliverAppBar(context, isDark),
           const SliverToBoxAdapter(child: BannerAdWidget()),
-          SliverToBoxAdapter(child: SizedBox(height: 8.h)),
+          SliverToBoxAdapter(child: SizedBox(height: 8)),
           _buildWorkoutContent(),
         ],
       ),
@@ -130,7 +129,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   Widget _buildSliverAppBar(BuildContext context, bool isDark) {
     return SliverAppBar(
-      expandedHeight: 120.h,
+      expandedHeight: 120,
       floating: false,
       pinned: true,
       elevation: 0,
@@ -151,11 +150,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
             style: TextStyle(
               fontFamily: 'kings',
               fontWeight: FontWeight.bold,
-              fontSize: 24.sp,
+              fontSize: 24,
               color: isDark ? Colors.white : Colors.black87,
               shadows: [
                 Shadow(
-                  color: AppColors.primaryColor!.withOpacity(0.3),
+                  color: AppColors.primaryColor.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -201,7 +200,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     }
 
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -219,7 +218,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                 );
               },
               child: Padding(
-                padding: EdgeInsets.only(bottom: 12.h),
+                padding: const EdgeInsets.only(bottom: 12),
                 child: WorkoutsListView(
                   workoutNotifier.workoutList,
                   _nameController,
@@ -269,29 +268,29 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               ),
               child: AlertDialog(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 elevation: 10,
                 title: Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(8.w),
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor!.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12.r),
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         Icons.fitness_center_rounded,
                         color: AppColors.primaryColor,
-                        size: 24.sp,
+                        size: 24,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'New Workout Set',
                         style: TextStyle(
-                          fontSize: 18.sp,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -308,12 +307,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                         Text(
                           'Workout Name',
                           style: TextStyle(
-                            fontSize: 13.sp,
+                            fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: isDark ? AppColors.white : AppColors.black,
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        const SizedBox(height: 8),
                         CustomTextField(
                           placeholderText: 'e.g., Full Body Blast',
                           isObscure: false,
@@ -322,16 +321,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                               ? 'Workout set name is required'.capitalizeWord()
                               : null,
                         ),
-                        SizedBox(height: 16.h),
+                        const SizedBox(height: 16),
                         Text(
                           'Description (Optional)',
                           style: TextStyle(
-                            fontSize: 13.sp,
+                            fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: isDark ? AppColors.white : AppColors.black,
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        const SizedBox(height: 8),
                         CustomTextField(
                           textEditingController: _descriptionController,
                           isTextArea: true,
@@ -347,14 +346,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                     onPressed: () => Navigator.of(context).pop(),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
-                        vertical: 12.h,
+                        horizontal: 20,
+                        vertical: 12,
                       ),
                     ),
                     child: Text(
                       'Cancel',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 16,
                         color: Colors.grey[600],
                       ),
                     ),
@@ -388,18 +387,18 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                         backgroundColor: AppColors.primaryColor,
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
-                          vertical: 12.h,
+                          horizontal: 24,
+                          vertical: 12,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: 2,
                       ),
                       child: Text(
                         'Create',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

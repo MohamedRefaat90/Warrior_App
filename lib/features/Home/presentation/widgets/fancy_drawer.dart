@@ -9,7 +9,6 @@ import 'package:Warrior/features/Home/presentation/widgets/logo_section.dart';
 import 'package:Warrior/features/Home/presentation/widgets/settings_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
@@ -57,7 +56,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                 child: Text(
                   'WARRIOR',
                   style: TextStyle(
-                    fontSize: 32.sp,
+                    fontSize: 32,
                     fontWeight: FontWeight.w900,
                     fontFamily: "kings",
                     letterSpacing: 3,
@@ -74,10 +73,11 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
               ),
               // SizedBox(height: 8.h),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(20.r),
+                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: AppColors.white.withValues(alpha: 0.3),
                     width: 1.5,
@@ -87,25 +87,25 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   context.l10n.unleashYourPower,
                   style: TextStyle(
                     color: AppColors.white,
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.5,
                   ),
                 ),
               ),
-              SizedBox(height: 10.h),
+              const SizedBox(height: 10),
               // Settings Section - ExpansionTile
               SettingsSection(),
-              SizedBox(height: 8.h),
+              const SizedBox(height: 8),
               // Glass Menu Items
               Flexible(
                 fit: FlexFit.loose,
                 flex: 3,
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 12.w),
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
                     color: AppColors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(30.r),
+                    borderRadius: BorderRadius.circular(30),
                     border: Border.all(
                       color: AppColors.white.withValues(alpha: 0.3),
                       width: 1.5,
@@ -119,7 +119,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30.r),
+                    borderRadius: BorderRadius.circular(30),
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -135,7 +135,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 10.h),
+                          const SizedBox(height: 10),
                           FancyDrawerItem(
                             icon: Icons.share_rounded,
                             title: context.l10n.shareApp,
@@ -154,7 +154,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                               TalkerService.info('User shared the app', 'HOME');
                             },
                           ),
-                          SizedBox(height: 8.h),
+                          const SizedBox(height: 8),
                           FancyDrawerItem(
                             icon: Icons.star_rounded,
                             title: context.l10n.rateApp,
@@ -172,7 +172,7 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                                   'User opened rate app', 'HOME');
                             },
                           ),
-                          SizedBox(height: 8.h),
+                          const SizedBox(height: 8),
                           FancyDrawerItem(
                             icon: Icons.logout_rounded,
                             title: context.l10n.logout,
@@ -195,15 +195,14 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                               }
                             },
                           ),
-                          // const Spacer(),
                           // Footer
                           Padding(
-                            padding: EdgeInsets.only(top: 10.h, bottom: 5.h),
+                            padding: const EdgeInsets.only(top: 10, bottom: 5),
                             child: Text(
                               _version,
                               style: TextStyle(
                                 color: AppColors.white.withValues(alpha: 0.6),
-                                fontSize: 11.sp,
+                                fontSize: 11,
                               ),
                             ),
                           ),
@@ -213,8 +212,6 @@ class _FancyDrawerState extends ConsumerState<FancyDrawer> {
                   ),
                 ),
               ),
-
-              // Spacer(),
             ],
           ),
         ),

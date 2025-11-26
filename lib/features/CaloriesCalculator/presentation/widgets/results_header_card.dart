@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Header card for results screen showing goal type
 class ResultsHeaderCard extends StatelessWidget {
@@ -41,14 +40,14 @@ class ResultsHeaderCard extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [goalColorDark, goalColorLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: goalColorDark.withValues(alpha: 0.3),
@@ -59,22 +58,22 @@ class ResultsHeaderCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(goalIcon, size: 50.sp, color: AppColors.white),
-          SizedBox(height: 10.h),
+          Icon(goalIcon, size: 50, color: AppColors.white),
+          const SizedBox(height: 10),
           Text(
             goalText,
             style: TextStyle(
-              fontSize: 22.sp,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: AppColors.white,
             ),
           ),
           if (goal != 'maintain') ...[
-            SizedBox(height: 5.h),
+            const SizedBox(height: 5),
             Text(
               weeklyGoalDescription,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 14,
                 color: AppColors.white.withValues(alpha: 0.9),
               ),
             ),

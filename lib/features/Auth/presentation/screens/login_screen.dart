@@ -3,6 +3,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
@@ -13,7 +14,6 @@ import 'package:Warrior/features/Auth/presentation/widgets/login_with.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -34,7 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       bottomSheet: Container(
-        height: 0.66.sh,
+        height: context.screenHeight * 0.66,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -46,13 +46,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   "Login",
                   style: TextStyle(fontFamily: "Poppins", fontSize: 30),
                 ),
-                10.verticalSpace,
+                const SizedBox(height: 10),
                 CustomTextField(
                     placeholderText: "Email",
                     isObscure: false,
                     textEditingController: emailController,
                     validator: (value) => emailValidator(value!.trim())),
-                10.verticalSpace,
+                const SizedBox(height: 10),
                 CustomTextField(
                     placeholderText: "password",
                     textEditingController: passwordController,
@@ -73,7 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: TextStyle(color: AppColors.black),
                       )),
                 ),
-                0.verticalSpace,
+                const SizedBox(height: 0),
                 CustomBTN(
                     widget: ProviderStates.isLoading
                         ? const BtnLoader()
@@ -81,7 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     color: AppColors.primaryColor,
                     padding: 15,
                     splashColor: AppColors.black,
-                    width: 0.4.sw,
+                    width: context.screenWidth * 0.4,
                     press: () async {
                       if (formKey.currentState!.validate()) {
                         await ref.read(loginProvider.notifier).login(
@@ -95,9 +95,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 //       context.goNamed(AppRouters.muscles);
                 //     },
                 //     child: Text("Guest Mode")),
-                15.verticalSpace,
+                const SizedBox(height: 15),
                 const LoginWith(),
-                15.verticalSpace,
+                const SizedBox(height: 15),
                 const GoogleButton(),
                 // 10.verticalSpace,
                 const GoToSignup()

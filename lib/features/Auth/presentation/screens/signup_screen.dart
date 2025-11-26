@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/network/provider_states.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
@@ -10,7 +11,6 @@ import 'package:Warrior/features/Auth/presentation/widgets/password_validation_r
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/routers.dart';
@@ -53,7 +53,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    15.verticalSpace,
+                    const SizedBox(height: 15),
                     CustomTextField(
                         placeholderText: "Name",
                         textEditingController: nameController,
@@ -64,13 +64,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           }
                           return null;
                         }),
-                    10.verticalSpace,
+                    const SizedBox(height: 10),
                     CustomTextField(
                         placeholderText: "Email",
                         textEditingController: emailController,
                         isObscure: false,
                         validator: (value) => emailValidator(value!.trim())),
-                    10.verticalSpace,
+                    const SizedBox(height: 10),
                     CustomTextField(
                       placeholderText: "password",
                       textEditingController: passwordController,
@@ -81,16 +81,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           .passwordValidator(password),
                       // validator: (value) => passwordValidator(value!)
                     ),
-                    10.verticalSpace,
+                    const SizedBox(height: 10),
                     PasswordValidationRules(),
-                    10.verticalSpace,
+                    const SizedBox(height: 10),
                     CustomTextField(
                         placeholderText: "Confirm Password",
                         isObscure: true,
                         isPassword: true,
                         validator: (value) => confirmPasswordvalidator(
                             value!, passwordController.text)),
-                    40.verticalSpace,
+                    const SizedBox(height: 40),
                     CustomBTN(
                         widget: providerStates.isLoading
                             ? const BtnLoader()
@@ -98,7 +98,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         color: AppColors.primaryColor,
                         padding: 15,
                         splashColor: AppColors.black,
-                        width: 0.4.sw,
+                        width: context.screenWidth * 0.4,
                         press: () {
                           if (formKey.currentState!.validate() &&
                               validatePassword()) {
@@ -114,7 +114,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   angle: 3.14 / 4,
                   child: Image.asset(
                     AppAssets.dumbbell,
-                    width: 0.35.sw,
+                    width: context.screenWidth * 0.35,
                   ),
                 )
               ],

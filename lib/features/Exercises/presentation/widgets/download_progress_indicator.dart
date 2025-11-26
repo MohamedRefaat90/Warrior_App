@@ -4,7 +4,6 @@ import 'package:Warrior/core/services/exercise_cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Global download progress indicator
 ///
@@ -104,25 +103,25 @@ class _DownloadProgressIndicatorState
     final percentage = (progress.progress * 100).toInt();
 
     return Positioned(
-      bottom: 16.h,
-      left: 16.w,
-      right: 16.w,
+      bottom: 16,
+      left: 16,
+      right: 16,
       child: Material(
         elevation: 8,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(12),
         shadowColor: Colors.black.withValues(alpha: 0.3),
         child: Container(
-          padding: EdgeInsets.all(16.w),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.primaryColor!.withValues(alpha: 0.3),
+              color: AppColors.primaryColor.withValues(alpha: 0.3),
               width: 2,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primaryColor!.withValues(alpha: 0.1),
+                color: AppColors.primaryColor.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -137,7 +136,7 @@ class _DownloadProgressIndicatorState
                   Icon(
                     Icons.cloud_download,
                     color: AppColors.primaryColor,
-                    size: 20.sp,
+                    size: 20,
                   )
                       .animate(
                           // onPlay: (controller) => controller.repeat(),
@@ -147,7 +146,7 @@ class _DownloadProgressIndicatorState
                         end: const Offset(1.1, 1.1),
                         duration: 1000.ms,
                       ),
-                  SizedBox(width: 12.w),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,17 +154,17 @@ class _DownloadProgressIndicatorState
                         Text(
                           'Downloading exercises',
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: AppColors.black,
                             fontFamily: 'Poppins',
                           ),
                         ),
-                        SizedBox(height: 2.h),
+                        const SizedBox(height: 2),
                         Text(
                           '${progress.cachedExercises}/${progress.totalExercises} completed',
                           style: TextStyle(
-                            fontSize: 11.sp,
+                            fontSize: 11,
                             color: AppColors.black.withValues(alpha: 0.6),
                             fontFamily: 'Poppins',
                           ),
@@ -176,7 +175,7 @@ class _DownloadProgressIndicatorState
                   Text(
                     '$percentage%',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryColor,
                       fontFamily: 'Poppins',
@@ -184,9 +183,9 @@ class _DownloadProgressIndicatorState
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
+              const SizedBox(height: 12),
               ClipRRect(
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(8),
                 child: TweenAnimationBuilder<double>(
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.easeInOut,
@@ -196,21 +195,21 @@ class _DownloadProgressIndicatorState
                   ),
                   builder: (context, value, _) => LinearProgressIndicator(
                     value: value,
-                    minHeight: 8.h,
+                    minHeight: 8,
                     backgroundColor:
-                        AppColors.primaryColor!.withValues(alpha: 0.1),
+                        AppColors.primaryColor.withValues(alpha: 0.1),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.primaryColor!,
+                      AppColors.primaryColor,
                     ),
                   ),
                 ),
               ),
               if (progress.currentExercise != null) ...[
-                SizedBox(height: 8.h),
+                const SizedBox(height: 8),
                 Text(
                   'Downloading: ${progress.currentExercise}',
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: 10,
                     color: AppColors.black.withValues(alpha: 0.5),
                     fontFamily: 'Poppins',
                     fontStyle: FontStyle.italic,
@@ -236,15 +235,15 @@ class _DownloadProgressIndicatorState
 
   Widget _buildSuccessMessage(CacheProgress progress) {
     return Positioned(
-      bottom: 16.h,
-      left: 16.w,
-      right: 16.w,
+      bottom: 16,
+      left: 16,
+      right: 16,
       child: Material(
         elevation: 8,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(12),
         shadowColor: Colors.green.withValues(alpha: 0.3),
         child: Container(
-          padding: EdgeInsets.all(16.w),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -254,7 +253,7 @@ class _DownloadProgressIndicatorState
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Colors.green.withValues(alpha: 0.3),
@@ -268,14 +267,14 @@ class _DownloadProgressIndicatorState
               Icon(
                 Icons.check_circle,
                 color: Colors.white,
-                size: 24.sp,
+                size: 24,
               ).animate().scale(
                     begin: const Offset(0, 0),
                     end: const Offset(1, 1),
                     duration: 400.ms,
                     curve: Curves.elasticOut,
                   ),
-              SizedBox(width: 12.w),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,17 +283,17 @@ class _DownloadProgressIndicatorState
                     Text(
                       'Download Complete!',
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontFamily: 'Poppins',
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                    const SizedBox(height: 2),
                     Text(
                       '${progress.cachedExercises} exercises available offline',
                       style: TextStyle(
-                        fontSize: 11.sp,
+                        fontSize: 11,
                         color: Colors.white.withValues(alpha: 0.9),
                         fontFamily: 'Poppins',
                       ),

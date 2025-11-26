@@ -4,7 +4,6 @@ import 'package:Warrior/features/Predefined_workouts/domain/entities/workout_gro
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_group_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Widget that displays workout groups with expansion tiles
 class WorkoutGroupsView extends ConsumerStatefulWidget {
@@ -29,26 +28,26 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
       return Center(
         child: Text(
           'No workout groups available',
-          style: TextStyle(fontSize: 16.sp),
+          style: const TextStyle(fontSize: 16),
         ),
       );
     }
 
     return ListView.separated(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       itemCount: widget.workoutGroups.length,
       separatorBuilder: (context, index) {
         // Show native ad after the first group
         if (index == 0 && ConnectivityChecker.isOnline!) {
           return Column(
             children: [
-              SizedBox(height: 16.h),
+              const SizedBox(height: 16),
               const NativeAdWidget(),
-              SizedBox(height: 16.h),
+              const SizedBox(height: 16),
             ],
           );
         }
-        return SizedBox(height: 16.h);
+        return const SizedBox(height: 16);
       },
       itemBuilder: (context, index) {
         final group = widget.workoutGroups[index];

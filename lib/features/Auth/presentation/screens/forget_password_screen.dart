@@ -2,13 +2,13 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/network/provider_states.dart';
@@ -46,7 +46,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                     textEditingController: emailController,
                     isObscure: false,
                     validator: (value) => emailValidator(value!.trim())),
-                30.verticalSpace,
+                const SizedBox(height: 30),
                 CustomBTN(
                     widget: providerStates.isLoading
                         ? const BtnLoader()
@@ -54,7 +54,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                     color: AppColors.primaryColor,
                     padding: 15,
                     splashColor: AppColors.black,
-                    width: 0.4.sw,
+                    width: context.screenWidth * 0.4,
                     press: () async {
                       if (formKey.currentState!.validate()) {
                         await ref

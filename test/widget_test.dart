@@ -8,7 +8,6 @@ import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -33,21 +32,14 @@ void main() {
             workoutRepo.overrideWithValue(mockWorkoutRepo),
             syncServiceProvider.overrideWith(() => SyncService()),
           ],
-          child: ScreenUtilInit(
-            designSize: const Size(360, 690),
-            minTextAdapt: true,
-            splitScreenMode: true,
-            builder: (_, child) {
-              return MaterialApp(
-                title: 'Warrior Test',
-                home: Scaffold(
-                  appBar: AppBar(title: const Text('Warrior')),
-                  body: const Center(
-                    child: Text('Welcome to Warrior'),
-                  ),
-                ),
-              );
-            },
+          child: MaterialApp(
+            title: 'Warrior Test',
+            home: Scaffold(
+              appBar: AppBar(title: const Text('Warrior')),
+              body: const Center(
+                child: Text('Welcome to Warrior'),
+              ),
+            ),
           ),
         ),
       );
@@ -102,24 +94,17 @@ void main() {
             workoutRepo.overrideWithValue(mockWorkoutRepo),
             syncServiceProvider.overrideWith(() => SyncService()),
           ],
-          child: ScreenUtilInit(
-            designSize: const Size(360, 690),
-            minTextAdapt: true,
-            splitScreenMode: true,
-            builder: (_, child) {
-              return MaterialApp(
-                home: Scaffold(
-                  body: LayoutBuilder(
-                    builder: (context, constraints) {
-                      return Center(
-                        child: Text(
-                            'Screen: ${constraints.maxWidth}x${constraints.maxHeight}'),
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
+          child: MaterialApp(
+            home: Scaffold(
+              body: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Center(
+                    child: Text(
+                        'Screen: ${constraints.maxWidth}x${constraints.maxHeight}'),
+                  );
+                },
+              ),
+            ),
           ),
         ),
       );
@@ -233,22 +218,17 @@ void main() {
             workoutRepo.overrideWithValue(mockWorkoutRepo),
             syncServiceProvider.overrideWith(() => SyncService()),
           ],
-          child: ScreenUtilInit(
-            designSize: const Size(360, 690),
-            builder: (_, child) {
-              return MaterialApp(
-                home: Scaffold(
-                  body: ListView.builder(
-                    itemCount: 100,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text('Item $index'),
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
+          child: MaterialApp(
+            home: Scaffold(
+              body: ListView.builder(
+                itemCount: 100,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text('Item $index'),
+                  );
+                },
+              ),
+            ),
           ),
         ),
       );

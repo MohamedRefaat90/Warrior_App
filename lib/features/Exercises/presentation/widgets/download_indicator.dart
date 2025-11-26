@@ -5,7 +5,6 @@ import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Download indicator banner for exercise cards
 ///
@@ -40,16 +39,16 @@ class DownloadIndicatorBanner extends ConsumerWidget {
       top: 0,
       right: 0,
       child: Container(
-        width: isDownloading ? 110.w : 55.w,
+        width: isDownloading ? 110 : 55,
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(
-            horizontal: isDownloading ? 6.w : 0, vertical: 3.h),
+            horizontal: isDownloading ? 6 : 0, vertical: 3),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: isDownloading
                 ? [
-                    AppColors.primaryColor!.withValues(alpha: 0.7),
-                    AppColors.primaryColor!.withValues(alpha: 0.9),
+                    AppColors.primaryColor.withValues(alpha: 0.7),
+                    AppColors.primaryColor.withValues(alpha: 0.9),
                   ]
                 : [
                     Colors.green.shade600.withValues(alpha: 0.8),
@@ -59,10 +58,10 @@ class DownloadIndicatorBanner extends ConsumerWidget {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(8.r),
-            bottomRight: Radius.circular(8.r),
-            topLeft: Radius.circular(8.r),
-            topRight: Radius.circular(8.r),
+            bottomLeft: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+            topLeft: Radius.circular(8),
+            topRight: Radius.circular(8),
           ),
           boxShadow: [
             BoxShadow(
@@ -98,14 +97,14 @@ class DownloadIndicatorBanner extends ConsumerWidget {
         Icon(
           Icons.check_circle,
           color: Colors.white,
-          size: 12.sp,
+          size: 12,
         ),
-        SizedBox(width: 4.w),
+        const SizedBox(width: 4),
         Text(
           'Offline',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 9.sp,
+            fontSize: 9,
             fontWeight: FontWeight.w600,
             fontFamily: 'Poppins',
           ),
@@ -121,18 +120,18 @@ class DownloadIndicatorBanner extends ConsumerWidget {
         Icon(
           Icons.cloud_download_outlined,
           color: Colors.white,
-          size: 12.sp,
+          size: 12,
         ).animate().scale(
               begin: const Offset(0.8, 0.8),
               end: const Offset(1.2, 1.2),
               duration: 800.ms,
             ),
-        SizedBox(width: 4.w),
+        const SizedBox(width: 4),
         Text(
           'Downloading...',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 9.sp,
+            fontSize: 9,
             fontWeight: FontWeight.w600,
             fontFamily: 'Poppins',
           ),

@@ -15,7 +15,6 @@ import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/section
 import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/weekly_goal_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class CaloriesCalculatorScreen extends ConsumerStatefulWidget {
@@ -91,42 +90,42 @@ class _CaloriesCalculatorScreenState
       body: state.isLoading
           ? const Center(child: Loader())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(20.w),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header Section
                   Center(child: const CalculatorHeaderCard()),
-                  SizedBox(height: 30.h),
+                  const SizedBox(height: 30),
 
                   // Basic Info Section
                   const SectionTitle(title: 'Basic Information'),
-                  SizedBox(height: 15.h),
+                  const SizedBox(height: 15),
                   InputCard(
                     label: 'Weight',
                     hint: 'Enter weight',
                     suffix: 'kg',
                     controller: _weightController,
                   ),
-                  SizedBox(height: 15.h),
+                  const SizedBox(height: 15),
                   InputCard(
                     label: 'Height',
                     hint: 'Enter height',
                     suffix: 'cm',
                     controller: _heightController,
                   ),
-                  SizedBox(height: 15.h),
+                  const SizedBox(height: 15),
                   InputCard(
                     label: 'Age',
                     hint: 'Enter age',
                     suffix: 'years',
                     controller: _ageController,
                   ),
-                  SizedBox(height: 30.h),
+                  const SizedBox(height: 30),
 
                   // Gender Selection
                   const SectionTitle(title: 'Gender'),
-                  SizedBox(height: 15.h),
+                  const SizedBox(height: 15),
                   Row(
                     children: [
                       Expanded(
@@ -137,7 +136,7 @@ class _CaloriesCalculatorScreenState
                           onTap: () => setState(() => _selectedGender = 'male'),
                         ),
                       ),
-                      SizedBox(width: 15.w),
+                      const SizedBox(width: 15),
                       Expanded(
                         child: GenderSelectionCard(
                           icon: Icons.female,
@@ -149,14 +148,14 @@ class _CaloriesCalculatorScreenState
                       ),
                     ],
                   ),
-                  SizedBox(height: 30.h),
+                  const SizedBox(height: 30),
 
                   // Activity Level
                   const SectionTitle(title: 'Activity Level'),
-                  SizedBox(height: 15.h),
+                  const SizedBox(height: 15),
                   ..._activityLevels.map((level) {
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 12.h),
+                      padding: const EdgeInsets.only(bottom: 12),
                       child: ActivityLevelItem(
                         value: level['value']!,
                         label: level['label']!,
@@ -169,11 +168,11 @@ class _CaloriesCalculatorScreenState
                       ),
                     );
                   }),
-                  SizedBox(height: 30.h),
+                  const SizedBox(height: 30),
 
                   // Goal Selection
                   const SectionTitle(title: 'Your Goal'),
-                  SizedBox(height: 15.h),
+                  const SizedBox(height: 15),
                   GoalCard(
                     icon: Icons.trending_down,
                     title: 'Weight Loss',
@@ -183,7 +182,7 @@ class _CaloriesCalculatorScreenState
                     color: Colors.orange,
                     onTap: () => setState(() => _selectedGoal = 'weight_loss'),
                   ),
-                  SizedBox(height: 12.h),
+                  const SizedBox(height: 12),
                   GoalCard(
                     icon: Icons.trending_flat,
                     title: 'Maintain Weight',
@@ -193,7 +192,7 @@ class _CaloriesCalculatorScreenState
                     color: Colors.blue,
                     onTap: () => setState(() => _selectedGoal = 'maintain'),
                   ),
-                  SizedBox(height: 12.h),
+                  const SizedBox(height: 12),
                   GoalCard(
                     icon: Icons.trending_up,
                     title: 'Muscle Gain',
@@ -203,40 +202,40 @@ class _CaloriesCalculatorScreenState
                     color: Colors.green,
                     onTap: () => setState(() => _selectedGoal = 'muscle_gain'),
                   ),
-                  SizedBox(height: 30.h),
+                  const SizedBox(height: 30),
 
                   // Weekly Goal (only if not maintain)
                   if (_selectedGoal != 'maintain') ...[
                     const SectionTitle(title: 'Weekly Goal'),
-                    SizedBox(height: 15.h),
+                    const SizedBox(height: 15),
                     WeeklyGoalItem(
                       goal: 0.25,
                       isSelected: _selectedWeeklyGoal == 0.25,
                       action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
                       onTap: () => setState(() => _selectedWeeklyGoal = 0.25),
                     ),
-                    SizedBox(height: 12.h),
+                    const SizedBox(height: 12),
                     WeeklyGoalItem(
                       goal: 0.5,
                       isSelected: _selectedWeeklyGoal == 0.5,
                       action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
                       onTap: () => setState(() => _selectedWeeklyGoal = 0.5),
                     ),
-                    SizedBox(height: 12.h),
+                    const SizedBox(height: 12),
                     WeeklyGoalItem(
                       goal: 0.75,
                       isSelected: _selectedWeeklyGoal == 0.75,
                       action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
                       onTap: () => setState(() => _selectedWeeklyGoal = 0.75),
                     ),
-                    SizedBox(height: 12.h),
+                    const SizedBox(height: 12),
                     WeeklyGoalItem(
                       goal: 1.0,
                       isSelected: _selectedWeeklyGoal == 1.0,
                       action: _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
                       onTap: () => setState(() => _selectedWeeklyGoal = 1.0),
                     ),
-                    SizedBox(height: 30.h),
+                    const SizedBox(height: 30),
                   ],
 
                   // Calculate Button
@@ -245,18 +244,18 @@ class _CaloriesCalculatorScreenState
                     child: CustomBTN(
                       press: _handleCalculate,
                       color: AppColors.primaryColor,
-                      radius: 15.r,
+                      radius: 15,
                       widget: Text(
                         'Calculate',
                         style: TextStyle(
-                          fontSize: 18.sp,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: AppColors.white,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.h),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

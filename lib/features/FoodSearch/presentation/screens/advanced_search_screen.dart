@@ -5,7 +5,6 @@ import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_wid
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Advanced search screen with filters and autocomplete
 class AdvancedSearchScreen extends ConsumerStatefulWidget {
@@ -46,7 +45,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
         children: [
           // Search bar with autocomplete
           Padding(
-            padding: EdgeInsets.all(16.w),
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 // Search field
@@ -77,7 +76,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                     }
                   },
                 ),
-                8.verticalSpace,
+                const SizedBox(height: 8),
                 // Autocomplete suggestions
                 if (_searchController.text.length >= 2)
                   Consumer(
@@ -88,7 +87,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         data: (items) {
                           if (items.isEmpty) return const SizedBox.shrink();
                           return Container(
-                            constraints: BoxConstraints(maxHeight: 200.h),
+                            constraints: const BoxConstraints(maxHeight: 200),
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(12),
@@ -123,7 +122,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                       );
                     },
                   ),
-                16.verticalSpace,
+                const SizedBox(height: 16),
                 // Filter toggle and search button
                 Row(
                   children: [
@@ -141,7 +140,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                             '${_showFilters ? 'Hide' : 'Show'} Filters ${searchState.hasActiveFilters ? '(${_getActiveFilterCount(searchState)})' : ''}'),
                       ),
                     ),
-                    16.horizontalSpace,
+                    const SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: searchState.isLoading
@@ -149,8 +148,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                             : () => searchNotifier.performSearch(),
                         icon: searchState.isLoading
                             ? SizedBox(
-                                width: 16.w,
-                                height: 16.h,
+                                width: 16,
+                                height: 16,
                                 child: const CircularProgressIndicator(
                                     strokeWidth: 2),
                               )
@@ -169,7 +168,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
             Expanded(
               flex: 0,
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -195,7 +194,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         }).toList(),
                       ),
                     ),
-                    16.verticalSpace,
+                    const SizedBox(height: 16),
 
                     // NOVA Group filter
                     _buildFilterSection(
@@ -216,7 +215,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         }).toList(),
                       ),
                     ),
-                    16.verticalSpace,
+                    const SizedBox(height: 16),
 
                     // Dietary preferences
                     _buildFilterSection(
@@ -242,7 +241,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         ],
                       ),
                     ),
-                    16.verticalSpace,
+                    const SizedBox(height: 16),
 
                     // Common allergens
                     _buildFilterSection(
@@ -270,7 +269,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                         }).toList(),
                       ),
                     ),
-                    16.verticalSpace,
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -319,7 +318,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        8.verticalSpace,
+        const SizedBox(height: 8),
         content,
       ],
     );
@@ -347,7 +346,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
     }
 
     return GridView.builder(
-      padding: EdgeInsets.all(16.w),
+      padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10,

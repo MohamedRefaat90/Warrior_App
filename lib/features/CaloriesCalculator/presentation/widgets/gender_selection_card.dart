@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Gender selection card widget
 class GenderSelectionCard extends StatelessWidget {
@@ -24,20 +23,20 @@ class GenderSelectionCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: EdgeInsets.symmetric(vertical: 20.h),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primaryColor : AppColors.white,
-          borderRadius: BorderRadius.circular(15.r),
+          borderRadius: BorderRadius.circular(15),
           border: Border.all(
             color: isSelected
-                ? AppColors.primaryColor!
+                ? AppColors.primaryColor
                 : AppColors.black.withValues(alpha: 0.1),
             width: 2,
           ),
           boxShadow: [
             if (isSelected)
               BoxShadow(
-                color: AppColors.primaryColor!.withValues(alpha: 0.3),
+                color: AppColors.primaryColor.withValues(alpha: 0.3),
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               ),
@@ -50,15 +49,15 @@ class GenderSelectionCard extends StatelessWidget {
               scale: isSelected ? 1.1 : 1.0,
               child: Icon(
                 icon,
-                size: 40.sp,
+                size: 40,
                 color: isSelected ? AppColors.white : AppColors.black,
               ),
             ),
-            SizedBox(height: 8.h),
+            const SizedBox(height: 8),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
               style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: isSelected ? AppColors.white : AppColors.black,
               ),

@@ -1,3 +1,4 @@
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/grid_muscle_card.dart';
@@ -31,8 +32,8 @@ class MusclesGridView extends ConsumerWidget {
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ResponsiveUtils.getGridColumns(context),
                 childAspectRatio: 0.85,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,

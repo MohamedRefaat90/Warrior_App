@@ -2,13 +2,13 @@
 import 'package:Warrior/core/functions/checkAndShowReviewDialog.dart';
 import 'package:Warrior/core/functions/checkForForceUpdate.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/Home/presentation/provider/home_provider.dart';
 import 'package:Warrior/features/Home/presentation/widgets/category_card.dart';
 import 'package:Warrior/features/Home/presentation/widgets/fancy_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -24,7 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
-            padding: EdgeInsets.only(left: 16.w),
+            padding: const EdgeInsets.only(left: 16),
             icon: Stack(
               alignment: Alignment.center,
               children: [
@@ -56,38 +56,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       drawer: const FancyDrawer(),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveUtils.horizontalPadding(context),
+            vertical: 16,
+          ),
           child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // const BannerAdWidget(),
-                const Spacer(),
-                GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 1.2,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: ResponsiveUtils.maxContentWidth,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Spacer(),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: ResponsiveUtils.getGridColumns(context),
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 1.2,
+                    ),
+                    itemCount: ref.read(homeProvider).categoryItems.length - 1,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return CategoryCard(
+                          category:
+                              ref.read(homeProvider).categoryItems[index]);
+                    },
                   ),
-                  itemCount: ref.read(homeProvider).categoryItems.length - 1,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return CategoryCard(
-                        category: ref.read(homeProvider).categoryItems[index]);
-                  },
-                ),
-                SizedBox(height: 0.01.sh),
-                SizedBox(
-                  width: 175.w,
-                  height: 120.h,
-                  child: CategoryCard(
-                      category: ref.read(homeProvider).categoryItems.last),
-                ),
-                const Spacer(),
-                SizedBox(width: 1.sw, child: const BannerAdWidget()),
-              ],
+                  const SizedBox(height: 16),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SizedBox(
+                        width: constraints.maxWidth * 0.5,
+                        height: 120,
+                        child: CategoryCard(
+                            category:
+                                ref.read(homeProvider).categoryItems.last),
+                      );
+                    },
+                  ),
+                  const Spacer(),
+                  const BannerAdWidget(),
+                ],
+              ),
             ),
           ),
         ),

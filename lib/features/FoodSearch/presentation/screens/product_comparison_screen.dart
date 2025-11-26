@@ -6,7 +6,6 @@ import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_wid
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 /// Product comparison screen for side-by-side comparison
@@ -63,7 +62,7 @@ class ProductComparisonScreen extends ConsumerWidget {
     List<Widget> values,
   ) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -102,7 +101,7 @@ class ProductComparisonScreen extends ConsumerWidget {
         children: [
           // Product headers
           SizedBox(
-            height: 200.h,
+            height: 200,
             child: Row(
               children: products
                   .map((product) => Expanded(
@@ -150,7 +149,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           // Nutrition comparison
           if (products.any((p) => p.nutritionValues != null)) ...[
             Padding(
-              padding: EdgeInsets.all(16.w),
+              padding: const EdgeInsets.all(16),
               child: Text(
                 'Nutritional Values (per 100g)',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -236,7 +235,7 @@ class ProductComparisonScreen extends ConsumerWidget {
 
           // Dietary information
           Padding(
-            padding: EdgeInsets.all(16.w),
+            padding: const EdgeInsets.all(16),
             child: Text(
               'Dietary Information',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -280,7 +279,7 @@ class ProductComparisonScreen extends ConsumerWidget {
                 .toList(),
           ),
 
-          32.verticalSpace,
+          const SizedBox(height: 32),
         ],
       ),
     );
@@ -306,7 +305,7 @@ class ProductComparisonScreen extends ConsumerWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -340,7 +339,8 @@ class ProductComparisonScreen extends ConsumerWidget {
               flex: 3,
               child: Center(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: isBest
                         ? Colors.green.withValues(alpha: 0.2)
@@ -376,7 +376,7 @@ class ProductComparisonScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     return Card(
-      margin: EdgeInsets.all(4.w),
+      margin: const EdgeInsets.all(4),
       child: Stack(
         children: [
           Column(
@@ -387,9 +387,9 @@ class ProductComparisonScreen extends ConsumerWidget {
                 width: 80,
                 height: 80,
               ),
-              8.verticalSpace,
+              const SizedBox(height: 8),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   product.productName ?? 'Unknown',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -401,9 +401,9 @@ class ProductComparisonScreen extends ConsumerWidget {
                 ),
               ),
               if (product.brands != null) ...[
-                4.verticalSpace,
+                const SizedBox(height: 4),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     product.brands!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -453,13 +453,13 @@ class ProductComparisonScreen extends ConsumerWidget {
             width: 150,
             height: 150,
           ),
-          16.verticalSpace,
+          const SizedBox(height: 16),
           Text(
             product.productName ?? 'Unknown Product',
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
-          8.verticalSpace,
+          const SizedBox(height: 8),
           Text(
             'Add more products to compare',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -469,7 +469,7 @@ class ProductComparisonScreen extends ConsumerWidget {
                       .withValues(alpha: 0.6),
                 ),
           ),
-          24.verticalSpace,
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
               context.pushNamed(AppRouters.advancedSearch);

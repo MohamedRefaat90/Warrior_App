@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Macro row displaying individual macronutrient details
 class MacroRow extends StatelessWidget {
@@ -22,10 +21,10 @@ class MacroRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: color.withValues(alpha: 0.3),
           width: 2,
@@ -34,14 +33,14 @@ class MacroRow extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 8.w,
-            height: 40.h,
+            width: 8,
+            height: 40,
             decoration: BoxDecoration(
               color: color,
-              borderRadius: BorderRadius.circular(4.r),
+              borderRadius: BorderRadius.circular(4),
             ),
           ),
-          SizedBox(width: 15.w),
+          const SizedBox(width: 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,16 +48,16 @@ class MacroRow extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: AppColors.black,
                   ),
                 ),
-                SizedBox(height: 3.h),
+                const SizedBox(height: 3),
                 Text(
                   '${grams.toStringAsFixed(0)}g • ${calories.toStringAsFixed(0)} kcal',
                   style: TextStyle(
-                    fontSize: 13.sp,
+                    fontSize: 13,
                     color: AppColors.black.withValues(alpha: 0.6),
                   ),
                 ),
@@ -68,7 +67,7 @@ class MacroRow extends StatelessWidget {
           Text(
             '${percentage.toStringAsFixed(0)}%',
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: color,
             ),

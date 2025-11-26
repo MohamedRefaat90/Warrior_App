@@ -1,7 +1,6 @@
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_row.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// A wrapper component that displays workouts in multiple rows,
 /// with up to 3 cards per row
@@ -31,7 +30,7 @@ class WorkoutGrid extends StatelessWidget {
         (index) {
           return Padding(
             padding: EdgeInsets.only(
-              bottom: index < rows.length - 1 ? verticalSpacing.h : 0,
+              bottom: index < rows.length - 1 ? verticalSpacing : 0,
             ),
             child: WorkoutRow(
               workouts: rows[index],

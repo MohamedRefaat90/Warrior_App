@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Pie chart widget for macronutrient visualization
 class MacroPieChart extends StatefulWidget {
@@ -48,16 +47,16 @@ class _MacroPieChartState extends State<MacroPieChart> {
         ),
         borderData: FlBorderData(show: false),
         sectionsSpace: 2,
-        centerSpaceRadius: 60.r,
+        centerSpaceRadius: 60,
         sections: [
           // Protein section
           PieChartSectionData(
             color: const Color.fromARGB(255, 238, 31, 31),
             value: widget.proteinPercent,
             title: '${widget.proteinPercent.toStringAsFixed(0)}%',
-            radius: touchedIndex == 0 ? 110.r : 100.r,
+            radius: touchedIndex == 0 ? 110 : 100,
             titleStyle: TextStyle(
-              fontSize: touchedIndex == 0 ? 18.sp : 16.sp,
+              fontSize: touchedIndex == 0 ? 18 : 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               shadows: [
@@ -79,9 +78,9 @@ class _MacroPieChartState extends State<MacroPieChart> {
             color: Colors.green,
             value: widget.carbsPercent,
             title: '${widget.carbsPercent.toStringAsFixed(0)}%',
-            radius: touchedIndex == 1 ? 110.r : 100.r,
+            radius: touchedIndex == 1 ? 110 : 100,
             titleStyle: TextStyle(
-              fontSize: touchedIndex == 1 ? 18.sp : 16.sp,
+              fontSize: touchedIndex == 1 ? 18 : 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               shadows: [
@@ -102,9 +101,9 @@ class _MacroPieChartState extends State<MacroPieChart> {
             color: Colors.orange,
             value: widget.fatsPercent,
             title: '${widget.fatsPercent.toStringAsFixed(0)}%',
-            radius: touchedIndex == 2 ? 110.r : 100.r,
+            radius: touchedIndex == 2 ? 110 : 100,
             titleStyle: TextStyle(
-              fontSize: touchedIndex == 2 ? 18.sp : 16.sp,
+              fontSize: touchedIndex == 2 ? 18 : 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               shadows: [
@@ -129,10 +128,10 @@ class _MacroPieChartState extends State<MacroPieChart> {
 
   Widget _buildBadge(String text, Color color) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: color.withValues(alpha: 0.4),
@@ -145,7 +144,7 @@ class _MacroPieChartState extends State<MacroPieChart> {
         text,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 12.sp,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
           color: Colors.white,
           height: 1.2,

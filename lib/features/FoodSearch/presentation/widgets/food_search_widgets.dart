@@ -1,7 +1,6 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 /// Allergen chip widget
@@ -59,9 +58,9 @@ class EcoscoreWidget extends StatelessWidget {
       child: Center(
         child: Text(
           score,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
-            fontSize: 15.sp,
+            fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
         ),

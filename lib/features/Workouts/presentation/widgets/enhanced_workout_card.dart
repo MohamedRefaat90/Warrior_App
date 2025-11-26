@@ -8,7 +8,6 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class EnhancedWorkoutCard extends ConsumerStatefulWidget {
@@ -77,9 +76,9 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
             context.pushNamed(AppRouters.workoutDetails, extra: widget.workout);
           },
           child: Container(
-            margin: EdgeInsets.only(bottom: 12.h),
+            margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(16),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -117,7 +116,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
               ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(16),
               child: Stack(
                 children: [
                   // Accent gradient bar
@@ -126,7 +125,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                     top: 0,
                     bottom: 0,
                     child: Container(
-                      width: 6.w,
+                      width: 6,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -141,13 +140,13 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                   ),
                   // Main content
                   Padding(
-                    padding: EdgeInsets.all(16.w),
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
                         // Icon container
                         Container(
-                          width: 56.w,
-                          height: 56.w,
+                          width: 56,
+                          height: 56,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -157,7 +156,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                                 _cardColor.withOpacity(0.7),
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(14.r),
+                            borderRadius: BorderRadius.circular(14),
                             boxShadow: [
                               BoxShadow(
                                 color: _cardColor.withOpacity(0.3),
@@ -169,10 +168,10 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                           child: Icon(
                             Icons.fitness_center_rounded,
                             color: Colors.white,
-                            size: 28.sp,
+                            size: 28,
                           ),
                         ),
-                        SizedBox(width: 16.w),
+                        const SizedBox(width: 16),
                         // Text content
                         Expanded(
                           child: Column(
@@ -181,7 +180,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                               Text(
                                 widget.workout.name!.capitalizeWord(),
                                 style: TextStyle(
-                                  fontSize: 18.sp,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'poppins',
                                   color: isDark ? Colors.white : Colors.black87,
@@ -190,13 +189,13 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: 4.h),
+                              const SizedBox(height: 4),
                               Text(
                                 widget.workout.description!.isEmpty
                                     ? 'No description'
                                     : widget.workout.description!,
                                 style: TextStyle(
-                                  fontSize: 13.sp,
+                                  fontSize: 13,
                                   color: isDark
                                       ? Colors.grey[400]
                                       : Colors.grey[600],
@@ -205,30 +204,30 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: 8.h),
+                              const SizedBox(height: 8),
                               // Exercise count badge
                               Container(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 10.w,
-                                  vertical: 4.h,
+                                  horizontal: 10,
+                                  vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
                                   color: _cardColor.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(8.r),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(
                                       Icons.fitness_center,
-                                      size: 14.sp,
+                                      size: 14,
                                       color: _cardColor,
                                     ),
-                                    SizedBox(width: 4.w),
+                                    const SizedBox(width: 4),
                                     Text(
                                       '${widget.workout.workoutItems!.length} exercises',
                                       style: TextStyle(
-                                        fontSize: 12.sp,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                         color: _cardColor,
                                       ),
@@ -247,7 +246,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                               color: Colors.green,
                               onPressed: () => _showEditDialog(context),
                             ),
-                            SizedBox(height: 8.h),
+                            const SizedBox(height: 8),
                             _buildActionButton(
                               icon: Icons.delete_rounded,
                               color: Colors.red,
@@ -300,13 +299,13 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
           HapticFeedback.mediumImpact();
           onPressed();
         },
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(10),
         child: Container(
-          width: 40.w,
-          height: 40.w,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: color.withOpacity(0.3),
               width: 1.5,
@@ -314,7 +313,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
           ),
           child: Icon(
             icon,
-            size: 20.sp,
+            size: 20,
             color: color,
           ),
         ),
@@ -333,27 +332,27 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(20),
         ),
         title: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(8.w),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.red.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.warning_rounded,
                 color: Colors.red,
-                size: 24.sp,
+                size: 24,
               ),
             ),
-            SizedBox(width: 12.w),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 'Delete ${widget.workout.name}',
-                style: TextStyle(fontSize: 18.sp),
+                style: const TextStyle(fontSize: 18),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -382,7 +381,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: ref.watch(workoutsProvider).isLoading
@@ -404,22 +403,22 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(20),
         ),
         title: Row(
           children: [
             Container(
               decoration: BoxDecoration(
                 color: Colors.green.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.edit_rounded,
                 color: Colors.green,
-                size: 24.sp,
+                size: 24,
               ),
             ),
-            SizedBox(width: 12.w),
+            const SizedBox(width: 12),
             Text('editWorkoutSet'.tr(context)),
           ],
         ),
@@ -431,7 +430,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
               isObscure: false,
               placeholderText: 'Workout Name',
             ),
-            SizedBox(height: 12.h),
+            const SizedBox(height: 12),
             CustomTextField(
               textEditingController: descriptionController,
               isTextArea: true,
@@ -462,7 +461,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: ref.watch(workoutsProvider).isLoading

@@ -8,7 +8,6 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:Warrior/features/Workouts/presentation/widgets/enhanced_workout_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkoutsListView extends ConsumerStatefulWidget {
   final List<WorkoutSetModel> workouts;
@@ -52,9 +51,9 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
 
   Widget _buildDismissBackground() {
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
+      margin: const EdgeInsets.only(bottom: 12),
       alignment: Alignment.centerRight,
-      padding: EdgeInsets.only(right: 20.w),
+      padding: const EdgeInsets.only(right: 20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.centerLeft,
@@ -64,7 +63,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
             Colors.red,
           ],
         ),
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -72,14 +71,14 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
           Icon(
             Icons.delete_rounded,
             color: Colors.white,
-            size: 32.sp,
+            size: 32,
           ),
-          SizedBox(height: 4.h),
+          const SizedBox(height: 4),
           Text(
             'delete'.tr(context),
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12.sp,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -108,7 +107,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
             child: Material(
               elevation: elevation,
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(16),
               shadowColor: Colors.black.withOpacity(0.3),
               child: child,
             ),
@@ -139,7 +138,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
               child: Icon(
                 Icons.drag_handle,
                 color: Colors.grey[600],
-                size: 25.sp,
+                size: 25,
               ),
             ),
           ),
@@ -153,23 +152,23 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(20),
         ),
         title: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(8.w),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.red.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.warning_rounded,
                 color: Colors.red,
-                size: 24.sp,
+                size: 24,
               ),
             ),
-            SizedBox(width: 12.w),
+            const SizedBox(width: 12),
             Expanded(child: Text('deleteWorkout'.tr(context))),
           ],
         ),
@@ -192,7 +191,7 @@ class _WorkoutsListViewState extends ConsumerState<WorkoutsListView> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
             child: Text('delete'.tr(context)),

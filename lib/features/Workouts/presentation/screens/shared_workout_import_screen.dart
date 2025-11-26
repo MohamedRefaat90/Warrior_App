@@ -3,6 +3,7 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/api_error_handler.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/add_workout.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -13,7 +14,6 @@ import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 /// Provider family to fetch a shared workout by code
@@ -126,7 +126,7 @@ class _ErrorView extends StatelessWidget {
             const SizedBox(height: 24),
             CustomBTN(
               widget: Text('retry'.tr(context)),
-              width: 150.w,
+              width: 150,
               padding: 10,
               radius: 8,
               color: AppColors.primaryColor,
@@ -177,9 +177,8 @@ class _WorkoutContent extends StatelessWidget {
                     itemCount: workout.workoutItems!.length,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: ResponsiveUtils.getGridColumns(context),
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 15,
                       childAspectRatio: 0.9,
@@ -193,7 +192,7 @@ class _WorkoutContent extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 20.h),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

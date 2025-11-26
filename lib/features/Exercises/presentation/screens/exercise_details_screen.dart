@@ -10,7 +10,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 
 class ExerciseDetailsScreen extends StatefulWidget {
@@ -43,7 +42,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
           statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         ),
         leading: Padding(
-          padding: EdgeInsets.all(8.w),
+          padding: const EdgeInsets.all(8),
           child: Material(
             color: isDark
                 ? Colors.white.withOpacity(0.1)
@@ -68,7 +67,8 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 child: Column(
                   children: [
                     _ExerciseVideoPlayer(
@@ -77,13 +77,13 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                       hasError: _hasVideoError,
                       errorMessage: _videoErrorMessage,
                     ),
-                    SizedBox(height: 20.h),
+                    const SizedBox(height: 20),
                     _ExerciseTitle(name: widget.exercise.name),
-                    SizedBox(height: 24.h),
+                    const SizedBox(height: 24),
                     _TargetedMusclesSection(
                       imageUrl: widget.exercise.targetedMuscles,
                     ),
-                    SizedBox(height: 24.h),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -287,21 +287,21 @@ class _ExerciseTitle extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
               ? AppColors.darkSecondary.withOpacity(0.3)
-              : AppColors.primaryColor!.withOpacity(0.3),
+              : AppColors.primaryColor.withOpacity(0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
                 ? AppColors.darkSecondary.withOpacity(0.2)
-                : AppColors.primaryColor!.withOpacity(0.2),
+                : AppColors.primaryColor.withOpacity(0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -310,7 +310,7 @@ class _ExerciseTitle extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(10.w),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isDark
@@ -319,8 +319,8 @@ class _ExerciseTitle extends StatelessWidget {
                         AppColors.darkPrimary,
                       ]
                     : [
-                        AppColors.primaryColor!,
-                        AppColors.red!,
+                        AppColors.primaryColor,
+                        AppColors.red,
                       ],
               ),
               borderRadius: BorderRadius.circular(12),
@@ -331,7 +331,7 @@ class _ExerciseTitle extends StatelessWidget {
               size: 24,
             ),
           ),
-          SizedBox(width: 16.w),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               name,
@@ -372,8 +372,8 @@ class _ExerciseVideoPlayer extends StatelessWidget {
     return Container(
       width: double.infinity,
       constraints: BoxConstraints(
-        minHeight: 200.h,
-        maxHeight: 280.h,
+        minHeight: 200,
+        maxHeight: 280,
       ),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.white,
@@ -381,14 +381,14 @@ class _ExerciseVideoPlayer extends StatelessWidget {
         border: Border.all(
           color: isDark
               ? AppColors.darkSecondary.withOpacity(0.3)
-              : AppColors.primaryColor!.withOpacity(0.3),
+              : AppColors.primaryColor.withOpacity(0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
                 ? AppColors.darkSecondary.withOpacity(0.2)
-                : AppColors.primaryColor!.withOpacity(0.2),
+                : AppColors.primaryColor.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 8),
             spreadRadius: -4,
@@ -443,7 +443,7 @@ class _ImageErrorWidget extends StatelessWidget {
     if (file.existsSync()) {
       return Image.file(
         file,
-        width: 200.w,
+        width: 200,
         errorBuilder: (context, error, stackTrace) => const _ImagePlaceholder(),
       );
     }
@@ -460,7 +460,7 @@ class _ImagePlaceholder extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      height: 200.h,
+      height: 200,
       decoration: BoxDecoration(
         color: isDark
             ? const Color(0xFF1a1a2e).withOpacity(0.5)
@@ -476,7 +476,7 @@ class _ImagePlaceholder extends StatelessWidget {
               size: 48,
               color: isDark ? Colors.grey.shade700 : Colors.grey.shade400,
             ),
-            SizedBox(height: 12.h),
+            const SizedBox(height: 12),
             Text(
               'Image not available',
               style: TextStyle(
@@ -507,21 +507,21 @@ class _TargetedMusclesSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20.w),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isDark
               ? AppColors.darkSecondary.withOpacity(0.3)
-              : AppColors.primaryColor!.withOpacity(0.3),
+              : AppColors.primaryColor.withOpacity(0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
                 ? AppColors.darkSecondary.withOpacity(0.15)
-                : AppColors.primaryColor!.withOpacity(0.15),
+                : AppColors.primaryColor.withOpacity(0.15),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -533,7 +533,7 @@ class _TargetedMusclesSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all(8.w),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: isDark
@@ -542,8 +542,8 @@ class _TargetedMusclesSection extends StatelessWidget {
                             AppColors.darkPrimary,
                           ]
                         : [
-                            AppColors.primaryColor!,
-                            AppColors.red!,
+                            AppColors.primaryColor,
+                            AppColors.red,
                           ],
                   ),
                   borderRadius: BorderRadius.circular(10),
@@ -554,7 +554,7 @@ class _TargetedMusclesSection extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              SizedBox(width: 12.w),
+              const SizedBox(width: 12),
               Text(
                 'Targeted Muscles',
                 style: TextStyle(
@@ -566,9 +566,9 @@ class _TargetedMusclesSection extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          const SizedBox(height: 16),
           Container(
-            padding: EdgeInsets.all(16.w),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isDark
                   ? const Color(0xFF121212).withOpacity(0.5)
@@ -589,7 +589,7 @@ class _TargetedMusclesSection extends StatelessWidget {
                       // maxHeightDiskCache: 500,
                       fadeInDuration: const Duration(milliseconds: 200),
                       placeholder: (context, url) => SizedBox(
-                        height: 200.h,
+                        height: 200,
                         child: const Center(child: CustomLoadingWidget()),
                       ),
                       errorWidget: (context, url, error) =>
@@ -626,7 +626,7 @@ class _VideoErrorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(16.w),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.red.withOpacity(0.1),
                 shape: BoxShape.circle,
@@ -637,7 +637,7 @@ class _VideoErrorWidget extends StatelessWidget {
                 color: Colors.red,
               ),
             ),
-            SizedBox(height: 12.h),
+            const SizedBox(height: 12),
             const Text(
               'Video Unavailable',
               style: TextStyle(
@@ -647,9 +647,9 @@ class _VideoErrorWidget extends StatelessWidget {
               ),
             ),
             if (errorMessage != null) ...[
-              SizedBox(height: 8.h),
+              const SizedBox(height: 8),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32.w),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Text(
                   errorMessage!,
                   style: TextStyle(

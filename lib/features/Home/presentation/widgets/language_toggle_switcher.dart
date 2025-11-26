@@ -1,7 +1,6 @@
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Animated language toggle switcher for EN/AR
 /// Features smooth transitions and visual feedback for current language
@@ -19,10 +18,10 @@ class LanguageToggleSwitcher extends ConsumerWidget {
         ref.read(appSettingsProvider.notifier).setLanguage(newLocale);
       },
       child: Container(
-        width: 70.w,
-        height: 35.h,
+        width: 70,
+        height: 35,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
             colors: isArabic
                 ? [
@@ -53,9 +52,9 @@ class LanguageToggleSwitcher extends ConsumerWidget {
               alignment:
                   isArabic ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
-                width: 28.w,
-                height: 28.h,
-                margin: EdgeInsets.symmetric(horizontal: 3.w),
+                width: 28,
+                height: 28,
+                margin: const EdgeInsets.symmetric(horizontal: 3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
@@ -86,7 +85,7 @@ class LanguageToggleSwitcher extends ConsumerWidget {
                         color: isArabic
                             ? const Color(0xFF10B981)
                             : const Color(0xFF9333EA),
-                        fontSize: 11.sp,
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

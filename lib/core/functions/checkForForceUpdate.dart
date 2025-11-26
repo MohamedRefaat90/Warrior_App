@@ -6,7 +6,6 @@ import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Home/presentation/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -46,7 +45,7 @@ void checkForForceUpdate(WidgetRef ref, BuildContext context) async {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Lottie.asset(AppAssets.newUpdate),
-                10.verticalSpace,
+                const SizedBox(height: 10),
                 const Text(
                   'A new version of the app is available. Please update to continue.',
                   textAlign: TextAlign.center,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Goal selection card widget
 class GoalCard extends StatelessWidget {
@@ -31,11 +30,11 @@ class GoalCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: EdgeInsets.all(16.w),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color:
               isSelected ? color.withValues(alpha: 0.1) : colorScheme.surface,
-          borderRadius: BorderRadius.circular(15.r),
+          borderRadius: BorderRadius.circular(15),
           border: Border.all(
             color:
                 isSelected ? color : colorScheme.outline.withValues(alpha: 0.3),
@@ -55,18 +54,18 @@ class GoalCard extends StatelessWidget {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              padding: EdgeInsets.all(10.w),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: isSelected ? 0.3 : 0.2),
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: AnimatedScale(
                 duration: const Duration(milliseconds: 300),
                 scale: isSelected ? 1.1 : 1.0,
-                child: Icon(icon, color: color, size: 24.sp),
+                child: Icon(icon, color: color, size: 24),
               ),
             ),
-            SizedBox(width: 15.w),
+            const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,18 +73,18 @@ class GoalCard extends StatelessWidget {
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 300),
                     style: TextStyle(
-                      fontSize: 15.sp,
+                      fontSize: 15,
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.w600,
                       color: colorScheme.onSurface,
                     ),
                     child: Text(title),
                   ),
-                  SizedBox(height: 3.h),
+                  const SizedBox(height: 3),
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 12,
                       color: colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
@@ -98,7 +97,7 @@ class GoalCard extends StatelessWidget {
               child: Icon(
                 Icons.check_circle,
                 color: color,
-                size: 24.sp,
+                size: 24,
               ),
             ),
           ],

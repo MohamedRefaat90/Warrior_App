@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Info section displaying important notes
 class InfoSection extends StatelessWidget {
@@ -8,10 +7,10 @@ class InfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: Colors.blue.shade200,
           width: 1.5,
@@ -22,33 +21,33 @@ class InfoSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, color: Colors.blue, size: 24.sp),
-              SizedBox(width: 10.w),
+              Icon(Icons.info_outline, color: Colors.blue, size: 24),
+              const SizedBox(width: 10),
               Text(
                 'Important Notes',
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue.shade900,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 15.h),
+          const SizedBox(height: 15),
           _InfoBullet(
             text:
                 'These calculations are based on the Mifflin-St Jeor equation',
           ),
-          SizedBox(height: 8.h),
+          const SizedBox(height: 8),
           _InfoBullet(
             text:
                 'Individual results may vary based on metabolism and genetics',
           ),
-          SizedBox(height: 8.h),
+          const SizedBox(height: 8),
           _InfoBullet(
             text: 'Consult a healthcare professional before major diet changes',
           ),
-          SizedBox(height: 8.h),
+          const SizedBox(height: 8),
           _InfoBullet(
             text: 'Track your progress and adjust as needed',
           ),
@@ -69,10 +68,10 @@ class _InfoBullet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 6.h, right: 8.w),
+          padding: const EdgeInsets.only(top: 6, right: 8),
           child: Container(
-            width: 6.w,
-            height: 6.h,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(
               color: Colors.blue.shade700,
               shape: BoxShape.circle,
@@ -83,7 +82,7 @@ class _InfoBullet extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 13.sp,
+              fontSize: 13,
               color: Colors.blue.shade900,
               height: 1.4,
             ),

@@ -6,7 +6,6 @@ import 'package:Warrior/features/Auth/presentation/widgets/otp_fileds.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
@@ -32,9 +31,9 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
           child: Column(
             children: [
               const Text("Enter the OTP sent to your email"),
-              20.verticalSpace,
+              const SizedBox(height: 20),
               Center(child: RoundedWithShadow(email: widget.email)),
-              20.verticalSpace,
+              const SizedBox(height: 20),
               OtpTimerButton(
                 onPressed: () async {
                   await ref.read(otpProvider.notifier).resendOTP(widget.email);
@@ -46,7 +45,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                 duration: 90,
               ),
               providerStates.isLoading
-                  ? Lottie.asset(AppAssets.loader, width: 100.w)
+                  ? Lottie.asset(AppAssets.loader, width: 100)
                   : const SizedBox(),
             ],
           ),

@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Main calories display card
 class MainCaloriesCard extends StatelessWidget {
@@ -14,20 +13,20 @@ class MainCaloriesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(25.w),
+      padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primaryColor!,
-            AppColors.red!,
+            AppColors.primaryColor,
+            AppColors.red,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor!.withValues(alpha: 0.3),
+            color: AppColors.primaryColor.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -38,11 +37,11 @@ class MainCaloriesCard extends StatelessWidget {
           Text(
             'Daily Caloric Target',
             style: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 16,
               color: AppColors.white.withValues(alpha: 0.9),
             ),
           ),
-          SizedBox(height: 10.h),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -51,26 +50,26 @@ class MainCaloriesCard extends StatelessWidget {
               Text(
                 '${dailyCaloricNeeds.round()}',
                 style: TextStyle(
-                  fontSize: 48.sp,
+                  fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: AppColors.white,
                 ),
               ),
-              SizedBox(width: 5.w),
+              const SizedBox(width: 5),
               Text(
                 'kcal',
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: 18,
                   color: AppColors.white.withValues(alpha: 0.9),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 5.h),
+          const SizedBox(height: 5),
           Text(
             'per day',
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 14,
               color: AppColors.white.withValues(alpha: 0.8),
             ),
           ),

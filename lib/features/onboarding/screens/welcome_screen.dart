@@ -4,7 +4,6 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                 Color.fromARGB(65, 0, 0, 0), BlendMode.colorBurn),
           ),
           Positioned(
-            bottom: 0.2.sh,
+            bottom: MediaQuery.of(context).size.height * 0.2,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

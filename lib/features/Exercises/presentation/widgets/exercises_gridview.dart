@@ -1,4 +1,5 @@
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
@@ -44,8 +45,8 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
               },
               childCount: firstFourExercises.length,
             ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ResponsiveUtils.getGridColumns(context),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
             ),
@@ -73,8 +74,8 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
                 },
                 childCount: remainingExercises.length,
               ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ResponsiveUtils.getGridColumns(context),
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),

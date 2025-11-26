@@ -1,6 +1,5 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Educational screen explaining Nutri-Score, NOVA, and Eco-Score
 class NutritionGuideScreen extends StatelessWidget {
@@ -29,15 +28,15 @@ class NutritionGuideScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              padding: EdgeInsets.all(24.w),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
                   Icon(
                     Icons.school_outlined,
-                    size: 64.w,
+                    size: 64,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  16.verticalSpace,
+                  const SizedBox(height: 16),
                   Text(
                     context.l10n.makeBetterFoodChoices,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -45,7 +44,7 @@ class NutritionGuideScreen extends StatelessWidget {
                         ),
                     textAlign: TextAlign.center,
                   ),
-                  8.verticalSpace,
+                  const SizedBox(height: 8),
                   Text(
                     context.l10n.learnAboutScores,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -86,7 +85,7 @@ class NutritionGuideScreen extends StatelessWidget {
               ],
             ),
 
-            Divider(height: 48.h, thickness: 2),
+            Divider(height: 48, thickness: 2),
 
             // NOVA Group Section
             _buildScoreSection(
@@ -119,7 +118,7 @@ class NutritionGuideScreen extends StatelessWidget {
               ],
             ),
 
-            Divider(height: 48.h, thickness: 2),
+            Divider(height: 48, thickness: 2),
 
             // Eco-Score Section
             _buildScoreSection(
@@ -150,8 +149,8 @@ class NutritionGuideScreen extends StatelessWidget {
 
             // Tips Section
             Container(
-              margin: EdgeInsets.all(16.w),
-              padding: EdgeInsets.all(20.w),
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondaryContainer,
                 borderRadius: BorderRadius.circular(16),
@@ -166,7 +165,7 @@ class NutritionGuideScreen extends StatelessWidget {
                         color:
                             Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
-                      12.horizontalSpace,
+                      const SizedBox(width: 12),
                       Text(
                         context.l10n.quickTips,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -178,7 +177,7 @@ class NutritionGuideScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  16.verticalSpace,
+                  const SizedBox(height: 16),
                   _buildTip(context, context.l10n.tip1),
                   _buildTip(context, context.l10n.tip2),
                   _buildTip(context, context.l10n.tip3),
@@ -188,7 +187,7 @@ class NutritionGuideScreen extends StatelessWidget {
               ),
             ),
 
-            32.verticalSpace,
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -197,8 +196,8 @@ class NutritionGuideScreen extends StatelessWidget {
 
   Widget _buildScoreCard(BuildContext context, _ScoreExample example) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(16.w),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: example.color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
@@ -211,8 +210,8 @@ class NutritionGuideScreen extends StatelessWidget {
         children: [
           // Score badge
           Container(
-            width: 48.w,
-            height: 48.w,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               color: example.color,
               shape: BoxShape.circle,
@@ -222,12 +221,12 @@ class NutritionGuideScreen extends StatelessWidget {
               example.score,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20.sp,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          16.horizontalSpace,
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +237,7 @@ class NutritionGuideScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                4.verticalSpace,
+                const SizedBox(height: 4),
                 Text(
                   example.examples,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -266,7 +265,7 @@ class NutritionGuideScreen extends StatelessWidget {
     required List<_ScoreExample> scoreExamples,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -274,14 +273,14 @@ class NutritionGuideScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(12.w),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: iconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: iconColor, size: 32.w),
+                child: Icon(icon, color: iconColor, size: 32),
               ),
-              16.horizontalSpace,
+              const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   title,
@@ -292,7 +291,7 @@ class NutritionGuideScreen extends StatelessWidget {
               ),
             ],
           ),
-          16.verticalSpace,
+          const SizedBox(height: 16),
 
           // Description
           Text(
@@ -301,7 +300,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   height: 1.5,
                 ),
           ),
-          24.verticalSpace,
+          const SizedBox(height: 24),
 
           // How it works
           Text(
@@ -310,18 +309,18 @@ class NutritionGuideScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          12.verticalSpace,
+          const SizedBox(height: 12),
           ...howItWorks.map((point) => Padding(
-                padding: EdgeInsets.only(bottom: 8.h),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
                       Icons.check_circle,
-                      size: 20.w,
+                      size: 20,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    12.horizontalSpace,
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         point,
@@ -331,7 +330,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   ],
                 ),
               )),
-          24.verticalSpace,
+          const SizedBox(height: 24),
 
           // Score examples
           Text(
@@ -340,7 +339,7 @@ class NutritionGuideScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          16.verticalSpace,
+          const SizedBox(height: 16),
           ...scoreExamples.map((example) => _buildScoreCard(context, example)),
         ],
       ),
@@ -349,16 +348,16 @@ class NutritionGuideScreen extends StatelessWidget {
 
   Widget _buildTip(BuildContext context, String tip) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
             Icons.arrow_right,
             color: Theme.of(context).colorScheme.onSecondaryContainer,
-            size: 24.w,
+            size: 24,
           ),
-          8.horizontalSpace,
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               tip,

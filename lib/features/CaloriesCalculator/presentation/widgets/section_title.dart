@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Section title widget for organizing content sections
 class SectionTitle extends StatelessWidget {
@@ -13,11 +12,11 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 15.h, bottom: 10.h),
+      padding: const EdgeInsets.only(top: 15, bottom: 10),
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 18.sp,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
           color: Theme.of(context).colorScheme.onSurface,
         ),

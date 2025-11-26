@@ -10,7 +10,6 @@ import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/section
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CaloriesResultsScreen extends ConsumerWidget {
   const CaloriesResultsScreen({super.key});
@@ -31,34 +30,34 @@ class CaloriesResultsScreen extends ConsumerWidget {
             children: [
               Icon(
                 Icons.info_outline,
-                size: 80.sp,
+                size: 80,
                 color: AppColors.primaryColor,
               ),
-              SizedBox(height: 20.h),
+              const SizedBox(height: 20),
               Text(
                 'No calculation results available',
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10.h),
+              const SizedBox(height: 10),
               Text(
                 'Please complete the calculator form first',
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   color: AppColors.black.withValues(alpha: 0.6),
                 ),
               ),
-              SizedBox(height: 30.h),
+              const SizedBox(height: 30),
               CustomBTN(
                 press: () => Navigator.pop(context),
                 color: AppColors.primaryColor,
-                radius: 15.r,
+                radius: 15,
                 widget: Text(
                   'Go Back',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: AppColors.white,
                   ),
@@ -89,7 +88,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20.w),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,7 +102,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(height: 25.h),
+            const SizedBox(height: 25),
 
             // Main Calories Card
             FadeInUp(
@@ -113,7 +112,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 dailyCaloricNeeds: results.dailyCaloricNeeds,
               ),
             ),
-            SizedBox(height: 25.h),
+            const SizedBox(height: 25),
 
             // Metrics Section
             FadeInLeft(
@@ -121,7 +120,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
               delay: const Duration(milliseconds: 200),
               child: const SectionTitle(title: 'Metabolic Metrics'),
             ),
-            SizedBox(height: 15.h),
+            const SizedBox(height: 15),
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 300),
@@ -136,7 +135,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                       color: Colors.red,
                     ),
                   ),
-                  SizedBox(width: 15.w),
+                  const SizedBox(width: 15),
                   Expanded(
                     child: MetricCard(
                       title: 'TDEE',
@@ -149,7 +148,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            SizedBox(height: 25.h),
+            const SizedBox(height: 25),
 
             // Macros Chart Section
             FadeInLeft(
@@ -157,15 +156,15 @@ class CaloriesResultsScreen extends ConsumerWidget {
               delay: const Duration(milliseconds: 400),
               child: const SectionTitle(title: 'Macronutrient Split'),
             ),
-            SizedBox(height: 15.h),
+            const SizedBox(height: 15),
             ZoomIn(
               duration: const Duration(milliseconds: 800),
               delay: const Duration(milliseconds: 500),
               child: Container(
-                padding: EdgeInsets.all(20.w),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20.r),
+                  borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.black.withValues(alpha: 0.08),
@@ -175,7 +174,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                   ],
                 ),
                 child: SizedBox(
-                  height: 280.h,
+                  height: 280,
                   child: MacroPieChart(
                     proteinPercent: macros.proteinPercentage,
                     carbsPercent: macros.carbsPercentage,
@@ -187,7 +186,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(height: 25.h),
+            const SizedBox(height: 25),
 
             // Macros Details
             FadeInLeft(
@@ -195,7 +194,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
               delay: const Duration(milliseconds: 600),
               child: const SectionTitle(title: 'Daily Macros Target'),
             ),
-            SizedBox(height: 15.h),
+            const SizedBox(height: 15),
             FadeInRight(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 650),
@@ -207,7 +206,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 color: Color.fromARGB(255, 238, 31, 31),
               ),
             ),
-            SizedBox(height: 12.h),
+            const SizedBox(height: 12),
             FadeInRight(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 700),
@@ -219,7 +218,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 color: Colors.green,
               ),
             ),
-            SizedBox(height: 12.h),
+            const SizedBox(height: 12),
             FadeInRight(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 750),
@@ -231,7 +230,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 color: Colors.orange,
               ),
             ),
-            SizedBox(height: 25.h),
+            const SizedBox(height: 25),
 
             // Reset Button
             FadeInUp(
@@ -245,16 +244,16 @@ class CaloriesResultsScreen extends ConsumerWidget {
                     Navigator.pop(context);
                   },
                   color: AppColors.primaryColor,
-                  radius: 15.r,
+                  radius: 15,
                   widget: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.refresh, color: Colors.white),
-                      SizedBox(width: 10.w),
+                      const SizedBox(width: 10),
                       Text(
                         'New Calculation',
                         style: TextStyle(
-                          fontSize: 18.sp,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: AppColors.white,
                         ),
@@ -264,7 +263,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20.h),
+            const SizedBox(height: 20),
           ],
         ),
       ),

@@ -7,7 +7,6 @@ import 'package:Warrior/features/Workouts/presentation/widgets/weight_chip.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 const double _maxWeightValue = 999;
 
@@ -216,7 +215,7 @@ class _CurrentWeightIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
@@ -231,15 +230,15 @@ class _CurrentWeightIndicator extends StatelessWidget {
           Icon(
             Icons.history_rounded,
             color: Colors.white,
-            size: 16.sp,
+            size: 16,
           ),
-          SizedBox(width: 6.w),
+          const SizedBox(width: 6),
           Text(
             "Last: $lastWeight ${equipmentType == "machine" ? "Bar" : "KG"}",
             style: TextStyle(
               fontFamily: "poppins",
               fontWeight: FontWeight.w600,
-              fontSize: 12.sp,
+              fontSize: 12,
               color: Colors.white,
             ),
           ),
@@ -268,16 +267,16 @@ class _CustomWeightHeader extends StatelessWidget {
           child: Icon(
             Icons.edit_rounded,
             color: AppColors.primaryColor,
-            size: 18.sp,
+            size: 18,
           ),
         ),
-        SizedBox(width: 10.w),
+        const SizedBox(width: 10),
         Text(
           "Custom Weight",
           style: TextStyle(
             fontFamily: "poppins",
             fontWeight: FontWeight.w700,
-            fontSize: 14.sp,
+            fontSize: 14,
             color: isDark ? Colors.white : Colors.grey.shade800,
             letterSpacing: 0.3,
           ),
@@ -314,8 +313,8 @@ class _CustomWeightInput extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-      padding: EdgeInsets.all(8.w),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: isDark ? colorScheme.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -343,7 +342,7 @@ class _CustomWeightInput extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _CustomWeightHeader(isDark: isDark),
-          SizedBox(height: 12.h),
+          const SizedBox(height: 12),
           _CustomWeightTextField(
             controller: controller,
             focusNode: focusNode,
@@ -355,7 +354,7 @@ class _CustomWeightInput extends StatelessWidget {
             onChanged: onChanged,
           ),
           if (validationError != null) ...[
-            SizedBox(height: 8.h),
+            const SizedBox(height: 8),
             _ValidationErrorText(error: validationError!),
           ],
         ],
@@ -400,13 +399,13 @@ class _CustomWeightTextField extends StatelessWidget {
       style: TextStyle(
         fontFamily: "poppins",
         fontWeight: FontWeight.w600,
-        fontSize: 16.sp,
+        fontSize: 16,
       ),
       decoration: InputDecoration(
         hintText: "Enter weight value",
         hintStyle: TextStyle(
           fontFamily: "poppins",
-          fontSize: 12.sp,
+          fontSize: 12,
           color: Colors.grey.shade400,
         ),
         suffixIcon: _WeightUnitBadge(isMachine: isMachine),
@@ -443,9 +442,9 @@ class _CustomWeightTextField extends StatelessWidget {
             width: 2,
           ),
         ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 14.h,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
         ),
       ),
     );
@@ -465,7 +464,7 @@ class _HeaderIcon extends StatelessWidget {
       child: Icon(
         Icons.fitness_center_rounded,
         color: Colors.white,
-        size: 24.sp,
+        size: 24,
       ),
     );
   }
@@ -487,18 +486,18 @@ class _HeaderTitle extends StatelessWidget {
           style: TextStyle(
             fontFamily: "poppins",
             fontWeight: FontWeight.w600,
-            fontSize: 12.sp,
+            fontSize: 12,
             color: Colors.white.withOpacity(0.9),
             letterSpacing: 0.5,
           ),
         ),
-        SizedBox(height: 2.h),
+        const SizedBox(height: 2),
         Text(
           exerciseName,
           style: TextStyle(
             fontFamily: "poppins",
             fontWeight: FontWeight.bold,
-            fontSize: 16.sp,
+            fontSize: 16,
             color: Colors.white,
             letterSpacing: 0.3,
           ),
@@ -522,7 +521,7 @@ class _UpdateWeightButton extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.w),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         boxShadow: [
@@ -540,15 +539,15 @@ class _UpdateWeightButton extends StatelessWidget {
             Icon(
               Icons.check_circle_rounded,
               color: Colors.white,
-              size: 20.sp,
+              size: 20,
             ),
-            SizedBox(width: 8.w),
+            const SizedBox(width: 8),
             Text(
               "Update Weight",
               style: TextStyle(
                 fontFamily: "poppins",
                 fontWeight: FontWeight.bold,
-                fontSize: 15.sp,
+                fontSize: 15,
                 color: Colors.white,
                 letterSpacing: 0.5,
               ),
@@ -578,15 +577,15 @@ class _ValidationErrorText extends StatelessWidget {
         Icon(
           Icons.error_outline,
           color: Colors.red,
-          size: 16.sp,
+          size: 16,
         ),
-        SizedBox(width: 6.w),
+        const SizedBox(width: 6),
         Expanded(
           child: Text(
             error,
             style: TextStyle(
               fontFamily: "poppins",
-              fontSize: 12.sp,
+              fontSize: 12,
               color: Colors.red,
               fontWeight: FontWeight.w500,
             ),
@@ -612,7 +611,7 @@ class _WeightList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       itemCount:
           isMachine ? MachineWeights.values.length : FreeWeights.values.length,
       itemBuilder: (context, index) {
@@ -621,7 +620,7 @@ class _WeightList extends StatelessWidget {
             : FreeWeights.values[index];
 
         return Padding(
-          padding: EdgeInsets.only(bottom: 8.h),
+          padding: const EdgeInsets.only(bottom: 8),
           child: WeightChip(
             weight: isMachine
                 ? (weight as MachineWeights).weight
@@ -652,7 +651,7 @@ class _WeightSelectorHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -675,7 +674,7 @@ class _WeightSelectorHeader extends StatelessWidget {
             child: Row(
               children: [
                 _HeaderIcon(),
-                SizedBox(width: 12.w),
+                const SizedBox(width: 12),
                 Expanded(
                   child: _HeaderTitle(exerciseName: exerciseName),
                 ),
@@ -702,7 +701,7 @@ class _WeightUnitBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(8),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.primaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
@@ -712,7 +711,7 @@ class _WeightUnitBadge extends StatelessWidget {
         style: TextStyle(
           fontFamily: "poppins",
           fontWeight: FontWeight.bold,
-          fontSize: 13.sp,
+          fontSize: 13,
           color: AppColors.primaryColor,
         ),
       ),

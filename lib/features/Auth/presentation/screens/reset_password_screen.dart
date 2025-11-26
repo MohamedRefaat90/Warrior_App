@@ -3,6 +3,7 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/network/provider_states.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
@@ -10,7 +11,6 @@ import 'package:Warrior/features/Auth/presentation/widgets/password_validation_r
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/functions/flushbar.dart';
@@ -46,9 +46,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             children: [
               Text(
                 "Enter your new password".capitalizeWord(),
-                style: TextStyle(fontSize: 15.sp),
+                style: TextStyle(fontSize: 15),
               ),
-              20.verticalSpace,
+              const SizedBox(height: 20),
               CustomTextField(
                   textEditingController: passwordController,
                   placeholderText: 'New Password',
@@ -58,9 +58,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                       .passwordValidator(password),
                   // validator: (value) => passwordValidator(value ?? ""),
                   isPassword: true),
-              10.verticalSpace,
+              const SizedBox(height: 10),
               PasswordValidationRules(),
-              10.verticalSpace,
+              const SizedBox(height: 10),
               CustomTextField(
                   textEditingController: confirmPasswordController,
                   validator: (value) =>
@@ -68,14 +68,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   placeholderText: 'Confirm Password',
                   isObscure: true,
                   isPassword: true),
-              20.verticalSpace,
+              const SizedBox(height: 20),
               CustomBTN(
                   widget: providerStates.isLoading
                       ? const BtnLoader()
                       : const Text("Reset Password"),
                   color: AppColors.black,
                   padding: 15,
-                  width: 0.4.sw,
+                  width: context.screenWidth * 0.4,
                   splashColor: AppColors.primaryColor,
                   press: () async {
                     ResetPasswordNotifier resetNotifier =

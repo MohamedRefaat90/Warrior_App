@@ -2,7 +2,6 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_grid.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// A reusable workout group tile widget with expansion functionality
 class WorkoutGroupTile extends StatefulWidget {
@@ -40,15 +39,15 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
           ? Colors.white
           : null, // Default card color when collapsed
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(12),
         side: _isExpanded
-            ? BorderSide(color: widget.iconColor, width: 1.w)
+            ? BorderSide(color: widget.iconColor, width: 1)
             : BorderSide.none,
       ),
 
       child: ExpansionTile(
         initiallyExpanded: false,
-        tilePadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         onExpansionChanged: (expanded) {
           setState(() {
             _isExpanded = expanded;
@@ -58,28 +57,28 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
         shape: const Border(),
         collapsedShape: const Border(),
         leading: Container(
-          padding: EdgeInsets.all(8.w),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: widget.iconColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
             widget.icon,
             color: widget.iconColor,
-            size: 24.sp,
+            size: 24,
           ),
         ),
         title: Text(
           widget.title,
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: isDark && _isExpanded ? AppColors.black : AppColors.white,
           ),
         ),
         children: [
           Padding(
-            padding: EdgeInsets.all(12.w),
+            padding: const EdgeInsets.all(12),
             child: WorkoutGrid(workouts: widget.workouts),
           ),
         ],

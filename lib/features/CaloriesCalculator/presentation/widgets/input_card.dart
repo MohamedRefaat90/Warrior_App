@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Input card for weight, height, age fields
 class InputCard extends StatelessWidget {
@@ -27,7 +26,7 @@ class InputCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withValues(alpha: 0.05),
@@ -50,12 +49,12 @@ class InputCard extends StatelessWidget {
           hintStyle:
               TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.5)),
           suffixStyle: TextStyle(
-            fontSize: 14.sp,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: colorScheme.primary,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.r),
+            borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(
               color: isDark ? AppColors.darkSecondary : AppColors.black,
               width: 1,
@@ -64,8 +63,8 @@ class InputCard extends StatelessWidget {
           filled: true,
           fillColor: colorScheme.surface,
           contentPadding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 18.h,
+            horizontal: 20,
+            vertical: 18,
           ),
         ),
       ),

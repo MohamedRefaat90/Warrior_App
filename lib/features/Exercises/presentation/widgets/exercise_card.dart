@@ -8,7 +8,6 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/loading_widget.dart';
@@ -45,7 +44,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                 children: [
                   CachedNetworkImage(
                     imageUrl: widget.exercise.image,
-                    height: 120.h,
+                    height: 120,
                     fadeInDuration: const Duration(milliseconds: 200),
                     placeholder: (context, url) => const CustomLoadingWidget(),
                     errorWidget: (context, url, error) {
@@ -54,7 +53,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                           widget.exercise.image.contains(':\\')) {
                         return Image.file(
                           File(widget.exercise.image),
-                          height: 120.h,
+                          height: 120,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(Icons.image_not_supported, size: 50),
                         );
@@ -64,8 +63,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                       }
                     },
                   ),
-                  SizedBox(
-                    width: 100.w,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       widget.exercise.name,
                       textAlign: TextAlign.center,

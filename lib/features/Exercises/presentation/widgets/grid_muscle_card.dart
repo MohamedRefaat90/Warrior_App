@@ -99,7 +99,7 @@ class GridMuscleCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: primaryColor,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 1,

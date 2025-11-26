@@ -6,7 +6,6 @@ import 'package:Warrior/features/Predefined_workouts/presentation/provider/prede
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_groups_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PredefinedWorkoutsScreen extends ConsumerStatefulWidget {
   const PredefinedWorkoutsScreen({super.key});
@@ -32,7 +31,7 @@ class _PredefinedWorkoutScreenState
           style: TextStyle(
             fontFamily: 'kings',
             fontWeight: FontWeight.bold,
-            fontSize: 28.sp,
+            fontSize: 28,
           ),
         ),
       ),
@@ -60,29 +59,29 @@ class _PredefinedWorkoutScreenState
                   size: 48,
                   color: isOffline ? Colors.orange : Colors.red,
                 ),
-                SizedBox(height: 16.h),
+                const SizedBox(height: 16),
                 Text(
                   isOffline ? 'You are offline' : 'Something went wrong',
                   style: TextStyle(
-                    fontSize: 18.sp,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.h),
+                const SizedBox(height: 8),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
                     isOffline
                         ? 'No cached workouts available. Connect to the internet to download workouts.'
                         : 'Failed to load predefined workouts',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 14,
                       color: Colors.grey,
                     ),
                   ),
                 ),
-                SizedBox(height: 16.h),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     // Refresh the grouped workouts provider

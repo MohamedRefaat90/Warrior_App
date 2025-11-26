@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -7,7 +8,6 @@ import 'package:Warrior/features/Workouts/presentation/widgets/empty_workout_exe
 import 'package:Warrior/features/Workouts/presentation/widgets/last_weight_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkoutGridView extends ConsumerStatefulWidget {
   final WorkoutSetModel workout;
@@ -54,10 +54,10 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                       ),
                     ),
                     Positioned(
-                        width: 105.w,
-                        height: 22.h,
-                        bottom: -7.h,
-                        right: 33.w,
+                        width: 105,
+                        height: 22,
+                        bottom: -7,
+                        right: 33,
                         child: CustomBTN(
                           widget: Text.rich(
                             TextSpan(children: [
@@ -75,7 +75,7 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
                             ]),
-                            style: TextStyle(fontSize: 9.sp),
+                            style: TextStyle(fontSize: 9),
                           ),
                           radius: 4,
                           color: AppColors.green,
@@ -111,15 +111,15 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
               },
               childCount: widget.workout.workoutItems!.length,
             ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ResponsiveUtils.getGridColumns(context),
               crossAxisSpacing: 10,
               mainAxisSpacing: 15,
               childAspectRatio: 0.9,
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 20.h),
+            child: SizedBox(height: 20),
           ),
         ],
       ),

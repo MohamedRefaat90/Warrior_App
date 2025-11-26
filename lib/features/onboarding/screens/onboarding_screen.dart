@@ -6,7 +6,6 @@ import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/onboarding/data/onboarding_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -42,15 +41,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   Image.asset(
                     onboardingItems[index].image,
-                    width: 0.8.sw,
+                    width: MediaQuery.of(context).size.width * 0.8,
                   ),
-                  20.verticalSpace,
+                  const SizedBox(height: 20),
                   Text(
                     onboardingItems[index].title,
-                    style:
-                        TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  10.verticalSpace,
+                  const SizedBox(height: 10),
                   Text(
                     onboardingItems[index].description,
                     textAlign: TextAlign.center,
@@ -65,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 widget: Text('letsBegin'.tr(context)),
                 color: AppColors.black,
                 padding: 15,
-                width: 0.5.sw,
+                width: MediaQuery.of(context).size.width * 0.5,
                 press: () async {
                   await SharedPref.setBool(StorageKeys.isFirstTime, false);
                   await SharedPref.setInt(StorageKeys.numberOfWorkouts, 0);
@@ -80,7 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     dotColor: AppColors.black,
                     activeDotColor: AppColors.primaryColor),
               ),
-        30.verticalSpace
+        const SizedBox(height: 30)
       ],
     ));
   }

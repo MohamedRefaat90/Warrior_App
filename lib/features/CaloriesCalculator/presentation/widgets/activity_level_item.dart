@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Activity level selection item widget
 class ActivityLevelItem extends StatelessWidget {
@@ -23,30 +22,30 @@ class ActivityLevelItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+      padding: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          padding: EdgeInsets.all(16.w),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primaryColor!.withValues(alpha: 0.1)
+                ? AppColors.primaryColor.withValues(alpha: 0.1)
                 : isDarkMode
                     ? AppColors.darkSurface
                     : AppColors.white,
-            borderRadius: BorderRadius.circular(15.r),
+            borderRadius: BorderRadius.circular(15),
             border: Border.all(
               color: isSelected
-                  ? AppColors.primaryColor!
+                  ? AppColors.primaryColor
                   : AppColors.black.withValues(alpha: 0.1),
               width: 2,
             ),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: AppColors.primaryColor!.withValues(alpha: 0.2),
+                      color: AppColors.primaryColor.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -69,7 +68,7 @@ class ActivityLevelItem extends StatelessWidget {
                           : AppColors.black.withValues(alpha: 0.3),
                 ),
               ),
-              SizedBox(width: 15.w),
+              const SizedBox(width: 15),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,18 +76,18 @@ class ActivityLevelItem extends StatelessWidget {
                     AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 300),
                       style: TextStyle(
-                        fontSize: 15.sp,
+                        fontSize: 15,
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.w600,
                         color: isDarkMode ? AppColors.white : AppColors.black,
                       ),
                       child: Text(label),
                     ),
-                    SizedBox(height: 3.h),
+                    const SizedBox(height: 3),
                     Text(
                       description,
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         color: isDarkMode
                             ? AppColors.white.withValues(alpha: 0.6)
                             : AppColors.black.withValues(alpha: 0.6),

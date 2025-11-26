@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LogoSection extends StatelessWidget {
   const LogoSection({super.key});
@@ -12,8 +11,8 @@ class LogoSection extends StatelessWidget {
       children: [
         // Glow effect
         Container(
-          width: 170.w,
-          height: 170.w,
+          width: 170,
+          height: 170,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             boxShadow: [
@@ -27,9 +26,9 @@ class LogoSection extends StatelessWidget {
         ),
         // Logo Container
         Container(
-          width: 150.w,
-          height: 150.w,
-          padding: EdgeInsets.all(0.w),
+          width: 150,
+          height: 150,
+          padding: const EdgeInsets.all(0),
           decoration: BoxDecoration(
             color: AppColors.white,
             shape: BoxShape.circle,
@@ -48,7 +47,7 @@ class LogoSection extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 return Icon(
                   Icons.fitness_center,
-                  size: 80.sp,
+                  size: 80,
                   color: AppColors.primaryColor,
                 );
               },

@@ -10,7 +10,6 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class EmptyWorkoutList extends ConsumerStatefulWidget {
@@ -40,7 +39,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
         child: SlideTransition(
           position: _slideAnimation,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.w),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -53,8 +52,8 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                     return Transform.scale(
                       scale: value,
                       child: Container(
-                        width: 120.w,
-                        height: 120.w,
+                        width: 120,
+                        height: 120,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
@@ -75,39 +74,39 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                         ),
                         child: Icon(
                           Icons.fitness_center_rounded,
-                          size: 60.sp,
+                          size: 60,
                           color: AppColors.primaryColor,
                         ),
                       ),
                     );
                   },
                 ),
-                SizedBox(height: 32.h),
+                const SizedBox(height: 32),
                 // Title
                 Text(
                   'No Workouts Yet',
                   style: TextStyle(
                     fontFamily: 'poppins',
                     fontWeight: FontWeight.bold,
-                    fontSize: 28.sp,
+                    fontSize: 28,
                     color: isDark ? Colors.white : Colors.black87,
                     letterSpacing: 0.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 12.h),
+                const SizedBox(height: 12),
                 // Subtitle
                 Text(
                   'Start building your fitness journey\nby creating your first workout set',
                   style: TextStyle(
                     fontFamily: 'poppins',
-                    fontSize: 15.sp,
+                    fontSize: 15,
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 40.h),
+                const SizedBox(height: 40),
                 // Create button
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0.0, end: 1.0),
@@ -125,7 +124,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                     label: Text(
                       'Create Workout Set',
                       style: TextStyle(
-                        fontSize: 18.sp,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
                       ),
@@ -134,26 +133,26 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                       backgroundColor: AppColors.primaryColor,
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(
-                        horizontal: 32.w,
-                        vertical: 16.h,
+                        horizontal: 32,
+                        vertical: 16,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.r),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                       elevation: 8,
                       shadowColor: AppColors.primaryColor.withOpacity(0.4),
                     ),
                   ),
                 ),
-                SizedBox(height: 24.h),
+                const SizedBox(height: 24),
                 // Tips
                 Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: isDark
                         ? Colors.grey[900]
                         : AppColors.primaryColor.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(12.r),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: AppColors.primaryColor.withOpacity(0.2),
                       width: 1,
@@ -164,14 +163,14 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                       Icon(
                         Icons.lightbulb_outline_rounded,
                         color: AppColors.primaryColor,
-                        size: 24.sp,
+                        size: 24,
                       ),
-                      SizedBox(width: 12.w),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'Tip: Organize exercises into sets for better workout tracking',
                           style: TextStyle(
-                            fontSize: 13.sp,
+                            fontSize: 13,
                             color: isDark ? Colors.grey[400] : Colors.grey[700],
                             height: 1.4,
                           ),
@@ -257,24 +256,24 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
               ),
               child: AlertDialog(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 elevation: 10,
                 title: Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(8.w),
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         Icons.fitness_center_rounded,
                         color: AppColors.primaryColor,
-                        size: 24.sp,
+                        size: 24,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text('createWorkoutSet'.tr(context)),
                     ),
@@ -290,12 +289,12 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                         Text(
                           'Workout Name',
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        const SizedBox(height: 8),
                         CustomTextField(
                           placeholderText: 'e.g., Full Body Blast',
                           textEditingController: _nameController,
@@ -304,16 +303,16 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                               ? 'Workout set name is required'.capitalizeWord()
                               : null,
                         ),
-                        SizedBox(height: 16.h),
+                        const SizedBox(height: 16),
                         Text(
                           'Description (Optional)',
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        const SizedBox(height: 8),
                         CustomTextField(
                           textEditingController: _descriptionController,
                           isTextArea: true,
@@ -357,7 +356,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                       backgroundColor: AppColors.primaryColor,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: Text('create'.tr(context)),

@@ -1,6 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Metric card for displaying BMR/TDEE
 class MetricCard extends StatelessWidget {
@@ -22,10 +21,10 @@ class MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: color.withValues(alpha: 0.3),
           width: 2,
@@ -40,30 +39,30 @@ class MetricCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 30.sp),
-          SizedBox(height: 10.h),
+          Icon(icon, color: color, size: 30),
+          const SizedBox(height: 10),
           Text(
             title,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
               color: AppColors.black,
             ),
           ),
-          SizedBox(height: 5.h),
+          const SizedBox(height: 5),
           Text(
             value,
             style: TextStyle(
-              fontSize: 24.sp,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          SizedBox(height: 3.h),
+          const SizedBox(height: 3),
           Text(
             subtitle,
             style: TextStyle(
-              fontSize: 11.sp,
+              fontSize: 11,
               color: AppColors.black.withValues(alpha: 0.6),
             ),
             textAlign: TextAlign.center,

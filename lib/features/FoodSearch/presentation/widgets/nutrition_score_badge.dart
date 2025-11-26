@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+Color getScoreColor(String score) {
+  switch (score) {
+    case 'A':
+      return const Color(0xFF038141); // Dark Green
+    case 'B':
+      return const Color(0xFF85BB2F); // Light Green
+    case 'C':
+      return const Color(0xFFFECC02); // Yellow
+    case 'D':
+      return const Color(0xFFEE8100); // Orange
+    case 'E':
+      return const Color(0xFFE63E11); // Red
+    default:
+      return Colors.grey;
+  }
+}
 
 /// Badge widget for displaying Nutri-Score (A-E)
 /// Color-coded from dark green (A) to red (E)
@@ -44,7 +60,7 @@ class NutritionScoreBadge extends StatelessWidget {
           score,
           style: TextStyle(
             color: Colors.white,
-            fontSize: score == "N/A" ? 10.sp : 15.sp,
+            fontSize: score == "N/A" ? 10 : 15,
             fontWeight: FontWeight.bold,
             fontFamily: 'Poppins',
           ),
@@ -133,7 +149,7 @@ class NutritionScoreShield extends StatelessWidget {
                 score,
                 style: TextStyle(
                   color: color,
-                  fontSize: 13.sp,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Poppins',
                 ),
@@ -143,22 +159,5 @@ class NutritionScoreShield extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-Color getScoreColor(String score) {
-  switch (score) {
-    case 'A':
-      return const Color(0xFF038141); // Dark Green
-    case 'B':
-      return const Color(0xFF85BB2F); // Light Green
-    case 'C':
-      return const Color(0xFFFECC02); // Yellow
-    case 'D':
-      return const Color(0xFFEE8100); // Orange
-    case 'E':
-      return const Color(0xFFE63E11); // Red
-    default:
-      return Colors.grey;
   }
 }

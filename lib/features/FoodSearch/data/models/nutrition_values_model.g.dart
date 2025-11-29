@@ -28,13 +28,18 @@ class NutritionValuesModelAdapter extends TypeAdapter<NutritionValuesModel> {
       sodium: fields[8] as double?,
       salt: fields[9] as double?,
       servingSize: fields[10] as double?,
+      confidenceScores: (fields[11] as Map?)?.cast<String, double>(),
+      requiresManualReview: fields[12] as bool?,
+      ocrScannedAt: fields[13] as DateTime?,
+      rawOcrText: fields[14] as String?,
+      dataMode: fields[15] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, NutritionValuesModel obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.energyKcal)
       ..writeByte(1)
@@ -56,7 +61,17 @@ class NutritionValuesModelAdapter extends TypeAdapter<NutritionValuesModel> {
       ..writeByte(9)
       ..write(obj.salt)
       ..writeByte(10)
-      ..write(obj.servingSize);
+      ..write(obj.servingSize)
+      ..writeByte(11)
+      ..write(obj.confidenceScores)
+      ..writeByte(12)
+      ..write(obj.requiresManualReview)
+      ..writeByte(13)
+      ..write(obj.ocrScannedAt)
+      ..writeByte(14)
+      ..write(obj.rawOcrText)
+      ..writeByte(15)
+      ..write(obj.dataMode);
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/favorite_food_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
+import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
 import 'package:Warrior/features/FoodSearch/data/models/search_history_model.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -15,11 +16,12 @@ class HiveManager {
   static late Box<WorkoutSetModel> workoutsBox;
   static late Box<WorkoutSetModel> predefinedWorkoutsBox;
   static late Box<PendingOperation> pendingOpsBox;
-  
+
   // Food Search boxes
   static late Box<FoodProductModel> foodProductsBox;
   static late Box<FavoriteFoodModel> favoriteFoodsBox;
   static late Box<SearchHistoryModel> searchHistoryBox;
+  static late Box<PendingProductUpload> pendingProductsBox;
 
   // Update or add this method to ensure operations are properly stored
   static Future<void> addPendingOperation(PendingOperation operation) async {
@@ -29,15 +31,37 @@ class HiveManager {
         'HIVE');
   }
 
+  // Pending product upload methods
+  static Future<void> addPendingProductUpload(
+      PendingProductUpload upload) async {
+    await pendingProductsBox.add(upload);
+    TalkerService.debug(
+        'Added pending product upload: ${upload.barcode}, '
+            'total count: ${pendingProductsBox.length}',
+        'HIVE');
+  }
+
   // Clear pending operations
   static Future<void> clearPendingOperations() async {
     await pendingOpsBox.clear();
+  }
+
+  static Future<void> clearPendingProductUploads() async {
+    await pendingProductsBox.clear();
+    TalkerService.debug('Cleared all pending product uploads', 'HIVE');
   }
 
   static List<PendingOperation> getPendingOperations() {
     TalkerService.debug(
         'Getting pending operations, count: ${pendingOpsBox.length}', 'HIVE');
     return pendingOpsBox.values.toList();
+  }
+
+  static List<PendingProductUpload> getPendingProductUploads() {
+    TalkerService.debug(
+        'Getting pending product uploads, count: ${pendingProductsBox.length}',
+        'HIVE');
+    return pendingProductsBox.values.toList();
   }
 
   static Future<void> init() async {
@@ -49,13 +73,14 @@ class HiveManager {
     Hive.registerAdapter(WorkoutItemModelAdapter());
     Hive.registerAdapter(PendingOperationAdapter());
     Hive.registerAdapter(SyncOperationTypeAdapter());
-    
+
     // Register Food Search adapters
     Hive.registerAdapter(FoodProductModelAdapter());
     Hive.registerAdapter(NutritionValuesModelAdapter());
     Hive.registerAdapter(SearchHistoryModelAdapter());
     Hive.registerAdapter(SearchTypeAdapter());
     Hive.registerAdapter(FavoriteFoodModelAdapter());
+    Hive.registerAdapter(PendingProductUploadAdapter());
 
     musclesBox = await Hive.openBox<MuscleModel>('muscles');
     exercisesBox = await Hive.openBox<ExerciseModel>('exercises');
@@ -63,11 +88,20 @@ class HiveManager {
     predefinedWorkoutsBox =
         await Hive.openBox<WorkoutSetModel>('predefinedWorkouts');
     pendingOpsBox = await Hive.openBox<PendingOperation>("pendingOperations");
-    
+
     // Open Food Search boxes
     foodProductsBox = await Hive.openBox<FoodProductModel>('foodProducts');
     favoriteFoodsBox = await Hive.openBox<FavoriteFoodModel>('favoriteFoods');
     searchHistoryBox = await Hive.openBox<SearchHistoryModel>('searchHistory');
+    pendingProductsBox =
+        await Hive.openBox<PendingProductUpload>('pendingProducts');
+  }
+
+  static Future<void> removePendingProductUpload(
+      PendingProductUpload upload) async {
+    await upload.delete();
+    TalkerService.debug(
+        'Removed pending product upload: ${upload.barcode}', 'HIVE');
   }
 
   static Future<void> saveToHive(Box box, List data) async {

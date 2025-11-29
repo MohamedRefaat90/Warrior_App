@@ -1,10 +1,14 @@
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/data/data_sources/food_local_data_source.dart';
 import 'package:Warrior/features/FoodSearch/data/data_sources/food_remote_data_source.dart';
 import 'package:Warrior/features/FoodSearch/data/models/favorite_food_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
+import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
 import 'package:Warrior/features/FoodSearch/data/models/search_history_model.dart';
+import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
@@ -119,6 +123,16 @@ class FoodSearchRepo {
   // History methods
   List<SearchHistoryModel> getHistory({int limit = 20}) {
     return _localDataSource.getHistory(limit: limit);
+  }
+
+  /// Gets the count of pending product uploads.
+  int getPendingProductCount() {
+    return HiveManager.getPendingProductUploads().length;
+  }
+
+  /// Gets all pending product uploads.
+  List<PendingProductUpload> getPendingProductUploads() {
+    return HiveManager.getPendingProductUploads();
   }
 
   /// Get product from cache by barcode
@@ -312,6 +326,116 @@ class FoodSearchRepo {
     }
   }
 
+  /// Submit product with nutrition facts.
+  ///
+  /// Handles both online and offline scenarios:
+  /// - Online: Submits directly to Open Food Facts API
+  /// - Offline: Queues for later sync
+  ///
+  /// Returns true if submission was successful or queued.
+  Future<bool> submitProductWithNutrition({
+    required Product product,
+    required User user,
+    NutritionValuesModel? nutrition,
+    String? imagePath,
+    bool isUpdate = false,
+  }) async {
+    try {
+      // Apply nutrition facts to product if provided
+      final productWithNutrition = _applyNutritionToProduct(product, nutrition);
+
+      // Check connectivity
+      if (ConnectivityChecker.isOnline == true) {
+        // Online: Submit directly
+        final success = isUpdate
+            ? await _remoteDataSource.updateProduct(productWithNutrition, user)
+            : await _remoteDataSource.addNewProduct(productWithNutrition, user);
+
+        if (success) {
+          TalkerService.info(
+            'Product ${isUpdate ? "updated" : "created"} successfully: '
+                '${product.barcode}',
+            'FOOD_REPO',
+          );
+
+          // Upload image if provided
+          if (imagePath != null && product.barcode != null) {
+            try {
+              await uploadProductImage(
+                barcode: product.barcode!,
+                imagePath: imagePath,
+                imageField: ImageField.FRONT,
+                user: user,
+              );
+            } catch (imageError) {
+              TalkerService.warning(
+                'Product saved but image upload failed: $imageError',
+                'FOOD_REPO',
+              );
+            }
+          }
+
+          return true;
+        }
+
+        // If submission failed, queue for retry
+        TalkerService.warning(
+          'Direct submission failed, queuing for retry',
+          'FOOD_REPO',
+        );
+        await _enqueuePendingProduct(
+          product: product,
+          nutrition: nutrition,
+          imagePath: imagePath,
+          isUpdate: isUpdate,
+        );
+        return true;
+      } else {
+        // Offline: Queue for later sync
+        TalkerService.info(
+          'Offline: Queuing product for sync: ${product.barcode}',
+          'FOOD_REPO',
+        );
+        await _enqueuePendingProduct(
+          product: product,
+          nutrition: nutrition,
+          imagePath: imagePath,
+          isUpdate: isUpdate,
+        );
+        return true;
+      }
+    } catch (e, stackTrace) {
+      TalkerService.error(
+        'Error in submitProductWithNutrition',
+        'FOOD_REPO',
+        e,
+        stackTrace,
+      );
+
+      // Try to queue on error for later retry
+      try {
+        await _enqueuePendingProduct(
+          product: product,
+          nutrition: nutrition,
+          imagePath: imagePath,
+          isUpdate: isUpdate,
+        );
+        TalkerService.info(
+          'Product queued for retry after error',
+          'FOOD_REPO',
+        );
+        return true;
+      } catch (queueError) {
+        TalkerService.error(
+          'Failed to queue product',
+          'FOOD_REPO',
+          queueError,
+        );
+        return false;
+      }
+    }
+  }
+
   /// Update existing product
   Future<bool> updateProduct(Product product, User user) async {
     try {
@@ -349,6 +473,82 @@ class FoodSearchRepo {
           'Error in uploadProductImage', 'FOOD_REPO', e, stackTrace);
       rethrow;
     }
+  }
+
+  /// Applies nutrition values to a Product object.
+  Product _applyNutritionToProduct(
+    Product product,
+    NutritionValuesModel? nutrition,
+  ) {
+    if (nutrition == null) return product;
+
+    // Create nutriments map from nutrition model
+    final nutriments = nutrition.toOFFNutriments();
+
+    // Note: The openfoodfacts package uses Nutriments class
+    // We need to create the product with nutriments
+    return Product(
+      barcode: product.barcode,
+      productName: product.productName,
+      productNameInLanguages: product.productNameInLanguages,
+      brands: product.brands,
+      brandsTags: product.brandsTags,
+      countries: product.countries,
+      countriesTags: product.countriesTags,
+      lang: product.lang,
+      quantity: product.quantity,
+      servingSize: product.servingSize,
+      categories: product.categories,
+      categoriesTags: product.categoriesTags,
+      labels: product.labels,
+      labelsTags: product.labelsTags,
+      packaging: product.packaging,
+      packagingTags: product.packagingTags,
+      stores: product.stores,
+      storesTags: product.storesTags,
+      ingredientsText: product.ingredientsText,
+      ingredientsTextInLanguages: product.ingredientsTextInLanguages,
+      noNutritionData: false,
+      nutriments: Nutriments.fromJson(nutriments),
+    );
+  }
+
+  /// Enqueues a product for offline sync.
+  Future<void> _enqueuePendingProduct({
+    required Product product,
+    NutritionValuesModel? nutrition,
+    String? imagePath,
+    required bool isUpdate,
+  }) async {
+    if (product.barcode == null) {
+      throw Exception('Product barcode is required for offline queue');
+    }
+
+    // Serialize product data for storage
+    final productData = <String, dynamic>{
+      'barcode': product.barcode,
+      'productName': product.productName,
+      'brands': product.brands,
+      'countries': product.countries,
+      'quantity': product.quantity,
+      'servingSize': product.servingSize,
+      'categories': product.categories,
+      'labels': product.labels,
+      'packaging': product.packaging,
+      'stores': product.stores,
+      'ingredientsText': product.ingredientsText,
+    };
+
+    final pendingUpload = PendingProductUpload(
+      barcode: product.barcode!,
+      productData: productData,
+      nutritionFacts: nutrition,
+      imagePath: imagePath,
+      operationType:
+          isUpdate ? SyncOperationType.update : SyncOperationType.create,
+    );
+
+    await HiveManager.addPendingProductUpload(pendingUpload);
   }
 
   /// Search in local cache

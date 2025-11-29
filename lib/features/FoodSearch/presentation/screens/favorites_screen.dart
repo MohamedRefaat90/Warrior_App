@@ -28,9 +28,9 @@ class FavoritesScreen extends ConsumerWidget {
         ],
       ),
       body: favorites.isEmpty
-          ? const EmptyStateWidget(
-              title: 'No Favorites Yet',
-              message: 'Add products to your favorites to see them here',
+          ? EmptyStateWidget(
+              title: context.l10n.noFavoritesYet,
+              message: context.l10n.addProductsToFavorites,
               icon: Icons.favorite_border,
             )
           : GridView.builder(

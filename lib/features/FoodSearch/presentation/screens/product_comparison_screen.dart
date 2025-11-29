@@ -24,7 +24,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           if (comparisonProducts.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.clear_all),
-              tooltip: 'Clear all',
+              tooltip: context.l10n.clearAll,
               onPressed: () {
                 ref.read(comparisonProvider.notifier).clearComparison();
               },
@@ -33,11 +33,10 @@ class ProductComparisonScreen extends ConsumerWidget {
       ),
       body: comparisonProducts.isEmpty
           ? EmptyStateWidget(
-              title: 'No Products to Compare',
-              message:
-                  'Add products from search results to compare their nutritional values.',
+              title: context.l10n.noProductsToCompare,
+              message: context.l10n.addProductsToCompare,
               icon: Icons.compare_arrows,
-              actionLabel: 'Search Products',
+              actionLabel: context.l10n.searchProducts,
               onAction: () {
                 context.pushNamed(AppRouters.advancedSearch);
               },
@@ -78,7 +77,7 @@ class ProductComparisonScreen extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Text(
               title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -87,7 +86,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
           ),
           ...values.map((value) => Expanded(
-                flex: 3,
+                flex: 1,
                 child: Center(child: value),
               )),
         ],
@@ -120,7 +119,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           // Comparison rows
           _buildComparisonSection(
             context,
-            'Nutri-Score',
+            context.l10n.nutriScore,
             products
                 .map((p) => p.nutriScore != null
                     ? NutritionScoreBadge(nutriScore: p.nutriScore, size: 50)
@@ -129,11 +128,11 @@ class ProductComparisonScreen extends ConsumerWidget {
           ),
           _buildComparisonSection(
             context,
-            'NOVA Group',
+            context.l10n.novaGroup,
             products
                 .map((p) => Text(
                       p.novaGroup != null
-                          ? 'Group ${p.novaGroup}'
+                          ? '${context.l10n.group} ${p.novaGroup}'
                           : 'na'.tr(context),
                       style: Theme.of(context).textTheme.titleMedium,
                     ))
@@ -141,7 +140,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           ),
           _buildComparisonSection(
             context,
-            'Eco-Score',
+            context.l10n.ecoScore,
             products
                 .map((p) => p.ecoscore != null
                     ? EcoscoreWidget(ecoscore: p.ecoscore, size: 50)
@@ -156,7 +155,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                'Nutritional Values (per 100g)',
+                context.l10n.nutritionalValuesPer100g,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -164,7 +163,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Energy (kcal)',
+              '${context.l10n.energy} (kcal)',
               products
                   .map((p) =>
                       p.nutritionValues?.energyKcal?.toStringAsFixed(0) ??
@@ -173,7 +172,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Proteins',
+              context.l10n.proteins,
               products
                   .map((p) => p.nutritionValues?.proteins != null
                       ? '${p.nutritionValues!.proteins!.toStringAsFixed(1)}g'
@@ -182,7 +181,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Carbohydrates',
+              context.l10n.carbohydrates,
               products
                   .map((p) => p.nutritionValues?.carbohydrates != null
                       ? '${p.nutritionValues!.carbohydrates!.toStringAsFixed(1)}g'
@@ -191,7 +190,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Sugars',
+              context.l10n.sugars,
               products
                   .map((p) => p.nutritionValues?.sugars != null
                       ? '${p.nutritionValues!.sugars!.toStringAsFixed(1)}g'
@@ -200,7 +199,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Fat',
+              context.l10n.fat,
               products
                   .map((p) => p.nutritionValues?.fat != null
                       ? '${p.nutritionValues!.fat!.toStringAsFixed(1)}g'
@@ -209,7 +208,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Saturated Fat',
+              context.l10n.saturatedFat,
               products
                   .map((p) => p.nutritionValues?.saturatedFat != null
                       ? '${p.nutritionValues!.saturatedFat!.toStringAsFixed(1)}g'
@@ -218,7 +217,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Fiber',
+              context.l10n.fiber,
               products
                   .map((p) => p.nutritionValues?.fiber != null
                       ? '${p.nutritionValues!.fiber!.toStringAsFixed(1)}g'
@@ -227,7 +226,7 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
             _buildNutritionComparisonRow(
               context,
-              'Salt',
+              context.l10n.salt,
               products
                   .map((p) => p.nutritionValues?.salt != null
                       ? '${p.nutritionValues!.salt!.toStringAsFixed(2)}g'
@@ -242,7 +241,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Dietary Information',
+              context.l10n.dietaryInformation,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -250,7 +249,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           ),
           _buildComparisonSection(
             context,
-            'Vegan',
+            context.l10n.vegan,
             products
                 .map((p) => Icon(
                       p.isVegan == true ? Icons.check_circle : Icons.cancel,
@@ -261,7 +260,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           ),
           _buildComparisonSection(
             context,
-            'Vegetarian',
+            context.l10n.vegetarian,
             products
                 .map((p) => Icon(
                       p.isVegetarian == true
@@ -274,7 +273,7 @@ class ProductComparisonScreen extends ConsumerWidget {
           ),
           _buildComparisonSection(
             context,
-            'Palm Oil Free',
+            context.l10n.palmOilFree,
             products
                 .map((p) => Icon(
                       p.palmOilFree == true ? Icons.check_circle : Icons.cancel,
@@ -396,7 +395,7 @@ class ProductComparisonScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  product.productName ?? 'Unknown',
+                  product.productName ?? context.l10n.unknownProduct,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -460,13 +459,13 @@ class ProductComparisonScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            product.productName ?? 'Unknown Product',
+            product.productName ?? context.l10n.unknownProduct,
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
-            'Add more products to compare',
+            context.l10n.addMoreProductsToCompare,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context)
                       .colorScheme

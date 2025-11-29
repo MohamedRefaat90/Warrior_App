@@ -334,6 +334,625 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tip5 => 'Balance is key - variety in your diet matters';
 
   @override
+  String get login => 'Login';
+
+  @override
+  String get signup => 'Sign Up';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get passwordRequired => 'Password is required';
+
+  @override
+  String get nameRequired => 'Name is required';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get forgetPassword => 'Forget Password';
+
+  @override
+  String get sendEmail => 'Send Email';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get enterNewPassword => 'Enter your new password';
+
+  @override
+  String get verifyOtp => 'Verify OTP';
+
+  @override
+  String get enterOtpSentToEmail => 'Enter the OTP sent to your email';
+
+  @override
+  String get resendOtp => 'Resend OTP';
+
+  @override
+  String get welcomeWarrior =>
+      'Welcome warrior, you can join the battle now 💪';
+
+  @override
+  String get passwordResetSuccess =>
+      'Password reset successfully. Try to login with new password';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account?';
+
+  @override
+  String get loginWith => 'Login With';
+
+  @override
+  String get checkInternetConnection => 'Check Your Internet Connection';
+
+  @override
+  String get mustBeLargerThan8 => 'Must be larger than 8 characters';
+
+  @override
+  String get mustContainUpperChar => 'Must contain uppercase character';
+
+  @override
+  String get mustContainLowerChar => 'Must contain lowercase character';
+
+  @override
+  String get mustContainNumber => 'Must contain a number';
+
+  @override
+  String get mustContainSpecialChar => 'Must contain special character';
+
+  @override
+  String get muscles => 'Muscles';
+
+  @override
+  String get myWorkouts => 'My Workouts';
+
+  @override
+  String get predefinedWorkouts => 'Predefined Workouts';
+
+  @override
+  String get caloriesCalculator => 'Calories Calculator';
+
+  @override
+  String get resetCalculator => 'Reset Calculator';
+
+  @override
+  String get calculationSuccess => 'Calculation completed successfully! 🎉';
+
+  @override
+  String get failedToCalculate => 'Failed to calculate';
+
+  @override
+  String get sedentary => 'Sedentary';
+
+  @override
+  String get sedentaryDesc => 'Little or no exercise';
+
+  @override
+  String get lightlyActive => 'Lightly Active';
+
+  @override
+  String get lightlyActiveDesc => 'Light exercise 1-3 days/week';
+
+  @override
+  String get moderatelyActive => 'Moderately Active';
+
+  @override
+  String get moderatelyActiveDesc => 'Moderate exercise 3-5 days/week';
+
+  @override
+  String get veryActive => 'Very Active';
+
+  @override
+  String get veryActiveDesc => 'Hard exercise 6-7 days/week';
+
+  @override
+  String get extraActive => 'Extra Active';
+
+  @override
+  String get extraActiveDesc => 'Very hard exercise & physical job';
+
+  @override
+  String get newWorkout => 'New Workout';
+
+  @override
+  String get yourWorkouts => 'Your Workouts';
+
+  @override
+  String get newWorkoutSet => 'New Workout Set';
+
+  @override
+  String get workoutName => 'Workout Name';
+
+  @override
+  String get descriptionOptional => 'Description (Optional)';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get noWorkoutsYet => 'No Workouts Yet';
+
+  @override
+  String get startBuildingFitness =>
+      'Start building your fitness journey by creating your first workout set!';
+
+  @override
+  String get tipOrganizeExercises =>
+      'Tip: Organize your exercises into sets for better tracking';
+
+  @override
+  String get addNewExercise => 'Add New Exercise';
+
+  @override
+  String get shareWorkout => 'Share workout';
+
+  @override
+  String get customWeight => 'Custom Weight';
+
+  @override
+  String get enterWeightValue => 'Enter weight value';
+
+  @override
+  String get selectWeight => 'Select Weight';
+
+  @override
+  String get updateWeight => 'Update Weight';
+
+  @override
+  String get lastWeight => 'Last Weight';
+
+  @override
+  String get deleteWorkoutConfirm =>
+      'Are you sure you want to delete this workout? This action cannot be undone.';
+
+  @override
+  String get noExercisesYet => 'No Exercises Yet';
+
+  @override
+  String get workoutReadyForExercises =>
+      'Your workout is ready for some exercises!';
+
+  @override
+  String get addExercisesToStart =>
+      'Add exercises to get started with your training';
+
+  @override
+  String get editProduct => 'Edit Product';
+
+  @override
+  String get addNewProduct => 'Add New Product';
+
+  @override
+  String get contributionHelp =>
+      'Your contribution will help millions of people make better food choices';
+
+  @override
+  String get barcodeRequired => 'Barcode *';
+
+  @override
+  String get enterProductBarcode => 'Enter product barcode';
+
+  @override
+  String get barcodeIsRequired => 'Barcode is required';
+
+  @override
+  String get barcodeMinDigits => 'Barcode must be at least 8 digits';
+
+  @override
+  String get productNameRequired => 'Product Name *';
+
+  @override
+  String get enterProductName => 'Enter product name';
+
+  @override
+  String get productNameIsRequired => 'Product name is required';
+
+  @override
+  String get brand => 'Brand';
+
+  @override
+  String get enterBrandName => 'Enter brand name';
+
+  @override
+  String get quantity => 'Quantity';
+
+  @override
+  String get quantityExample => 'e.g., 500g, 1L, 250ml';
+
+  @override
+  String get servingSize => 'Serving Size';
+
+  @override
+  String get servingSizeExample => 'e.g., 30g, 100ml';
+
+  @override
+  String get ingredients => 'Ingredients';
+
+  @override
+  String get ingredientsHint => 'List all ingredients separated by commas';
+
+  @override
+  String get countries => 'Countries';
+
+  @override
+  String get countriesHint => 'Where is this product sold?';
+
+  @override
+  String get productImage => 'Product Image';
+
+  @override
+  String get searchByNameBrandCategory =>
+      'Search by name, brand, or category...';
+
+  @override
+  String get enterBarcodeNumber => 'Enter barcode number';
+
+  @override
+  String get enjoyingWarrior => 'Enjoying Warrior?';
+
+  @override
+  String get rateAppMessage =>
+      'Thank you for using Warrior! Would you like to rate the app?';
+
+  @override
+  String get maybeLater => 'Maybe Later';
+
+  @override
+  String get rateTheApp => 'Rate the App';
+
+  @override
+  String get updateAvailable => 'Update Available';
+
+  @override
+  String get updateMessage =>
+      'A new version of the app is available. Please update to get the latest features.';
+
+  @override
+  String get updateNow => 'Update Now';
+
+  @override
+  String get onboardingTitle1 => 'Target Every Muscle';
+
+  @override
+  String get onboardingDesc1 =>
+      'Unlock a variety of exercises designed to strengthen and sculpt every muscle group';
+
+  @override
+  String get onboardingTitle2 => 'Customize Your Workouts';
+
+  @override
+  String get onboardingDesc2 =>
+      'Craft your unique workout sets and organize them your way';
+
+  @override
+  String get onboardingTitle3 => 'Your Fitness, Your Way';
+
+  @override
+  String get onboardingDesc3 =>
+      'Take control of your training with personalized workout plans';
+
+  @override
+  String get basicInformation => 'Basic Information';
+
+  @override
+  String get weight => 'Weight';
+
+  @override
+  String get enterWeight => 'Enter weight';
+
+  @override
+  String get height => 'Height';
+
+  @override
+  String get enterHeight => 'Enter height';
+
+  @override
+  String get age => 'Age';
+
+  @override
+  String get enterAge => 'Enter age';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get activityLevel => 'Activity Level';
+
+  @override
+  String get yourGoal => 'Your Goal';
+
+  @override
+  String get weightLoss => 'Weight Loss';
+
+  @override
+  String get loseWeightGradually => 'Lose weight gradually';
+
+  @override
+  String get maintainWeight => 'Maintain Weight';
+
+  @override
+  String get keepCurrentWeight => 'Keep current weight';
+
+  @override
+  String get muscleGain => 'Muscle Gain';
+
+  @override
+  String get buildMuscleMass => 'Build muscle mass';
+
+  @override
+  String get weeklyGoal => 'Weekly Goal';
+
+  @override
+  String get lose => 'Lose';
+
+  @override
+  String get gain => 'Gain';
+
+  @override
+  String get kgPerWeek => 'kg per week';
+
+  @override
+  String get calculate => 'Calculate';
+
+  @override
+  String get calculateYourDailyCaloricNeeds =>
+      'Calculate Your Daily\nCaloric Needs';
+
+  @override
+  String get getPersonalizedNutritionTargets =>
+      'Get personalized nutrition targets';
+
+  @override
+  String get results => 'Results';
+
+  @override
+  String get yourResults => 'Your Results';
+
+  @override
+  String get noResultsAvailable => 'No calculation results available';
+
+  @override
+  String get completeFormFirst => 'Please complete the calculator form first';
+
+  @override
+  String get goBack => 'Go Back';
+
+  @override
+  String get newCalculation => 'New Calculation';
+
+  @override
+  String get metabolicMetrics => 'Metabolic Metrics';
+
+  @override
+  String get bmr => 'BMR';
+
+  @override
+  String get basalMetabolicRate => 'Basal Metabolic\nRate';
+
+  @override
+  String get tdee => 'TDEE';
+
+  @override
+  String get totalDailyEnergyExpenditure => 'Total Daily Energy\nExpenditure';
+
+  @override
+  String get macronutrientSplit => 'Macronutrient Split';
+
+  @override
+  String get dailyMacrosTarget => 'Daily Macros Target';
+
+  @override
+  String get protein => 'Protein';
+
+  @override
+  String get carbs => 'Carbs';
+
+  @override
+  String get fats => 'Fats';
+
+  @override
+  String get kcal => 'kcal';
+
+  @override
+  String get dailyCalories => 'Daily Calories';
+
+  @override
+  String get kg => 'kg';
+
+  @override
+  String get g => 'g';
+
+  @override
+  String get cm => 'cm';
+
+  @override
+  String get years => 'years';
+
+  @override
+  String get bar => 'bar';
+
+  @override
+  String get createWorkoutSetWarning =>
+      'To create your workout set you must select at least one exercise';
+
+  @override
+  String get dontShowAgain => 'Don\'t show this again';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get updateYourWorkoutSet => 'Update Your Workout Set';
+
+  @override
+  String get finishYourWorkoutSet => 'Finish Your Workout Set';
+
+  @override
+  String workoutAddedSuccessfully(String name) {
+    return 'Workout ($name) added successfully!';
+  }
+
+  @override
+  String get productAddedSuccessfully => 'Product added successfully!';
+
+  @override
+  String get productUpdatedSuccessfully => 'Product updated successfully!';
+
+  @override
+  String get changeImage => 'Change Image';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get imageTip =>
+      'Tip: Take a clear photo of the product front, ingredients list, and nutrition facts.';
+
+  @override
+  String get updateProduct => 'Update Product';
+
+  @override
+  String get requiredFieldsDisclaimer =>
+      '* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.';
+
+  @override
+  String get failedToAddProduct => 'Failed to add product. Please try again.';
+
+  @override
+  String get failedToUpdateProduct =>
+      'Failed to update product. Please try again.';
+
+  @override
+  String imageSelected(String filename) {
+    return 'Image selected: $filename';
+  }
+
+  @override
+  String get targetedMuscles => 'Targeted Muscles';
+
+  @override
+  String get downloadingExercises => 'Downloading exercises';
+
+  @override
+  String get completed => 'completed';
+
+  @override
+  String get downloading => 'Downloading';
+
+  @override
+  String get downloadComplete => 'Download Complete!';
+
+  @override
+  String exercisesAvailableOffline(int count) {
+    return '$count exercises available offline';
+  }
+
+  @override
+  String get exercises => 'exercises';
+
+  @override
+  String get noDescription => 'No description';
+
+  @override
+  String deleteWorkoutTitle(String name) {
+    return 'Delete $name';
+  }
+
+  @override
+  String get deleteWorkoutMessage =>
+      'Are you sure you want to delete this workout set? This action cannot be undone.';
+
+  @override
+  String get noPredefinedWorkoutsOffline =>
+      'No predefined workouts available offline';
+
+  @override
+  String get pleaseGoOnlineToDownload => 'Please go online to download it';
+
+  @override
+  String get youAreOffline => 'You are offline';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get noCachedWorkoutsAvailable =>
+      'No cached workouts available. Connect to the internet to download workouts.';
+
+  @override
+  String get failedToLoadPredefinedWorkouts =>
+      'Failed to load predefined workouts';
+
+  @override
+  String get noWorkoutGroupsAvailable => 'No workout groups available';
+
+  @override
+  String workoutsCount(int count) {
+    return '$count workouts';
+  }
+
+  @override
+  String get addToMyWorkouts => 'Add to my workouts';
+
+  @override
+  String get pleaseEnterYourAge => 'Please enter your age';
+
+  @override
+  String get pleaseEnterValidNumber => 'Please enter a valid number';
+
+  @override
+  String get ageMustBeBetween => 'Age must be between 13 and 120 years';
+
+  @override
+  String get pleaseEnterYourHeight => 'Please enter your height';
+
+  @override
+  String get heightMustBeBetween => 'Height must be between 100 and 250 cm';
+
+  @override
+  String get pleaseEnterYourWeight => 'Please enter your weight';
+
+  @override
+  String get weightMustBeBetween => 'Weight must be between 20 and 300 kg';
+
+  @override
+  String get weightLossPlan => 'Weight Loss Plan';
+
+  @override
+  String get muscleGainPlan => 'Muscle Gain Plan';
+
+  @override
+  String get maintenancePlan => 'Maintenance Plan';
+
+  @override
+  String get dailyCaloricTarget => 'Daily Caloric Target';
+
+  @override
+  String get perDay => 'per day';
+
+  @override
   String get advancedSearchTooltip => 'Advanced Search';
 
   @override
@@ -357,4 +976,158 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get startByScanningBarcode =>
       'Start by scanning a barcode or searching for products';
+
+  @override
+  String get positionTheBarcodeWithinTheFrame =>
+      'Position the barcode within the frame';
+
+  @override
+  String get enterManually => 'Enter manually';
+
+  @override
+  String get unknownProduct => 'Unknown Product';
+
+  @override
+  String get allergens => 'Allergens';
+
+  @override
+  String get labels => 'Labels';
+
+  @override
+  String get nutritionFacts => 'Nutrition Facts';
+
+  @override
+  String get nutritionFactsPer100g => 'Nutrition Facts (per 100g)';
+
+  @override
+  String get nutritionScores => 'Nutrition Scores';
+
+  @override
+  String get editProductInfo => 'Edit Product Info';
+
+  @override
+  String get removeFromCompare => 'Remove from Compare';
+
+  @override
+  String get addToCompare => 'Add to Compare';
+
+  @override
+  String get energy => 'Energy';
+
+  @override
+  String get proteins => 'Proteins';
+
+  @override
+  String get carbohydrates => 'Carbohydrates';
+
+  @override
+  String get sugars => 'Sugars';
+
+  @override
+  String get fat => 'Fat';
+
+  @override
+  String get saturatedFat => 'Saturated Fat';
+
+  @override
+  String get fiber => 'Fiber';
+
+  @override
+  String get salt => 'Salt';
+
+  @override
+  String get noProductsToCompare => 'No Products to Compare';
+
+  @override
+  String get addProductsToCompare =>
+      'Add products from search results to compare their nutritional values.';
+
+  @override
+  String get searchProducts => 'Search Products';
+
+  @override
+  String get clearAll => 'Clear all';
+
+  @override
+  String get addMoreProductsToCompare => 'Add more products to compare';
+
+  @override
+  String get nutritionalValuesPer100g => 'Nutritional Values (per 100g)';
+
+  @override
+  String get dietaryInformation => 'Dietary Information';
+
+  @override
+  String get noFavoritesYet => 'No Favorites Yet';
+
+  @override
+  String get addProductsToFavorites =>
+      'Add products to your favorites to see them here';
+
+  @override
+  String get clearAllFilters => 'Clear all filters';
+
+  @override
+  String get showFilters => 'Show Filters';
+
+  @override
+  String get hideFilters => 'Hide Filters';
+
+  @override
+  String get novaGroup => 'NOVA Group';
+
+  @override
+  String get group => 'Group';
+
+  @override
+  String get dietaryPreferences => 'Dietary Preferences';
+
+  @override
+  String get excludeAllergens => 'Exclude Allergens';
+
+  @override
+  String get milk => 'Milk';
+
+  @override
+  String get eggs => 'Eggs';
+
+  @override
+  String get peanuts => 'Peanuts';
+
+  @override
+  String get treeNuts => 'Tree Nuts';
+
+  @override
+  String get soy => 'Soy';
+
+  @override
+  String get wheat => 'Wheat';
+
+  @override
+  String get fish => 'Fish';
+
+  @override
+  String get shellfish => 'Shellfish';
+
+  @override
+  String get noResults => 'No Results';
+
+  @override
+  String get noResultsFound =>
+      'No results found.\nTry adjusting your search or filters.';
+
+  @override
+  String get productNotInDatabase =>
+      'This product is not in our database yet. Would you like to add it to help the community?';
+
+  @override
+  String get errorScanningBarcode => 'Error scanning barcode';
+
+  @override
+  String get contributionMessage =>
+      'Your contribution will help millions of users worldwide make better food choices!';
+
+  @override
+  String get openFoodFactsDisclaimer =>
+      '* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.';
 }

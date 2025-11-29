@@ -132,7 +132,7 @@
   "@productNotFound": {
     "description": "Product not found message"
   },
-  "addProduct": "ضيف منتج",
+  "addProduct": "ضيف المنتج",
   "@addProduct": {
     "description": "Add product button"
   },
@@ -152,11 +152,11 @@
   "@clear": {
     "description": "Clear button text"
   },
-  "vegan": "نباتي",
+  "vegan": "نباتي كامل",
   "@vegan": {
     "description": "Vegan label"
   },
-  "vegetarian": "نباتي (يتناول منتجات الألبان)",
+  "vegetarian": "نباتي (يحتوي منتجات الألبان)",
   "@vegetarian": {
     "description": "Vegetarian label"
   },
@@ -172,7 +172,7 @@
   "@foodSearch": {
     "description": "Food search screen title"
   },
-  "scan": "امسح",
+  "scan": "افحص",
   "@scan": {
     "description": "Scan button text"
   },
@@ -424,36 +424,1020 @@
   "@tip5": {
     "description": "Tip 5"
   },
-  "advancedSearchTooltip": "??? ?????",
+  "pleaseEnterYourAge": "الرجاء إدخال عمرك",
+  "@pleaseEnterYourAge": {
+    "description": "Age input validation error"
+  },
+  "pleaseEnterValidNumber": "الرجاء إدخال رقم صحيح",
+  "@pleaseEnterValidNumber": {
+    "description": "Number validation error"
+  },
+  "ageMustBeBetween": "العمر يجب أن يكون بين 13 و 120 سنة",
+  "@ageMustBeBetween": {
+    "description": "Age range validation error"
+  },
+  "pleaseEnterYourHeight": "الرجاء إدخال طولك",
+  "@pleaseEnterYourHeight": {
+    "description": "Height input validation error"
+  },
+  "heightMustBeBetween": "الطول يجب أن يكون بين 100 و 250 سم",
+  "@heightMustBeBetween": {
+    "description": "Height range validation error"
+  },
+  "pleaseEnterYourWeight": "الرجاء إدخال وزنك",
+  "@pleaseEnterYourWeight": {
+    "description": "Weight input validation error"
+  },
+  "weightMustBeBetween": "الوزن يجب أن يكون بين 20 و 300 كيلوغرام",
+  "@weightMustBeBetween": {
+    "description": "Weight range validation error"
+  },
+  "weightLossPlan": "خطة فقدان الوزن",
+  "@weightLossPlan": {
+    "description": "Weight loss goal plan title"
+  },
+  "muscleGainPlan": "خطة زيادة العضلات",
+  "@muscleGainPlan": {
+    "description": "Muscle gain goal plan title"
+  },
+  "maintenancePlan": "خطة الحفاظ على الوزن",
+  "@maintenancePlan": {
+    "description": "Maintenance goal plan title"
+  },
+  "dailyCaloricTarget": "السعرات الحرارية اليومية",
+  "@dailyCaloricTarget": {
+    "description": "Daily caloric target label"
+  },
+  "perDay": "كل يوم",
+  "@perDay": {
+    "description": "Per day text"
+  },
+
+  "advancedSearchTooltip": "بحث متقدم",
   "@advancedSearchTooltip": {
     "description": "Advanced search tooltip"
   },
-  "searchHistoryTooltip": "??? ?????",
+  "searchHistoryTooltip": "سجل البحث",
   "@searchHistoryTooltip": {
     "description": "Search history tooltip"
   },
-  "addProductButton": "??? ????",
+  "addProductButton": "إضافة منتج",
   "@addProductButton": {
     "description": "Add product button label"
   },
-  "favoritesButton": "???????",
+  "favoritesButton": "المفضلة",
   "@favoritesButton": {
     "description": "Favorites button label"
   },
-  "compareButton": "????",
+  "compareButton": "مقارنة",
   "@compareButton": {
     "description": "Compare button label"
   },
-  "recentlyScanned": "?? ???? ??????",
+  "recentlyScanned": "أخر ما تم فحصه",
   "@recentlyScanned": {
     "description": "Recently scanned section title"
   },
-  "noProductsYet": "???? ?????? ???",
+  "noProductsYet": "لا يوجد منتجات",
   "@noProductsYet": {
     "description": "No products empty state title"
   },
-  "startByScanningBarcode": "???? ???? ???????? ?? ????? ?? ??????",
+  "startByScanningBarcode": "ابدأ بفحص شريط الباركود أو البحث عن المنتجات",
   "@startByScanningBarcode": {
     "description": "No products empty state message"
+  },
+  "positionTheBarcodeWithinTheFrame": "قم بوضع الشريط الباركود داخل إطار الفحص",
+  "@positionTheBarcodeWithinTheFrame": {
+    "description": "Barcode scanner instruction"
+  },
+  "enterManually":"أدخل يدويًا",
+  "@enterManually":{
+    "description": "Barcode scanner instruction"
+  },
+
+  "login": "تسجيل الدخول",
+  "@login": {
+    "description": "Login button text"
+  },
+  "signup": "إنشاء حساب",
+  "@signup": {
+    "description": "Signup button text"
+  },
+  "email": "البريد الإلكتروني",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "كلمة المرور",
+  "@password": {
+    "description": "Password field label"
+  },
+  "name": "الاسم",
+  "@name": {
+    "description": "Name field label"
+  },
+  "confirmPassword": "تأكيد كلمة المرور",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "newPassword": "كلمة مرور جديدة",
+  "@newPassword": {
+    "description": "New password field label"
+  },
+  "passwordRequired": "كلمة المرور مطلوبة",
+  "@passwordRequired": {
+    "description": "Password required validation error"
+  },
+  "nameRequired": "الاسم مطلوب",
+  "@nameRequired": {
+    "description": "Name required validation error"
+  },
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "@forgotPassword": {
+    "description": "Forgot password link"
+  },
+  "forgetPassword": "نسيت كلمة المرور",
+  "@forgetPassword": {
+    "description": "Forget password screen title"
+  },
+  "sendEmail": "إرسال البريد",
+  "@sendEmail": {
+    "description": "Send email button"
+  },
+  "resetPassword": "إعادة تعيين كلمة المرور",
+  "@resetPassword": {
+    "description": "Reset password button"
+  },
+  "enterNewPassword": "أدخل كلمة المرور الجديدة",
+  "@enterNewPassword": {
+    "description": "Enter new password instruction"
+  },
+  "verifyOtp": "تحقق من الرمز",
+  "@verifyOtp": {
+    "description": "Verify OTP button"
+  },
+  "enterOtpSentToEmail": "أدخل الرمز المرسل إلى بريدك الإلكتروني",
+  "@enterOtpSentToEmail": {
+    "description": "OTP instruction"
+  },
+  "resendOtp": "إعادة إرسال الرمز",
+  "@resendOtp": {
+    "description": "Resend OTP button"
+  },
+  "welcomeWarrior": "مرحباً يا محارب",
+  "@welcomeWarrior": {
+    "description": "Welcome message"
+  },
+  "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح",
+  "@passwordResetSuccess": {
+    "description": "Password reset success message"
+  },
+  "dontHaveAccount": "مش عندك حساب؟",
+  "@dontHaveAccount": {
+    "description": "Don't have account text"
+  },
+  "loginWith": "سجل دخول بـ",
+  "@loginWith": {
+    "description": "Login with social provider text"
+  },
+  "checkInternetConnection": "تحقق من اتصال الإنترنت",
+  "@checkInternetConnection": {
+    "description": "Check internet connection error"
+  },
+  "mustBeLargerThan8": "يجب أن تكون أكثر من 8 أحرف",
+  "@mustBeLargerThan8": {
+    "description": "Password length validation"
+  },
+  "mustContainUpperChar": "يجب أن تحتوي على حرف كبير",
+  "@mustContainUpperChar": {
+    "description": "Password uppercase validation"
+  },
+  "mustContainLowerChar": "يجب أن تحتوي على حرف صغير",
+  "@mustContainLowerChar": {
+    "description": "Password lowercase validation"
+  },
+  "mustContainNumber": "يجب أن تحتوي على رقم",
+  "@mustContainNumber": {
+    "description": "Password number validation"
+  },
+  "mustContainSpecialChar": "يجب أن تحتوي على رمز خاص",
+  "@mustContainSpecialChar": {
+    "description": "Password special character validation"
+  },
+  "muscles": "العضلات",
+  "@muscles": {
+    "description": "Muscles screen title"
+  },
+  "myWorkouts": "تماريني",
+  "@myWorkouts": {
+    "description": "My workouts screen title"
+  },
+  "predefinedWorkouts": "تمارين جاهزة",
+  "@predefinedWorkouts": {
+    "description": "Predefined workouts screen title"
+  },
+  "caloriesCalculator": "حاسبة السعرات",
+  "@caloriesCalculator": {
+    "description": "Calories calculator screen title"
+  },
+  "resetCalculator": "إعادة تعيين الحاسبة",
+  "@resetCalculator": {
+    "description": "Reset calculator button"
+  },
+  "calculationSuccess": "تم الحساب بنجاح",
+  "@calculationSuccess": {
+    "description": "Calculation success message"
+  },
+  "failedToCalculate": "فشل في الحساب",
+  "@failedToCalculate": {
+    "description": "Calculation failure message"
+  },
+  "sedentary": "خامل",
+  "@sedentary": {
+    "description": "Sedentary activity level"
+  },
+  "sedentaryDesc": "قليل أو لا يوجد تمارين",
+  "@sedentaryDesc": {
+    "description": "Sedentary activity description"
+  },
+  "lightlyActive": "نشاط خفيف",
+  "@lightlyActive": {
+    "description": "Lightly active activity level"
+  },
+  "lightlyActiveDesc": "تمارين خفيفة 1-3 أيام في الأسبوع",
+  "@lightlyActiveDesc": {
+    "description": "Lightly active description"
+  },
+  "moderatelyActive": "نشاط متوسط",
+  "@moderatelyActive": {
+    "description": "Moderately active activity level"
+  },
+  "moderatelyActiveDesc": "تمارين متوسطة 3-5 أيام في الأسبوع",
+  "@moderatelyActiveDesc": {
+    "description": "Moderately active description"
+  },
+  "veryActive": "نشاط عالي",
+  "@veryActive": {
+    "description": "Very active activity level"
+  },
+  "veryActiveDesc": "تمارين شديدة 6-7 أيام في الأسبوع",
+  "@veryActiveDesc": {
+    "description": "Very active description"
+  },
+  "extraActive": "نشاط مكثف",
+  "@extraActive": {
+    "description": "Extra active activity level"
+  },
+  "extraActiveDesc": "تمارين شديدة جداً أو عمل بدني",
+  "@extraActiveDesc": {
+    "description": "Extra active description"
+  },
+  "newWorkout": "تمرين جديد",
+  "@newWorkout": {
+    "description": "New workout button"
+  },
+  "yourWorkouts": "تماريناتك",
+  "@yourWorkouts": {
+    "description": "Your workouts section title"
+  },
+  "newWorkoutSet": "مجموعة تمارين جديدة",
+  "@newWorkoutSet": {
+    "description": "New workout set button"
+  },
+  "workoutName": "اسم التمرين",
+  "@workoutName": {
+    "description": "Workout name field label"
+  },
+  "descriptionOptional": "الوصف (اختياري)",
+  "@descriptionOptional": {
+    "description": "Description optional field label"
+  },
+  "description": "الوصف",
+  "@description": {
+    "description": "Description field label"
+  },
+  "noWorkoutsYet": "لا يوجد تمارين بعد",
+  "@noWorkoutsYet": {
+    "description": "No workouts empty state"
+  },
+  "startBuildingFitness": "ابدأ ببناء لياقتك",
+  "@startBuildingFitness": {
+    "description": "Start building fitness message"
+  },
+  "tipOrganizeExercises": "نصيحة: نظّم تماريناتك في مجموعات",
+  "@tipOrganizeExercises": {
+    "description": "Tip to organize exercises"
+  },
+  "addNewExercise": "أضف تمرين جديد",
+  "@addNewExercise": {
+    "description": "Add new exercise button"
+  },
+  "shareWorkout": "شارك التمرين",
+  "@shareWorkout": {
+    "description": "Share workout button"
+  },
+  "customWeight": "وزن مخصص",
+  "@customWeight": {
+    "description": "Custom weight option"
+  },
+  "enterWeightValue": "أدخل قيمة الوزن",
+  "@enterWeightValue": {
+    "description": "Enter weight value instruction"
+  },
+  "selectWeight": "اختر الوزن",
+  "@selectWeight": {
+    "description": "Select weight label"
+  },
+  "updateWeight": "تحديث الوزن",
+  "@updateWeight": {
+    "description": "Update weight button"
+  },
+  "lastWeight": "آخر وزن",
+  "@lastWeight": {
+    "description": "Last weight label"
+  },
+  "deleteWorkoutConfirm": "هل تريد حذف هذا التمرين؟",
+  "@deleteWorkoutConfirm": {
+    "description": "Delete workout confirmation"
+  },
+  "noExercisesYet": "لا يوجد تمارين بعد",
+  "@noExercisesYet": {
+    "description": "No exercises empty state"
+  },
+  "workoutReadyForExercises": "التمرين جاهز للتمارين",
+  "@workoutReadyForExercises": {
+    "description": "Workout ready message"
+  },
+  "addExercisesToStart": "أضف تمارين للبدء",
+  "@addExercisesToStart": {
+    "description": "Add exercises instruction"
+  },
+  "editProduct": "تعديل المنتج",
+  "@editProduct": {
+    "description": "Edit product screen title"
+  },
+  "addNewProduct": "إضافة منتج جديد",
+  "@addNewProduct": {
+    "description": "Add new product screen title"
+  },
+  "contributionHelp": "مساهمتك تساعد الآخرين",
+  "@contributionHelp": {
+    "description": "Contribution help message"
+  },
+  "barcodeRequired": "الباركود مطلوب",
+  "@barcodeRequired": {
+    "description": "Barcode required validation"
+  },
+  "enterProductBarcode": "أدخل باركود المنتج",
+  "@enterProductBarcode": {
+    "description": "Enter product barcode instruction"
+  },
+  "barcodeIsRequired": "الباركود مطلوب",
+  "@barcodeIsRequired": {
+    "description": "Barcode is required validation"
+  },
+  "barcodeMinDigits": "الباركود يجب أن يكون 8 أرقام على الأقل",
+  "@barcodeMinDigits": {
+    "description": "Barcode minimum digits validation"
+  },
+  "productNameRequired": "اسم المنتج مطلوب",
+  "@productNameRequired": {
+    "description": "Product name required validation"
+  },
+  "enterProductName": "أدخل اسم المنتج",
+  "@enterProductName": {
+    "description": "Enter product name instruction"
+  },
+  "productNameIsRequired": "اسم المنتج مطلوب",
+  "@productNameIsRequired": {
+    "description": "Product name is required validation"
+  },
+  "brand": "العلامة التجارية",
+  "@brand": {
+    "description": "Brand field label"
+  },
+  "enterBrandName": "أدخل اسم العلامة التجارية",
+  "@enterBrandName": {
+    "description": "Enter brand name instruction"
+  },
+  "quantity": "الكمية",
+  "@quantity": {
+    "description": "Quantity field label"
+  },
+  "quantityExample": "مثال: 500 جم، 1 لتر",
+  "@quantityExample": {
+    "description": "Quantity example"
+  },
+  "servingSize": "حجم الحصة",
+  "@servingSize": {
+    "description": "Serving size field label"
+  },
+  "servingSizeExample": "مثال: 100 جم، 250 مل",
+  "@servingSizeExample": {
+    "description": "Serving size example"
+  },
+  "ingredients": "المكونات",
+  "@ingredients": {
+    "description": "Ingredients field label"
+  },
+  "ingredientsHint": "أدخل المكونات مفصولة بفواصل",
+  "@ingredientsHint": {
+    "description": "Ingredients hint"
+  },
+  "countries": "البلدان",
+  "@countries": {
+    "description": "Countries field label"
+  },
+  "countriesHint": "البلدان المتوفر فيها المنتج",
+  "@countriesHint": {
+    "description": "Countries hint"
+  },
+  "productImage": "صورة المنتج",
+  "@productImage": {
+    "description": "Product image label"
+  },
+  "searchByNameBrandCategory": "ابحث بالاسم أو العلامة أو الفئة",
+  "@searchByNameBrandCategory": {
+    "description": "Search placeholder"
+  },
+  "enterBarcodeNumber": "أدخل رقم الباركود",
+  "@enterBarcodeNumber": {
+    "description": "Enter barcode number instruction"
+  },
+  "enjoyingWarrior": "هل تستمتع بتطبيق المحارب؟",
+  "@enjoyingWarrior": {
+    "description": "Enjoying app question"
+  },
+  "rateAppMessage": "قيّم التطبيق على المتجر لدعمنا",
+  "@rateAppMessage": {
+    "description": "Rate app message"
+  },
+  "maybeLater": "ربما لاحقاً",
+  "@maybeLater": {
+    "description": "Maybe later button"
+  },
+  "rateTheApp": "قيّم التطبيق",
+  "@rateTheApp": {
+    "description": "Rate the app button"
+  },
+  "updateAvailable": "تحديث متوفر",
+  "@updateAvailable": {
+    "description": "Update available title"
+  },
+  "updateMessage": "نسخة جديدة متوفرة. يرجى التحديث للحصول على أفضل تجربة.",
+  "@updateMessage": {
+    "description": "Update message"
+  },
+  "updateNow": "حدّث الآن",
+  "@updateNow": {
+    "description": "Update now button"
+  },
+  "onboardingTitle1": "مرحباً بك في المحارب",
+  "@onboardingTitle1": {
+    "description": "Onboarding title 1"
+  },
+  "onboardingDesc1": "رحلتك نحو اللياقة تبدأ هنا",
+  "@onboardingDesc1": {
+    "description": "Onboarding description 1"
+  },
+  "onboardingTitle2": "تمارين مخصصة",
+  "@onboardingTitle2": {
+    "description": "Onboarding title 2"
+  },
+  "onboardingDesc2": "أنشئ وتتبع تماريناتك الخاصة",
+  "@onboardingDesc2": {
+    "description": "Onboarding description 2"
+  },
+  "onboardingTitle3": "تغذية ذكية",
+  "@onboardingTitle3": {
+    "description": "Onboarding title 3"
+  },
+  "onboardingDesc3": "افحص المنتجات واحسب سعراتك",
+  "@onboardingDesc3": {
+    "description": "Onboarding description 3"
+  },
+  "basicInformation": "المعلومات الأساسية",
+  "@basicInformation": {
+    "description": "Basic information section title"
+  },
+  "weight": "الوزن",
+  "@weight": {
+    "description": "Weight field label"
+  },
+  "enterWeight": "أدخل الوزن",
+  "@enterWeight": {
+    "description": "Enter weight instruction"
+  },
+  "height": "الطول",
+  "@height": {
+    "description": "Height field label"
+  },
+  "enterHeight": "أدخل الطول",
+  "@enterHeight": {
+    "description": "Enter height instruction"
+  },
+  "age": "العمر",
+  "@age": {
+    "description": "Age field label"
+  },
+  "enterAge": "أدخل العمر",
+  "@enterAge": {
+    "description": "Enter age instruction"
+  },
+  "gender": "الجنس",
+  "@gender": {
+    "description": "Gender field label"
+  },
+  "male": "ذكر",
+  "@male": {
+    "description": "Male gender option"
+  },
+  "female": "أنثى",
+  "@female": {
+    "description": "Female gender option"
+  },
+  "activityLevel": "مستوى النشاط",
+  "@activityLevel": {
+    "description": "Activity level field label"
+  },
+  "yourGoal": "هدفك",
+  "@yourGoal": {
+    "description": "Your goal section title"
+  },
+  "weightLoss": "فقدان الوزن",
+  "@weightLoss": {
+    "description": "Weight loss goal"
+  },
+  "loseWeightGradually": "افقد الوزن تدريجياً",
+  "@loseWeightGradually": {
+    "description": "Lose weight gradually description"
+  },
+  "maintainWeight": "الحفاظ على الوزن",
+  "@maintainWeight": {
+    "description": "Maintain weight goal"
+  },
+  "keepCurrentWeight": "حافظ على وزنك الحالي",
+  "@keepCurrentWeight": {
+    "description": "Keep current weight description"
+  },
+  "muscleGain": "بناء العضلات",
+  "@muscleGain": {
+    "description": "Muscle gain goal"
+  },
+  "buildMuscleMass": "ابنِ كتلة عضلية",
+  "@buildMuscleMass": {
+    "description": "Build muscle mass description"
+  },
+  "weeklyGoal": "الهدف الأسبوعي",
+  "@weeklyGoal": {
+    "description": "Weekly goal section title"
+  },
+  "lose": "خسارة",
+  "@lose": {
+    "description": "Lose weight text"
+  },
+  "gain": "زيادة",
+  "@gain": {
+    "description": "Gain weight text"
+  },
+  "kgPerWeek": "كجم في الأسبوع",
+  "@kgPerWeek": {
+    "description": "Kg per week unit"
+  },
+  "calculate": "احسب",
+  "@calculate": {
+    "description": "Calculate button"
+  },
+  "calculateYourDailyCaloricNeeds": "احسب احتياجاتك اليومية من السعرات",
+  "@calculateYourDailyCaloricNeeds": {
+    "description": "Calculator title"
+  },
+  "getPersonalizedNutritionTargets": "احصل على أهداف غذائية مخصصة",
+  "@getPersonalizedNutritionTargets": {
+    "description": "Calculator subtitle"
+  },
+  "results": "النتائج",
+  "@results": {
+    "description": "Results section title"
+  },
+  "yourResults": "نتائجك",
+  "@yourResults": {
+    "description": "Your results title"
+  },
+  "noResultsAvailable": "لا توجد نتائج متوفرة",
+  "@noResultsAvailable": {
+    "description": "No results message"
+  },
+  "completeFormFirst": "أكمل النموذج أولاً",
+  "@completeFormFirst": {
+    "description": "Complete form instruction"
+  },
+  "goBack": "رجوع",
+  "@goBack": {
+    "description": "Go back button"
+  },
+  "newCalculation": "حساب جديد",
+  "@newCalculation": {
+    "description": "New calculation button"
+  },
+  "metabolicMetrics": "المقاييس الأيضية",
+  "@metabolicMetrics": {
+    "description": "Metabolic metrics section title"
+  },
+  "bmr": "معدل الأيض الأساسي",
+  "@bmr": {
+    "description": "BMR label"
+  },
+  "basalMetabolicRate": "معدل الأيض الأساسي",
+  "@basalMetabolicRate": {
+    "description": "Basal metabolic rate full name"
+  },
+  "tdee": "إجمالي الطاقة اليومية",
+  "@tdee": {
+    "description": "TDEE label"
+  },
+  "totalDailyEnergyExpenditure": "إجمالي إنفاق الطاقة اليومي",
+  "@totalDailyEnergyExpenditure": {
+    "description": "Total daily energy expenditure full name"
+  },
+  "macronutrientSplit": "توزيع العناصر الغذائية",
+  "@macronutrientSplit": {
+    "description": "Macronutrient split section title"
+  },
+  "dailyMacrosTarget": "الأهداف اليومية من العناصر الغذائية",
+  "@dailyMacrosTarget": {
+    "description": "Daily macros target section title"
+  },
+  "protein": "البروتين",
+  "@protein": {
+    "description": "Protein label"
+  },
+  "carbs": "الكربوهيدرات",
+  "@carbs": {
+    "description": "Carbs label"
+  },
+  "fats": "الدهون",
+  "@fats": {
+    "description": "Fats label"
+  },
+  "kcal": "سعرة",
+  "@kcal": {
+    "description": "Kilocalorie unit"
+  },
+  "dailyCalories": "السعرات اليومية",
+  "@dailyCalories": {
+    "description": "Daily calories label"
+  },
+  "kg": "كجم",
+  "@kg": {
+    "description": "Kilogram unit"
+  },
+  "g": "جم",
+  "@g": {
+    "description": "Gram unit"
+  },
+  "cm": "سم",
+  "@cm": {
+    "description": "Centimeter unit"
+  },
+  "years": "سنة",
+  "@years": {
+    "description": "Years unit"
+  },
+  "bar": "شريط",
+  "@bar": {
+    "description": "Bar unit"
+  },
+  "createWorkoutSetWarning": "لم تكمل إنشاء مجموعة التمارين بعد",
+  "@createWorkoutSetWarning": {
+    "description": "Create workout set warning"
+  },
+  "dontShowAgain": "لا تظهر هذا مرة أخرى",
+  "@dontShowAgain": {
+    "description": "Don't show again checkbox"
+  },
+  "close": "إغلاق",
+  "@close": {
+    "description": "Close button"
+  },
+  "updateYourWorkoutSet": "حدّث مجموعة تماريناتك",
+  "@updateYourWorkoutSet": {
+    "description": "Update workout set instruction"
+  },
+  "finishYourWorkoutSet": "أكمل مجموعة تماريناتك",
+  "@finishYourWorkoutSet": {
+    "description": "Finish workout set instruction"
+  },
+  "workoutAddedSuccessfully": "تم إضافة التمرين بنجاح",
+  "@workoutAddedSuccessfully": {
+    "description": "Workout added success message"
+  },
+  "productAddedSuccessfully": "تم إضافة المنتج بنجاح",
+  "@productAddedSuccessfully": {
+    "description": "Product added success message"
+  },
+  "productUpdatedSuccessfully": "تم تحديث المنتج بنجاح",
+  "@productUpdatedSuccessfully": {
+    "description": "Product updated success message"
+  },
+  "changeImage": "تغيير الصورة",
+  "@changeImage": {
+    "description": "Change image button"
+  },
+  "takePhoto": "التقط صورة",
+  "@takePhoto": {
+    "description": "Take photo button"
+  },
+  "imageTip": "نصيحة: استخدم صورة واضحة للمنتج",
+  "@imageTip": {
+    "description": "Image tip"
+  },
+  "updateProduct": "تحديث المنتج",
+  "@updateProduct": {
+    "description": "Update product button"
+  },
+  "requiredFieldsDisclaimer": "الحقول المطلوبة محددة بـ *",
+  "@requiredFieldsDisclaimer": {
+    "description": "Required fields disclaimer"
+  },
+  "failedToAddProduct": "فشل في إضافة المنتج",
+  "@failedToAddProduct": {
+    "description": "Failed to add product error"
+  },
+  "failedToUpdateProduct": "فشل في تحديث المنتج",
+  "@failedToUpdateProduct": {
+    "description": "Failed to update product error"
+  },
+  "imageSelected": "تم اختيار الصورة",
+  "@imageSelected": {
+    "description": "Image selected message"
+  },
+  "targetedMuscles": "العضلات المستهدفة",
+  "@targetedMuscles": {
+    "description": "Targeted muscles section title"
+  },
+  "downloadingExercises": "جاري تحميل التمارين",
+  "@downloadingExercises": {
+    "description": "Downloading exercises message"
+  },
+  "completed": "مكتمل",
+  "@completed": {
+    "description": "Completed status"
+  },
+  "downloading": "جاري التحميل",
+  "@downloading": {
+    "description": "Downloading status"
+  },
+  "downloadComplete": "اكتمل التحميل",
+  "@downloadComplete": {
+    "description": "Download complete message"
+  },
+  "exercisesAvailableOffline": "التمارين متوفرة بدون إنترنت",
+  "@exercisesAvailableOffline": {
+    "description": "Exercises available offline message"
+  },
+  "exercises": "التمارين",
+  "@exercises": {
+    "description": "Exercises screen title"
+  },
+  "noDescription": "لا يوجد وصف",
+  "@noDescription": {
+    "description": "No description placeholder"
+  },
+  "deleteWorkoutTitle": "حذف التمرين",
+  "@deleteWorkoutTitle": {
+    "description": "Delete workout dialog title"
+  },
+  "deleteWorkoutMessage": "هل أنت متأكد من حذف هذا التمرين؟",
+  "@deleteWorkoutMessage": {
+    "description": "Delete workout confirmation message"
+  },
+  "noPredefinedWorkoutsOffline": "لا تتوفر تمارين جاهزة بدون إنترنت",
+  "@noPredefinedWorkoutsOffline": {
+    "description": "No predefined workouts offline message"
+  },
+  "pleaseGoOnlineToDownload": "يرجى الاتصال بالإنترنت للتحميل",
+  "@pleaseGoOnlineToDownload": {
+    "description": "Go online to download instruction"
+  },
+  "youAreOffline": "أنت غير متصل بالإنترنت",
+  "@youAreOffline": {
+    "description": "Offline status message"
+  },
+  "somethingWentWrong": "حدث خطأ ما",
+  "@somethingWentWrong": {
+    "description": "Something went wrong error"
+  },
+  "noCachedWorkoutsAvailable": "لا توجد تمارين محفوظة",
+  "@noCachedWorkoutsAvailable": {
+    "description": "No cached workouts message"
+  },
+  "failedToLoadPredefinedWorkouts": "فشل في تحميل التمارين الجاهزة",
+  "@failedToLoadPredefinedWorkouts": {
+    "description": "Failed to load predefined workouts error"
+  },
+  "noWorkoutGroupsAvailable": "لا توجد مجموعات تمارين",
+  "@noWorkoutGroupsAvailable": {
+    "description": "No workout groups message"
+  },
+  "workoutsCount": "{count} تمرين",
+  "@workoutsCount": {
+    "description": "Workouts count with number",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addToMyWorkouts": "أضف إلى تماريني",
+  "@addToMyWorkouts": {
+    "description": "Add to my workouts button"
+  },
+
+  "unknownProduct": "منتج غير معروف",
+  "@unknownProduct": {
+    "description": "Unknown product placeholder"
+  },
+  "allergens": "مسببات الحساسية",
+  "@allergens": {
+    "description": "Allergens section title"
+  },
+  "labels": "التصنيفات",
+  "@labels": {
+    "description": "Labels section title"
+  },
+  "nutritionFacts": "القيم الغذائية",
+  "@nutritionFacts": {
+    "description": "Nutrition facts section title"
+  },
+  "nutritionFactsPer100g": "القيم الغذائية (لكل 100 جم)",
+  "@nutritionFactsPer100g": {
+    "description": "Nutrition facts per 100g section title"
+  },
+  "nutritionScores": "تقييمات التغذية",
+  "@nutritionScores": {
+    "description": "Nutrition scores section title"
+  },
+  "editProductInfo": "تعديل معلومات المنتج",
+  "@editProductInfo": {
+    "description": "Edit product info tooltip"
+  },
+  "removeFromCompare": "إزالة من المقارنة",
+  "@removeFromCompare": {
+    "description": "Remove from compare button"
+  },
+  "addToCompare": "إضافة للمقارنة",
+  "@addToCompare": {
+    "description": "Add to compare button"
+  },
+  "energy": "الطاقة",
+  "@energy": {
+    "description": "Energy nutrient label"
+  },
+  "proteins": "البروتينات",
+  "@proteins": {
+    "description": "Proteins nutrient label"
+  },
+  "carbohydrates": "الكربوهيدرات",
+  "@carbohydrates": {
+    "description": "Carbohydrates nutrient label"
+  },
+  "sugars": "السكريات",
+  "@sugars": {
+    "description": "Sugars nutrient label"
+  },
+  "fat": "الدهون",
+  "@fat": {
+    "description": "Fat nutrient label"
+  },
+  "saturatedFat": "الدهون المشبعة",
+  "@saturatedFat": {
+    "description": "Saturated fat nutrient label"
+  },
+  "fiber": "الألياف",
+  "@fiber": {
+    "description": "Fiber nutrient label"
+  },
+  "salt": "الملح",
+  "@salt": {
+    "description": "Salt nutrient label"
+  },
+  "noProductsToCompare": "لا توجد منتجات للمقارنة",
+  "@noProductsToCompare": {
+    "description": "No products to compare empty state"
+  },
+  "addProductsToCompare": "أضف منتجات من نتائج البحث لمقارنة قيمها الغذائية",
+  "@addProductsToCompare": {
+    "description": "Add products to compare instruction"
+  },
+  "searchProducts": "ابحث عن منتجات",
+  "@searchProducts": {
+    "description": "Search products button"
+  },
+  "clearAll": "مسح الكل",
+  "@clearAll": {
+    "description": "Clear all button"
+  },
+  "addMoreProductsToCompare": "أضف المزيد من المنتجات للمقارنة",
+  "@addMoreProductsToCompare": {
+    "description": "Add more products to compare instruction"
+  },
+  "nutritionalValuesPer100g": "القيم الغذائية (لكل 100 جم)",
+  "@nutritionalValuesPer100g": {
+    "description": "Nutritional values per 100g title"
+  },
+  "dietaryInformation": "المعلومات الغذائية",
+  "@dietaryInformation": {
+    "description": "Dietary information section title"
+  },
+  "noFavoritesYet": "لا توجد مفضلات بعد",
+  "@noFavoritesYet": {
+    "description": "No favorites empty state title"
+  },
+  "addProductsToFavorites": "أضف منتجات للمفضلة لتظهر هنا",
+  "@addProductsToFavorites": {
+    "description": "Add products to favorites instruction"
+  },
+  "clearAllFilters": "مسح جميع الفلاتر",
+  "@clearAllFilters": {
+    "description": "Clear all filters tooltip"
+  },
+  "showFilters": "عرض الفلاتر",
+  "@showFilters": {
+    "description": "Show filters button"
+  },
+  "hideFilters": "إخفاء الفلاتر",
+  "@hideFilters": {
+    "description": "Hide filters button"
+  },
+  "novaGroup": "مجموعة NOVA",
+  "@novaGroup": {
+    "description": "NOVA group filter label"
+  },
+  "group": "المجموعة",
+  "@group": {
+    "description": "Group label"
+  },
+  "dietaryPreferences": "التفضيلات الغذائية",
+  "@dietaryPreferences": {
+    "description": "Dietary preferences section title"
+  },
+  "excludeAllergens": "استبعاد مسببات الحساسية",
+  "@excludeAllergens": {
+    "description": "Exclude allergens section title"
+  },
+  "milk": "الحليب",
+  "@milk": {
+    "description": "Milk allergen"
+  },
+  "eggs": "البيض",
+  "@eggs": {
+    "description": "Eggs allergen"
+  },
+  "peanuts": "الفول السوداني",
+  "@peanuts": {
+    "description": "Peanuts allergen"
+  },
+  "treeNuts": "المكسرات",
+  "@treeNuts": {
+    "description": "Tree nuts allergen"
+  },
+  "soy": "الصويا",
+  "@soy": {
+    "description": "Soy allergen"
+  },
+  "wheat": "القمح",
+  "@wheat": {
+    "description": "Wheat allergen"
+  },
+  "fish": "السمك",
+  "@fish": {
+    "description": "Fish allergen"
+  },
+  "shellfish": "المحار",
+  "@shellfish": {
+    "description": "Shellfish allergen"
+  },
+  "noResults": "لا توجد نتائج",
+  "@noResults": {
+    "description": "No results empty state title"
+  },
+  "noResultsFound": "لم يتم العثور على نتائج.\nجرب تعديل البحث أو الفلاتر.",
+  "@noResultsFound": {
+    "description": "No results found message"
+  },
+  "productNotInDatabase": "هذا المنتج غير موجود في قاعدة البيانات. هل تريد إضافته لمساعدة المجتمع؟",
+  "@productNotInDatabase": {
+    "description": "Product not in database message"
+  },
+  "errorScanningBarcode": "خطأ في فحص الباركود",
+  "@errorScanningBarcode": {
+    "description": "Error scanning barcode message"
+  },
+  "contributionMessage": "مساهمتك هتساعد ملايين المستخدمين حول العالم في اتخاذ خيارات غذائية أفضل!",
+  "@contributionMessage": {
+    "description": "Contribution help message"
+  },
+  "openFoodFactsDisclaimer": "* حقول مطلوبة\n\nبإرسالك، توافق على المساهمة بهذه المعلومات في قاعدة بيانات Open Food Facts تحت رخصة قاعدة البيانات المفتوحة.",
+  "@openFoodFactsDisclaimer": {
+    "description": "Open Food Facts disclaimer"
   }
 }

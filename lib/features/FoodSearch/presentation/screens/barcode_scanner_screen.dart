@@ -76,7 +76,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
                     const CircularProgressIndicator(color: Colors.white)
                   else
                     Text(
-                      'Position the barcode within the frame',
+                      context.l10n.positionTheBarcodeWithinTheFrame,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                           ),
@@ -88,8 +88,8 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
                       _showManualInputDialog();
                     },
                     icon: const Icon(Icons.keyboard, color: Colors.white),
-                    label: const Text(
-                      'Enter manually',
+                    label: Text(
+                      context.l10n.enterManually,
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -197,8 +197,8 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            hintText: 'Enter barcode number',
+          decoration: InputDecoration(
+            hintText: context.l10n.enterBarcode,
             border: OutlineInputBorder(),
           ),
         ),

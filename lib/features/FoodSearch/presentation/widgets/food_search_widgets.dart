@@ -347,6 +347,7 @@ class ProductImageWidget extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
+      alignment: Alignment.center,
       placeholder: (context, url) => Container(
         width: width,
         height: height,

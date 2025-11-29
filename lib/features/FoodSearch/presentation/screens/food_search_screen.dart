@@ -23,14 +23,14 @@ class FoodSearchScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            tooltip: 'advancedSearchTooltip'.tr(context),
+            tooltip: context.l10n.advancedSearchTooltip,
             onPressed: () {
               context.pushNamed(AppRouters.advancedSearch);
             },
           ),
           IconButton(
             icon: const Icon(Icons.history),
-            tooltip: 'searchHistoryTooltip'.tr(context),
+            tooltip: context.l10n.searchHistoryTooltip,
             onPressed: () {
               context.pushNamed(AppRouters.searchHistory);
             },
@@ -67,7 +67,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.add_box,
-                                      label: 'addProductButton'.tr(context),
+                                      label: context.l10n.addProductButton,
                                       color: Colors.green,
                                       onTap: () => context
                                           .pushNamed(AppRouters.productForm),
@@ -77,7 +77,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.favorite,
-                                      label: 'favoritesButton'.tr(context),
+                                      label: context.l10n.favoritesButton,
                                       color: Colors.red,
                                       onTap: () => context
                                           .pushNamed(AppRouters.favorites),
@@ -87,8 +87,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.filter_list,
-                                      label:
-                                          'advancedSearchTooltip'.tr(context),
+                                      label: context.l10n.advancedSearchTooltip,
                                       color: Colors.orange,
                                       onTap: () => context
                                           .pushNamed(AppRouters.advancedSearch),
@@ -98,7 +97,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.compare_arrows,
-                                      label: 'compareButton'.tr(context),
+                                      label: context.l10n.compareButton,
                                       color: Colors.blue,
                                       onTap: () => context.pushNamed(
                                           AppRouters.productComparison),
@@ -115,7 +114,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                     Expanded(
                                       child: _QuickActionButton(
                                         icon: Icons.add_box,
-                                        label: 'Add Product',
+                                        label: context.l10n.addProductButton,
                                         color: Colors.green,
                                         onTap: () => context
                                             .pushNamed(AppRouters.productForm),
@@ -125,7 +124,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                     Expanded(
                                       child: _QuickActionButton(
                                         icon: Icons.favorite,
-                                        label: 'Favorites',
+                                        label: context.l10n.favoritesButton,
                                         color: Colors.red,
                                         onTap: () => context
                                             .pushNamed(AppRouters.favorites),
@@ -139,7 +138,8 @@ class FoodSearchScreen extends ConsumerWidget {
                                     Expanded(
                                       child: _QuickActionButton(
                                         icon: Icons.filter_list,
-                                        label: 'Advanced Search',
+                                        label:
+                                            context.l10n.advancedSearchTooltip,
                                         color: Colors.orange,
                                         onTap: () => context.pushNamed(
                                             AppRouters.advancedSearch),
@@ -149,7 +149,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                     Expanded(
                                       child: _QuickActionButton(
                                         icon: Icons.compare_arrows,
-                                        label: 'Compare',
+                                        label: context.l10n.compareButton,
                                         color: Colors.blue,
                                         onTap: () => context.pushNamed(
                                             AppRouters.productComparison),
@@ -170,7 +170,7 @@ class FoodSearchScreen extends ConsumerWidget {
                               context.pushNamed(AppRouters.nutritionGuide);
                             },
                             icon: const Icon(Icons.school_outlined),
-                            label: Text('understandingFoodScores'.tr(context)),
+                            label: Text(context.l10n.understandingFoodScores),
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(
                                   vertical: context.mediumSpacing),
@@ -187,7 +187,7 @@ class FoodSearchScreen extends ConsumerWidget {
                         // Recently scanned section
                         if (recentlyScanned.isNotEmpty) ...[
                           Text(
-                            'recentlyScanned'.tr(context),
+                            context.l10n.recentlyScanned,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           SizedBox(height: context.smallSpacing),
@@ -215,8 +215,8 @@ class FoodSearchScreen extends ConsumerWidget {
                         // Empty state
                         if (recentlyScanned.isEmpty)
                           EmptyStateWidget(
-                            title: 'noProductsYet'.tr(context),
-                            message: 'startByScanningBarcode'.tr(context),
+                            title: context.l10n.noProductsYet,
+                            message: context.l10n.startByScanningBarcode,
                             icon: Icons.qr_code_scanner,
                           ),
                       ],
@@ -233,7 +233,7 @@ class FoodSearchScreen extends ConsumerWidget {
           context.pushNamed(AppRouters.barcodeScanner);
         },
         icon: const Icon(Icons.qr_code_scanner),
-        label: Text('scan'.tr(context)),
+        label: Text(context.l10n.scan),
       ),
     );
   }
@@ -276,7 +276,10 @@ class _QuickActionButton extends StatelessWidget {
               SizedBox(height: context.smallSpacing),
               Text(
                 label,
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

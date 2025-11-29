@@ -1,3 +1,4 @@
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -38,7 +39,10 @@ class NutritionScoreBadge extends StatelessWidget {
       return SizedBox(width: size, height: size);
     }
 
-    final score = nutriScore! != 'UNKNOWN' ? nutriScore!.toUpperCase() : 'N/A';
+    TalkerService.warning('Rendering Nutri-Score Badge: $nutriScore');
+    final score = nutriScore! != 'UNKNOWN' && nutriScore! != 'NOT-APPLICABLE'
+        ? nutriScore!.toUpperCase()
+        : 'N/A';
     final color = getScoreColor(score);
 
     Widget badge = Container(
@@ -98,7 +102,9 @@ class NutritionScoreShield extends StatelessWidget {
       return SizedBox(width: width, height: height);
     }
 
-    final score = nutriScore! != 'UNKNOWN' ? nutriScore!.toUpperCase() : 'N/A';
+    final score = nutriScore! != 'UNKNOWN' && nutriScore! != 'NOT-APPLICABLE'
+        ? nutriScore!.toUpperCase()
+        : 'N/A';
     final color = getScoreColor(score);
 
     return Container(

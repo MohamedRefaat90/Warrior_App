@@ -42,8 +42,8 @@ class ProductCard extends ConsumerWidget {
                       imageUrl: product.imageFrontUrl ?? product.imageUrl,
                       width: double.infinity,
                       height: ResponsiveUtils.value(context,
-                          mobile: 120.0, tablet: 140.0, desktop: 160.0),
-                      fit: BoxFit.contain,
+                          mobile: 110.0, tablet: 130.0, desktop: 150.0),
+                      fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(

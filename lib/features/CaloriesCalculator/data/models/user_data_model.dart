@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:Warrior/core/extensions/translation_ext.dart';
-import 'package:Warrior/core/localization/arb/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Model representing user input data for calorie calculations

@@ -1,3 +1,4 @@
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/advanced_search_provider.dart';
@@ -18,9 +19,12 @@ class AdvancedSearchScreen extends ConsumerStatefulWidget {
       _AdvancedSearchScreenState();
 }
 
-class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
+class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   bool _showFilters = false;
+  late AnimationController _filterAnimationController;
+  late Animation<double> _filterAnimation;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
           if (searchState.hasActiveFilters)
             IconButton(
               icon: const Icon(Icons.clear_all),
-              tooltip: 'Clear all filters',
+              tooltip: context.l10n.clearAllFilters,
               onPressed: () {
                 searchNotifier.clearFilters();
                 _searchController.clear();
@@ -53,7 +57,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Search by name, brand, or category...',
+                    hintText: context.l10n.searchByNameBrandCategory,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
@@ -135,16 +139,12 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            _showFilters = !_showFilters;
-                          });
-                        },
+                        onPressed: _toggleFilters,
                         icon: Icon(_showFilters
                             ? Icons.filter_alt
                             : Icons.filter_alt_outlined),
                         label: Text(
-                            '${_showFilters ? 'Hide' : 'Show'} Filters ${searchState.hasActiveFilters ? '(${_getActiveFilterCount(searchState)})' : ''}'),
+                            '${_showFilters ? context.l10n.hideFilters : context.l10n.showFilters} ${searchState.hasActiveFilters ? '(${_getActiveFilterCount(searchState)})' : ''}'),
                       ),
                     ),
                     SizedBox(width: context.mediumSpacing),
@@ -170,10 +170,12 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
             ),
           ),
 
-          // Filters section
-          if (_showFilters)
-            Expanded(
-              flex: 0,
+          // Filters section with slide animation
+          SizeTransition(
+            sizeFactor: _filterAnimation,
+            axisAlignment: -1.0,
+            child: SizedBox(
+              height: context.screenHeight * 0.25,
               child: SingleChildScrollView(
                 padding:
                     EdgeInsets.symmetric(horizontal: context.mediumSpacing),
@@ -182,14 +184,19 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                   children: [
                     // Nutri-Score filter
                     _buildFilterSection(
-                      'Nutri-Score',
+                      context.l10n.nutriScore,
                       Wrap(
                         spacing: context.smallSpacing,
                         children: ['A', 'B', 'C', 'D', 'E'].map((score) {
                           final isSelected =
                               searchState.selectedNutriScore == score;
                           return FilterChip(
-                            label: Text(score),
+                            label: Text(
+                              score,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             selected: isSelected,
                             onSelected: (selected) {
                               searchNotifier
@@ -206,14 +213,14 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
 
                     // NOVA Group filter
                     _buildFilterSection(
-                      'NOVA Group',
+                      context.l10n.novaGroup,
                       Wrap(
                         spacing: context.smallSpacing,
                         children: [1, 2, 3, 4].map((group) {
                           final isSelected =
                               searchState.selectedNovaGroup == group;
                           return FilterChip(
-                            label: Text('Group $group'),
+                            label: Text('${context.l10n.group} $group'),
                             selected: isSelected,
                             onSelected: (selected) {
                               searchNotifier
@@ -227,7 +234,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
 
                     // Dietary preferences
                     _buildFilterSection(
-                      'Dietary Preferences',
+                      context.l10n.dietaryPreferences,
                       Column(
                         children: [
                           SwitchListTile(
@@ -241,7 +248,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                             onChanged: (_) => searchNotifier.toggleVegetarian(),
                           ),
                           SwitchListTile(
-                            title: const Text('Palm Oil Free'),
+                            title: Text(context.l10n.palmOilFree),
                             value: searchState.palmOilFree,
                             onChanged: (_) =>
                                 searchNotifier.togglePalmOilFree(),
@@ -253,26 +260,26 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
 
                     // Common allergens
                     _buildFilterSection(
-                      'Exclude Allergens',
+                      context.l10n.excludeAllergens,
                       Wrap(
                         spacing: context.smallSpacing,
-                        children: [
-                          'Milk',
-                          'Eggs',
-                          'Peanuts',
-                          'Tree Nuts',
-                          'Soy',
-                          'Wheat',
-                          'Fish',
-                          'Shellfish'
-                        ].map((allergen) {
-                          final isSelected = searchState.excludedAllergens
-                              .contains(allergen.toLowerCase());
+                        children: {
+                          'milk': context.l10n.milk,
+                          'eggs': context.l10n.eggs,
+                          'peanuts': context.l10n.peanuts,
+                          'tree nuts': context.l10n.treeNuts,
+                          'soy': context.l10n.soy,
+                          'wheat': context.l10n.wheat,
+                          'fish': context.l10n.fish,
+                          'shellfish': context.l10n.shellfish,
+                        }.entries.map((entry) {
+                          final isSelected =
+                              searchState.excludedAllergens.contains(entry.key);
                           return FilterChip(
-                            label: Text(allergen),
+                            label: Text(entry.value),
                             selected: isSelected,
-                            onSelected: (_) => searchNotifier
-                                .toggleAllergen(allergen.toLowerCase()),
+                            onSelected: (_) =>
+                                searchNotifier.toggleAllergen(entry.key),
                           );
                         }).toList(),
                       ),
@@ -282,6 +289,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
                 ),
               ),
             ),
+          ),
 
           const Divider(height: 1),
 
@@ -297,12 +305,22 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _filterAnimationController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _filterAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _filterAnimation = CurvedAnimation(
+      parent: _filterAnimationController,
+      curve: Curves.easeInOut,
+    );
+
     // Pre-fill search query if provided
     if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
       _searchController.text = widget.initialQuery!;
@@ -347,8 +365,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
 
     if (searchState.results.isEmpty) {
       return EmptyStateWidget(
-        title: 'No Results',
-        message: 'No results found.\nTry adjusting your search or filters.',
+        title: context.l10n.noResults,
+        message: context.l10n.noResultsFound,
         icon: Icons.search_off,
       );
     }
@@ -396,5 +414,16 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
       default:
         return Colors.grey;
     }
+  }
+
+  void _toggleFilters() {
+    setState(() {
+      _showFilters = !_showFilters;
+      if (_showFilters) {
+        _filterAnimationController.forward();
+      } else {
+        _filterAnimationController.reverse();
+      }
+    });
   }
 }

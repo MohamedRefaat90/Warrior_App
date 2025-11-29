@@ -1,3 +1,4 @@
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
@@ -39,8 +40,9 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(widget.product != null ? 'Edit Product' : 'Add New Product'),
+        title: Text(widget.product != null
+            ? context.l10n.editProduct
+            : context.l10n.addNewProduct),
       ),
       body: Form(
         key: _formKey,
@@ -63,7 +65,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Your contribution will help millions of users worldwide make better food choices!',
+                          context.l10n.contributionMessage,
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: Theme.of(context)
@@ -81,20 +83,20 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               // Barcode field
               TextFormField(
                 controller: _barcodeController,
-                decoration: const InputDecoration(
-                  labelText: 'Barcode *',
-                  hintText: 'Enter product barcode',
-                  prefixIcon: Icon(Icons.qr_code),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.l10n.barcodeRequired,
+                  hintText: context.l10n.enterProductBarcode,
+                  prefixIcon: const Icon(Icons.qr_code),
+                  border: const OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
                 enabled: widget.product == null && widget.barcode == null,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Barcode is required';
+                    return context.l10n.barcodeIsRequired;
                   }
                   if (value.trim().length < 8) {
-                    return 'Barcode must be at least 8 digits';
+                    return context.l10n.barcodeMinDigits;
                   }
                   return null;
                 },
@@ -104,16 +106,16 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               // Product name field
               TextFormField(
                 controller: _productNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Product Name *',
-                  hintText: 'Enter product name',
-                  prefixIcon: Icon(Icons.shopping_bag),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.l10n.productNameRequired,
+                  hintText: context.l10n.enterProductName,
+                  prefixIcon: const Icon(Icons.shopping_bag),
+                  border: const OutlineInputBorder(),
                 ),
                 textCapitalization: TextCapitalization.words,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Product name is required';
+                    return context.l10n.productNameIsRequired;
                   }
                   return null;
                 },
@@ -123,11 +125,11 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               // Brands field
               TextFormField(
                 controller: _brandsController,
-                decoration: const InputDecoration(
-                  labelText: 'Brand',
-                  hintText: 'Enter brand name',
-                  prefixIcon: Icon(Icons.business),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.l10n.brand,
+                  hintText: context.l10n.enterBrandName,
+                  prefixIcon: const Icon(Icons.business),
+                  border: const OutlineInputBorder(),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -136,11 +138,11 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               // Quantity field
               TextFormField(
                 controller: _quantityController,
-                decoration: const InputDecoration(
-                  labelText: 'Quantity',
-                  hintText: 'e.g., 500g, 1L, 250ml',
-                  prefixIcon: Icon(Icons.scale),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.l10n.quantity,
+                  hintText: context.l10n.quantityExample,
+                  prefixIcon: const Icon(Icons.scale),
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
@@ -148,11 +150,11 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               // Serving size field
               TextFormField(
                 controller: _servingSizeController,
-                decoration: const InputDecoration(
-                  labelText: 'Serving Size',
-                  hintText: 'e.g., 30g, 100ml',
-                  prefixIcon: Icon(Icons.restaurant),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.l10n.servingSize,
+                  hintText: context.l10n.servingSizeExample,
+                  prefixIcon: const Icon(Icons.restaurant),
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
@@ -160,11 +162,11 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               // Ingredients field
               TextFormField(
                 controller: _ingredientsController,
-                decoration: const InputDecoration(
-                  labelText: 'Ingredients',
-                  hintText: 'List all ingredients separated by commas',
-                  prefixIcon: Icon(Icons.list),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.l10n.ingredients,
+                  hintText: context.l10n.ingredientsHint,
+                  prefixIcon: const Icon(Icons.list),
+                  border: const OutlineInputBorder(),
                 ),
                 maxLines: 4,
                 textCapitalization: TextCapitalization.sentences,
@@ -174,11 +176,11 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               // Countries field
               TextFormField(
                 controller: _countriesController,
-                decoration: const InputDecoration(
-                  labelText: 'Countries',
-                  hintText: 'Where is this product sold?',
-                  prefixIcon: Icon(Icons.public),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.l10n.countries,
+                  hintText: context.l10n.countriesHint,
+                  prefixIcon: const Icon(Icons.public),
+                  border: const OutlineInputBorder(),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -192,13 +194,13 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Product Image',
+                        context.l10n.productImage,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       if (_selectedImagePath != null) ...[
                         Text(
-                          'Image selected: ${_selectedImagePath!.split('/').last}',
+                          '${context.l10n.imageSelected}: ${_selectedImagePath!.split('/').last}',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         SizedBox(height: context.smallSpacing),
@@ -207,12 +209,12 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                         onPressed: _pickImage,
                         icon: const Icon(Icons.camera_alt),
                         label: Text(_selectedImagePath != null
-                            ? 'Change Image'
-                            : 'Take Photo'),
+                            ? context.l10n.changeImage
+                            : context.l10n.takePhoto),
                       ),
                       SizedBox(height: context.smallSpacing),
                       Text(
-                        'Tip: Take a clear photo of the product front, ingredients list, and nutrition facts.',
+                        context.l10n.imageTip,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
@@ -241,16 +243,20 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                       )
                     : Text(
                         widget.product != null
-                            ? 'Update Product'
-                            : 'Add Product',
-                        style: Theme.of(context).textTheme.titleMedium,
+                            ? context.l10n.updateProduct
+                            : context.l10n.addProduct,
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
               ),
               SizedBox(height: context.mediumSpacing),
 
               // Disclaimer
               Text(
-                '* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.',
+                context.l10n.openFoodFactsDisclaimer,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -359,8 +365,8 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       if (success) {
         Flushbar(
           message: widget.product != null
-              ? 'Product updated successfully!'
-              : 'Product added successfully!',
+              ? context.l10n.productUpdatedSuccessfully
+              : context.l10n.productAddedSuccessfully,
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.green,
           icon: const Icon(Icons.check_circle, color: Colors.white),
@@ -373,8 +379,9 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
         }
       } else {
         Flushbar(
-          message:
-              'Failed to ${widget.product != null ? 'update' : 'add'} product. Please try again.',
+          message: widget.product != null
+              ? context.l10n.failedToUpdateProduct
+              : context.l10n.failedToAddProduct,
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.red,
           icon: const Icon(Icons.error, color: Colors.white),

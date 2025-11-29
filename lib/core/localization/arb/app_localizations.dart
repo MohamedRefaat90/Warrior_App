@@ -733,6 +733,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Balance is key - variety in your diet matters'**
   String get tip5;
+
+  /// Advanced search tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Search'**
+  String get advancedSearchTooltip;
+
+  /// Search history tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Search History'**
+  String get searchHistoryTooltip;
+
+  /// Add product button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add Product'**
+  String get addProductButton;
+
+  /// Favorites button label
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favoritesButton;
+
+  /// Compare button label
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get compareButton;
+
+  /// Recently scanned section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Scanned'**
+  String get recentlyScanned;
+
+  /// No products empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'No Products Yet'**
+  String get noProductsYet;
+
+  /// No products empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'Start by scanning a barcode or searching for products'**
+  String get startByScanningBarcode;
 }
 
 class _AppLocalizationsDelegate

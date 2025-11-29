@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class SignupSuccess extends StatelessWidget {
                 ),
                 SizedBox(height: context.mediumSpacing),
                 Text(
-                  'welcome warrior you can join the battle now 💪'.capitalizeWord(),
+                  'welcomeWarrior'.tr(context),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class SignupSuccess extends StatelessWidget {
                 ),
                 SizedBox(height: context.mediumSpacing),
                 CustomBTN(
-                    widget: const Text("Login"),
+                    widget: Text('login'.tr(context)),
                     color: AppColors.primaryColor,
                     padding: 15,
                     width: ResponsiveUtils.value<double>(

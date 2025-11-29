@@ -1,5 +1,5 @@
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -59,8 +59,7 @@ class FinishBTN extends ConsumerWidget {
                       showSuccessFlushbar(
                         context,
                         position: FlushbarPosition.TOP,
-                        'Workout ($workoutName) added successfully!'
-                            .capitalizeWord(),
+                        context.l10n.workoutAddedSuccessfully(workoutName),
                       );
 
                       // Small delay to ensure message is visible before navigation
@@ -93,8 +92,8 @@ class FinishBTN extends ConsumerWidget {
                     )
                   : Text(
                       appendToExistingWorkoutSet!
-                          ? "Update Your Workout Set"
-                          : "Finish Your Workout Set",
+                          ? context.l10n.updateYourWorkoutSet
+                          : context.l10n.finishYourWorkoutSet,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,

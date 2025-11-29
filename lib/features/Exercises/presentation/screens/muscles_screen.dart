@@ -1,11 +1,13 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/providers/cache_provider.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/core/widgets/offline_view.dart';
@@ -98,6 +100,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final appSettings = ref.watch(appSettingsProvider.notifier);
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && widget.isComingFromWorkoutScreen == true) {
@@ -108,10 +111,10 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text(
-            'Muscles',
+            context.l10n.muscles,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontFamily: "Kings",
+              fontFamily: appSettings.fontFamily(),
               fontSize: 32,
               color: isDark ? Colors.white : Colors.black,
               letterSpacing: 1.2,

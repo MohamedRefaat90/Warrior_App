@@ -423,6 +423,37 @@
   "tip5": "التوازن هو المفتاح - التنوع في أكلك مهم",
   "@tip5": {
     "description": "Tip 5"
+  },
+  "advancedSearchTooltip": "??? ?????",
+  "@advancedSearchTooltip": {
+    "description": "Advanced search tooltip"
+  },
+  "searchHistoryTooltip": "??? ?????",
+  "@searchHistoryTooltip": {
+    "description": "Search history tooltip"
+  },
+  "addProductButton": "??? ????",
+  "@addProductButton": {
+    "description": "Add product button label"
+  },
+  "favoritesButton": "???????",
+  "@favoritesButton": {
+    "description": "Favorites button label"
+  },
+  "compareButton": "????",
+  "@compareButton": {
+    "description": "Compare button label"
+  },
+  "recentlyScanned": "?? ???? ??????",
+  "@recentlyScanned": {
+    "description": "Recently scanned section title"
+  },
+  "noProductsYet": "???? ?????? ???",
+  "@noProductsYet": {
+    "description": "No products empty state title"
+  },
+  "startByScanningBarcode": "???? ???? ???????? ?? ????? ?? ??????",
+  "@startByScanningBarcode": {
+    "description": "No products empty state message"
   }
 }
-

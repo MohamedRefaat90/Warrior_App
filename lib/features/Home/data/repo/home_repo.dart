@@ -16,27 +16,27 @@ class HomeRepo {
   final Dio _dio;
   List<CategoryItem> categoryItems = [
     CategoryItem(
-      title: "Muscles",
+      title: "muscles",
       image: AppAssets.muscles,
       navigateTo: AppRouters.muscles,
     ),
     CategoryItem(
-      title: "My Workouts",
+      title: "myWorkouts",
       image: AppAssets.workout,
       navigateTo: AppRouters.workouts,
     ),
     CategoryItem(
-      title: "Predefined Workouts",
+      title: "predefinedWorkouts",
       image: AppAssets.dumbbell,
       navigateTo: AppRouters.predefinedWorkouts,
     ),
     CategoryItem(
-      title: "Calories Calculator",
+      title: "caloriesCalculator",
       image: AppAssets.calculator,
       navigateTo: AppRouters.caloriesCalculator,
     ),
     CategoryItem(
-      title: "Food Search",
+      title: "foodSearch",
       image: AppAssets.foodSearch,
       navigateTo: AppRouters.foodSearch,
     ),

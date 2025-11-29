@@ -2,6 +2,7 @@
 import 'package:Warrior/core/functions/checkAndShowReviewDialog.dart';
 import 'package:Warrior/core/functions/checkForForceUpdate.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/Home/presentation/provider/home_provider.dart';
@@ -20,11 +21,16 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final String lang = ref.watch(appSettingsProvider).locale.languageCode;
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
-            padding: const EdgeInsets.only(left: 16),
+            padding: lang == 'ar'
+                ? EdgeInsets.only(
+                    right: ResponsiveUtils.horizontalPadding(context))
+                : EdgeInsets.only(
+                    left: ResponsiveUtils.horizontalPadding(context)),
             icon: Stack(
               alignment: Alignment.center,
               children: [
@@ -86,16 +92,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return SizedBox(
-                        width: constraints.maxWidth * 0.5,
-                        height: 120,
-                        child: CategoryCard(
-                            category:
-                                ref.read(homeProvider).categoryItems.last),
-                      );
-                    },
+                  SizedBox(
+                    width: context.screenWidth * 0.44,
+                    height: context.screenHeight * 0.167,
+                    child: CategoryCard(
+                        category: ref.read(homeProvider).categoryItems.last),
                   ),
                   const Spacer(),
                   const BannerAdWidget(),

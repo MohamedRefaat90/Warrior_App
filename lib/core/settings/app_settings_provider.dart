@@ -196,4 +196,8 @@ class AppSettingsNotifier extends Notifier<AppSettings> {
       TalkerService.error('Failed to persist theme mode', 'SETTINGS', e);
     }
   }
+
+  String fontFamily() {
+    return state.locale.languageCode == 'ar' ? 'Cairo' : 'Poppins';
+  }
 }

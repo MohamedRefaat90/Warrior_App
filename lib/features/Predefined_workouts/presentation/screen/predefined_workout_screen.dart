@@ -1,5 +1,6 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/core/widgets/offline_view.dart';
@@ -22,15 +23,15 @@ class _PredefinedWorkoutScreenState
   Widget build(BuildContext context) {
     // Watch the grouped workouts provider instead of flat list
     final groupedWorkoutsState = ref.watch(groupedWorkoutsProvider);
-
+    final appSettings = ref.watch(appSettingsProvider.notifier);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Predefined Workouts',
+          context.l10n.predefinedWorkouts,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontFamily: 'kings',
+                fontFamily: appSettings.fontFamily(),
                 fontWeight: FontWeight.bold,
               ),
         ),
@@ -40,8 +41,8 @@ class _PredefinedWorkoutScreenState
           // Check if the list is empty
           if (workoutGroups.isEmpty) {
             return OfflineView(
-              title: 'No predefined workouts available offline',
-              subtitle: 'Please go online to download it',
+              title: context.l10n.noPredefinedWorkoutsOffline,
+              subtitle: context.l10n.pleaseGoOnlineToDownload,
             );
           }
           // Use the new grouped view with domain entities
@@ -68,7 +69,9 @@ class _PredefinedWorkoutScreenState
                   ),
                   SizedBox(height: context.mediumSpacing),
                   Text(
-                    isOffline ? 'You are offline' : 'Something went wrong',
+                    isOffline
+                        ? context.l10n.youAreOffline
+                        : context.l10n.somethingWentWrong,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -76,8 +79,8 @@ class _PredefinedWorkoutScreenState
                   SizedBox(height: context.smallSpacing),
                   Text(
                     isOffline
-                        ? 'No cached workouts available. Connect to the internet to download workouts.'
-                        : 'Failed to load predefined workouts',
+                        ? context.l10n.noCachedWorkoutsAvailable
+                        : context.l10n.failedToLoadPredefinedWorkouts,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey,

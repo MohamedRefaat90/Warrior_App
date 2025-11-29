@@ -1,6 +1,8 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -38,7 +40,13 @@ class AddWorkoutBtn extends ConsumerWidget {
               child: const Loader(),
             )
           : CustomBTN(
-              widget: Text('Add to my workouts'.capitalizeWord()),
+              widget: Text(
+                context.l10n.addToMyWorkouts.capitalizeWord(),
+                style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontFamily:
+                        ref.watch(appSettingsProvider.notifier).fontFamily()),
+              ),
               width: double.infinity,
               color: AppColors.primaryColor,
               press: () async {

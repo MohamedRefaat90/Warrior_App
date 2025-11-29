@@ -72,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         SizedBox(height: context.mediumSpacing),
                         Text(
-                          onboardingItems[index].title,
+                          onboardingItems[index].titleKey.tr(context),
                           style:
                               Theme.of(context).textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -81,7 +81,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         SizedBox(height: context.smallSpacing),
                         Text(
-                          onboardingItems[index].description,
+                          onboardingItems[index].descriptionKey.tr(context),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium,
                         )

@@ -1,3 +1,4 @@
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
@@ -10,10 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class WorkoutGroupsView extends ConsumerStatefulWidget {
   final List<WorkoutGroup> workoutGroups;
 
-  const WorkoutGroupsView({
-    super.key,
-    required this.workoutGroups,
-  });
+  const WorkoutGroupsView({super.key, required this.workoutGroups});
 
   @override
   ConsumerState<WorkoutGroupsView> createState() => _WorkoutGroupsViewState();
@@ -28,7 +26,7 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
     if (widget.workoutGroups.isEmpty) {
       return Center(
         child: Text(
-          'No workout groups available',
+          context.l10n.noWorkoutGroupsAvailable,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       );
@@ -55,7 +53,7 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
 
         return WorkoutGroupTile(
           title: group.groupName,
-          subtitle: '${group.workoutCount} workouts',
+          subtitle: context.l10n.workoutsCount(group.workoutCount),
           icon: _getIconForGroup(index),
           iconColor: _getColorForGroup(index),
           workouts: group.workouts,

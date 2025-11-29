@@ -20,8 +20,12 @@ class MuscleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3,
+      elevation: 20,
       child: ListTile(
+        tileColor: const Color.fromARGB(30, 96, 125, 139),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         onTap: () => context.pushNamed(AppRouters.exercises, extra: {
           'id': muscle.id,
           'name': muscle.name,

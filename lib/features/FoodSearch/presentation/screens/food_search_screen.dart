@@ -23,14 +23,14 @@ class FoodSearchScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            tooltip: 'Advanced Search',
+            tooltip: 'advancedSearchTooltip'.tr(context),
             onPressed: () {
               context.pushNamed(AppRouters.advancedSearch);
             },
           ),
           IconButton(
             icon: const Icon(Icons.history),
-            tooltip: 'Search History',
+            tooltip: 'searchHistoryTooltip'.tr(context),
             onPressed: () {
               context.pushNamed(AppRouters.searchHistory);
             },
@@ -67,7 +67,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.add_box,
-                                      label: 'Add Product',
+                                      label: 'addProductButton'.tr(context),
                                       color: Colors.green,
                                       onTap: () => context
                                           .pushNamed(AppRouters.productForm),
@@ -77,7 +77,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.favorite,
-                                      label: 'Favorites',
+                                      label: 'favoritesButton'.tr(context),
                                       color: Colors.red,
                                       onTap: () => context
                                           .pushNamed(AppRouters.favorites),
@@ -87,7 +87,8 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.filter_list,
-                                      label: 'Advanced Search',
+                                      label:
+                                          'advancedSearchTooltip'.tr(context),
                                       color: Colors.orange,
                                       onTap: () => context
                                           .pushNamed(AppRouters.advancedSearch),
@@ -97,7 +98,7 @@ class FoodSearchScreen extends ConsumerWidget {
                                   Expanded(
                                     child: _QuickActionButton(
                                       icon: Icons.compare_arrows,
-                                      label: 'Compare',
+                                      label: 'compareButton'.tr(context),
                                       color: Colors.blue,
                                       onTap: () => context.pushNamed(
                                           AppRouters.productComparison),
@@ -186,7 +187,7 @@ class FoodSearchScreen extends ConsumerWidget {
                         // Recently scanned section
                         if (recentlyScanned.isNotEmpty) ...[
                           Text(
-                            'Recently Scanned',
+                            'recentlyScanned'.tr(context),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           SizedBox(height: context.smallSpacing),
@@ -213,10 +214,9 @@ class FoodSearchScreen extends ConsumerWidget {
                         ],
                         // Empty state
                         if (recentlyScanned.isEmpty)
-                          const EmptyStateWidget(
-                            title: 'No Products Yet',
-                            message:
-                                'Start by scanning a barcode or searching for products',
+                          EmptyStateWidget(
+                            title: 'noProductsYet'.tr(context),
+                            message: 'startByScanningBarcode'.tr(context),
                             icon: Icons.qr_code_scanner,
                           ),
                       ],

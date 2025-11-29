@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -39,43 +40,14 @@ class _CaloriesCalculatorScreenState
   String _selectedGoal = 'maintain';
   double _selectedWeeklyGoal = 0.5;
 
-  // Activity level options
-  final List<Map<String, String>> _activityLevels = [
-    {
-      'value': 'sedentary',
-      'label': 'Sedentary',
-      'desc': 'Little or no exercise'
-    },
-    {
-      'value': 'lightly_active',
-      'label': 'Lightly Active',
-      'desc': 'Light exercise 1-3 days/week'
-    },
-    {
-      'value': 'moderately_active',
-      'label': 'Moderately Active',
-      'desc': 'Moderate exercise 3-5 days/week'
-    },
-    {
-      'value': 'very_active',
-      'label': 'Very Active',
-      'desc': 'Hard exercise 6-7 days/week'
-    },
-    {
-      'value': 'extra_active',
-      'label': 'Extra Active',
-      'desc': 'Very hard exercise & physical job'
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(caloriesCalculatorProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Calories Calculator',
+        title: Text(
+          'caloriesCalculator'.tr(context),
           style: TextStyle(fontFamily: 'kings', fontWeight: FontWeight.w900),
         ),
         centerTitle: true,
@@ -84,7 +56,7 @@ class _CaloriesCalculatorScreenState
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _handleReset,
-              tooltip: 'Reset Calculator',
+              tooltip: 'resetCalculator'.tr(context),
             ),
         ],
       ),
@@ -105,39 +77,39 @@ class _CaloriesCalculatorScreenState
                       SizedBox(height: context.largeSpacing),
 
                       // Basic Info Section
-                      const SectionTitle(title: 'Basic Information'),
+                      SectionTitle(title: 'basicInformation'.tr(context)),
                       SizedBox(height: context.mediumSpacing),
                       InputCard(
-                        label: 'Weight',
-                        hint: 'Enter weight',
-                        suffix: 'kg',
+                        label: 'weight'.tr(context),
+                        hint: 'enterWeight'.tr(context),
+                        suffix: 'kg'.tr(context),
                         controller: _weightController,
                       ),
                       SizedBox(height: context.mediumSpacing),
                       InputCard(
-                        label: 'Height',
-                        hint: 'Enter height',
-                        suffix: 'cm',
+                        label: 'height'.tr(context),
+                        hint: 'enterHeight'.tr(context),
+                        suffix: 'cm'.tr(context),
                         controller: _heightController,
                       ),
                       SizedBox(height: context.mediumSpacing),
                       InputCard(
-                        label: 'Age',
-                        hint: 'Enter age',
-                        suffix: 'years',
+                        label: 'age'.tr(context),
+                        hint: 'enterAge'.tr(context),
+                        suffix: 'years'.tr(context),
                         controller: _ageController,
                       ),
                       SizedBox(height: context.largeSpacing),
 
                       // Gender Selection
-                      const SectionTitle(title: 'Gender'),
+                      SectionTitle(title: 'gender'.tr(context)),
                       SizedBox(height: context.mediumSpacing),
                       Row(
                         children: [
                           Expanded(
                             child: GenderSelectionCard(
                               icon: Icons.male,
-                              label: 'Male',
+                              label: 'male'.tr(context),
                               isSelected: _selectedGender == 'male',
                               onTap: () =>
                                   setState(() => _selectedGender = 'male'),
@@ -147,7 +119,7 @@ class _CaloriesCalculatorScreenState
                           Expanded(
                             child: GenderSelectionCard(
                               icon: Icons.female,
-                              label: 'Female',
+                              label: 'female'.tr(context),
                               isSelected: _selectedGender == 'female',
                               onTap: () =>
                                   setState(() => _selectedGender = 'female'),
@@ -158,9 +130,9 @@ class _CaloriesCalculatorScreenState
                       SizedBox(height: context.largeSpacing),
 
                       // Activity Level
-                      const SectionTitle(title: 'Activity Level'),
+                      SectionTitle(title: 'activityLevel'.tr(context)),
                       SizedBox(height: context.mediumSpacing),
-                      ..._activityLevels.map((level) {
+                      ..._getActivityLevels(context).map((level) {
                         return Padding(
                           padding:
                               EdgeInsets.only(bottom: context.smallSpacing),
@@ -180,12 +152,12 @@ class _CaloriesCalculatorScreenState
                       SizedBox(height: context.largeSpacing),
 
                       // Goal Selection
-                      const SectionTitle(title: 'Your Goal'),
+                      SectionTitle(title: 'yourGoal'.tr(context)),
                       SizedBox(height: context.mediumSpacing),
                       GoalCard(
                         icon: Icons.trending_down,
-                        title: 'Weight Loss',
-                        subtitle: 'Lose weight gradually',
+                        title: 'weightLoss'.tr(context),
+                        subtitle: 'loseWeightGradually'.tr(context),
                         value: 'weight_loss',
                         isSelected: _selectedGoal == 'weight_loss',
                         color: Colors.orange,
@@ -195,8 +167,8 @@ class _CaloriesCalculatorScreenState
                       SizedBox(height: context.smallSpacing),
                       GoalCard(
                         icon: Icons.trending_flat,
-                        title: 'Maintain Weight',
-                        subtitle: 'Keep current weight',
+                        title: 'maintainWeight'.tr(context),
+                        subtitle: 'keepCurrentWeight'.tr(context),
                         value: 'maintain',
                         isSelected: _selectedGoal == 'maintain',
                         color: Colors.blue,
@@ -205,8 +177,8 @@ class _CaloriesCalculatorScreenState
                       SizedBox(height: context.smallSpacing),
                       GoalCard(
                         icon: Icons.trending_up,
-                        title: 'Muscle Gain',
-                        subtitle: 'Build muscle mass',
+                        title: 'muscleGain'.tr(context),
+                        subtitle: 'buildMuscleMass'.tr(context),
                         value: 'muscle_gain',
                         isSelected: _selectedGoal == 'muscle_gain',
                         color: Colors.green,
@@ -217,13 +189,14 @@ class _CaloriesCalculatorScreenState
 
                       // Weekly Goal (only if not maintain)
                       if (_selectedGoal != 'maintain') ...[
-                        const SectionTitle(title: 'Weekly Goal'),
+                        SectionTitle(title: 'weeklyGoal'.tr(context)),
                         SizedBox(height: context.mediumSpacing),
                         WeeklyGoalItem(
                           goal: 0.25,
                           isSelected: _selectedWeeklyGoal == 0.25,
-                          action:
-                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                          action: _selectedGoal == 'weight_loss'
+                              ? 'lose'.tr(context)
+                              : 'gain'.tr(context),
                           onTap: () =>
                               setState(() => _selectedWeeklyGoal = 0.25),
                         ),
@@ -231,8 +204,9 @@ class _CaloriesCalculatorScreenState
                         WeeklyGoalItem(
                           goal: 0.5,
                           isSelected: _selectedWeeklyGoal == 0.5,
-                          action:
-                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                          action: _selectedGoal == 'weight_loss'
+                              ? 'lose'.tr(context)
+                              : 'gain'.tr(context),
                           onTap: () =>
                               setState(() => _selectedWeeklyGoal = 0.5),
                         ),
@@ -240,8 +214,9 @@ class _CaloriesCalculatorScreenState
                         WeeklyGoalItem(
                           goal: 0.75,
                           isSelected: _selectedWeeklyGoal == 0.75,
-                          action:
-                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                          action: _selectedGoal == 'weight_loss'
+                              ? 'lose'.tr(context)
+                              : 'gain'.tr(context),
                           onTap: () =>
                               setState(() => _selectedWeeklyGoal = 0.75),
                         ),
@@ -249,8 +224,9 @@ class _CaloriesCalculatorScreenState
                         WeeklyGoalItem(
                           goal: 1.0,
                           isSelected: _selectedWeeklyGoal == 1.0,
-                          action:
-                              _selectedGoal == 'weight_loss' ? 'Lose' : 'Gain',
+                          action: _selectedGoal == 'weight_loss'
+                              ? 'lose'.tr(context)
+                              : 'gain'.tr(context),
                           onTap: () =>
                               setState(() => _selectedWeeklyGoal = 1.0),
                         ),
@@ -265,7 +241,7 @@ class _CaloriesCalculatorScreenState
                           color: AppColors.primaryColor,
                           radius: context.responsiveBorderRadius,
                           widget: Text(
-                            'Calculate',
+                            'calculate'.tr(context),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
@@ -302,10 +278,39 @@ class _CaloriesCalculatorScreenState
     });
   }
 
+  // Activity level options
+  List<Map<String, String>> _getActivityLevels(BuildContext context) => [
+        {
+          'value': 'sedentary',
+          'label': 'sedentary'.tr(context),
+          'desc': 'sedentaryDesc'.tr(context),
+        },
+        {
+          'value': 'lightly_active',
+          'label': 'lightlyActive'.tr(context),
+          'desc': 'lightlyActiveDesc'.tr(context),
+        },
+        {
+          'value': 'moderately_active',
+          'label': 'moderatelyActive'.tr(context),
+          'desc': 'moderatelyActiveDesc'.tr(context),
+        },
+        {
+          'value': 'very_active',
+          'label': 'veryActive'.tr(context),
+          'desc': 'veryActiveDesc'.tr(context),
+        },
+        {
+          'value': 'extra_active',
+          'label': 'extraActive'.tr(context),
+          'desc': 'extraActiveDesc'.tr(context),
+        },
+      ];
+
   void _handleCalculate() {
     // Validate weight
     final weightError =
-        UserDataModel.validateWeightInput(_weightController.text);
+        UserDataModel.validateWeightInput(_weightController.text, context);
     if (weightError != null) {
       showValidationErrorFlushbar(context, weightError);
       return;
@@ -313,14 +318,15 @@ class _CaloriesCalculatorScreenState
 
     // Validate height
     final heightError =
-        UserDataModel.validateHeightInput(_heightController.text);
+        UserDataModel.validateHeightInput(_heightController.text, context);
     if (heightError != null) {
       showValidationErrorFlushbar(context, heightError);
       return;
     }
 
     // Validate age
-    final ageError = UserDataModel.validateAgeInput(_ageController.text);
+    final ageError =
+        UserDataModel.validateAgeInput(_ageController.text, context);
     if (ageError != null) {
       showValidationErrorFlushbar(context, ageError);
       return;
@@ -339,10 +345,13 @@ class _CaloriesCalculatorScreenState
 
       ref.read(caloriesCalculatorProvider.notifier).calculate(userData);
       TalkerService.info('Navigating to results', 'CALORIES_CALCULATOR');
-      showSuccessFlushbar(context, 'Calculation completed successfully! 🎉');
+      showSuccessFlushbar(context, 'calculationSuccess'.tr(context));
       context.pushNamed(AppRouters.caloriesResults);
     } catch (e) {
-      showErrorFlushbar(context, 'Failed to calculate: ${e.toString()}');
+      showErrorFlushbar(
+        context,
+        '${'failedToCalculate'.tr(context)}: ${e.toString()}',
+      );
     }
   }
 

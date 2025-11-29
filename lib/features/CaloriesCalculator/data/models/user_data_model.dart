@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:Warrior/core/extensions/translation_ext.dart';
+import 'package:Warrior/core/localization/arb/app_localizations.dart';
+import 'package:flutter/material.dart';
+
 /// Model representing user input data for calorie calculations
 class UserDataModel {
   final double weight; // in kg
@@ -86,46 +90,46 @@ class UserDataModel {
   }
 
   /// Get age validation error message
-  static String? validateAgeInput(String? value) {
+  static String? validateAgeInput(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your age';
+      return context.l10n.pleaseEnterYourAge;
     }
     final age = int.tryParse(value);
     if (age == null) {
-      return 'Please enter a valid number';
+      return context.l10n.pleaseEnterValidNumber;
     }
     if (!isValidAge(age)) {
-      return 'Age must be between 13 and 120 years';
+      return context.l10n.ageMustBeBetween;
     }
     return null;
   }
 
   /// Get height validation error message
-  static String? validateHeightInput(String? value) {
+  static String? validateHeightInput(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your height';
+      return context.l10n.pleaseEnterYourHeight;
     }
     final height = double.tryParse(value);
     if (height == null) {
-      return 'Please enter a valid number';
+      return context.l10n.pleaseEnterValidNumber;
     }
     if (!isValidHeight(height)) {
-      return 'Height must be between 100 and 250 cm';
+      return context.l10n.heightMustBeBetween;
     }
     return null;
   }
 
   /// Get weight validation error message
-  static String? validateWeightInput(String? value) {
+  static String? validateWeightInput(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your weight';
+      return context.l10n.pleaseEnterYourWeight;
     }
     final weight = double.tryParse(value);
     if (weight == null) {
-      return 'Please enter a valid number';
+      return context.l10n.pleaseEnterValidNumber;
     }
     if (!isValidWeight(weight)) {
-      return 'Weight must be between 20 and 300 kg';
+      return context.l10n.weightMustBeBetween;
     }
     return null;
   }

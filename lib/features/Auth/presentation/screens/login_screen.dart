@@ -3,6 +3,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -30,9 +31,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ProviderStates = ref.watch(loginProvider);
+    final providerStates = ref.watch(loginProvider);
     final isDesktopOrTablet = context.isDesktop || context.isTablet;
-
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // For desktop/tablet, use a different layout approach
     if (isDesktopOrTablet) {
       return Scaffold(
@@ -58,7 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       constraints: BoxConstraints(
                         maxWidth: ResponsiveUtils.maxCardWidth + 100,
                       ),
-                      child: _buildLoginForm(ProviderStates),
+                      child: _buildLoginForm(providerStates, isDark),
                     ),
                   ),
                 ),
@@ -70,26 +71,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     // Mobile layout with bottom sheet
-    final bottomSheetHeight = context.screenHeight * 0.66;
+    final bottomSheetHeight = context.screenHeight * 0.60;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       bottomSheet: Container(
         height: bottomSheetHeight,
-        color: Colors.white,
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.horizontalPadding,
-              vertical: context.smallSpacing,
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: ResponsiveUtils.maxCardWidth + 100,
-              ),
-              child: _buildLoginForm(ProviderStates),
-            ),
+        color: isDark ? AppColors.darkBackground : Colors.white,
+        padding: EdgeInsets.symmetric(
+          horizontal: context.horizontalPadding,
+          vertical: context.smallSpacing,
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: ResponsiveUtils.maxCardWidth + 100,
           ),
+          child: _buildLoginForm(providerStates, isDark),
         ),
       ),
       body: SafeArea(
@@ -112,53 +109,55 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           context,
           current.errorMessage!
                   .contains("The connection errored: Failed host lookup:")
-              ? "Check Your Internet Connection"
+              ? 'checkInternetConnection'.tr(context)
               : current.errorMessage!,
         );
       }
     });
   }
 
-  Widget _buildLoginForm(dynamic providerStates) {
+  Widget _buildLoginForm(dynamic providerStates, bool isDark) {
     return Form(
       key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Login",
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontFamily: "Poppins")),
+          Text('login'.tr(context),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontFamily: "Poppins",
+                  color: isDark ? AppColors.white : AppColors.black)),
           SizedBox(height: context.smallSpacing),
           CustomTextField(
-              placeholderText: "Email",
+              placeholderText: 'email'.tr(context),
               isObscure: false,
               textEditingController: emailController,
               validator: (value) => emailValidator(value!.trim())),
           SizedBox(height: context.smallSpacing),
           CustomTextField(
-              placeholderText: "password",
+              placeholderText: 'password'.tr(context),
               textEditingController: passwordController,
               isPassword: true,
               isObscure: true,
               validator: (value) =>
-                  value!.isEmpty ? "Password is required" : null),
+                  value!.isEmpty ? 'passwordRequired'.tr(context) : null),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
                 onPressed: () => context.pushNamed(AppRouters.forgetPassword),
                 style: ButtonStyle(
                     padding: WidgetStateProperty.all(const EdgeInsets.all(5))),
-                child: const Text(
-                  "Forgot Password?",
-                  style: TextStyle(color: AppColors.black),
+                child: Text(
+                  'forgotPassword'.tr(context),
+                  style: TextStyle(
+                      color: isDark ? AppColors.white : AppColors.black,
+                      fontWeight: FontWeight.bold),
                 )),
           ),
           CustomBTN(
               widget: providerStates.isLoading
                   ? const BtnLoader()
-                  : const Text("Login"),
+                  : Text('login'.tr(context),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
               color: AppColors.primaryColor,
               padding:
                   ResponsiveUtils.value(context, mobile: 15.0, desktop: 18.0),

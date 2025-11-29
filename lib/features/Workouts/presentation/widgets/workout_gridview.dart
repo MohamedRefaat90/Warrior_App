@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
@@ -56,45 +57,38 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                     Positioned(
                         width: ResponsiveUtils.value<double>(
                           context,
-                          mobile: 105,
+                          mobile: context.screenWidth * 0.26,
                           tablet: 120,
                           desktop: 130,
                         ),
                         height: ResponsiveUtils.value<double>(
                           context,
-                          mobile: 22,
+                          mobile: context.screenHeight * 0.03,
                           tablet: 26,
                           desktop: 28,
                         ),
                         bottom: -7,
-                        right: ResponsiveUtils.value<double>(
-                          context,
-                          mobile: 33,
-                          tablet: 40,
-                          desktop: 50,
-                        ),
                         child: CustomBTN(
                           widget: Text.rich(
                             TextSpan(children: [
-                              TextSpan(
-                                  text: "Last Weight : ",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w400)),
-                              TextSpan(text: "${workoutExercise.lastWeight} "),
+                              TextSpan(text: context.l10n.lastWeight),
+                              TextSpan(text: " ${workoutExercise.lastWeight} "),
                               TextSpan(
                                   text:
                                       workoutExercise.exercise.equipmentType ==
                                               "machine"
-                                          ? "Bar"
-                                          : "KG",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
+                                          ? context.l10n.kg
+                                          : context.l10n.kg),
                             ]),
-                            style: Theme.of(context).textTheme.labelSmall,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                                color: AppColors.white),
+                            textDirection: TextDirection.ltr,
                           ),
                           radius: 4,
                           color: AppColors.green,
-                          padding: 0,
+                          padding: 2,
                           press: () async {
                             final newWeight = await showModalBottomSheet<num>(
                                 context: context,
@@ -104,12 +98,6 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                                   maxHeight:
                                       MediaQuery.of(context).size.height * 0.7,
                                 ),
-                                // shape: const RoundedRectangleBorder(
-                                //   borderRadius: BorderRadius.only(
-                                //     topLeft: Radius.circular(20),
-                                //     topRight: Radius.circular(20),
-                                //   ),
-                                // ),
                                 builder: (context) => LastWeightSelector(
                                     workout: widget.workout,
                                     workoutExercise: workoutExercise));
@@ -133,9 +121,7 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
               childAspectRatio: 0.9,
             ),
           ),
-          SliverToBoxAdapter(
-            child: SizedBox(height: context.mediumSpacing),
-          ),
+          SliverToBoxAdapter(child: SizedBox(height: context.mediumSpacing)),
         ],
       ),
     );

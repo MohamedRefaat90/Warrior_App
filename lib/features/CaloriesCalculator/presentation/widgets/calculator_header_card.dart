@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,7 @@ class CalculatorHeaderCard extends StatelessWidget {
           ),
           SizedBox(height: context.smallSpacing),
           Text(
-            'Calculate Your Daily\nCaloric Needs',
+            'calculateYourDailyCaloricNeeds'.tr(context),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -47,7 +48,7 @@ class CalculatorHeaderCard extends StatelessWidget {
           ),
           SizedBox(height: context.smallSpacing / 2),
           Text(
-            'Get personalized nutrition targets',
+            'getPersonalizedNutritionTargets'.tr(context),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.white.withValues(alpha: 0.9),

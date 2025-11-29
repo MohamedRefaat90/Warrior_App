@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
@@ -84,7 +83,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                 const SizedBox(height: 32),
                 // Title
                 Text(
-                  'No Workouts Yet',
+                  'noWorkoutsYet'.tr(context),
                   style: TextStyle(
                     fontFamily: 'poppins',
                     fontWeight: FontWeight.bold,
@@ -97,7 +96,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                 const SizedBox(height: 12),
                 // Subtitle
                 Text(
-                  'Start building your fitness journey\nby creating your first workout set',
+                  'startBuildingFitness'.tr(context),
                   style: TextStyle(
                     fontFamily: 'poppins',
                     fontSize: 15,
@@ -300,12 +299,12 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                           textEditingController: _nameController,
                           isObscure: false,
                           validator: (value) => value!.isEmpty
-                              ? 'Workout set name is required'.capitalizeWord()
+                              ? 'nameRequired'.tr(context)
                               : null,
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Description (Optional)',
+                          'descriptionOptional'.tr(context),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,

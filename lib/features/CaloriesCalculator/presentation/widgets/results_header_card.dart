@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:flutter/material.dart';
 
 /// Header card for results screen showing goal type
@@ -24,19 +25,19 @@ class ResultsHeaderCard extends StatelessWidget {
         goalIcon = Icons.trending_down;
         goalColorDark = Colors.orange.shade700;
         goalColorLight = Colors.orange.shade400;
-        goalText = 'Weight Loss Plan';
+        goalText = context.l10n.weightLossPlan;
         break;
       case 'muscle_gain':
         goalIcon = Icons.trending_up;
         goalColorDark = Colors.green.shade700;
         goalColorLight = Colors.green.shade400;
-        goalText = 'Muscle Gain Plan';
+        goalText = context.l10n.muscleGainPlan;
         break;
       default:
         goalIcon = Icons.trending_flat;
         goalColorDark = Colors.blue.shade700;
         goalColorLight = Colors.blue.shade400;
-        goalText = 'Maintenance Plan';
+        goalText = context.l10n.maintenancePlan;
     }
 
     return Container(

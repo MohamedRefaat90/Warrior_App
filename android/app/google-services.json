@@ -22,14 +22,6 @@
           }
         },
         {
-          "client_id": "466603345246-nqdg9dqb0tslms7qa6k32l8jqclcr6h4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.warrior90.app",
-            "certificate_hash": "ace5e6bb280df7c3a75c651ac9e4bf1862bcd6d7"
-          }
-        },
-        {
           "client_id": "466603345246-r99b4r8056lqhgrcsagpoolmvc73pjdk.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -55,7 +47,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-7417773148722475~7594818599"
     }
   ],
   "configuration_version": "1"

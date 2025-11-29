@@ -423,6 +423,1648 @@
   "tip5": "Balance is key - variety in your diet matters",
   "@tip5": {
     "description": "Tip 5"
+  },
+
+  "login": "Login",
+  "@login": {
+    "description": "Login button and title"
+  },
+  "signup": "Sign Up",
+  "@signup": {
+    "description": "Sign up button and title"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field placeholder"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field placeholder"
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Name field placeholder"
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Confirm password field placeholder"
+  },
+  "newPassword": "New Password",
+  "@newPassword": {
+    "description": "New password field placeholder"
+  },
+  "passwordRequired": "Password is required",
+  "@passwordRequired": {
+    "description": "Password required validation message"
+  },
+  "nameRequired": "Name is required",
+  "@nameRequired": {
+    "description": "Name required validation message"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "forgetPassword": "Forget Password",
+  "@forgetPassword": {
+    "description": "Forget password screen title"
+  },
+  "sendEmail": "Send Email",
+  "@sendEmail": {
+    "description": "Send email button"
+  },
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Reset password button"
+  },
+  "enterNewPassword": "Enter your new password",
+  "@enterNewPassword": {
+    "description": "Enter new password instruction"
+  },
+  "verifyOtp": "Verify OTP",
+  "@verifyOtp": {
+    "description": "Verify OTP screen title"
+  },
+  "enterOtpSentToEmail": "Enter the OTP sent to your email",
+  "@enterOtpSentToEmail": {
+    "description": "OTP instruction text"
+  },
+  "resendOtp": "Resend OTP",
+  "@resendOtp": {
+    "description": "Resend OTP button"
+  },
+  "welcomeWarrior": "Welcome warrior, you can join the battle now 💪",
+  "@welcomeWarrior": {
+    "description": "Signup success message"
+  },
+  "passwordResetSuccess": "Password reset successfully. Try to login with new password",
+  "@passwordResetSuccess": {
+    "description": "Password reset success message"
+  },
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "No account prompt"
+  },
+  "loginWith": "Login With",
+  "@loginWith": {
+    "description": "Login with divider text"
+  },
+  "checkInternetConnection": "Check Your Internet Connection",
+  "@checkInternetConnection": {
+    "description": "Internet connection error message"
+  },
+  "mustBeLargerThan8": "Must be larger than 8 characters",
+  "@mustBeLargerThan8": {
+    "description": "Password length validation"
+  },
+  "mustContainUpperChar": "Must contain uppercase character",
+  "@mustContainUpperChar": {
+    "description": "Password uppercase validation"
+  },
+  "mustContainLowerChar": "Must contain lowercase character",
+  "@mustContainLowerChar": {
+    "description": "Password lowercase validation"
+  },
+  "mustContainNumber": "Must contain a number",
+  "@mustContainNumber": {
+    "description": "Password number validation"
+  },
+  "mustContainSpecialChar": "Must contain special character",
+  "@mustContainSpecialChar": {
+    "description": "Password special character validation"
+  },
+
+  "muscles": "Muscles",
+  "@muscles": {
+    "description": "Muscles category title"
+  },
+  "myWorkouts": "My Workouts",
+  "@myWorkouts": {
+    "description": "My workouts category title"
+  },
+  "predefinedWorkouts": "Predefined Workouts",
+  "@predefinedWorkouts": {
+    "description": "Predefined workouts category title"
+  },
+  "caloriesCalculator": "Calories Calculator",
+  "@caloriesCalculator": {
+    "description": "Calories calculator category title"
+  },
+  "resetCalculator": "Reset Calculator",
+  "@resetCalculator": {
+    "description": "Reset calculator tooltip"
+  },
+  "calculationSuccess": "Calculation completed successfully! 🎉",
+  "@calculationSuccess": {
+    "description": "Calculation success message"
+  },
+  "failedToCalculate": "Failed to calculate",
+  "@failedToCalculate": {
+    "description": "Calculation error message prefix"
+  },
+  "sedentary": "Sedentary",
+  "@sedentary": {
+    "description": "Activity level - sedentary"
+  },
+  "sedentaryDesc": "Little or no exercise",
+  "@sedentaryDesc": {
+    "description": "Sedentary description"
+  },
+  "lightlyActive": "Lightly Active",
+  "@lightlyActive": {
+    "description": "Activity level - lightly active"
+  },
+  "lightlyActiveDesc": "Light exercise 1-3 days/week",
+  "@lightlyActiveDesc": {
+    "description": "Lightly active description"
+  },
+  "moderatelyActive": "Moderately Active",
+  "@moderatelyActive": {
+    "description": "Activity level - moderately active"
+  },
+  "moderatelyActiveDesc": "Moderate exercise 3-5 days/week",
+  "@moderatelyActiveDesc": {
+    "description": "Moderately active description"
+  },
+  "veryActive": "Very Active",
+  "@veryActive": {
+    "description": "Activity level - very active"
+  },
+  "veryActiveDesc": "Hard exercise 6-7 days/week",
+  "@veryActiveDesc": {
+    "description": "Very active description"
+  },
+  "extraActive": "Extra Active",
+  "@extraActive": {
+    "description": "Activity level - extra active"
+  },
+  "extraActiveDesc": "Very hard exercise & physical job",
+  "@extraActiveDesc": {
+    "description": "Extra active description"
+  },
+
+  "newWorkout": "New Workout",
+  "@newWorkout": {
+    "description": "New workout button"
+  },
+  "yourWorkouts": "Your Workouts",
+  "@yourWorkouts": {
+    "description": "Your workouts section title"
+  },
+  "newWorkoutSet": "New Workout Set",
+  "@newWorkoutSet": {
+    "description": "New workout set dialog title"
+  },
+  "workoutName": "Workout Name",
+  "@workoutName": {
+    "description": "Workout name field"
+  },
+  "descriptionOptional": "Description (Optional)",
+  "@descriptionOptional": {
+    "description": "Optional description field"
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Description field"
+  },
+  "noWorkoutsYet": "No Workouts Yet",
+  "@noWorkoutsYet": {
+    "description": "No workouts empty state title"
+  },
+  "startBuildingFitness": "Start building your fitness journey by creating your first workout set!",
+  "@startBuildingFitness": {
+    "description": "No workouts empty state message"
+  },
+  "tipOrganizeExercises": "Tip: Organize your exercises into sets for better tracking",
+  "@tipOrganizeExercises": {
+    "description": "Workout organization tip"
+  },
+  "addNewExercise": "Add New Exercise",
+  "@addNewExercise": {
+    "description": "Add exercise tooltip"
+  },
+  "shareWorkout": "Share workout",
+  "@shareWorkout": {
+    "description": "Share workout tooltip"
+  },
+  "customWeight": "Custom Weight",
+  "@customWeight": {
+    "description": "Custom weight option"
+  },
+  "enterWeightValue": "Enter weight value",
+  "@enterWeightValue": {
+    "description": "Weight input hint"
+  },
+  "selectWeight": "Select Weight",
+  "@selectWeight": {
+    "description": "Weight selection title"
+  },
+  "updateWeight": "Update Weight",
+  "@updateWeight": {
+    "description": "Update weight button"
+  },
+  "lastWeight": "Last Weight",
+  "@lastWeight": {
+    "description": "Last weight label"
+  },
+  "deleteWorkoutConfirm": "Are you sure you want to delete this workout? This action cannot be undone.",
+  "@deleteWorkoutConfirm": {
+    "description": "Delete workout confirmation message"
+  },
+  "noExercisesYet": "No Exercises Yet",
+  "@noExercisesYet": {
+    "description": "No exercises empty state title"
+  },
+  "workoutReadyForExercises": "Your workout is ready for some exercises!",
+  "@workoutReadyForExercises": {
+    "description": "No exercises encouragement"
+  },
+  "addExercisesToStart": "Add exercises to get started with your training",
+  "@addExercisesToStart": {
+    "description": "Add exercises prompt"
+  },
+
+  "editProduct": "Edit Product",
+  "@editProduct": {
+    "description": "Edit product title"
+  },
+  "addNewProduct": "Add New Product",
+  "@addNewProduct": {
+    "description": "Add new product title"
+  },
+  "contributionHelp": "Your contribution will help millions of people make better food choices",
+  "@contributionHelp": {
+    "description": "Product contribution message"
+  },
+  "barcodeRequired": "Barcode *",
+  "@barcodeRequired": {
+    "description": "Barcode required field"
+  },
+  "enterProductBarcode": "Enter product barcode",
+  "@enterProductBarcode": {
+    "description": "Barcode input hint"
+  },
+  "barcodeIsRequired": "Barcode is required",
+  "@barcodeIsRequired": {
+    "description": "Barcode required validation"
+  },
+  "barcodeMinDigits": "Barcode must be at least 8 digits",
+  "@barcodeMinDigits": {
+    "description": "Barcode length validation"
+  },
+  "productNameRequired": "Product Name *",
+  "@productNameRequired": {
+    "description": "Product name required field"
+  },
+  "enterProductName": "Enter product name",
+  "@enterProductName": {
+    "description": "Product name input hint"
+  },
+  "productNameIsRequired": "Product name is required",
+  "@productNameIsRequired": {
+    "description": "Product name required validation"
+  },
+  "brand": "Brand",
+  "@brand": {
+    "description": "Brand field"
+  },
+  "enterBrandName": "Enter brand name",
+  "@enterBrandName": {
+    "description": "Brand input hint"
+  },
+  "quantity": "Quantity",
+  "@quantity": {
+    "description": "Quantity field"
+  },
+  "quantityExample": "e.g., 500g, 1L, 250ml",
+  "@quantityExample": {
+    "description": "Quantity example"
+  },
+  "servingSize": "Serving Size",
+  "@servingSize": {
+    "description": "Serving size field"
+  },
+  "servingSizeExample": "e.g., 30g, 100ml",
+  "@servingSizeExample": {
+    "description": "Serving size example"
+  },
+  "ingredients": "Ingredients",
+  "@ingredients": {
+    "description": "Ingredients field"
+  },
+  "ingredientsHint": "List all ingredients separated by commas",
+  "@ingredientsHint": {
+    "description": "Ingredients input hint"
+  },
+  "countries": "Countries",
+  "@countries": {
+    "description": "Countries field"
+  },
+  "countriesHint": "Where is this product sold?",
+  "@countriesHint": {
+    "description": "Countries input hint"
+  },
+  "productImage": "Product Image",
+  "@productImage": {
+    "description": "Product image field"
+  },
+  "searchByNameBrandCategory": "Search by name, brand, or category...",
+  "@searchByNameBrandCategory": {
+    "description": "Search hint"
+  },
+  "enterBarcodeNumber": "Enter barcode number",
+  "@enterBarcodeNumber": {
+    "description": "Barcode number input hint"
+  },
+
+  "enjoyingWarrior": "Enjoying Warrior?",
+  "@enjoyingWarrior": {
+    "description": "Rate app dialog title"
+  },
+  "rateAppMessage": "Thank you for using Warrior! Would you like to rate the app?",
+  "@rateAppMessage": {
+    "description": "Rate app dialog message"
+  },
+  "maybeLater": "Maybe Later",
+  "@maybeLater": {
+    "description": "Maybe later button"
+  },
+  "rateTheApp": "Rate the App",
+  "@rateTheApp": {
+    "description": "Rate the app button"
+  },
+  "updateAvailable": "Update Available",
+  "@updateAvailable": {
+    "description": "Update available dialog title"
+  },
+  "updateMessage": "A new version of the app is available. Please update to get the latest features.",
+  "@updateMessage": {
+    "description": "Update available dialog message"
+  },
+  "updateNow": "Update Now",
+  "@updateNow": {
+    "description": "Update now button"
+  },
+
+  "onboardingTitle1": "Target Every Muscle",
+  "@onboardingTitle1": {
+    "description": "Onboarding page 1 title"
+  },
+  "onboardingDesc1": "Unlock a variety of exercises designed to strengthen and sculpt every muscle group",
+  "@onboardingDesc1": {
+    "description": "Onboarding page 1 description"
+  },
+  "onboardingTitle2": "Customize Your Workouts",
+  "@onboardingTitle2": {
+    "description": "Onboarding page 2 title"
+  },
+  "onboardingDesc2": "Craft your unique workout sets and organize them your way",
+  "@onboardingDesc2": {
+    "description": "Onboarding page 2 description"
+  },
+  "onboardingTitle3": "Your Fitness, Your Way",
+  "@onboardingTitle3": {
+    "description": "Onboarding page 3 title"
+  },
+  "onboardingDesc3": "Take control of your training with personalized workout plans",
+  "@onboardingDesc3": {
+    "description": "Onboarding page 3 description"
+  },
+
+  "basicInformation": "Basic Information",
+  "@basicInformation": {
+    "description": "Basic information section title"
+  },
+  "weight": "Weight",
+  "@weight": {
+    "description": "Weight field label"
+  },
+  "enterWeight": "Enter weight",
+  "@enterWeight": {
+    "description": "Enter weight hint"
+  },
+  "height": "Height",
+  "@height": {
+    "description": "Height field label"
+  },
+  "enterHeight": "Enter height",
+  "@enterHeight": {
+    "description": "Enter height hint"
+  },
+  "age": "Age",
+  "@age": {
+    "description": "Age field label"
+  },
+  "enterAge": "Enter age",
+  "@enterAge": {
+    "description": "Enter age hint"
+  },
+  "gender": "Gender",
+  "@gender": {
+    "description": "Gender section title"
+  },
+  "male": "Male",
+  "@male": {
+    "description": "Male gender option"
+  },
+  "female": "Female",
+  "@female": {
+    "description": "Female gender option"
+  },
+  "activityLevel": "Activity Level",
+  "@activityLevel": {
+    "description": "Activity level section title"
+  },
+  "yourGoal": "Your Goal",
+  "@yourGoal": {
+    "description": "Your goal section title"
+  },
+  "weightLoss": "Weight Loss",
+  "@weightLoss": {
+    "description": "Weight loss goal option"
+  },
+  "loseWeightGradually": "Lose weight gradually",
+  "@loseWeightGradually": {
+    "description": "Weight loss goal description"
+  },
+  "maintainWeight": "Maintain Weight",
+  "@maintainWeight": {
+    "description": "Maintain weight goal option"
+  },
+  "keepCurrentWeight": "Keep current weight",
+  "@keepCurrentWeight": {
+    "description": "Maintain weight goal description"
+  },
+  "muscleGain": "Muscle Gain",
+  "@muscleGain": {
+    "description": "Muscle gain goal option"
+  },
+  "buildMuscleMass": "Build muscle mass",
+  "@buildMuscleMass": {
+    "description": "Muscle gain goal description"
+  },
+  "weeklyGoal": "Weekly Goal",
+  "@weeklyGoal": {
+    "description": "Weekly goal section title"
+  },
+  "lose": "Lose",
+  "@lose": {
+    "description": "Lose action for weekly goal"
+  },
+  "gain": "Gain",
+  "@gain": {
+    "description": "Gain action for weekly goal"
+  },
+  "kgPerWeek": "kg per week",
+  "@kgPerWeek": {
+    "description": "Kilograms per week unit"
+  },
+  "calculate": "Calculate",
+  "@calculate": {
+    "description": "Calculate button text"
+  },
+  "calculateYourDailyCaloricNeeds": "Calculate Your Daily\nCaloric Needs",
+  "@calculateYourDailyCaloricNeeds": {
+    "description": "Calculator header title"
+  },
+  "getPersonalizedNutritionTargets": "Get personalized nutrition targets",
+  "@getPersonalizedNutritionTargets": {
+    "description": "Calculator header subtitle"
+  },
+  "results": "Results",
+  "@results": {
+    "description": "Results screen title"
+  },
+  "yourResults": "Your Results",
+  "@yourResults": {
+    "description": "Your results screen title"
+  },
+  "noResultsAvailable": "No calculation results available",
+  "@noResultsAvailable": {
+    "description": "No results message"
+  },
+  "completeFormFirst": "Please complete the calculator form first",
+  "@completeFormFirst": {
+    "description": "Complete form first instruction"
+  },
+  "goBack": "Go Back",
+  "@goBack": {
+    "description": "Go back button text"
+  },
+  "newCalculation": "New Calculation",
+  "@newCalculation": {
+    "description": "New calculation tooltip"
+  },
+  "metabolicMetrics": "Metabolic Metrics",
+  "@metabolicMetrics": {
+    "description": "Metabolic metrics section title"
+  },
+  "bmr": "BMR",
+  "@bmr": {
+    "description": "Basal Metabolic Rate abbreviation"
+  },
+  "basalMetabolicRate": "Basal Metabolic\nRate",
+  "@basalMetabolicRate": {
+    "description": "Basal Metabolic Rate full name"
+  },
+  "tdee": "TDEE",
+  "@tdee": {
+    "description": "Total Daily Energy Expenditure abbreviation"
+  },
+  "totalDailyEnergyExpenditure": "Total Daily Energy\nExpenditure",
+  "@totalDailyEnergyExpenditure": {
+    "description": "TDEE full name"
+  },
+  "macronutrientSplit": "Macronutrient Split",
+  "@macronutrientSplit": {
+    "description": "Macronutrient split section title"
+  },
+  "dailyMacrosTarget": "Daily Macros Target",
+  "@dailyMacrosTarget": {
+    "description": "Daily macros target section title"
+  },
+  "protein": "Protein",
+  "@protein": {
+    "description": "Protein nutrient name"
+  },
+  "carbs": "Carbs",
+  "@carbs": {
+    "description": "Carbohydrates nutrient name"
+  },
+  "fats": "Fats",
+  "@fats": {
+    "description": "Fats nutrient name"
+  },
+  "kcal": "kcal",
+  "@kcal": {
+    "description": "Kilocalories unit"
+  },
+  "dailyCalories": "Daily Calories",
+  "@dailyCalories": {
+    "description": "Daily calories label"
+  },
+  "kg": "kg",
+  "@kg": {
+    "description": "Kilograms unit"
+  },
+  "g": "g",
+  "@g": {
+    "description": "Grams unit"
+  },
+  "cm": "cm",
+  "@cm": {
+    "description": "Centimeters unit"
+  },
+  "years": "years",
+  "@years": {
+    "description": "Years unit"
+  },
+  "bar": "bar",
+  "@bar": {
+    "description": "Bar unit"
+  },
+  "createWorkoutSetWarning": "To create your workout set you must select at least one exercise",
+  "@createWorkoutSetWarning": {
+    "description": "Warning message when creating workout without exercises"
+  },
+  "dontShowAgain": "Don't show this again",
+  "@dontShowAgain": {
+    "description": "Don't show again checkbox label"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+  "updateYourWorkoutSet": "Update Your Workout Set",
+  "@updateYourWorkoutSet": {
+    "description": "Button text for updating existing workout set"
+  },
+  "finishYourWorkoutSet": "Finish Your Workout Set",
+  "@finishYourWorkoutSet": {
+    "description": "Button text for finishing new workout set"
+  },
+  "workoutAddedSuccessfully": "Workout ({name}) added successfully!",
+  "@workoutAddedSuccessfully": {
+    "description": "Success message when workout is added",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "The name of the workout"
+      }
+    }
+  },
+  "productAddedSuccessfully": "Product added successfully!",
+  "@productAddedSuccessfully": {
+    "description": "Success message when product is added"
+  },
+  "productUpdatedSuccessfully": "Product updated successfully!",
+  "@productUpdatedSuccessfully": {
+    "description": "Success message when product is updated"
+  },
+  "changeImage": "Change Image",
+  "@changeImage": {
+    "description": "Button text to change selected image"
+  },
+  "takePhoto": "Take Photo",
+  "@takePhoto": {
+    "description": "Button text to take a photo"
+  },
+  "imageTip": "Tip: Take a clear photo of the product front, ingredients list, and nutrition facts.",
+  "@imageTip": {
+    "description": "Tip for taking product photos"
+  },
+  "updateProduct": "Update Product",
+  "@updateProduct": {
+    "description": "Button text to update product"
+  },
+  "requiredFieldsDisclaimer": "* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.",
+  "@requiredFieldsDisclaimer": {
+    "description": "Disclaimer about required fields and database license"
+  },
+  "failedToAddProduct": "Failed to add product. Please try again.",
+  "@failedToAddProduct": {
+    "description": "Error message when adding product fails"
+  },
+  "failedToUpdateProduct": "Failed to update product. Please try again.",
+  "@failedToUpdateProduct": {
+    "description": "Error message when updating product fails"
+  },
+  "imageSelected": "Image selected: {filename}",
+  "@imageSelected": {
+    "description": "Message showing selected image filename",
+    "placeholders": {
+      "filename": {
+        "type": "String",
+        "description": "The name of the selected file"
+      }
+    }
+  },
+  "targetedMuscles": "Targeted Muscles",
+  "@targetedMuscles": {
+    "description": "Targeted muscles section title"
+  },
+  "downloadingExercises": "Downloading exercises",
+  "@downloadingExercises": {
+    "description": "Text shown when downloading exercises"
+  },
+  "completed": "completed",
+  "@completed": {
+    "description": "Completed status text"
+  },
+  "downloading": "Downloading",
+  "@downloading": {
+    "description": "Downloading status text"
+  },
+  "downloadComplete": "Download Complete!",
+  "@downloadComplete": {
+    "description": "Success message when download is complete"
+  },
+  "exercisesAvailableOffline": "{count} exercises available offline",
+  "@exercisesAvailableOffline": {
+    "description": "Message showing number of exercises available offline",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of exercises"
+      }
+    }
+  },
+  "exercises": "exercises",
+  "@exercises": {
+    "description": "Exercises text (plural)"
+  },
+  "noDescription": "No description",
+  "@noDescription": {
+    "description": "Text shown when workout has no description"
+  },
+  "deleteWorkoutTitle": "Delete {name}",
+  "@deleteWorkoutTitle": {
+    "description": "Delete workout dialog title",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Name of the workout"
+      }
+    }
+  },
+  "deleteWorkoutMessage": "Are you sure you want to delete this workout set? This action cannot be undone.",
+  "@deleteWorkoutMessage": {
+    "description": "Delete workout confirmation message"
+  },
+  "noPredefinedWorkoutsOffline": "No predefined workouts available offline",
+  "@noPredefinedWorkoutsOffline": {
+    "description": "Message when no predefined workouts are cached"
+  },
+  "pleaseGoOnlineToDownload": "Please go online to download it",
+  "@pleaseGoOnlineToDownload": {
+    "description": "Instruction to go online to download workouts"
+  },
+  "youAreOffline": "You are offline",
+  "@youAreOffline": {
+    "description": "Offline status message"
+  },
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
+  },
+  "noCachedWorkoutsAvailable": "No cached workouts available. Connect to the internet to download workouts.",
+  "@noCachedWorkoutsAvailable": {
+    "description": "Message when offline and no cached workouts"
+  },
+  "failedToLoadPredefinedWorkouts": "Failed to load predefined workouts",
+  "@failedToLoadPredefinedWorkouts": {
+    "description": "Error message when loading predefined workouts fails"
+  },
+  "noWorkoutGroupsAvailable": "No workout groups available",
+  "@noWorkoutGroupsAvailable": {
+    "description": "Message when no workout groups are available"
+  },
+  "workoutsCount": "{count} workouts",
+  "@workoutsCount": {
+    "description": "Number of workouts in a group",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of workouts"
+      }
+    }
+  },
+  "addToMyWorkouts": "Add to my workouts",
+  "@addToMyWorkouts": {
+    "description": "Add To My Workouts Button"
+  },
+  "pleaseEnterYourAge": "Please enter your age",
+  "@pleaseEnterYourAge": {
+    "description": "Age input validation error"
+  },
+  "pleaseEnterValidNumber": "Please enter a valid number",
+  "@pleaseEnterValidNumber": {
+    "description": "Number validation error"
+  },
+  "ageMustBeBetween": "Age must be between 13 and 120 years",
+  "@ageMustBeBetween": {
+    "description": "Age range validation error"
+  },
+  "pleaseEnterYourHeight": "Please enter your height",
+  "@pleaseEnterYourHeight": {
+    "description": "Height input validation error"
+  },
+  "heightMustBeBetween": "Height must be between 100 and 250 cm",
+  "@heightMustBeBetween": {
+    "description": "Height range validation error"
+  },
+  "pleaseEnterYourWeight": "Please enter your weight",
+  "@pleaseEnterYourWeight": {
+    "description": "Weight input validation error"
+  },
+  "weightMustBeBetween": "Weight must be between 20 and 300 kg",
+  "@weightMustBeBetween": {
+    "description": "Weight range validation error"
+  },
+  "weightLossPlan": "Weight Loss Plan",
+  "@weightLossPlan": {
+    "description": "Weight loss goal plan title"
+  },
+  "muscleGainPlan": "Muscle Gain Plan",
+  "@muscleGainPlan": {
+    "description": "Muscle gain goal plan title"
+  },
+  "maintenancePlan": "Maintenance Plan",
+  "@maintenancePlan": {
+    "description": "Maintenance goal plan title"
+  },
+  "dailyCaloricTarget": "Daily Caloric Target",
+  "@dailyCaloricTarget": {
+    "description": "Daily caloric target label"
+  },
+  "kcal": "kcal",
+  "@kcal": {
+    "description": "Kilocalories unit"
+  },
+  "perDay": "per day",
+  "@perDay": {
+    "description": "Per day text"
   }
 }
 
+
+  "@nameRequired": {
+    "description": "Name required validation message"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "forgetPassword": "Forget Password",
+  "@forgetPassword": {
+    "description": "Forget password screen title"
+  },
+  "sendEmail": "Send Email",
+  "@sendEmail": {
+    "description": "Send email button"
+  },
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Reset password button"
+  },
+  "enterNewPassword": "Enter your new password",
+  "@enterNewPassword": {
+    "description": "Enter new password instruction"
+  },
+  "verifyOtp": "Verify OTP",
+  "@verifyOtp": {
+    "description": "Verify OTP screen title"
+  },
+  "enterOtpSentToEmail": "Enter the OTP sent to your email",
+  "@enterOtpSentToEmail": {
+    "description": "OTP instruction text"
+  },
+  "resendOtp": "Resend OTP",
+  "@resendOtp": {
+    "description": "Resend OTP button"
+  },
+  "welcomeWarrior": "Welcome warrior, you can join the battle now 💪",
+  "@welcomeWarrior": {
+    "description": "Signup success message"
+  },
+  "passwordResetSuccess": "Password reset successfully. Try to login with new password",
+  "@passwordResetSuccess": {
+    "description": "Password reset success message"
+  },
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "No account prompt"
+  },
+  "loginWith": "Login With",
+  "@loginWith": {
+    "description": "Login with divider text"
+  },
+  "checkInternetConnection": "Check Your Internet Connection",
+  "@checkInternetConnection": {
+    "description": "Internet connection error message"
+  },
+  "mustBeLargerThan8": "Must be larger than 8 characters",
+  "@mustBeLargerThan8": {
+    "description": "Password length validation"
+  },
+  "mustContainUpperChar": "Must contain uppercase character",
+  "@mustContainUpperChar": {
+    "description": "Password uppercase validation"
+  },
+  "mustContainLowerChar": "Must contain lowercase character",
+  "@mustContainLowerChar": {
+    "description": "Password lowercase validation"
+  },
+  "mustContainNumber": "Must contain a number",
+  "@mustContainNumber": {
+    "description": "Password number validation"
+  },
+  "mustContainSpecialChar": "Must contain special character",
+  "@mustContainSpecialChar": {
+    "description": "Password special character validation"
+  },
+
+  "muscles": "Muscles",
+  "@muscles": {
+    "description": "Muscles category title"
+  },
+  "myWorkouts": "My Workouts",
+  "@myWorkouts": {
+    "description": "My workouts category title"
+  },
+  "predefinedWorkouts": "Predefined Workouts",
+  "@predefinedWorkouts": {
+    "description": "Predefined workouts category title"
+  },
+  "caloriesCalculator": "Calories Calculator",
+  "@caloriesCalculator": {
+    "description": "Calories calculator category title"
+  },
+  "resetCalculator": "Reset Calculator",
+  "@resetCalculator": {
+    "description": "Reset calculator tooltip"
+  },
+  "calculationSuccess": "Calculation completed successfully! 🎉",
+  "@calculationSuccess": {
+    "description": "Calculation success message"
+  },
+  "failedToCalculate": "Failed to calculate",
+  "@failedToCalculate": {
+    "description": "Calculation error message prefix"
+  },
+  "sedentary": "Sedentary",
+  "@sedentary": {
+    "description": "Activity level - sedentary"
+  },
+  "sedentaryDesc": "Little or no exercise",
+  "@sedentaryDesc": {
+    "description": "Sedentary description"
+  },
+  "lightlyActive": "Lightly Active",
+  "@lightlyActive": {
+    "description": "Activity level - lightly active"
+  },
+  "lightlyActiveDesc": "Light exercise 1-3 days/week",
+  "@lightlyActiveDesc": {
+    "description": "Lightly active description"
+  },
+  "moderatelyActive": "Moderately Active",
+  "@moderatelyActive": {
+    "description": "Activity level - moderately active"
+  },
+  "moderatelyActiveDesc": "Moderate exercise 3-5 days/week",
+  "@moderatelyActiveDesc": {
+    "description": "Moderately active description"
+  },
+  "veryActive": "Very Active",
+  "@veryActive": {
+    "description": "Activity level - very active"
+  },
+  "veryActiveDesc": "Hard exercise 6-7 days/week",
+  "@veryActiveDesc": {
+    "description": "Very active description"
+  },
+  "extraActive": "Extra Active",
+  "@extraActive": {
+    "description": "Activity level - extra active"
+  },
+  "extraActiveDesc": "Very hard exercise & physical job",
+  "@extraActiveDesc": {
+    "description": "Extra active description"
+  },
+
+  "newWorkout": "New Workout",
+  "@newWorkout": {
+    "description": "New workout button"
+  },
+  "yourWorkouts": "Your Workouts",
+  "@yourWorkouts": {
+    "description": "Your workouts section title"
+  },
+  "newWorkoutSet": "New Workout Set",
+  "@newWorkoutSet": {
+    "description": "New workout set dialog title"
+  },
+  "workoutName": "Workout Name",
+  "@workoutName": {
+    "description": "Workout name field"
+  },
+  "descriptionOptional": "Description (Optional)",
+  "@descriptionOptional": {
+    "description": "Optional description field"
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Description field"
+  },
+  "noWorkoutsYet": "No Workouts Yet",
+  "@noWorkoutsYet": {
+    "description": "No workouts empty state title"
+  },
+  "startBuildingFitness": "Start building your fitness journey by creating your first workout set!",
+  "@startBuildingFitness": {
+    "description": "No workouts empty state message"
+  },
+  "tipOrganizeExercises": "Tip: Organize your exercises into sets for better tracking",
+  "@tipOrganizeExercises": {
+    "description": "Workout organization tip"
+  },
+  "addNewExercise": "Add New Exercise",
+  "@addNewExercise": {
+    "description": "Add exercise tooltip"
+  },
+  "shareWorkout": "Share workout",
+  "@shareWorkout": {
+    "description": "Share workout tooltip"
+  },
+  "customWeight": "Custom Weight",
+  "@customWeight": {
+    "description": "Custom weight option"
+  },
+  "enterWeightValue": "Enter weight value",
+  "@enterWeightValue": {
+    "description": "Weight input hint"
+  },
+  "selectWeight": "Select Weight",
+  "@selectWeight": {
+    "description": "Weight selection title"
+  },
+  "updateWeight": "Update Weight",
+  "@updateWeight": {
+    "description": "Update weight button"
+  },
+  "lastWeight": "Last Weight",
+  "@lastWeight": {
+    "description": "Last weight label"
+  },
+  "deleteWorkoutConfirm": "Are you sure you want to delete this workout? This action cannot be undone.",
+  "@deleteWorkoutConfirm": {
+    "description": "Delete workout confirmation message"
+  },
+  "noExercisesYet": "No Exercises Yet",
+  "@noExercisesYet": {
+    "description": "No exercises empty state title"
+  },
+  "workoutReadyForExercises": "Your workout is ready for some exercises!",
+  "@workoutReadyForExercises": {
+    "description": "No exercises encouragement"
+  },
+  "addExercisesToStart": "Add exercises to get started with your training",
+  "@addExercisesToStart": {
+    "description": "Add exercises prompt"
+  },
+
+  "editProduct": "Edit Product",
+  "@editProduct": {
+    "description": "Edit product title"
+  },
+  "addNewProduct": "Add New Product",
+  "@addNewProduct": {
+    "description": "Add new product title"
+  },
+  "contributionHelp": "Your contribution will help millions of people make better food choices",
+  "@contributionHelp": {
+    "description": "Product contribution message"
+  },
+  "barcodeRequired": "Barcode *",
+  "@barcodeRequired": {
+    "description": "Barcode required field"
+  },
+  "enterProductBarcode": "Enter product barcode",
+  "@enterProductBarcode": {
+    "description": "Barcode input hint"
+  },
+  "barcodeIsRequired": "Barcode is required",
+  "@barcodeIsRequired": {
+    "description": "Barcode required validation"
+  },
+  "barcodeMinDigits": "Barcode must be at least 8 digits",
+  "@barcodeMinDigits": {
+    "description": "Barcode length validation"
+  },
+  "productNameRequired": "Product Name *",
+  "@productNameRequired": {
+    "description": "Product name required field"
+  },
+  "enterProductName": "Enter product name",
+  "@enterProductName": {
+    "description": "Product name input hint"
+  },
+  "productNameIsRequired": "Product name is required",
+  "@productNameIsRequired": {
+    "description": "Product name required validation"
+  },
+  "brand": "Brand",
+  "@brand": {
+    "description": "Brand field"
+  },
+  "enterBrandName": "Enter brand name",
+  "@enterBrandName": {
+    "description": "Brand input hint"
+  },
+  "quantity": "Quantity",
+  "@quantity": {
+    "description": "Quantity field"
+  },
+  "quantityExample": "e.g., 500g, 1L, 250ml",
+  "@quantityExample": {
+    "description": "Quantity example"
+  },
+  "servingSize": "Serving Size",
+  "@servingSize": {
+    "description": "Serving size field"
+  },
+  "servingSizeExample": "e.g., 30g, 100ml",
+  "@servingSizeExample": {
+    "description": "Serving size example"
+  },
+  "ingredients": "Ingredients",
+  "@ingredients": {
+    "description": "Ingredients field"
+  },
+  "ingredientsHint": "List all ingredients separated by commas",
+  "@ingredientsHint": {
+    "description": "Ingredients input hint"
+  },
+  "countries": "Countries",
+  "@countries": {
+    "description": "Countries field"
+  },
+  "countriesHint": "Where is this product sold?",
+  "@countriesHint": {
+    "description": "Countries input hint"
+  },
+  "productImage": "Product Image",
+  "@productImage": {
+    "description": "Product image field"
+  },
+  "searchByNameBrandCategory": "Search by name, brand, or category...",
+  "@searchByNameBrandCategory": {
+    "description": "Search hint"
+  },
+  "enterBarcodeNumber": "Enter barcode number",
+  "@enterBarcodeNumber": {
+    "description": "Barcode number input hint"
+  },
+
+  "enjoyingWarrior": "Enjoying Warrior?",
+  "@enjoyingWarrior": {
+    "description": "Rate app dialog title"
+  },
+  "rateAppMessage": "Thank you for using Warrior! Would you like to rate the app?",
+  "@rateAppMessage": {
+    "description": "Rate app dialog message"
+  },
+  "maybeLater": "Maybe Later",
+  "@maybeLater": {
+    "description": "Maybe later button"
+  },
+  "rateTheApp": "Rate the App",
+  "@rateTheApp": {
+    "description": "Rate the app button"
+  },
+  "updateAvailable": "Update Available",
+  "@updateAvailable": {
+    "description": "Update available dialog title"
+  },
+  "updateMessage": "A new version of the app is available. Please update to get the latest features.",
+  "@updateMessage": {
+    "description": "Update available dialog message"
+  },
+  "updateNow": "Update Now",
+  "@updateNow": {
+    "description": "Update now button"
+  },
+
+  "onboardingTitle1": "Target Every Muscle",
+  "@onboardingTitle1": {
+    "description": "Onboarding page 1 title"
+  },
+  "onboardingDesc1": "Unlock a variety of exercises designed to strengthen and sculpt every muscle group",
+  "@onboardingDesc1": {
+    "description": "Onboarding page 1 description"
+  },
+  "onboardingTitle2": "Customize Your Workouts",
+  "@onboardingTitle2": {
+    "description": "Onboarding page 2 title"
+  },
+  "onboardingDesc2": "Craft your unique workout sets and organize them your way",
+  "@onboardingDesc2": {
+    "description": "Onboarding page 2 description"
+  },
+  "onboardingTitle3": "Your Fitness, Your Way",
+  "@onboardingTitle3": {
+    "description": "Onboarding page 3 title"
+  },
+  "onboardingDesc3": "Take control of your training with personalized workout plans",
+  "@onboardingDesc3": {
+    "description": "Onboarding page 3 description"
+  },
+
+  "basicInformation": "Basic Information",
+  "@basicInformation": {
+    "description": "Basic information section title"
+  },
+  "weight": "Weight",
+  "@weight": {
+    "description": "Weight field label"
+  },
+  "enterWeight": "Enter weight",
+  "@enterWeight": {
+    "description": "Enter weight hint"
+  },
+  "height": "Height",
+  "@height": {
+    "description": "Height field label"
+  },
+  "enterHeight": "Enter height",
+  "@enterHeight": {
+    "description": "Enter height hint"
+  },
+  "age": "Age",
+  "@age": {
+    "description": "Age field label"
+  },
+  "enterAge": "Enter age",
+  "@enterAge": {
+    "description": "Enter age hint"
+  },
+  "gender": "Gender",
+  "@gender": {
+    "description": "Gender section title"
+  },
+  "male": "Male",
+  "@male": {
+    "description": "Male gender option"
+  },
+  "female": "Female",
+  "@female": {
+    "description": "Female gender option"
+  },
+  "activityLevel": "Activity Level",
+  "@activityLevel": {
+    "description": "Activity level section title"
+  },
+  "yourGoal": "Your Goal",
+  "@yourGoal": {
+    "description": "Your goal section title"
+  },
+  "weightLoss": "Weight Loss",
+  "@weightLoss": {
+    "description": "Weight loss goal option"
+  },
+  "loseWeightGradually": "Lose weight gradually",
+  "@loseWeightGradually": {
+    "description": "Weight loss goal description"
+  },
+  "maintainWeight": "Maintain Weight",
+  "@maintainWeight": {
+    "description": "Maintain weight goal option"
+  },
+  "keepCurrentWeight": "Keep current weight",
+  "@keepCurrentWeight": {
+    "description": "Maintain weight goal description"
+  },
+  "muscleGain": "Muscle Gain",
+  "@muscleGain": {
+    "description": "Muscle gain goal option"
+  },
+  "buildMuscleMass": "Build muscle mass",
+  "@buildMuscleMass": {
+    "description": "Muscle gain goal description"
+  },
+  "weeklyGoal": "Weekly Goal",
+  "@weeklyGoal": {
+    "description": "Weekly goal section title"
+  },
+  "lose": "Lose",
+  "@lose": {
+    "description": "Lose action for weekly goal"
+  },
+  "gain": "Gain",
+  "@gain": {
+    "description": "Gain action for weekly goal"
+  },
+  "kgPerWeek": "kg per week",
+  "@kgPerWeek": {
+    "description": "Kilograms per week unit"
+  },
+  "calculate": "Calculate",
+  "@calculate": {
+    "description": "Calculate button text"
+  },
+  "calculateYourDailyCaloricNeeds": "Calculate Your Daily\nCaloric Needs",
+  "@calculateYourDailyCaloricNeeds": {
+    "description": "Calculator header title"
+  },
+  "getPersonalizedNutritionTargets": "Get personalized nutrition targets",
+  "@getPersonalizedNutritionTargets": {
+    "description": "Calculator header subtitle"
+  },
+  "results": "Results",
+  "@results": {
+    "description": "Results screen title"
+  },
+  "yourResults": "Your Results",
+  "@yourResults": {
+    "description": "Your results screen title"
+  },
+  "noResultsAvailable": "No calculation results available",
+  "@noResultsAvailable": {
+    "description": "No results message"
+  },
+  "completeFormFirst": "Please complete the calculator form first",
+  "@completeFormFirst": {
+    "description": "Complete form first instruction"
+  },
+  "goBack": "Go Back",
+  "@goBack": {
+    "description": "Go back button text"
+  },
+  "newCalculation": "New Calculation",
+  "@newCalculation": {
+    "description": "New calculation tooltip"
+  },
+  "metabolicMetrics": "Metabolic Metrics",
+  "@metabolicMetrics": {
+    "description": "Metabolic metrics section title"
+  },
+  "bmr": "BMR",
+  "@bmr": {
+    "description": "Basal Metabolic Rate abbreviation"
+  },
+  "basalMetabolicRate": "Basal Metabolic\nRate",
+  "@basalMetabolicRate": {
+    "description": "Basal Metabolic Rate full name"
+  },
+  "tdee": "TDEE",
+  "@tdee": {
+    "description": "Total Daily Energy Expenditure abbreviation"
+  },
+  "totalDailyEnergyExpenditure": "Total Daily Energy\nExpenditure",
+  "@totalDailyEnergyExpenditure": {
+    "description": "TDEE full name"
+  },
+  "macronutrientSplit": "Macronutrient Split",
+  "@macronutrientSplit": {
+    "description": "Macronutrient split section title"
+  },
+  "dailyMacrosTarget": "Daily Macros Target",
+  "@dailyMacrosTarget": {
+    "description": "Daily macros target section title"
+  },
+  "protein": "Protein",
+  "@protein": {
+    "description": "Protein nutrient name"
+  },
+  "carbs": "Carbs",
+  "@carbs": {
+    "description": "Carbohydrates nutrient name"
+  },
+  "fats": "Fats",
+  "@fats": {
+    "description": "Fats nutrient name"
+  },
+  "kcal": "kcal",
+  "@kcal": {
+    "description": "Kilocalories unit"
+  },
+  "dailyCalories": "Daily Calories",
+  "@dailyCalories": {
+    "description": "Daily calories label"
+  },
+  "kg": "kg",
+  "@kg": {
+    "description": "Kilograms unit"
+  },
+  "g": "g",
+  "@g": {
+    "description": "Grams unit"
+  },
+  "cm": "cm",
+  "@cm": {
+    "description": "Centimeters unit"
+  },
+  "years": "years",
+  "@years": {
+    "description": "Years unit"
+  },
+  "bar": "bar",
+  "@bar": {
+    "description": "Bar unit"
+  },
+  "createWorkoutSetWarning": "To create your workout set you must select at least one exercise",
+  "@createWorkoutSetWarning": {
+    "description": "Warning message when creating workout without exercises"
+  },
+  "dontShowAgain": "Don't show this again",
+  "@dontShowAgain": {
+    "description": "Don't show again checkbox label"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+  "updateYourWorkoutSet": "Update Your Workout Set",
+  "@updateYourWorkoutSet": {
+    "description": "Button text for updating existing workout set"
+  },
+  "finishYourWorkoutSet": "Finish Your Workout Set",
+  "@finishYourWorkoutSet": {
+    "description": "Button text for finishing new workout set"
+  },
+  "workoutAddedSuccessfully": "Workout ({name}) added successfully!",
+  "@workoutAddedSuccessfully": {
+    "description": "Success message when workout is added",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "The name of the workout"
+      }
+    }
+  },
+  "productAddedSuccessfully": "Product added successfully!",
+  "@productAddedSuccessfully": {
+    "description": "Success message when product is added"
+  },
+  "productUpdatedSuccessfully": "Product updated successfully!",
+  "@productUpdatedSuccessfully": {
+    "description": "Success message when product is updated"
+  },
+  "changeImage": "Change Image",
+  "@changeImage": {
+    "description": "Button text to change selected image"
+  },
+  "takePhoto": "Take Photo",
+  "@takePhoto": {
+    "description": "Button text to take a photo"
+  },
+  "imageTip": "Tip: Take a clear photo of the product front, ingredients list, and nutrition facts.",
+  "@imageTip": {
+    "description": "Tip for taking product photos"
+  },
+  "updateProduct": "Update Product",
+  "@updateProduct": {
+    "description": "Button text to update product"
+  },
+  "requiredFieldsDisclaimer": "* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.",
+  "@requiredFieldsDisclaimer": {
+    "description": "Disclaimer about required fields and database license"
+  },
+  "failedToAddProduct": "Failed to add product. Please try again.",
+  "@failedToAddProduct": {
+    "description": "Error message when adding product fails"
+  },
+  "failedToUpdateProduct": "Failed to update product. Please try again.",
+  "@failedToUpdateProduct": {
+    "description": "Error message when updating product fails"
+  },
+  "imageSelected": "Image selected: {filename}",
+  "@imageSelected": {
+    "description": "Message showing selected image filename",
+    "placeholders": {
+      "filename": {
+        "type": "String",
+        "description": "The name of the selected file"
+      }
+    }
+  },
+  "targetedMuscles": "Targeted Muscles",
+  "@targetedMuscles": {
+    "description": "Targeted muscles section title"
+  },
+  "downloadingExercises": "Downloading exercises",
+  "@downloadingExercises": {
+    "description": "Text shown when downloading exercises"
+  },
+  "completed": "completed",
+  "@completed": {
+    "description": "Completed status text"
+  },
+  "downloading": "Downloading",
+  "@downloading": {
+    "description": "Downloading status text"
+  },
+  "downloadComplete": "Download Complete!",
+  "@downloadComplete": {
+    "description": "Success message when download is complete"
+  },
+  "exercisesAvailableOffline": "{count} exercises available offline",
+  "@exercisesAvailableOffline": {
+    "description": "Message showing number of exercises available offline",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of exercises"
+      }
+    }
+  },
+  "exercises": "exercises",
+  "@exercises": {
+    "description": "Exercises text (plural)"
+  },
+  "noDescription": "No description",
+  "@noDescription": {
+    "description": "Text shown when workout has no description"
+  },
+  "deleteWorkoutTitle": "Delete {name}",
+  "@deleteWorkoutTitle": {
+    "description": "Delete workout dialog title",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Name of the workout"
+      }
+    }
+  },
+  "deleteWorkoutMessage": "Are you sure you want to delete this workout set? This action cannot be undone.",
+  "@deleteWorkoutMessage": {
+    "description": "Delete workout confirmation message"
+  },
+  "noPredefinedWorkoutsOffline": "No predefined workouts available offline",
+  "@noPredefinedWorkoutsOffline": {
+    "description": "Message when no predefined workouts are cached"
+  },
+  "pleaseGoOnlineToDownload": "Please go online to download it",
+  "@pleaseGoOnlineToDownload": {
+    "description": "Instruction to go online to download workouts"
+  },
+  "youAreOffline": "You are offline",
+  "@youAreOffline": {
+    "description": "Offline status message"
+  },
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
+  },
+  "noCachedWorkoutsAvailable": "No cached workouts available. Connect to the internet to download workouts.",
+  "@noCachedWorkoutsAvailable": {
+    "description": "Message when offline and no cached workouts"
+  },
+  "failedToLoadPredefinedWorkouts": "Failed to load predefined workouts",
+  "@failedToLoadPredefinedWorkouts": {
+    "description": "Error message when loading predefined workouts fails"
+  },
+  "noWorkoutGroupsAvailable": "No workout groups available",
+  "@noWorkoutGroupsAvailable": {
+    "description": "Message when no workout groups are available"
+  },
+  "workoutsCount": "{count} workouts",
+  "@workoutsCount": {
+    "description": "Number of workouts in a group",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of workouts"
+      }
+    }
+  },
+  "addToMyWorkouts": "Add to my workouts",
+  "@addToMyWorkouts": {
+    "description": "Add To My Workouts Button"
+  },
+  "pleaseEnterYourAge": "Please enter your age",
+  "@pleaseEnterYourAge": {
+    "description": "Age input validation error"
+  },
+  "pleaseEnterValidNumber": "Please enter a valid number",
+  "@pleaseEnterValidNumber": {
+    "description": "Number validation error"
+  },
+  "ageMustBeBetween": "Age must be between 13 and 120 years",
+  "@ageMustBeBetween": {
+    "description": "Age range validation error"
+  },
+  "pleaseEnterYourHeight": "Please enter your height",
+  "@pleaseEnterYourHeight": {
+    "description": "Height input validation error"
+  },
+  "heightMustBeBetween": "Height must be between 100 and 250 cm",
+  "@heightMustBeBetween": {
+    "description": "Height range validation error"
+  },
+  "pleaseEnterYourWeight": "Please enter your weight",
+  "@pleaseEnterYourWeight": {
+    "description": "Weight input validation error"
+  },
+  "weightMustBeBetween": "Weight must be between 20 and 300 kg",
+  "@weightMustBeBetween": {
+    "description": "Weight range validation error"
+  },
+  "weightLossPlan": "Weight Loss Plan",
+  "@weightLossPlan": {
+    "description": "Weight loss goal plan title"
+  },
+  "muscleGainPlan": "Muscle Gain Plan",
+  "@muscleGainPlan": {
+    "description": "Muscle gain goal plan title"
+  },
+  "maintenancePlan": "Maintenance Plan",
+  "@maintenancePlan": {
+    "description": "Maintenance goal plan title"
+  },
+  "dailyCaloricTarget": "Daily Caloric Target",
+  "@dailyCaloricTarget": {
+    "description": "Daily caloric target label"
+  },
+  "kcal": "kcal",
+  "@kcal": {
+    "description": "Kilocalories unit"
+  },
+  "perDay": "per day",
+  "@perDay": {
+    "description": "Per day text"
+  },
+  "advancedSearchTooltip": "Advanced Search",
+  "@advancedSearchTooltip": {
+    "description": "Advanced search tooltip"
+  },
+  "searchHistoryTooltip": "Search History",
+  "@searchHistoryTooltip": {
+    "description": "Search history tooltip"
+  },
+  "addProductButton": "Add Product",
+  "@addProductButton": {
+    "description": "Add product button label"
+  },
+  "favoritesButton": "Favorites",
+  "@favoritesButton": {
+    "description": "Favorites button label"
+  },
+  "compareButton": "Compare",
+  "@compareButton": {
+    "description": "Compare button label"
+  },
+  "recentlyScanned": "Recently Scanned",
+  "@recentlyScanned": {
+    "description": "Recently scanned section title"
+  },
+  "noProductsYet": "No Products Yet",
+  "@noProductsYet": {
+    "description": "No products empty state title"
+  },
+  "startByScanningBarcode": "Start by scanning a barcode or searching for products",
+  "@startByScanningBarcode": {
+    "description": "No products empty state message"
+  }
+}

@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -31,7 +32,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
     final providerStates = ref.watch(forgetPasswordProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forget Password'),
+        title: Text('forgetPassword'.tr(context)),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -48,7 +49,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CustomTextField(
-                        placeholderText: "Email",
+                        placeholderText: 'email'.tr(context),
                         textEditingController: emailController,
                         isObscure: false,
                         validator: (value) => emailValidator(value!.trim())),
@@ -56,7 +57,7 @@ class _ForgetPasswordScreenState extends ConsumerState<ForgetPasswordScreen> {
                     CustomBTN(
                         widget: providerStates.isLoading
                             ? const BtnLoader()
-                            : const Text("Send Email"),
+                            : Text('sendEmail'.tr(context)),
                         color: AppColors.primaryColor,
                         padding: 15,
                         splashColor: AppColors.black,

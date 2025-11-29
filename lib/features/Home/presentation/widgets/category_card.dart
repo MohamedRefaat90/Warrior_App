@@ -1,14 +1,18 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Home/data/models/category_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class CategoryCard extends StatelessWidget {
+class CategoryCard extends ConsumerWidget {
   final CategoryItem category;
   const CategoryCard({super.key, required this.category});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appSettings = ref.watch(appSettingsProvider);
     return GestureDetector(
       onTap: () => context.pushNamed(category.navigateTo),
       child: Card(
@@ -30,10 +34,12 @@ class CategoryCard extends StatelessWidget {
                   ),
                   SizedBox(height: context.smallSpacing),
                   Text(
-                    category.title,
+                    category.title.tr(context),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          fontFamily: "poppins",
+                          fontFamily: appSettings.locale.languageCode == 'ar'
+                              ? "Cairo"
+                              : "Poppins",
                         ),
                     textAlign: TextAlign.center,
                   ),

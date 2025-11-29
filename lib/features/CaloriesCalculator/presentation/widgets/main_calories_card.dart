@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:flutter/material.dart';
 
 /// Main calories display card
@@ -35,7 +36,7 @@ class MainCaloriesCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Daily Caloric Target',
+            context.l10n.dailyCaloricTarget,
             style: TextStyle(
               fontSize: 16,
               color: AppColors.white.withValues(alpha: 0.9),
@@ -57,7 +58,7 @@ class MainCaloriesCard extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               Text(
-                'kcal',
+                context.l10n.kcal,
                 style: TextStyle(
                   fontSize: 18,
                   color: AppColors.white.withValues(alpha: 0.9),
@@ -67,7 +68,7 @@ class MainCaloriesCard extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            'per day',
+            context.l10n.perDay,
             style: TextStyle(
               fontSize: 14,
               color: AppColors.white.withValues(alpha: 0.8),

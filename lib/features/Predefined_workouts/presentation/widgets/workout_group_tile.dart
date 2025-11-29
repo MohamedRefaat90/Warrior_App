@@ -34,11 +34,9 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
-      elevation: 2,
+      elevation: 20,
       // Change card color based on expansion state
-      color: _isExpanded
-          ? Colors.white
-          : null, // Default card color when collapsed
+      color: _isExpanded ? Colors.white : AppColors.lightTail,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
         side: _isExpanded
@@ -76,8 +74,11 @@ class _WorkoutGroupTileState extends State<WorkoutGroupTile> {
           widget.title,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color:
-                    isDark && _isExpanded ? AppColors.black : AppColors.white,
+                color: isDark
+                    ? _isExpanded
+                        ? AppColors.black
+                        : AppColors.white
+                    : AppColors.black,
               ),
         ),
         children: [

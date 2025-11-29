@@ -24,4 +24,5 @@ abstract class AppColors {
   static const Color darkOnSurface =
       Color(0xFFE8E4F3); // Light purple-tinted white
   static const Color darkOnSurfaceVariant = Color(0xFF9694A3); // gray
+  static const Color lightTail = Color.fromARGB(30, 96, 125, 139); // gray
 }

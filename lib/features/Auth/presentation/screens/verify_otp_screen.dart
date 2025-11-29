@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Auth/presentation/provider/verify_otp_provider.dart';
 import 'package:Warrior/features/Auth/presentation/widgets/otp_fileds.dart';
@@ -26,7 +27,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
   Widget build(BuildContext context) {
     ProviderStates providerStates = ref.watch(otpProvider);
     return Scaffold(
-        appBar: AppBar(title: const Text('Verify OTP'), centerTitle: true),
+        appBar: AppBar(title: Text('verifyOtp'.tr(context)), centerTitle: true),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -39,7 +40,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Enter the OTP sent to your email",
+                      'enterOtpSentToEmail'.tr(context),
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     SizedBox(height: context.mediumSpacing),
@@ -54,7 +55,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                       buttonType: ButtonType.text_button,
                       textColor: Colors.blue,
                       backgroundColor: Colors.blue,
-                      text: const Text('Resend OTP'),
+                      text: Text('resendOtp'.tr(context)),
                       duration: 90,
                     ),
                     providerStates.isLoading

@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/features/Workouts/data/data_sources/workout_item_weights.dart';
 import 'package:flutter/material.dart';
 
@@ -33,9 +34,13 @@ class WeightChip extends StatelessWidget {
           TextSpan(
             children: [
               TextSpan(text: "$weight "),
-              TextSpan(text: type is MachineWeights ? "bar" : "kg"),
+              TextSpan(
+                  text: type is MachineWeights
+                      ? context.l10n.bar
+                      : context.l10n.kg),
             ],
             style: TextStyle(
+                fontWeight: FontWeight.bold,
                 color: isDark
                     ? AppColors.white
                     : (isSelected ? AppColors.white : AppColors.black)),

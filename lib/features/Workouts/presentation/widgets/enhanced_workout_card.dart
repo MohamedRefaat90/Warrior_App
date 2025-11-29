@@ -195,7 +195,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                               const SizedBox(height: 4),
                               Text(
                                 widget.workout.description!.isEmpty
-                                    ? 'No description'
+                                    ? context.l10n.noDescription
                                     : widget.workout.description!,
                                 style: TextStyle(
                                   fontSize: 13,
@@ -228,7 +228,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      '${widget.workout.workoutItems!.length} exercises',
+                                      '${widget.workout.workoutItems!.length} ${context.l10n.exercises}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
@@ -354,7 +354,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Delete ${widget.workout.name}',
+                context.l10n.deleteWorkoutTitle(widget.workout.name!),
                 style: const TextStyle(fontSize: 18),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -362,9 +362,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
             ),
           ],
         ),
-        content: const Text(
-          'Are you sure you want to delete this workout set? This action cannot be undone.',
-        ),
+        content: Text(context.l10n.deleteWorkoutMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -421,8 +419,8 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
                 size: 24,
               ),
             ),
-            const SizedBox(width: 12),
-            Text('editWorkoutSet'.tr(context)),
+            const SizedBox(width: 10),
+            Text('editWorkoutSet'.tr(context), style: TextStyle(fontSize: 18)),
           ],
         ),
         content: Column(
@@ -431,14 +429,14 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
             CustomTextField(
               textEditingController: nameController,
               isObscure: false,
-              placeholderText: 'Workout Name',
+              placeholderText: context.l10n.workoutName,
             ),
             const SizedBox(height: 12),
             CustomTextField(
               textEditingController: descriptionController,
               isTextArea: true,
               isObscure: false,
-              placeholderText: 'Description',
+              placeholderText: context.l10n.description,
             ),
           ],
         ),

@@ -83,63 +83,98 @@ class CaloriesCalculatorRepo {
     }
   }
 
-  /// Calculate macronutrient breakdown based on goal
+  /// Calculate macronutrient breakdown based on body weight and goal
   ///
-  /// Weight Loss (High Protein, Moderate Carbs, Low Fat):
-  /// - Protein: 40% (preserves muscle)
-  /// - Carbs: 35% (energy for workouts)
-  /// - Fats: 25% (essential functions)
+  /// Following the standard macronutrient calculation:
+  /// 1. Protein: Based on body weight
+  ///    - Males (Athletes): 1.6-2.5g per kg body weight
+  ///    - Females: 0.8-1.2g per kg body weight
+  ///    - Adjusted based on goal (higher for muscle gain/weight loss)
   ///
-  /// Maintain Weight (Balanced):
-  /// - Protein: 30%
-  /// - Carbs: 40%
-  /// - Fats: 30%
+  /// 2. Fats: 20-30% of total daily calories
+  ///    - Weight Loss: 20-25%
+  ///    - Maintain/Muscle Gain: 25-30%
   ///
-  /// Muscle Gain (High Protein & Carbs):
-  /// - Protein: 30% (builds muscle)
-  /// - Carbs: 50% (fuel for growth)
-  /// - Fats: 20% (hormonal balance)
+  /// 3. Carbs: Remaining calories after protein and fats
   ///
   /// Note:
   /// - 1g Protein = 4 calories
   /// - 1g Carbs = 4 calories
   /// - 1g Fat = 9 calories
-  MacronutrientModel calculateMacros(double dailyCalories, String goal) {
+  MacronutrientModel calculateMacros(
+    double dailyCalories,
+    String goal,
+    double weightKg,
+    String gender,
+  ) {
     try {
-      double proteinPercent, carbsPercent, fatsPercent;
+      // Step 1: Calculate Protein based on body weight
+      double proteinGramsPerKg;
 
+      if (gender == 'male') {
+        // Males: 1.6-2.5g per kg
+        switch (goal) {
+          case 'weight_loss':
+            proteinGramsPerKg = 1.6;
+            break;
+          case 'muscle_gain':
+            proteinGramsPerKg = 1.8;
+            break;
+          case 'maintain':
+          default:
+            proteinGramsPerKg = 1.8;
+            break;
+        }
+      } else {
+        // Females: 0.8-1.2g per kg
+        switch (goal) {
+          case 'weight_loss':
+            proteinGramsPerKg = 1.2;
+            break;
+          case 'muscle_gain':
+            proteinGramsPerKg = 1.2;
+            break;
+          case 'maintain':
+          default:
+            proteinGramsPerKg = 1.0;
+            break;
+        }
+      }
+
+      final proteinGrams = weightKg * proteinGramsPerKg;
+      final proteinCalories = proteinGrams * 4; // 4 calories per gram
+
+      // Step 2: Calculate Fats (20-30% of total calories)
+      double fatsPercent;
       switch (goal) {
         case 'weight_loss':
-          proteinPercent = 0.40;
-          carbsPercent = 0.35;
-          fatsPercent = 0.25;
+          fatsPercent = 0.20; // 20% for weight loss
           break;
         case 'muscle_gain':
-          proteinPercent = 0.30;
-          carbsPercent = 0.50;
-          fatsPercent = 0.20;
+          fatsPercent = 0.25; // 25% for muscle gain
           break;
         case 'maintain':
         default:
-          proteinPercent = 0.30;
-          carbsPercent = 0.40;
-          fatsPercent = 0.30;
+          fatsPercent = 0.30; // 30% for maintenance
           break;
       }
 
-      // Calculate calories for each macro
-      final proteinCalories = dailyCalories * proteinPercent;
-      final carbsCalories = dailyCalories * carbsPercent;
       final fatsCalories = dailyCalories * fatsPercent;
+      final fatsGrams = fatsCalories / 9; // 9 calories per gram
 
-      // Calculate grams (protein: 4 cal/g, carbs: 4 cal/g, fats: 9 cal/g)
-      final proteinGrams = proteinCalories / 4;
-      final carbsGrams = carbsCalories / 4;
-      final fatsGrams = fatsCalories / 9;
+      // Step 3: Calculate Carbs from remaining calories
+      final carbsCalories = dailyCalories - proteinCalories - fatsCalories;
+      final carbsGrams = carbsCalories / 4; // 4 calories per gram
+
+      // Calculate percentages for display
+      final proteinPercentage = (proteinCalories / dailyCalories) * 100;
+      final carbsPercentage = (carbsCalories / dailyCalories) * 100;
+      final fatsPercentage = (fatsCalories / dailyCalories) * 100;
 
       TalkerService.info(
-        'Macros calculated - P: ${proteinGrams.toStringAsFixed(1)}g, '
-            'C: ${carbsGrams.toStringAsFixed(1)}g, F: ${fatsGrams.toStringAsFixed(1)}g',
+        'Macros calculated - P: ${proteinGrams.toStringAsFixed(1)}g (${proteinPercentage.toStringAsFixed(1)}%), '
+            'C: ${carbsGrams.toStringAsFixed(1)}g (${carbsPercentage.toStringAsFixed(1)}%), '
+            'F: ${fatsGrams.toStringAsFixed(1)}g (${fatsPercentage.toStringAsFixed(1)}%)',
         'CALORIES_CALCULATOR',
       );
 
@@ -150,9 +185,9 @@ class CaloriesCalculatorRepo {
         proteinCalories: proteinCalories,
         carbsCalories: carbsCalories,
         fatsCalories: fatsCalories,
-        proteinPercentage: proteinPercent * 100,
-        carbsPercentage: carbsPercent * 100,
-        fatsPercentage: fatsPercent * 100,
+        proteinPercentage: proteinPercentage,
+        carbsPercentage: carbsPercentage,
+        fatsPercentage: fatsPercentage,
       );
     } catch (e) {
       TalkerService.error(
@@ -171,7 +206,12 @@ class CaloriesCalculatorRepo {
       final tdee = calculateTDEE(bmr, userData.activityLevel);
       final dailyCaloricNeeds =
           calculateDailyCaloricNeeds(tdee, userData.goal, userData.weeklyGoal);
-      final macros = calculateMacros(dailyCaloricNeeds, userData.goal);
+      final macros = calculateMacros(
+        dailyCaloricNeeds,
+        userData.goal,
+        userData.weight,
+        userData.gender,
+      );
 
       TalkerService.info(
         'Complete calculation finished successfully',

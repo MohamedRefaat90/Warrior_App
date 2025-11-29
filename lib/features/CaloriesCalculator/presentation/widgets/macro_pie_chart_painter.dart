@@ -1,3 +1,4 @@
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -68,8 +69,8 @@ class _MacroPieChartState extends State<MacroPieChart> {
             ),
             badgeWidget: touchedIndex == 0
                 ? _buildBadge(
-                    'Protein\n${widget.proteinGrams.toStringAsFixed(0)}g',
-                    Color.fromARGB(255, 238, 31, 31))
+                    '${context.l10n.protein}\n${widget.proteinGrams.toStringAsFixed(0)}${context.l10n.g}',
+                    const Color.fromARGB(255, 238, 31, 31))
                 : null,
             badgePositionPercentageOffset: -0.5,
           ),
@@ -91,7 +92,8 @@ class _MacroPieChartState extends State<MacroPieChart> {
               ],
             ),
             badgeWidget: touchedIndex == 1
-                ? _buildBadge('Carbs\n${widget.carbsGrams.toStringAsFixed(0)}g',
+                ? _buildBadge(
+                    '${context.l10n.carbs}\n${widget.carbsGrams.toStringAsFixed(0)}${context.l10n.g}',
                     Colors.green)
                 : null,
             badgePositionPercentageOffset: -0.5,
@@ -114,15 +116,16 @@ class _MacroPieChartState extends State<MacroPieChart> {
               ],
             ),
             badgeWidget: touchedIndex == 2
-                ? _buildBadge('Fats\n${widget.fatsGrams.toStringAsFixed(0)}g',
+                ? _buildBadge(
+                    '${context.l10n.fats}\n${widget.fatsGrams.toStringAsFixed(0)}${context.l10n.g}',
                     Colors.orange)
                 : null,
             badgePositionPercentageOffset: -0.5,
           ),
         ],
       ),
-      duration: const Duration(milliseconds: 750),
-      curve: Curves.easeInOutCubic,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeIn,
     );
   }
 

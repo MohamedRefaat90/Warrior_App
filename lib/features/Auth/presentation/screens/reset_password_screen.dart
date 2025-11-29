@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
@@ -52,33 +52,33 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Enter your new password".capitalizeWord(),
+                      'enterNewPassword'.tr(context),
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     SizedBox(height: context.mediumSpacing),
                     CustomTextField(
                         textEditingController: passwordController,
-                        placeholderText: 'New Password',
+                        placeholderText: 'newPassword'.tr(context),
                         isObscure: true,
                         onChange: (password) => ref
                             .read(resetPasswordProvider.notifier)
                             .passwordValidator(password),
                         isPassword: true),
                     SizedBox(height: context.smallSpacing),
-                    PasswordValidationRules(),
+                    const PasswordValidationRules(),
                     SizedBox(height: context.smallSpacing),
                     CustomTextField(
                         textEditingController: confirmPasswordController,
                         validator: (value) => confirmPasswordvalidator(
                             value!, passwordController.text),
-                        placeholderText: 'Confirm Password',
+                        placeholderText: 'confirmPassword'.tr(context),
                         isObscure: true,
                         isPassword: true),
                     SizedBox(height: context.mediumSpacing),
                     CustomBTN(
                         widget: providerStates.isLoading
                             ? const BtnLoader()
-                            : const Text("Reset Password"),
+                            : Text('resetPassword'.tr(context)),
                         color: AppColors.black,
                         padding: 15,
                         width: ResponsiveUtils.value<double>(

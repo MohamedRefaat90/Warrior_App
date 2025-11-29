@@ -1,6 +1,6 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -39,8 +39,7 @@ class _ResetPasswordSuccessState extends State<ResetPasswordSuccess> {
                         frameRate: const FrameRate(60))),
                 SizedBox(height: context.mediumSpacing),
                 Text(
-                  "Password reset successfully Try to login with new password"
-                      .capitalizeWord(),
+                  'passwordResetSuccess'.tr(context),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),

@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/functions/validators.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
@@ -39,7 +40,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Signup',
+          'signup'.tr(context),
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontFamily: "Poppines",
               ),
@@ -64,24 +65,24 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   children: [
                     SizedBox(height: context.smallSpacing),
                     CustomTextField(
-                        placeholderText: "Name",
+                        placeholderText: 'name'.tr(context),
                         textEditingController: nameController,
                         isObscure: false,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Name is required';
+                            return 'nameRequired'.tr(context);
                           }
                           return null;
                         }),
                     SizedBox(height: context.smallSpacing),
                     CustomTextField(
-                        placeholderText: "Email",
+                        placeholderText: 'email'.tr(context),
                         textEditingController: emailController,
                         isObscure: false,
                         validator: (value) => emailValidator(value!.trim())),
                     SizedBox(height: context.smallSpacing),
                     CustomTextField(
-                      placeholderText: "password",
+                      placeholderText: 'password'.tr(context),
                       textEditingController: passwordController,
                       isObscure: true,
                       isPassword: true,
@@ -90,10 +91,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           .passwordValidator(password),
                     ),
                     SizedBox(height: context.smallSpacing),
-                    PasswordValidationRules(),
+                    const PasswordValidationRules(),
                     SizedBox(height: context.smallSpacing),
                     CustomTextField(
-                        placeholderText: "Confirm Password",
+                        placeholderText: 'confirmPassword'.tr(context),
                         isObscure: true,
                         isPassword: true,
                         validator: (value) => confirmPasswordvalidator(
@@ -103,7 +104,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       child: CustomBTN(
                           widget: providerStates.isLoading
                               ? const BtnLoader()
-                              : const Text("Signup"),
+                              : Text('signup'.tr(context),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
                           color: AppColors.primaryColor,
                           padding: ResponsiveUtils.value(context,
                               mobile: 15.0, desktop: 18.0),
@@ -125,7 +128,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           }),
                     ),
                     if (!isDesktopOrTablet) ...[
-                      SizedBox(height: context.largeSpacing),
+                      SizedBox(height: context.screenHeight * 0.08),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Transform.rotate(

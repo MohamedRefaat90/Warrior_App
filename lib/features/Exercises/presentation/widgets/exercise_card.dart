@@ -35,7 +35,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
         onTap: () => context.pushNamed(AppRouters.exerciseDetails,
             extra: widget.exercise),
         child: Card(
-          elevation: 5,
+          elevation: 50,
+          color: Color.fromARGB(36, 82, 165, 207),
           shape: RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.circular(context.responsiveBorderRadius)),

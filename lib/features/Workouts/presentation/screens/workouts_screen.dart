@@ -2,8 +2,9 @@ import 'dart:ui';
 
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
-import 'package:Warrior/core/extensions/string.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -30,7 +31,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   late final AnimationController _fabAnimationController;
   late final Animation<double> _fabScaleAnimation;
   late final Animation<double> _fabRotationAnimation;
-
   @override
   Widget build(BuildContext context) {
     final workoutNotifier = ref.watch(workoutsProvider.notifier);
@@ -52,11 +52,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                   foregroundColor: Colors.white,
                   icon: const Icon(Icons.add_rounded, size: 28),
                   label: Text(
-                    'New Workout',
+                    'newWorkout'.tr(context),
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                        color: AppColors.white),
                   ),
                   onPressed: () => _showCreateWorkoutDialog(context),
                 ),
@@ -127,6 +127,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   }
 
   Widget _buildSliverAppBar(BuildContext context, bool isDark) {
+    final appSettings = ref.watch(appSettingsProvider);
+
     return SliverAppBar(
       expandedHeight: 120,
       floating: false,
@@ -145,9 +147,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         title: Material(
           color: Colors.transparent,
           child: Text(
-            'Your Workouts',
+            'yourWorkouts'.tr(context),
             style: TextStyle(
-              fontFamily: 'kings',
+              fontFamily:
+                  appSettings.locale.languageCode == 'ar' ? "Cairo" : "Poppins",
               fontWeight: FontWeight.bold,
               fontSize: 24,
               color: isDark ? Colors.white : Colors.black87,
@@ -287,7 +290,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'New Workout Set',
+                        'newWorkoutSet'.tr(context),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -304,7 +307,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Workout Name',
+                          'workoutName'.tr(context),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -317,12 +320,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                           isObscure: false,
                           textEditingController: _nameController,
                           validator: (value) => value!.isEmpty
-                              ? 'Workout set name is required'.capitalizeWord()
+                              ? 'nameRequired'.tr(context)
                               : null,
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Description (Optional)',
+                          'descriptionOptional'.tr(context),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -350,7 +353,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                       ),
                     ),
                     child: Text(
-                      'Cancel',
+                      'cancel'.tr(context),
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -395,7 +398,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                         elevation: 2,
                       ),
                       child: Text(
-                        'Create',
+                        'create'.tr(context),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

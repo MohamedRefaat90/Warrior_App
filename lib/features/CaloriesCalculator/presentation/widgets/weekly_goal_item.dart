@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +66,7 @@ class WeeklyGoalItem extends StatelessWidget {
             ),
             SizedBox(width: context.mediumSpacing),
             Text(
-              '$action $goal kg per week',
+              '$action $goal ${'kgPerWeek'.tr(context)}',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight:
                         isSelected ? FontWeight.bold : FontWeight.normal,

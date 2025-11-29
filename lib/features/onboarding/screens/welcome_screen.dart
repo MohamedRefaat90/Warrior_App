@@ -55,7 +55,10 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 CustomBTN(
-                  widget: Text('start'.tr(context)),
+                  widget: Text(
+                    'start'.tr(context),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   press: () => context.goNamed(AppRouters.onboarding),
                   padding: 15,
                   width: 150,

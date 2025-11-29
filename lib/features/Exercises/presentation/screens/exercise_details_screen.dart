@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
@@ -10,6 +12,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
 class ExerciseDetailsScreen extends StatefulWidget {
@@ -492,7 +495,7 @@ class _ImagePlaceholder extends StatelessWidget {
   }
 }
 
-class _TargetedMusclesSection extends StatelessWidget {
+class _TargetedMusclesSection extends ConsumerWidget {
   final String imageUrl;
 
   const _TargetedMusclesSection({required this.imageUrl});
@@ -502,9 +505,9 @@ class _TargetedMusclesSection extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    final appSettings = ref.watch(appSettingsProvider.notifier);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -556,10 +559,11 @@ class _TargetedMusclesSection extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Targeted Muscles',
+                context.l10n.targetedMuscles,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  fontFamily: appSettings.fontFamily(),
                   color: isDark ? Colors.white : Colors.black87,
                   letterSpacing: 0.3,
                 ),
@@ -583,10 +587,6 @@ class _TargetedMusclesSection extends StatelessWidget {
                       width: double.infinity,
                       fit: BoxFit.contain,
                       alignment: Alignment.center,
-                      // memCacheWidth: 400,
-                      // memCacheHeight: 400,
-                      // maxWidthDiskCache: 500,
-                      // maxHeightDiskCache: 500,
                       fadeInDuration: const Duration(milliseconds: 200),
                       placeholder: (context, url) => SizedBox(
                         height: 200,

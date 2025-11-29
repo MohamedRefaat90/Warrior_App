@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/provider/calories_calculator_provider.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/macro_pie_chart_painter.dart';
@@ -21,7 +22,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
     if (state.results == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Results'),
+          title: Text('results'.tr(context)),
           centerTitle: true,
         ),
         body: Center(
@@ -35,7 +36,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'No calculation results available',
+                'noResultsAvailable'.tr(context),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -43,7 +44,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Please complete the calculator form first',
+                'completeFormFirst'.tr(context),
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.black.withValues(alpha: 0.6),
@@ -55,7 +56,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 color: AppColors.primaryColor,
                 radius: 15,
                 widget: Text(
-                  'Go Back',
+                  'goBack'.tr(context),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -74,8 +75,8 @@ class CaloriesResultsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Your Results',
+        title: Text(
+          'yourResults'.tr(context),
           style: TextStyle(fontFamily: 'kings', fontWeight: FontWeight.w900),
         ),
         centerTitle: true,
@@ -83,7 +84,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => Navigator.pop(context),
-            tooltip: 'New Calculation',
+            tooltip: 'newCalculation'.tr(context),
           ),
         ],
       ),
@@ -118,7 +119,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
             FadeInLeft(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 200),
-              child: const SectionTitle(title: 'Metabolic Metrics'),
+              child: SectionTitle(title: 'metabolicMetrics'.tr(context)),
             ),
             const SizedBox(height: 15),
             FadeInUp(
@@ -128,9 +129,9 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: MetricCard(
-                      title: 'BMR',
+                      title: 'bmr'.tr(context),
                       value: '${results.bmr.round()}',
-                      subtitle: 'Basal Metabolic\nRate',
+                      subtitle: 'basalMetabolicRate'.tr(context),
                       icon: Icons.favorite,
                       color: Colors.red,
                     ),
@@ -138,9 +139,9 @@ class CaloriesResultsScreen extends ConsumerWidget {
                   const SizedBox(width: 15),
                   Expanded(
                     child: MetricCard(
-                      title: 'TDEE',
+                      title: 'tdee'.tr(context),
                       value: '${results.tdee.round()}',
-                      subtitle: 'Total Daily Energy\nExpenditure',
+                      subtitle: 'totalDailyEnergyExpenditure'.tr(context),
                       icon: Icons.local_fire_department,
                       color: Colors.deepOrange,
                     ),
@@ -154,7 +155,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
             FadeInLeft(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 400),
-              child: const SectionTitle(title: 'Macronutrient Split'),
+              child: SectionTitle(title: 'macronutrientSplit'.tr(context)),
             ),
             const SizedBox(height: 15),
             ZoomIn(
@@ -192,14 +193,14 @@ class CaloriesResultsScreen extends ConsumerWidget {
             FadeInLeft(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 600),
-              child: const SectionTitle(title: 'Daily Macros Target'),
+              child: SectionTitle(title: 'dailyMacrosTarget'.tr(context)),
             ),
             const SizedBox(height: 15),
             FadeInRight(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 650),
               child: MacroRow(
-                label: 'Protein',
+                label: 'protein'.tr(context),
                 grams: macros.proteinGrams,
                 calories: macros.proteinCalories,
                 percentage: macros.proteinPercentage,
@@ -211,7 +212,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 700),
               child: MacroRow(
-                label: 'Carbohydrates',
+                label: 'carbs'.tr(context),
                 grams: macros.carbsGrams,
                 calories: macros.carbsCalories,
                 percentage: macros.carbsPercentage,
@@ -223,7 +224,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 750),
               child: MacroRow(
-                label: 'Fats',
+                label: 'fats'.tr(context),
                 grams: macros.fatsGrams,
                 calories: macros.fatsCalories,
                 percentage: macros.fatsPercentage,
@@ -251,7 +252,7 @@ class CaloriesResultsScreen extends ConsumerWidget {
                       const Icon(Icons.refresh, color: Colors.white),
                       const SizedBox(width: 10),
                       Text(
-                        'New Calculation',
+                        'newCalculation'.tr(context),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

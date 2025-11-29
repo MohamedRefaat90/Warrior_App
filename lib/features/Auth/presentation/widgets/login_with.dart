@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:flutter/material.dart';
 
 class LoginWith extends StatelessWidget {
@@ -17,7 +18,7 @@ class LoginWith extends StatelessWidget {
             indent: 50,
           ),
         ),
-        Text("  Login With  "),
+        Text("  ${'loginWith'.tr(context)}  "),
         Expanded(
           child: Divider(
             color: isDarkMode ? AppColors.white : AppColors.black,

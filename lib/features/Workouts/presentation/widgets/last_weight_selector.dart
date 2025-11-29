@@ -1,4 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Workouts/data/data_sources/workout_item_weights.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -14,11 +16,8 @@ class LastWeightSelector extends ConsumerStatefulWidget {
   final WorkoutItemModel workoutExercise;
   final WorkoutSetModel workout;
 
-  const LastWeightSelector({
-    super.key,
-    required this.workoutExercise,
-    required this.workout,
-  });
+  const LastWeightSelector(
+      {super.key, required this.workoutExercise, required this.workout});
 
   @override
   LastWeightSelectorState createState() => LastWeightSelectorState();
@@ -203,7 +202,7 @@ class LastWeightSelectorState extends ConsumerState<LastWeightSelector>
 }
 
 /// Badge showing the current/last weight
-class _CurrentWeightIndicator extends StatelessWidget {
+class _CurrentWeightIndicator extends ConsumerWidget {
   final num lastWeight;
   final String equipmentType;
 
@@ -213,7 +212,9 @@ class _CurrentWeightIndicator extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appSettings = ref.watch(appSettingsProvider.notifier);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -234,9 +235,9 @@ class _CurrentWeightIndicator extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            "Last: $lastWeight ${equipmentType == "machine" ? "Bar" : "KG"}",
+            "${context.l10n.lastWeight} $lastWeight ${equipmentType == "machine" ? context.l10n.bar : context.l10n.kg}",
             style: TextStyle(
-              fontFamily: "poppins",
+              fontFamily: appSettings.fontFamily(),
               fontWeight: FontWeight.w600,
               fontSize: 12,
               color: Colors.white,
@@ -249,13 +250,14 @@ class _CurrentWeightIndicator extends StatelessWidget {
 }
 
 /// Header for custom weight section
-class _CustomWeightHeader extends StatelessWidget {
+class _CustomWeightHeader extends ConsumerWidget {
   final bool isDark;
 
   const _CustomWeightHeader({required this.isDark});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appSettings = ref.watch(appSettingsProvider.notifier);
     return Row(
       children: [
         Container(
@@ -272,11 +274,11 @@ class _CustomWeightHeader extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Text(
-          "Custom Weight",
+          context.l10n.customWeight,
           style: TextStyle(
-            fontFamily: "poppins",
-            fontWeight: FontWeight.w700,
-            fontSize: 14,
+            fontFamily: appSettings.fontFamily(),
+            fontWeight: FontWeight.w900,
+            fontSize: 15,
             color: isDark ? Colors.white : Colors.grey.shade800,
             letterSpacing: 0.3,
           ),
@@ -364,7 +366,7 @@ class _CustomWeightInput extends StatelessWidget {
 }
 
 /// Text field for custom weight input
-class _CustomWeightTextField extends StatelessWidget {
+class _CustomWeightTextField extends ConsumerWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final bool isMachine;
@@ -386,7 +388,9 @@ class _CustomWeightTextField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appSettings = ref.watch(appSettingsProvider.notifier);
+
     return TextField(
       controller: controller,
       focusNode: focusNode,
@@ -402,9 +406,9 @@ class _CustomWeightTextField extends StatelessWidget {
         fontSize: 16,
       ),
       decoration: InputDecoration(
-        hintText: "Enter weight value",
+        hintText: context.l10n.enterWeightValue,
         hintStyle: TextStyle(
-          fontFamily: "poppins",
+          fontFamily: appSettings.fontFamily(),
           fontSize: 12,
           color: Colors.grey.shade400,
         ),
@@ -471,20 +475,22 @@ class _HeaderIcon extends StatelessWidget {
 }
 
 /// Title section in the header
-class _HeaderTitle extends StatelessWidget {
+class _HeaderTitle extends ConsumerWidget {
   final String exerciseName;
 
   const _HeaderTitle({required this.exerciseName});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appSettings = ref.watch(appSettingsProvider.notifier);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Select Weight",
+          context.l10n.selectWeight,
           style: TextStyle(
-            fontFamily: "poppins",
+            fontFamily: appSettings.fontFamily(),
             fontWeight: FontWeight.w600,
             fontSize: 12,
             color: Colors.white.withOpacity(0.9),
@@ -495,7 +501,7 @@ class _HeaderTitle extends StatelessWidget {
         Text(
           exerciseName,
           style: TextStyle(
-            fontFamily: "poppins",
+            fontFamily: appSettings.fontFamily(),
             fontWeight: FontWeight.bold,
             fontSize: 16,
             color: Colors.white,
@@ -510,14 +516,15 @@ class _HeaderTitle extends StatelessWidget {
 }
 
 /// Update weight button at the bottom
-class _UpdateWeightButton extends StatelessWidget {
+class _UpdateWeightButton extends ConsumerWidget {
   final VoidCallback onPressed;
 
   const _UpdateWeightButton({required this.onPressed});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final appSettings = ref.watch(appSettingsProvider.notifier);
 
     return Container(
       width: double.infinity,
@@ -543,9 +550,9 @@ class _UpdateWeightButton extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              "Update Weight",
+              context.l10n.updateWeight,
               style: TextStyle(
-                fontFamily: "poppins",
+                fontFamily: appSettings.fontFamily(),
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
                 color: Colors.white,
@@ -692,13 +699,15 @@ class _WeightSelectorHeader extends StatelessWidget {
 }
 
 /// Badge showing the weight unit (KG or Bar)
-class _WeightUnitBadge extends StatelessWidget {
+class _WeightUnitBadge extends ConsumerWidget {
   final bool isMachine;
 
   const _WeightUnitBadge({required this.isMachine});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appSettings = ref.watch(appSettingsProvider.notifier);
+
     return Container(
       margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -707,9 +716,9 @@ class _WeightUnitBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        isMachine ? "Bar" : "KG",
+        isMachine ? context.l10n.bar : context.l10n.kg,
         style: TextStyle(
-          fontFamily: "poppins",
+          fontFamily: appSettings.fontFamily(),
           fontWeight: FontWeight.bold,
           fontSize: 13,
           color: AppColors.primaryColor,

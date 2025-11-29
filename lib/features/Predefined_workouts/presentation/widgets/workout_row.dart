@@ -28,14 +28,9 @@ class WorkoutRow extends StatelessWidget {
               }
 
               return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    right: index < 2 ? spacing : 0,
-                  ),
-                  child: PredefinedWorkoutCard(
-                    key: Key("workout_${workouts[index].id}"),
-                    workout: workouts[index],
-                  ),
+                child: PredefinedWorkoutCard(
+                  key: Key("workout_${workouts[index].id}"),
+                  workout: workouts[index],
                 ),
               );
             },

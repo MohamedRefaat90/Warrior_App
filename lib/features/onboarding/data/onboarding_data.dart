@@ -2,27 +2,26 @@ import 'package:Warrior/core/constants/assets.dart';
 
 List<OnboardingItem> onboardingItems = [
   OnboardingItem(
-      title: 'Target Every Muscle',
-      description:
-          'Unlock a variety of exercises designed for every muscle group to build strength effectively.',
+      titleKey: 'onboardingTitle1',
+      descriptionKey: 'onboardingDesc1',
       image: AppAssets.onboarding1),
   OnboardingItem(
-      title: 'Customize Your Workouts',
-      description:
-          'Craft your unique workout sets to match your fitness goals and preferences.',
+      titleKey: 'onboardingTitle2',
+      descriptionKey: 'onboardingDesc2',
       image: AppAssets.onboarding2),
   OnboardingItem(
-      title: 'Your Fitness, Your Way',
-      description:
-          'Take control of your training with a personalized approach to achieving your best self.',
+      titleKey: 'onboardingTitle3',
+      descriptionKey: 'onboardingDesc3',
       image: AppAssets.onboarding3),
 ];
 
 class OnboardingItem {
-  final String title;
-  final String description;
+  final String titleKey;
+  final String descriptionKey;
   final String image;
 
   OnboardingItem(
-      {required this.title, required this.description, required this.image});
+      {required this.titleKey,
+      required this.descriptionKey,
+      required this.image});
 }

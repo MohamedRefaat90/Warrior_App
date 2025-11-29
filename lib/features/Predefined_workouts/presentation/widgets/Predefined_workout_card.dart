@@ -1,3 +1,4 @@
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -7,10 +8,7 @@ import 'package:go_router/go_router.dart';
 class PredefinedWorkoutCard extends StatelessWidget {
   final WorkoutSetModel workout;
 
-  const PredefinedWorkoutCard({
-    super.key,
-    required this.workout,
-  });
+  const PredefinedWorkoutCard({super.key, required this.workout});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +17,16 @@ class PredefinedWorkoutCard extends StatelessWidget {
         onTap: () {
           context.pushNamed(
             AppRouters.predefinedWorkoutDetails,
-            extra: workout,
+            extra: workout as WorkoutSetModel,
           );
         },
         child: Card(
           clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          color: AppColors.lightTail,
+          elevation: 20,
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: context.smallSpacing,

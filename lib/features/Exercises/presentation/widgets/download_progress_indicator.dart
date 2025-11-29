@@ -1,6 +1,8 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/providers/cache_provider.dart';
 import 'package:Warrior/core/services/exercise_cache_manager.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,6 +103,7 @@ class _DownloadProgressIndicatorState
 
   Widget _buildProgressIndicator(CacheProgress progress) {
     final percentage = (progress.progress * 100).toInt();
+    final appSettings = ref.watch(appSettingsProvider.notifier);
 
     return Positioned(
       bottom: 16,
@@ -152,21 +155,21 @@ class _DownloadProgressIndicatorState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Downloading exercises',
+                          context.l10n.downloadingExercises,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: AppColors.black,
-                            fontFamily: 'Poppins',
+                            fontFamily: appSettings.fontFamily(),
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${progress.cachedExercises}/${progress.totalExercises} completed',
+                          '${progress.cachedExercises}/${progress.totalExercises} ${context.l10n.completed}',
                           style: TextStyle(
                             fontSize: 11,
                             color: AppColors.black.withValues(alpha: 0.6),
-                            fontFamily: 'Poppins',
+                            fontFamily: appSettings.fontFamily(),
                           ),
                         ),
                       ],
@@ -178,7 +181,7 @@ class _DownloadProgressIndicatorState
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryColor,
-                      fontFamily: 'Poppins',
+                      fontFamily: appSettings.fontFamily(),
                     ),
                   ),
                 ],
@@ -207,11 +210,11 @@ class _DownloadProgressIndicatorState
               if (progress.currentExercise != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  'Downloading: ${progress.currentExercise}',
+                  '${context.l10n.downloading}: ${progress.currentExercise}',
                   style: TextStyle(
                     fontSize: 10,
                     color: AppColors.black.withValues(alpha: 0.5),
-                    fontFamily: 'Poppins',
+                    fontFamily: appSettings.fontFamily(),
                     fontStyle: FontStyle.italic,
                   ),
                   maxLines: 1,
@@ -234,6 +237,8 @@ class _DownloadProgressIndicatorState
   }
 
   Widget _buildSuccessMessage(CacheProgress progress) {
+    final appSettings = ref.watch(appSettingsProvider.notifier);
+
     return Positioned(
       bottom: 16,
       left: 16,
@@ -281,21 +286,22 @@ class _DownloadProgressIndicatorState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Download Complete!',
+                      context.l10n.downloadComplete,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontFamily: 'Poppins',
+                        fontFamily: appSettings.fontFamily(),
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${progress.cachedExercises} exercises available offline',
+                      context.l10n
+                          .exercisesAvailableOffline(progress.cachedExercises),
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.white.withValues(alpha: 0.9),
-                        fontFamily: 'Poppins',
+                        fontFamily: appSettings.fontFamily(),
                       ),
                     ),
                   ],

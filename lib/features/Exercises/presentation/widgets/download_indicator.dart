@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Shows download status with fancy animations:
 /// - Not Downloaded: No indicator
 /// - Downloading: Animated shimmer with cloud download icon
-/// - Downloaded: Static banner with checkmark and "Available Offline" text
+/// - Downloaded: Static banner with checkmark and "Offline" text
 class DownloadIndicatorBanner extends ConsumerWidget {
   final ExerciseModel exercise;
 
@@ -36,8 +36,8 @@ class DownloadIndicatorBanner extends ConsumerWidget {
     final isDownloading = status == ExerciseCacheStatus.downloading;
 
     return Positioned(
-      top: 0,
-      right: 0,
+      top: 10,
+      right: 10,
       child: Container(
         width: isDownloading ? 110 : 55,
         alignment: Alignment.center,

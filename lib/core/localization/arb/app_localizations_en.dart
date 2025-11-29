@@ -332,4 +332,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tip5 => 'Balance is key - variety in your diet matters';
+
+  @override
+  String get advancedSearchTooltip => 'Advanced Search';
+
+  @override
+  String get searchHistoryTooltip => 'Search History';
+
+  @override
+  String get addProductButton => 'Add Product';
+
+  @override
+  String get favoritesButton => 'Favorites';
+
+  @override
+  String get compareButton => 'Compare';
+
+  @override
+  String get recentlyScanned => 'Recently Scanned';
+
+  @override
+  String get noProductsYet => 'No Products Yet';
+
+  @override
+  String get startByScanningBarcode =>
+      'Start by scanning a barcode or searching for products';
 }

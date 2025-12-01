@@ -1470,5 +1470,37 @@
   "openFoodFactsDisclaimer": "* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.",
   "@openFoodFactsDisclaimer": {
     "description": "Open Food Facts disclaimer"
+  },
+  "scanNutritionLabel": "Scan Nutrition Label",
+  "@scanNutritionLabel": {
+    "description": "Title for OCR scanner screen"
+  },
+  "positionNutritionLabel": "Position the nutrition label within the frame",
+  "@positionNutritionLabel": {
+    "description": "Instruction for OCR scanner"
+  },
+  "gallery": "Gallery",
+  "@gallery": {
+    "description": "Gallery button label"
+  },
+  "manual": "Manual",
+  "@manual": {
+    "description": "Manual entry button label"
+  },
+  "ocrFailed": "Scan Failed",
+  "@ocrFailed": {
+    "description": "OCR failure title"
+  },
+  "retake": "Retake",
+  "@retake": {
+    "description": "Retake photo button"
+  },
+  "manualEntry": "Manual Entry",
+  "@manualEntry": {
+    "description": "Manual entry button"
+  },
+  "scanComplete": "Scan Complete!",
+  "@scanComplete": {
+    "description": "Success message after OCR scan"
   }
 }

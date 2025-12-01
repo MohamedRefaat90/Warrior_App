@@ -1130,4 +1130,29 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get openFoodFactsDisclaimer =>
       '* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.';
+
+  @override
+  String get scanNutritionLabel => 'Scan Nutrition Label';
+
+  @override
+  String get positionNutritionLabel =>
+      'Position the nutrition label within the frame';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get manual => 'Manual';
+
+  @override
+  String get ocrFailed => 'Scan Failed';
+
+  @override
+  String get retake => 'Retake';
+
+  @override
+  String get manualEntry => 'Manual Entry';
+
+  @override
+  String get scanComplete => 'Scan Complete!';
 }

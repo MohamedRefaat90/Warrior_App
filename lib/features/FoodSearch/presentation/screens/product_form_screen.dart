@@ -1,10 +1,13 @@
+import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
@@ -35,6 +38,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
 
   bool _isLoading = false;
   String? _selectedImagePath;
+  NutritionFacts? _scannedNutrition;
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +190,84 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               ),
               const SizedBox(height: 24),
 
+              // OCR Nutrition Scanner section
+              Card(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.document_scanner,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'scanNutritionLabel'.tr(context),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondaryContainer,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: _scanNutritionLabel,
+                          icon: const Icon(Icons.camera_alt),
+                          label: Text('scanNutritionLabel'.tr(context)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onSecondary,
+                          ),
+                        ),
+                      ),
+                      if (_scannedNutrition != null) ...[
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.green),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.check_circle,
+                                  color: Colors.green),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Nutrition data scanned: '
+                                  '${_scannedNutrition!.populatedFieldCount} fields',
+                                  style: const TextStyle(color: Colors.green),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
               // Image picker section
               Card(
                 child: Padding(
@@ -317,6 +399,25 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       setState(() {
         _selectedImagePath = image.path;
       });
+    }
+  }
+
+  Future<void> _scanNutritionLabel() async {
+    final result = await context.pushNamed<NutritionFacts?>(
+      AppRouters.ocrScanner,
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _scannedNutrition = result;
+      });
+
+      Flushbar(
+        message: 'Scanned ${result.populatedFieldCount} nutrition fields!',
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.green,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+      ).show(context);
     }
   }
 

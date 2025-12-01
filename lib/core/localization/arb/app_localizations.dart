@@ -2245,6 +2245,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'* Required fields\n\nBy submitting, you agree to contribute this information to the Open Food Facts database under the Open Database License.'**
   String get openFoodFactsDisclaimer;
+
+  /// Title for OCR scanner screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Nutrition Label'**
+  String get scanNutritionLabel;
+
+  /// Instruction for OCR scanner
+  ///
+  /// In en, this message translates to:
+  /// **'Position the nutrition label within the frame'**
+  String get positionNutritionLabel;
+
+  /// Gallery button label
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// Manual entry button label
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get manual;
+
+  /// OCR failure title
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Failed'**
+  String get ocrFailed;
+
+  /// Retake photo button
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get retake;
+
+  /// Manual entry button
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Entry'**
+  String get manualEntry;
+
+  /// Success message after OCR scan
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Complete!'**
+  String get scanComplete;
 }
 
 class _AppLocalizationsDelegate

@@ -15,19 +15,20 @@ import 'package:Warrior/features/Auth/presentation/screens/verify_otp_screen.dar
 import 'package:Warrior/features/CaloriesCalculator/presentation/screens/calories_calculator_screen.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/screens/calories_results_screen.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/advanced_search_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/barcode_scanner_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/favorites_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/food_search_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/nutrition_guide_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/ocr_scanner_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/product_comparison_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/product_details_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/product_form_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/search_history_screen.dart';
-import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
-import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
-import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
 import 'package:Warrior/features/Home/presentation/screen/home_screen.dart';
 import 'package:Warrior/features/Nutrition/presentation/screens/nutrition_screen.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/screen/predefined_workout_details.dart';
@@ -328,6 +329,14 @@ class RoutersManager {
       pageBuilder: (context, state) => CustomTransition(
         child: const NutritionGuideScreen(),
         transitionType: PageTransitionType.fade,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.ocrScanner,
+      name: AppRouters.ocrScanner,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const OcrScannerScreen(),
+        transitionType: PageTransitionType.bottomToTop,
       ),
     ),
   ]);

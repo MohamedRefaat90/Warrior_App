@@ -1439,5 +1439,37 @@
   "openFoodFactsDisclaimer": "* حقول مطلوبة\n\nبإرسالك، توافق على المساهمة بهذه المعلومات في قاعدة بيانات Open Food Facts تحت رخصة قاعدة البيانات المفتوحة.",
   "@openFoodFactsDisclaimer": {
     "description": "Open Food Facts disclaimer"
+  },
+  "scanNutritionLabel": "مسح ملصق القيم الغذائية",
+  "@scanNutritionLabel": {
+    "description": "Title for OCR scanner screen"
+  },
+  "positionNutritionLabel": "ضع ملصق القيم الغذائية داخل الإطار",
+  "@positionNutritionLabel": {
+    "description": "Instruction for OCR scanner"
+  },
+  "gallery": "المعرض",
+  "@gallery": {
+    "description": "Gallery button label"
+  },
+  "manual": "يدوي",
+  "@manual": {
+    "description": "Manual entry button label"
+  },
+  "ocrFailed": "فشل المسح",
+  "@ocrFailed": {
+    "description": "OCR failure title"
+  },
+  "retake": "إعادة التصوير",
+  "@retake": {
+    "description": "Retake photo button"
+  },
+  "manualEntry": "إدخال يدوي",
+  "@manualEntry": {
+    "description": "Manual entry button"
+  },
+  "scanComplete": "تم المسح بنجاح!",
+  "@scanComplete": {
+    "description": "Success message after OCR scan"
   }
 }

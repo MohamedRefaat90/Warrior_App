@@ -1471,5 +1471,55 @@
   "scanComplete": "تم المسح بنجاح!",
   "@scanComplete": {
     "description": "Success message after OCR scan"
+  },
+  "per100g": "لكل 100 جم",
+  "@per100g": {
+    "description": "Per 100 grams unit toggle option"
+  },
+  "perServing": "لكل حصة",
+  "@perServing": {
+    "description": "Per serving unit toggle option"
+  },
+  "sodium": "الصوديوم",
+  "@sodium": {
+    "description": "Sodium nutrient label"
+  },
+  "lowConfidence": "ثقة منخفضة",
+  "@lowConfidence": {
+    "description": "Label for low confidence OCR values"
+  },
+  "pleaseVerify": "يرجى التحقق من هذه القيمة",
+  "@pleaseVerify": {
+    "description": "Helper text for low confidence fields"
+  },
+  "fieldsDetected": "{count} حقول",
+  "@fieldsDetected": {
+    "description": "Number of nutrition fields detected",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of fields"
+      }
+    }
+  },
+  "pendingSync": "في انتظار المزامنة",
+  "@pendingSync": {
+    "description": "Label for items waiting to sync"
+  },
+  "syncingChanges": "جاري مزامنة التغييرات...",
+  "@syncingChanges": {
+    "description": "Message shown during sync"
+  },
+  "changesPendingSync": "تغييرات في انتظار المزامنة",
+  "@changesPendingSync": {
+    "description": "Title for pending sync indicator"
+  },
+  "syncNow": "مزامنة الآن",
+  "@syncNow": {
+    "description": "Button to trigger manual sync"
+  },
+  "syncedWithServer": "تمت المزامنة مع الخادم",
+  "@syncedWithServer": {
+    "description": "Success message after sync completes"
   }
 }

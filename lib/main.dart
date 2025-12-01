@@ -76,8 +76,8 @@ class _SyncIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSync = ref.watch(syncServiceProvider);
-    if (!isSync) return const SizedBox.shrink();
+    final syncState = ref.watch(syncServiceProvider);
+    if (!syncState.isLoading) return const SizedBox.shrink();
 
     return Container(
       width: 80,

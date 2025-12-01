@@ -1502,5 +1502,55 @@
   "scanComplete": "Scan Complete!",
   "@scanComplete": {
     "description": "Success message after OCR scan"
+  },
+  "per100g": "Per 100g",
+  "@per100g": {
+    "description": "Per 100 grams unit toggle option"
+  },
+  "perServing": "Per Serving",
+  "@perServing": {
+    "description": "Per serving unit toggle option"
+  },
+  "sodium": "Sodium",
+  "@sodium": {
+    "description": "Sodium nutrient label"
+  },
+  "lowConfidence": "Low confidence",
+  "@lowConfidence": {
+    "description": "Label for low confidence OCR values"
+  },
+  "pleaseVerify": "Please verify this value",
+  "@pleaseVerify": {
+    "description": "Helper text for low confidence fields"
+  },
+  "fieldsDetected": "{count} fields",
+  "@fieldsDetected": {
+    "description": "Number of nutrition fields detected",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of fields"
+      }
+    }
+  },
+  "pendingSync": "Pending sync",
+  "@pendingSync": {
+    "description": "Label for items waiting to sync"
+  },
+  "syncingChanges": "Syncing changes...",
+  "@syncingChanges": {
+    "description": "Message shown during sync"
+  },
+  "changesPendingSync": "Changes pending sync",
+  "@changesPendingSync": {
+    "description": "Title for pending sync indicator"
+  },
+  "syncNow": "Sync Now",
+  "@syncNow": {
+    "description": "Button to trigger manual sync"
+  },
+  "syncedWithServer": "Synced with server",
+  "@syncedWithServer": {
+    "description": "Success message after sync completes"
   }
 }

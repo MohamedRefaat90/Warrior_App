@@ -1130,4 +1130,39 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scanComplete => 'تم المسح بنجاح!';
+
+  @override
+  String get per100g => 'لكل 100 جم';
+
+  @override
+  String get perServing => 'لكل حصة';
+
+  @override
+  String get sodium => 'الصوديوم';
+
+  @override
+  String get lowConfidence => 'ثقة منخفضة';
+
+  @override
+  String get pleaseVerify => 'يرجى التحقق من هذه القيمة';
+
+  @override
+  String fieldsDetected(int count) {
+    return '$count حقول';
+  }
+
+  @override
+  String get pendingSync => 'في انتظار المزامنة';
+
+  @override
+  String get syncingChanges => 'جاري مزامنة التغييرات...';
+
+  @override
+  String get changesPendingSync => 'تغييرات في انتظار المزامنة';
+
+  @override
+  String get syncNow => 'مزامنة الآن';
+
+  @override
+  String get syncedWithServer => 'تمت المزامنة مع الخادم';
 }

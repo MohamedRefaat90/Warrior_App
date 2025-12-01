@@ -1,122 +1,292 @@
+import 'dart:math' as math;
+
 import 'package:Warrior/core/extensions/string.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
+import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:flutter_riverpod/legacy.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:openfoodfacts/openfoodfacts.dart';
 
 final syncServiceProvider =
-    NotifierProvider<SyncService, bool>(SyncService.new);
+    NotifierProvider<SyncService, SyncState>(SyncService.new);
 
-class SyncService extends Notifier<bool> {
+class SyncService extends Notifier<SyncState> {
+  static const int _maxRetries = 5;
+  static const Duration _baseDelay = Duration(seconds: 2);
+  static const Duration _maxDelay = Duration(minutes: 5);
+
   late WorkoutRepo workoutRepository;
+  late FoodSearchRepo foodSearchRepository;
+
+  bool get isLoading => state.isLoading;
 
   @override
-  bool build() {
-    // Initialize and check for pending operations on startup
+  SyncState build() {
     workoutRepository = ref.read(workoutRepo);
+    foodSearchRepository = ref.read(foodSearchRepoProvider);
     _initSync();
-    return false;
+    return SyncState(
+      pendingWorkouts: HiveManager.pendingOpsBox.length,
+      pendingProducts: HiveManager.pendingProductsBox.length,
+    );
   }
 
-  bool get isLoading => state;
+  /// Refreshes the pending counts without syncing.
+  void refreshPendingCounts() {
+    state = state.copyWith(
+      pendingWorkouts: HiveManager.pendingOpsBox.length,
+      pendingProducts: HiveManager.pendingProductsBox.length,
+    );
+  }
+
   Future<void> syncPendingOperations() async {
     if (!ConnectivityChecker.isOnline!) return;
     try {
-      // Get all pending operations
-      state = true; // Set loading to true
-      final List<PendingOperation> pendingOps =
-          HiveManager.pendingOpsBox.values.toList();
-      TalkerService.info(
-          'Found ${pendingOps.length} pending operations', 'SYNC');
+      state = state.copyWith(isLoading: true);
 
-      // Skip sync if no operations
-      if (pendingOps.isEmpty) {
-        state = false;
-        return;
-      }
+      // Sync workouts
+      await _syncWorkouts();
 
-      // Sort operations by timestamp to maintain order
-      pendingOps.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+      // Sync products
+      await _syncProducts();
 
-      List<int?> successfullyProcessedIds = [];
+      // Update pending counts
+      state = state.copyWith(
+        isLoading: false,
+        pendingWorkouts: HiveManager.pendingOpsBox.length,
+        pendingProducts: HiveManager.pendingProductsBox.length,
+      );
 
-      for (final op in pendingOps) {
-        try {
-          if (op.entityType == 'workout') {
-            switch (op.operationType) {
-              case SyncOperationType.create:
-                if (op.workout != null) {
-                  TalkerService.info(
-                      'Creating workout: ${op.workout!.name}', 'SYNC');
-                  await workoutRepository.createWorkoutSet(op.workout!);
-                }
-                break;
-
-              case SyncOperationType.update:
-                final workout = op.workout!;
-                await workoutRepository.updateWorkoutSet(workout);
-                break;
-
-              case SyncOperationType.delete:
-                if (op.id != null) {
-                  await workoutRepository.deleteWorkoutSet(op.id!);
-                }
-                break;
-
-              case SyncOperationType.reorder:
-                await workoutRepository
-                    .reorderWorkoutsList(op.reorderWorkoutList!);
-                break;
-            }
-          } else if (op.entityType == 'workout_weight') {
-            await workoutRepository.updateLastWeight(
-              op.workout!.id!,
-              op.exerciseId!,
-              op.weight!,
-            );
-          }
-          successfullyProcessedIds.add(op.id);
-        } on Exception catch (e) {
-          TalkerService.error('Error processing operation ${op.id}', 'SYNC', e);
-          // Continue with next operation instead of failing entire sync
-          continue;
-        }
-      }
-      // Clear processed operations
-      await HiveManager.clearPendingOperations();
-      showToast('synced with server'.capitalizeWord(),
+      if (!state.hasPendingItems) {
+        showToast(
+          'synced with server'.capitalizeWord(),
           position: ToastPosition.bottom,
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 2),
           textPadding: const EdgeInsets.all(10),
           textStyle: const TextStyle(
-              fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500));
-      state = false; // Set loading to false
-      TalkerService.info('All pending operations synced with server', 'SYNC');
+            fontSize: 14,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+      }
+
+      TalkerService.info('Sync completed', 'SYNC');
     } catch (e) {
-      await HiveManager.clearPendingOperations();
+      state = state.copyWith(isLoading: false);
       TalkerService.error('Error during sync', 'SYNC', e);
-      state = false; // Set loading to false on error too
     }
+  }
+
+  /// Calculates exponential backoff delay.
+  Duration _calculateBackoff(int retryCount) {
+    final delay = _baseDelay * math.pow(2, retryCount).toInt();
+    return delay > _maxDelay ? _maxDelay : delay;
   }
 
   // Initialize sync on app startup
   Future<void> _initSync() async {
-    // Wait a moment for the app to fully initialize
     await Future.delayed(const Duration(seconds: 2));
 
-    // Check if there are pending operations and if we're online
-    if (HiveManager.pendingOpsBox.isNotEmpty &&
+    final hasPendingOps = HiveManager.pendingOpsBox.isNotEmpty;
+    final hasPendingProducts = HiveManager.pendingProductsBox.isNotEmpty;
+
+    if ((hasPendingOps || hasPendingProducts) &&
         ConnectivityChecker.isOnline == true) {
       TalkerService.info(
-          'Found pending operations on app startup, attempting to sync',
-          'SYNC');
+        'Found pending operations on app startup, attempting to sync',
+        'SYNC',
+      );
       await syncPendingOperations();
     }
+  }
+
+  /// Reconstructs a Product from pending upload data.
+  Product _reconstructProduct(PendingProductUpload upload) {
+    final data = upload.productData;
+    final nutrition = upload.nutritionFacts;
+
+    return Product(
+      barcode: upload.barcode,
+      productName: data['productName'] as String?,
+      brands: data['brands'] as String?,
+      countries: data['countries'] as String?,
+      quantity: data['quantity'] as String?,
+      servingSize: data['servingSize'] as String?,
+      categories: data['categories'] as String?,
+      labels: data['labels'] as String?,
+      packaging: data['packaging'] as String?,
+      stores: data['stores'] as String?,
+      ingredientsText: data['ingredientsText'] as String?,
+      nutriments: nutrition != null
+          ? Nutriments.fromJson(nutrition.toOFFNutriments())
+          : null,
+    );
+  }
+
+  /// Syncs pending product uploads with exponential backoff.
+  Future<void> _syncProducts() async {
+    final pendingUploads = HiveManager.getPendingProductUploads();
+
+    if (pendingUploads.isEmpty) return;
+
+    TalkerService.info(
+      'Found ${pendingUploads.length} pending product uploads',
+      'SYNC',
+    );
+
+    final uploadsToRemove = <PendingProductUpload>[];
+
+    for (final upload in pendingUploads) {
+      // Skip if max retries exceeded
+      if (upload.retryCount >= _maxRetries) {
+        TalkerService.warning(
+          'Max retries exceeded for product: ${upload.barcode}, removing',
+          'SYNC',
+        );
+        uploadsToRemove.add(upload);
+        continue;
+      }
+
+      try {
+        // Reconstruct Product from stored data
+        final product = _reconstructProduct(upload);
+
+        // Create a temporary user for sync (would normally come from auth)
+        final user = User(userId: 'sync-user', password: '');
+
+        // Attempt submission
+        final success = upload.operationType == SyncOperationType.update
+            ? await foodSearchRepository.updateProduct(product, user)
+            : await foodSearchRepository.addNewProduct(product, user);
+
+        if (success) {
+          TalkerService.info(
+            'Successfully synced product: ${upload.barcode}',
+            'SYNC',
+          );
+          uploadsToRemove.add(upload);
+        } else {
+          // Increment retry and apply backoff
+          upload.incrementRetryCount();
+          await upload.save();
+
+          final backoff = _calculateBackoff(upload.retryCount);
+          TalkerService.warning(
+            'Product sync failed, retry ${upload.retryCount}/$_maxRetries, '
+                'next attempt in ${backoff.inSeconds}s',
+            'SYNC',
+          );
+        }
+      } catch (e) {
+        TalkerService.error(
+          'Error syncing product: ${upload.barcode}',
+          'SYNC',
+          e,
+        );
+        upload.incrementRetryCount();
+        await upload.save();
+      }
+    }
+
+    // Remove successful uploads
+    for (final upload in uploadsToRemove) {
+      await HiveManager.removePendingProductUpload(upload);
+    }
+  }
+
+  /// Syncs pending workout operations.
+  Future<void> _syncWorkouts() async {
+    final List<PendingOperation> pendingOps =
+        HiveManager.pendingOpsBox.values.toList();
+
+    if (pendingOps.isEmpty) return;
+
+    TalkerService.info(
+      'Found ${pendingOps.length} pending workout operations',
+      'SYNC',
+    );
+
+    pendingOps.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+    for (final op in pendingOps) {
+      try {
+        if (op.entityType == 'workout') {
+          switch (op.operationType) {
+            case SyncOperationType.create:
+              if (op.workout != null) {
+                TalkerService.info(
+                  'Creating workout: ${op.workout!.name}',
+                  'SYNC',
+                );
+                await workoutRepository.createWorkoutSet(op.workout!);
+              }
+              break;
+
+            case SyncOperationType.update:
+              final workout = op.workout!;
+              await workoutRepository.updateWorkoutSet(workout);
+              break;
+
+            case SyncOperationType.delete:
+              if (op.id != null) {
+                await workoutRepository.deleteWorkoutSet(op.id!);
+              }
+              break;
+
+            case SyncOperationType.reorder:
+              await workoutRepository
+                  .reorderWorkoutsList(op.reorderWorkoutList!);
+              break;
+          }
+        } else if (op.entityType == 'workout_weight') {
+          await workoutRepository.updateLastWeight(
+            op.workout!.id!,
+            op.exerciseId!,
+            op.weight!,
+          );
+        }
+      } on Exception catch (e) {
+        TalkerService.error('Error processing operation ${op.id}', 'SYNC', e);
+        continue;
+      }
+    }
+
+    await HiveManager.clearPendingOperations();
+  }
+}
+
+/// State for sync service.
+class SyncState {
+  final bool isLoading;
+  final int pendingWorkouts;
+  final int pendingProducts;
+
+  const SyncState({
+    this.isLoading = false,
+    this.pendingWorkouts = 0,
+    this.pendingProducts = 0,
+  });
+
+  bool get hasPendingItems => pendingWorkouts > 0 || pendingProducts > 0;
+  int get totalPending => pendingWorkouts + pendingProducts;
+
+  SyncState copyWith({
+    bool? isLoading,
+    int? pendingWorkouts,
+    int? pendingProducts,
+  }) {
+    return SyncState(
+      isLoading: isLoading ?? this.isLoading,
+      pendingWorkouts: pendingWorkouts ?? this.pendingWorkouts,
+      pendingProducts: pendingProducts ?? this.pendingProducts,
+    );
   }
 }

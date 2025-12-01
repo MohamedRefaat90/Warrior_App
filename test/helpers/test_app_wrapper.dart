@@ -1,6 +1,7 @@
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
+import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,20 +57,21 @@ class TestAppWrapper {
 
 // Test-friendly SyncService that doesn't create timers
 class TestSyncService extends SyncService {
-  TestSyncService(testWorkoutRepo);
+  TestSyncService(WorkoutRepo testWorkoutRepo);
+
+  @override
+  SyncState build() {
+    workoutRepository = ref.read(workoutRepo);
+    foodSearchRepository = ref.read(foodSearchRepoProvider);
+    return const SyncState();
+  }
 
   @override
   Future<void> syncPendingOperations() async {
     // Mock implementation - no actual syncing in tests
-    state = true;
+    state = state.copyWith(isLoading: true);
     await Future.delayed(const Duration(milliseconds: 10));
-    state = false;
-  }
-
-  @override
-  Future<void> _initSync() async {
-    // Override to do nothing - no timers in tests
-    return;
+    state = state.copyWith(isLoading: false);
   }
 }
 

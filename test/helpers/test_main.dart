@@ -6,6 +6,7 @@ import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
+import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:Warrior/routing.dart';
 import 'package:flutter/material.dart';
@@ -43,19 +44,20 @@ Future<void> testMain() async {
 // Test-friendly SyncService that doesn't create timers
 class TestSyncService extends SyncService {
   @override
-  bool build() {
+  SyncState build() {
     // Initialize repository but don't start sync
     workoutRepository = ref.read(workoutRepo);
+    foodSearchRepository = ref.read(foodSearchRepoProvider);
     // Don't call _initSync() to avoid creating timers in tests
-    return false;
+    return const SyncState();
   }
 
   @override
   Future<void> syncPendingOperations() async {
     // Mock implementation - no actual syncing in tests
-    state = true;
+    state = state.copyWith(isLoading: true);
     await Future.delayed(const Duration(milliseconds: 10));
-    state = false;
+    state = state.copyWith(isLoading: false);
   }
 }
 
@@ -73,8 +75,8 @@ class _SyncIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSync = ref.watch(syncServiceProvider);
-    if (!isSync) return const SizedBox.shrink();
+    final syncState = ref.watch(syncServiceProvider);
+    if (!syncState.isLoading) return const SizedBox.shrink();
 
     return Container(
       width: 80,

@@ -1155,4 +1155,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanComplete => 'Scan Complete!';
+
+  @override
+  String get per100g => 'Per 100g';
+
+  @override
+  String get perServing => 'Per Serving';
+
+  @override
+  String get sodium => 'Sodium';
+
+  @override
+  String get lowConfidence => 'Low confidence';
+
+  @override
+  String get pleaseVerify => 'Please verify this value';
+
+  @override
+  String fieldsDetected(int count) {
+    return '$count fields';
+  }
+
+  @override
+  String get pendingSync => 'Pending sync';
+
+  @override
+  String get syncingChanges => 'Syncing changes...';
+
+  @override
+  String get changesPendingSync => 'Changes pending sync';
+
+  @override
+  String get syncNow => 'Sync Now';
+
+  @override
+  String get syncedWithServer => 'Synced with server';
 }

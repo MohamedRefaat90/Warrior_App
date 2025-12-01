@@ -2293,6 +2293,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan Complete!'**
   String get scanComplete;
+
+  /// Per 100 grams unit toggle option
+  ///
+  /// In en, this message translates to:
+  /// **'Per 100g'**
+  String get per100g;
+
+  /// Per serving unit toggle option
+  ///
+  /// In en, this message translates to:
+  /// **'Per Serving'**
+  String get perServing;
+
+  /// Sodium nutrient label
+  ///
+  /// In en, this message translates to:
+  /// **'Sodium'**
+  String get sodium;
+
+  /// Label for low confidence OCR values
+  ///
+  /// In en, this message translates to:
+  /// **'Low confidence'**
+  String get lowConfidence;
+
+  /// Helper text for low confidence fields
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify this value'**
+  String get pleaseVerify;
+
+  /// Number of nutrition fields detected
+  ///
+  /// In en, this message translates to:
+  /// **'{count} fields'**
+  String fieldsDetected(int count);
+
+  /// Label for items waiting to sync
+  ///
+  /// In en, this message translates to:
+  /// **'Pending sync'**
+  String get pendingSync;
+
+  /// Message shown during sync
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing changes...'**
+  String get syncingChanges;
+
+  /// Title for pending sync indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Changes pending sync'**
+  String get changesPendingSync;
+
+  /// Button to trigger manual sync
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Now'**
+  String get syncNow;
+
+  /// Success message after sync completes
+  ///
+  /// In en, this message translates to:
+  /// **'Synced with server'**
+  String get syncedWithServer;
 }
 
 class _AppLocalizationsDelegate

@@ -171,8 +171,15 @@ class RoutersManager {
     GoRoute(
       path: AppRouters.workoutDetails,
       name: AppRouters.workoutDetails,
+      redirect: (context, state) {
+        // Ensure we have valid WorkoutSetModel data
+        if (state.extra is! WorkoutSetModel) {
+          return AppRouters.workouts;
+        }
+        return null;
+      },
       pageBuilder: (context, state) => CustomTransition(
-        child: WorkoutDetails(state.extra as WorkoutSetModel),
+        child: WorkoutDetails(state.extra! as WorkoutSetModel),
         transitionType: PageTransitionType.fade,
       ),
     ),
@@ -212,8 +219,15 @@ class RoutersManager {
     GoRoute(
       path: AppRouters.predefinedWorkoutDetails,
       name: AppRouters.predefinedWorkoutDetails,
+      redirect: (context, state) {
+        // Ensure we have valid WorkoutSetModel data
+        if (state.extra is! WorkoutSetModel) {
+          return AppRouters.predefinedWorkouts;
+        }
+        return null;
+      },
       pageBuilder: (context, state) => CustomTransition(
-        child: PredefinedWorkoutDetails(state.extra as WorkoutSetModel),
+        child: PredefinedWorkoutDetails(state.extra! as WorkoutSetModel),
         transitionType: PageTransitionType.fade,
       ),
     ),

@@ -65,10 +65,23 @@ class _CameraPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure controller is initialized and not disposed before accessing
+    if (!controller.value.isInitialized) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
+        // Double-check controller is still valid during build
+        if (!controller.value.isInitialized) {
+          return const SizedBox.shrink();
+        }
+
         final size = constraints.biggest;
-        var scale = size.aspectRatio * controller.value.aspectRatio;
+        final cameraAspectRatio = controller.value.aspectRatio;
+        var scale = size.aspectRatio * cameraAspectRatio;
 
         if (scale < 1) scale = 1 / scale;
 
@@ -129,6 +142,7 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
   bool _isInitialized = false;
   bool _isTorchOn = false;
   String? _initError;
+  bool _hasHandledSuccess = false;
 
   final ImagePicker _imagePicker = ImagePicker();
   late ConfettiController _confettiController;
@@ -200,7 +214,7 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
 
           // Confetti overlay
           Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
             child: ConfettiWidget(
               confettiController: _confettiController,
               blastDirectionality: BlastDirectionality.explosive,
@@ -250,6 +264,10 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 2),
     );
+    // Reset OCR state when screen opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(ocrScannerProvider.notifier).reset();
+    });
     _initializeCamera();
   }
 
@@ -325,7 +343,10 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
       );
     }
 
-    if (!_isInitialized || _cameraController == null) {
+    // Check if camera is properly initialized and not disposed
+    if (!_isInitialized ||
+        _cameraController == null ||
+        !_cameraController!.value.isInitialized) {
       return const Center(
         child: CircularProgressIndicator(color: Colors.white),
       );
@@ -374,6 +395,7 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
                         OutlinedButton.icon(
                           onPressed: () {
                             ref.read(ocrScannerProvider.notifier).reset();
+                            _hasHandledSuccess = false;
                           },
                           icon: const Icon(Icons.refresh),
                           label: Text('retake'.tr(context)),
@@ -432,17 +454,25 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
   }
 
   Widget _handleSuccess(BuildContext context, NutritionFacts facts) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      HapticFeedback.heavyImpact();
-      _confettiController.play();
+    // Only handle success once to prevent multiple pops
+    if (!_hasHandledSuccess) {
+      _hasHandledSuccess = true;
+      debugPrint(
+          'OCR Success: Handling success with ${facts.populatedFieldCount} fields');
 
-      // Delay pop to show confetti
-      Future.delayed(const Duration(milliseconds: 800), () {
-        if (mounted) {
-          context.pop(facts);
-        }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        HapticFeedback.heavyImpact();
+        _confettiController.play();
+
+        // Delay pop to show confetti - facts are already in provider
+        Future.delayed(const Duration(milliseconds: 800), () {
+          if (mounted) {
+            debugPrint('OCR Success: Popping - facts are in provider');
+            context.pop(); // No need to pass facts, they're in provider
+          }
+        });
       });
-    });
+    }
 
     return Container(
       color: Colors.black.withValues(alpha: 0.7),

@@ -2,6 +2,8 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -9,6 +11,7 @@ import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/workout_gridview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
@@ -21,7 +24,7 @@ class WorkoutDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(workoutsProvider);
     final workoutNotifier = ref.read(workoutsProvider.notifier);
-
+    final appSettings = ref.watch(appSettingsProvider.notifier);
     // Get the updated workout from the provider's workout list
     // This ensures we always show the latest data after updates
     final updatedWorkout = workoutNotifier.workoutList
@@ -70,8 +73,10 @@ class WorkoutDetails extends ConsumerWidget {
           ),
           title: Text(
             '${updatedWorkout.name}',
-            style: const TextStyle(
-                fontFamily: "Kings", fontSize: 30, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontFamily: appSettings.fontFamily(),
+                fontSize: context.screenWidth * 0.06,
+                fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           actions: [

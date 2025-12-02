@@ -42,7 +42,7 @@ class ProductCard extends ConsumerWidget {
                       imageUrl: product.imageFrontUrl ?? product.imageUrl,
                       width: double.infinity,
                       height: ResponsiveUtils.value(context,
-                          mobile: 110.0, tablet: 130.0, desktop: 150.0),
+                          mobile: 105.0, tablet: 130.0, desktop: 150.0),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -72,7 +72,6 @@ class ProductCard extends ConsumerWidget {
                     ),
                 ],
               ),
-              SizedBox(height: context.smallSpacing),
               // Product name
               Text(
                 product.productName ?? 'Unknown Product',
@@ -94,7 +93,7 @@ class ProductCard extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-              SizedBox(height: context.smallSpacing / 2),
+              SizedBox(height: context.smallSpacing / 3),
               // Quantity
               if (product.quantity != null)
                 Text(

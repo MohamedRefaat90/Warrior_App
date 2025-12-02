@@ -68,21 +68,24 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                           desktop: 28,
                         ),
                         bottom: -7,
+
+                        // Last Weight Button
                         child: CustomBTN(
                           widget: Text.rich(
                             TextSpan(children: [
                               TextSpan(text: context.l10n.lastWeight),
-                              TextSpan(text: " ${workoutExercise.lastWeight} "),
+                              TextSpan(
+                                  text: ": ${workoutExercise.lastWeight} "),
                               TextSpan(
                                   text:
                                       workoutExercise.exercise.equipmentType ==
                                               "machine"
-                                          ? context.l10n.kg
+                                          ? context.l10n.bar
                                           : context.l10n.kg),
                             ]),
                             style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.screenWidth * 0.025,
                                 color: AppColors.white),
                             textDirection: TextDirection.ltr,
                           ),

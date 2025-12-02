@@ -39,7 +39,6 @@ class NutritionScoreBadge extends StatelessWidget {
       return SizedBox(width: size, height: size);
     }
 
-    TalkerService.warning('Rendering Nutri-Score Badge: $nutriScore');
     final score = nutriScore! != 'UNKNOWN' && nutriScore! != 'NOT-APPLICABLE'
         ? nutriScore!.toUpperCase()
         : 'N/A';

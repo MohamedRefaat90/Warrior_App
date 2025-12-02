@@ -12,8 +12,7 @@ final nutritionParsingServiceProvider = Provider<NutritionParsingService>(
 );
 
 /// Provider for OCR scanner state and actions.
-final ocrScannerProvider =
-    NotifierProvider.autoDispose<OcrScannerNotifier, OcrScanState>(
+final ocrScannerProvider = NotifierProvider<OcrScannerNotifier, OcrScanState>(
   OcrScannerNotifier.new,
 );
 
@@ -47,7 +46,7 @@ class OcrScanLoading extends OcrScanState {
 class OcrScannerNotifier extends Notifier<OcrScanState> {
   @override
   OcrScanState build() {
-    ref.keepAlive();
+    // No keepAlive - state should reset when screen is disposed
     return const OcrScanInitial();
   }
 

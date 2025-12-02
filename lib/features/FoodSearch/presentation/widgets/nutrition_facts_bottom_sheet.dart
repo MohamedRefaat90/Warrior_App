@@ -1,21 +1,22 @@
-import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/nutrition_state_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/ocr_scanner_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/confidence_indicator.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 /// Expandable section for nutrition facts input with OCR support.
 class NutritionFactsBottomSheet extends ConsumerStatefulWidget {
   final ValueChanged<NutritionFacts?>? onChanged;
   final NutritionFacts? initialFacts;
+  final Future<NutritionFacts?> Function()? onScanPressed;
 
   const NutritionFactsBottomSheet({
     super.key,
     this.onChanged,
     this.initialFacts,
+    this.onScanPressed,
   });
 
   @override
@@ -338,6 +339,31 @@ class _NutritionFactsBottomSheetState
     final state = ref.watch(nutritionStateProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
+    // Listen for OCR scan results
+    ref.listen<OcrScanState>(ocrScannerProvider, (previous, current) {
+      if (current is OcrScanSuccess && previous is! OcrScanSuccess) {
+        debugPrint(
+            'NutritionFactsBottomSheet: Received OCR result with ${current.facts.populatedFieldCount} fields');
+
+        // Schedule state update for after build completes
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+
+          // Update the nutrition state with scanned facts
+          ref.read(nutritionStateProvider.notifier).updateFacts(current.facts);
+
+          // Auto-expand to show the data
+          if (!ref.read(nutritionStateProvider).isExpanded) {
+            ref.read(nutritionStateProvider.notifier).setExpanded(true);
+            _expandController.forward();
+          }
+
+          // Notify parent
+          widget.onChanged?.call(current.facts);
+        });
+      }
+    });
+
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
@@ -377,6 +403,31 @@ class _NutritionFactsBottomSheetState
   }
 
   @override
+  void didUpdateWidget(NutritionFactsBottomSheet oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update state when initialFacts changes (e.g., after OCR scan)
+    if (widget.initialFacts != oldWidget.initialFacts &&
+        widget.initialFacts != null) {
+      debugPrint(
+          'NutritionFactsBottomSheet: initialFacts updated with ${widget.initialFacts!.populatedFieldCount} fields');
+
+      // Schedule state update for after build completes
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        ref
+            .read(nutritionStateProvider.notifier)
+            .updateFacts(widget.initialFacts!);
+        // Auto-expand when data is received
+        if (!ref.read(nutritionStateProvider).isExpanded) {
+          ref.read(nutritionStateProvider.notifier).setExpanded(true);
+          _expandController.forward();
+        }
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _expandController.dispose();
     super.dispose();
@@ -407,15 +458,10 @@ class _NutritionFactsBottomSheetState
   }
 
   Future<void> _launchScanner() async {
-    final result = await context.push<NutritionFacts>(AppRouters.ocrScanner);
-    if (!mounted || result == null) return;
+    if (widget.onScanPressed == null) return;
 
-    ref.read(nutritionStateProvider.notifier).updateFacts(result);
-    if (!ref.read(nutritionStateProvider).isExpanded) {
-      ref.read(nutritionStateProvider.notifier).setExpanded(true);
-      _expandController.forward();
-    }
-    widget.onChanged?.call(result);
+    // Just navigate to scanner - the ref.listen above will handle the result
+    await widget.onScanPressed!();
   }
 
   void _onFieldChanged(String key, double? value) {

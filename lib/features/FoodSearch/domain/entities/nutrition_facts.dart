@@ -218,8 +218,30 @@ class NutritionFacts {
   }
 
   /// Returns the confidence level for a field.
+  ///
+  /// Supports both short keys (e.g., 'energy', 'fat') and full field names
+  /// (e.g., 'energyKcal100g', 'fat100g').
   double getFieldConfidence(String field) {
-    return confidenceScores[field] ?? 0.0;
+    // Try direct lookup first
+    if (confidenceScores.containsKey(field)) {
+      return confidenceScores[field]!;
+    }
+
+    // Map full field names to short keys used in confidenceScores
+    final shortKey = switch (field) {
+      'energyKcal100g' || 'energyKj100g' => 'energy',
+      'fat100g' => 'fat',
+      'saturatedFat100g' => 'saturatedFat',
+      'carbohydrates100g' => 'carbohydrates',
+      'sugars100g' => 'sugars',
+      'fiber100g' => 'fiber',
+      'proteins100g' => 'proteins',
+      'sodium100g' => 'sodium',
+      'salt100g' => 'salt',
+      _ => field,
+    };
+
+    return confidenceScores[shortKey] ?? 0.0;
   }
 
   /// Returns all fields with low confidence (< 0.7).
@@ -291,7 +313,7 @@ class NutritionFacts {
 
   /// Checks if a specific field has high confidence (≥ 0.7).
   bool isFieldConfident(String field) {
-    return (confidenceScores[field] ?? 0.0) >= highConfidenceThreshold;
+    return getFieldConfidence(field) >= highConfidenceThreshold;
   }
 
   /// Validates that nutrition values are sensible.

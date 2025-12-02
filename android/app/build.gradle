@@ -69,7 +69,8 @@ android {
 
     splits {
         abi {
-            enable true
+            // Only enable ABI splits for release builds
+            enable gradle.startParameter.taskNames.any { it.contains("Release") }
             reset()
             include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             universalApk true
@@ -82,6 +83,10 @@ android {
             minifyEnabled false
             shrinkResources false
             debuggable true
+            // Disable Crashlytics for debug builds
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
         
         release {

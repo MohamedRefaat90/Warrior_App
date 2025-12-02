@@ -217,7 +217,12 @@ class _NutritionFieldState extends State<NutritionField> {
     if (widget.data.value != oldWidget.data.value) {
       final newText = widget.data.value?.toString() ?? '';
       if (_controller.text != newText) {
-        _controller.text = newText;
+        // Schedule controller update for after build completes
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _controller.text != newText) {
+            _controller.text = newText;
+          }
+        });
       }
     }
   }

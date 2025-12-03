@@ -1682,6 +1682,12 @@ abstract class AppLocalizations {
   /// **'Take Photo'**
   String get takePhoto;
 
+  /// Error message when image fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load image'**
+  String get imageLoadError;
+
   /// Tip for taking product photos
   ///
   /// In en, this message translates to:

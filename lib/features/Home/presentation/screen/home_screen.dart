@@ -45,11 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     child: Transform.rotate(
                       angle: 0.80,
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 22,
-                      ),
+                      child: Icon(Icons.menu, color: Colors.white, size: 22),
                     ),
                   ),
                 ),
@@ -63,16 +59,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: ResponsiveUtils.horizontalPadding(context),
-            vertical: 16,
-          ),
+              horizontal: ResponsiveUtils.horizontalPadding(context)),
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 maxWidth: ResponsiveUtils.maxContentWidth,
               ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Spacer(),
                   GridView.builder(
@@ -91,13 +84,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ref.read(homeProvider).categoryItems[index]);
                     },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: context.screenHeight * 0.02),
                   SizedBox(
-                    width: context.screenWidth * 0.44,
-                    height: context.screenHeight * 0.167,
-                    child: CategoryCard(
-                        category: ref.read(homeProvider).categoryItems.last),
-                  ),
+                      width: context.screenWidth * 0.44,
+                      height: context.screenHeight * 0.167,
+                      child: CategoryCard(
+                          category: ref.read(homeProvider).categoryItems.last)),
                   const Spacer(),
                   const BannerAdWidget(),
                 ],

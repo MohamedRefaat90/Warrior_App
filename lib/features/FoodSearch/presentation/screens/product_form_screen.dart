@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
@@ -25,6 +27,112 @@ class ProductFormScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ProductFormScreen> createState() => _ProductFormScreenState();
+}
+
+/// Full screen image view with Hero animation and interactive gestures.
+class _FullScreenImageView extends StatefulWidget {
+  final String imagePath;
+  final String heroTag;
+
+  const _FullScreenImageView({
+    required this.imagePath,
+    required this.heroTag,
+  });
+
+  @override
+  State<_FullScreenImageView> createState() => _FullScreenImageViewState();
+}
+
+class _FullScreenImageViewState extends State<_FullScreenImageView> {
+  final TransformationController _transformationController =
+      TransformationController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Interactive image viewer with zoom/pan
+            InteractiveViewer(
+              transformationController: _transformationController,
+              minScale: 0.5,
+              maxScale: 4.0,
+              child: Center(
+                child: Hero(
+                  tag: widget.heroTag,
+                  child: Image.file(
+                    File(widget.imagePath),
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.broken_image_rounded,
+                        size: 64,
+                        color: Colors.white54,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            // Close button
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 8,
+              right: 16,
+              child: Material(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(24),
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  borderRadius: BorderRadius.circular(24),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Reset zoom button
+            Positioned(
+              bottom: MediaQuery.of(context).padding.bottom + 16,
+              right: 16,
+              child: Material(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(24),
+                child: InkWell(
+                  onTap: () {
+                    _transformationController.value = Matrix4.identity();
+                  },
+                  borderRadius: BorderRadius.circular(24),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Icon(
+                      Icons.fit_screen_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
+  }
 }
 
 class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
@@ -214,13 +322,104 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                         context.l10n.productImage,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       if (_selectedImagePath != null) ...[
-                        Text(
-                          '${context.l10n.imageSelected}: ${_selectedImagePath!.split('/').last}',
-                          style: Theme.of(context).textTheme.bodySmall,
+                        GestureDetector(
+                          onTap: () => _showFullScreenImage(context),
+                          child: Hero(
+                            tag: 'product_image_${_selectedImagePath!}',
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Stack(
+                                children: [
+                                  Image.file(
+                                    File(_selectedImagePath!),
+                                    height: 200,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: 200,
+                                        width: double.infinity,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceContainerHighest,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.broken_image_rounded,
+                                              size: 48,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              context.l10n.imageLoadError,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  // Fullscreen button - top left
+                                  Positioned(
+                                    top: 8,
+                                    left: 8,
+                                    child: Material(
+                                      color: Colors.black54,
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: InkWell(
+                                        onTap: () =>
+                                            _showFullScreenImage(context),
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(6),
+                                          child: Icon(
+                                            Icons.fullscreen_rounded,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // Close button - top right
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: Material(
+                                      color: Colors.black54,
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedImagePath = null;
+                                          });
+                                        },
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(6),
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                        SizedBox(height: context.smallSpacing),
+                        const SizedBox(height: 12),
                       ],
                       OutlinedButton.icon(
                         onPressed: _pickImage,
@@ -341,6 +540,27 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     // Just navigate to scanner - provider handles the result
     await context.push(AppRouters.ocrScanner);
     return null; // Result comes via provider, not navigation
+  }
+
+  void _showFullScreenImage(BuildContext context) {
+    if (_selectedImagePath == null) return;
+
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.black87,
+        barrierDismissible: true,
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return _FullScreenImageView(
+            imagePath: _selectedImagePath!,
+            heroTag: 'product_image_${_selectedImagePath!}',
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
   }
 
   Future<void> _submitForm() async {

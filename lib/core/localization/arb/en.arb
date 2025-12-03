@@ -1069,6 +1069,10 @@
   "@takePhoto": {
     "description": "Button text to take a photo"
   },
+  "imageLoadError": "Failed to load image",
+  "@imageLoadError": {
+    "description": "Error message when image fails to load"
+  },
   "imageTip": "Tip: Take a clear photo of the product front, ingredients list, and nutrition facts.",
   "@imageTip": {
     "description": "Tip for taking product photos"

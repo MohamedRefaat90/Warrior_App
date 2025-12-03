@@ -1146,6 +1146,10 @@
   "@takePhoto": {
     "description": "Take photo button"
   },
+  "imageLoadError": "فشل في تحميل الصورة",
+  "@imageLoadError": {
+    "description": "Error message when image fails to load"
+  },
   "imageTip": "نصيحة: استخدم صورة واضحة للمنتج",
   "@imageTip": {
     "description": "Image tip"

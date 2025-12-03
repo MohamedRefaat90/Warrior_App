@@ -811,6 +811,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get takePhoto => 'التقط صورة';
 
   @override
+  String get imageLoadError => 'فشل في تحميل الصورة';
+
+  @override
   String get imageTip => 'نصيحة: استخدم صورة واضحة للمنتج';
 
   @override

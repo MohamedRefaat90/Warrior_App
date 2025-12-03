@@ -21,13 +21,9 @@ class ProductCard extends ConsumerWidget {
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withValues(alpha: 0.5),
-      // color: const Color.fromARGB(26, 221, 215, 215),
       child: InkWell(
         onTap: () {
-          context.pushNamed(
-            AppRouters.productDetails,
-            extra: product,
-          );
+          context.pushNamed(AppRouters.productDetails, extra: product);
         },
         child: Padding(
           padding: context.cardPadding,

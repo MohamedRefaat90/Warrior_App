@@ -102,11 +102,12 @@ class _ConfidenceIndicatorState extends State<ConfidenceIndicator>
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: _color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(color: _color.withValues(alpha: 0.3)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(_icon, size: 14, color: _color),
                 if (widget.showPercentage) ...[

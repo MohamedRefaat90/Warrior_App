@@ -827,6 +827,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get takePhoto => 'Take Photo';
 
   @override
+  String get imageLoadError => 'Failed to load image';
+
+  @override
   String get imageTip =>
       'Tip: Take a clear photo of the product front, ingredients list, and nutrition facts.';
 

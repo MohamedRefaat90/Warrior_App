@@ -149,7 +149,7 @@ class _NutritionFieldState extends State<NutritionField> {
       readOnly: widget.readOnly,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))
       ],
       onChanged: _onTextChanged,
       style: TextStyle(
@@ -167,13 +167,13 @@ class _NutritionFieldState extends State<NutritionField> {
           color: colorScheme.onSurfaceVariant,
           fontSize: 14,
         ),
-        prefixIcon: widget.data.icon != null
-            ? Icon(widget.data.icon,
-                size: 20, color: isLow ? Colors.orange : null)
-            : (isLow
-                ? const Icon(Icons.warning_amber_rounded,
-                    size: 20, color: Colors.orange)
-                : null),
+        // prefixIcon: widget.data.icon != null
+        //     ? Icon(widget.data.icon,
+        //         size: 20, color: isLow ? Colors.orange : null)
+        //     : (isLow
+        //         ? const Icon(Icons.warning_amber_rounded,
+        //             size: 20, color: Colors.orange)
+        //         : null),
         suffixIcon: hasConfidence
             ? Padding(
                 padding: const EdgeInsets.only(right: 8),
@@ -188,11 +188,11 @@ class _NutritionFieldState extends State<NutritionField> {
             ? colorScheme.primaryContainer.withValues(alpha: 0.3)
             : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(
             color: isLow
                 ? Colors.orange.withValues(alpha: 0.5)
@@ -200,11 +200,10 @@ class _NutritionFieldState extends State<NutritionField> {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.primary, width: 2),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         helperText: isLow ? 'Please verify this value' : null,
         helperStyle: const TextStyle(color: Colors.orange, fontSize: 11),
       ),

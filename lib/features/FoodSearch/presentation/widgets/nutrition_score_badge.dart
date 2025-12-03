@@ -26,12 +26,11 @@ class NutritionScoreBadge extends StatelessWidget {
   final double size;
   final bool animated;
 
-  const NutritionScoreBadge({
-    super.key,
-    required this.nutriScore,
-    this.size = 40,
-    this.animated = true,
-  });
+  const NutritionScoreBadge(
+      {super.key,
+      required this.nutriScore,
+      this.size = 40,
+      this.animated = true});
 
   @override
   Widget build(BuildContext context) {

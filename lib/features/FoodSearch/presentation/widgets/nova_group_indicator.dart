@@ -25,7 +25,7 @@ class NovaGroupIndicator extends StatelessWidget {
         children: List.generate(4, (index) {
           final isFilled = index < novaGroup!;
           return Padding(
-            padding: EdgeInsets.only(right: index < 3 ? 4 : 0),
+            padding: EdgeInsets.only(right: 4),
             child: Container(
               width: size,
               height: size,
@@ -33,9 +33,8 @@ class NovaGroupIndicator extends StatelessWidget {
                 color: isFilled ? _getNovaColor(novaGroup!) : Colors.grey[300],
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isFilled
-                      ? _getNovaColor(novaGroup!)
-                      : Colors.grey[400]!,
+                  color:
+                      isFilled ? _getNovaColor(novaGroup!) : Colors.grey[400]!,
                   width: 1,
                 ),
               ),
@@ -76,4 +75,3 @@ class NovaGroupIndicator extends StatelessWidget {
     }
   }
 }
-

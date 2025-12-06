@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
@@ -86,6 +87,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   top: 0,
                   left: 0,
                   child: Checkbox.adaptive(
+                    checkColor: AppColors.white,
                     value: isSelected,
                     onChanged: (value) {
                       setState(() {

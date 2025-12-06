@@ -12,15 +12,41 @@ import 'package:Warrior/features/Workouts/data/models/pending_operations_model.d
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
-final foodSearchRepoProvider = Provider<FoodSearchRepo>((ref) {
-  return FoodSearchRepo();
+/// Provider for local data source.
+final foodLocalDataSourceProvider = Provider<FoodLocalDataSource>((ref) {
+  return FoodLocalDataSource();
 });
 
-/// Repository for food search feature
-/// Implements caching strategy: try cache first, then remote
+/// Provider for remote data source.
+final foodRemoteDataSourceProvider = Provider<FoodRemoteDataSource>((ref) {
+  return FoodRemoteDataSource();
+});
+
+/// Provider for the food search repository.
+final foodSearchRepoProvider = Provider<FoodSearchRepo>((ref) {
+  return FoodSearchRepo(
+    remoteDataSource: ref.watch(foodRemoteDataSourceProvider),
+    localDataSource: ref.watch(foodLocalDataSourceProvider),
+  );
+});
+
+/// Repository for food search feature.
+///
+/// Implements caching strategy: try cache first, then remote.
 class FoodSearchRepo {
-  final FoodRemoteDataSource _remoteDataSource = FoodRemoteDataSource();
-  final FoodLocalDataSource _localDataSource = FoodLocalDataSource();
+  final FoodRemoteDataSource _remoteDataSource;
+
+  final FoodLocalDataSource _localDataSource;
+
+  /// Creates a [FoodSearchRepo] with the given data sources.
+  ///
+  /// The [remoteDataSource] handles API calls to Open Food Facts.
+  /// The [localDataSource] handles local caching with Hive.
+  FoodSearchRepo({
+    required FoodRemoteDataSource remoteDataSource,
+    required FoodLocalDataSource localDataSource,
+  })  : _remoteDataSource = remoteDataSource,
+        _localDataSource = localDataSource;
 
   /// Add new product to Open Food Facts
   Future<bool> addNewProduct(Product product, User user) async {
@@ -186,10 +212,10 @@ class FoodSearchRepo {
         pageSize: pageSize,
       );
 
-      // Cache all products
-      for (final product in products) {
-        await _localDataSource.cacheProduct(product);
-      }
+      // Cache all products in parallel
+      await Future.wait(
+        products.map((product) => _localDataSource.cacheProduct(product)),
+      );
 
       return products;
     } catch (e, stackTrace) {
@@ -216,10 +242,10 @@ class FoodSearchRepo {
         pageSize: pageSize,
       );
 
-      // Cache all products
-      for (final product in products) {
-        await _localDataSource.cacheProduct(product);
-      }
+      // Cache all products in parallel
+      await Future.wait(
+        products.map((product) => _localDataSource.cacheProduct(product)),
+      );
 
       return products;
     } catch (e, stackTrace) {
@@ -301,10 +327,10 @@ class FoodSearchRepo {
         pageSize: pageSize,
       );
 
-      // Cache all products
-      for (final product in products) {
-        await _localDataSource.cacheProduct(product);
-      }
+      // Cache all products in parallel
+      await Future.wait(
+        products.map((product) => _localDataSource.cacheProduct(product)),
+      );
 
       // Add to history
       if (products.isNotEmpty) {

@@ -104,6 +104,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
 
   @override
   void dispose() {
+    _controller.stop();
     _controller.dispose();
     super.dispose();
   }
@@ -144,10 +145,10 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
         // Product not found - offer to add it
         final shouldAdd = await showDialog<bool>(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text('productNotFound'.tr(context)),
-            content: const Text(
-              'This product is not in our database yet. Would you like to add it to help the community?',
+          builder: (dialogContext) => AlertDialog(
+            title: Text('productNotFound'.tr(dialogContext)),
+            content: Text(
+              dialogContext.l10n.productNotFoundContribute,
             ),
             actions: [
               TextButton(
@@ -176,7 +177,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
     } catch (e) {
       if (!mounted) return;
       Flushbar(
-        message: 'Error scanning barcode: ${e.toString()}',
+        message: '${context.l10n.errorScanningBarcode}: ${e.toString()}',
         duration: const Duration(seconds: 3),
         backgroundColor: Colors.red,
       ).show(context);

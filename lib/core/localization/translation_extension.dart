@@ -561,6 +561,36 @@ extension TranslationExtension on String {
       case 'years':
         return localizations.years;
 
+      // Muscles
+      case 'exercise':
+        return localizations.exercise;
+      case 'muscleAbs':
+        return localizations.muscleAbs;
+      case 'muscleTriceps':
+        return localizations.muscleTriceps;
+      case 'muscleShoulders':
+        return localizations.muscleShoulders;
+      case 'muscleLegs':
+        return localizations.muscleLegs;
+      case 'muscleChest':
+        return localizations.muscleChest;
+      case 'muscleBiceps':
+        return localizations.muscleBiceps;
+      case 'muscleBack':
+        return localizations.muscleBack;
+      case 'muscleForearms':
+        return localizations.muscleForearms;
+      case 'muscleGlutes':
+        return localizations.muscleGlutes;
+      case 'muscleCalves':
+        return localizations.muscleCalves;
+      case 'muscleCore':
+        return localizations.muscleCore;
+      case 'muscleTraps':
+        return localizations.muscleTraps;
+      case 'mustAddAtLeastOneExercise':
+        return localizations.mustAddAtLeastOneExercise;
+
       // Add more cases as you add more translations to ARB files
 
       default:

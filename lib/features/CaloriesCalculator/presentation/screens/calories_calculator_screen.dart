@@ -2,7 +2,9 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/loader.dart';
@@ -33,7 +35,7 @@ class _CaloriesCalculatorScreenState
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
   final _ageController = TextEditingController();
-
+  late final InterstitialAdManager calorieCalculatorAd;
   // Selected values
   String _selectedGender = 'male';
   String _selectedActivityLevel = 'sedentary';
@@ -43,12 +45,14 @@ class _CaloriesCalculatorScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(caloriesCalculatorProvider);
-
+    final appSettings = ref.watch(appSettingsProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'caloriesCalculator'.tr(context),
-          style: TextStyle(fontFamily: 'kings', fontWeight: FontWeight.w900),
+          style: TextStyle(
+              fontFamily: appSettings.fontFamily(),
+              fontWeight: FontWeight.w900),
         ),
         centerTitle: true,
         actions: [
@@ -266,6 +270,7 @@ class _CaloriesCalculatorScreenState
     _weightController.dispose();
     _heightController.dispose();
     _ageController.dispose();
+    calorieCalculatorAd.dispose();
     super.dispose();
   }
 
@@ -276,6 +281,9 @@ class _CaloriesCalculatorScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadSavedData();
     });
+    calorieCalculatorAd = InterstitialAdManager.forAdUnit(
+        'ca-app-pub-7417773148722475/5261929910');
+    calorieCalculatorAd.loadAd();
   }
 
   // Activity level options
@@ -345,8 +353,9 @@ class _CaloriesCalculatorScreenState
 
       ref.read(caloriesCalculatorProvider.notifier).calculate(userData);
       TalkerService.info('Navigating to results', 'CALORIES_CALCULATOR');
-      showSuccessFlushbar(context, 'calculationSuccess'.tr(context));
-      context.pushNamed(AppRouters.caloriesResults);
+      calorieCalculatorAd.showAd(onAdDismissed: () {
+        context.pushNamed(AppRouters.caloriesResults);
+      });
     } catch (e) {
       showErrorFlushbar(
         context,

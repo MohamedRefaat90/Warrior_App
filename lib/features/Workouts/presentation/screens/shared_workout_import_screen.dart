@@ -165,7 +165,8 @@ class _WorkoutContent extends StatelessWidget {
 
     return Column(
       children: [
-        const BannerAdWidget(),
+        const BannerAdWidget(
+            adUnitId: "ca-app-pub-7417773148722475/1350605065"),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0.8),

@@ -25,7 +25,7 @@ class PredefinedWorkoutCard extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
-          color: AppColors.lightTail,
+          color: const Color.fromARGB(132, 96, 125, 139),
           elevation: 20,
           child: Padding(
             padding: EdgeInsets.symmetric(

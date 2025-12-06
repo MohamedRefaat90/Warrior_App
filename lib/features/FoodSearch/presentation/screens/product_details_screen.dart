@@ -1,6 +1,8 @@
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
@@ -8,6 +10,7 @@ import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_pro
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nova_group_indicator.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +27,7 @@ class Allergens extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Allergens',
+                context.l10n.allergens,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(height: context.smallSpacing),
@@ -54,7 +57,7 @@ class Ingredients extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Ingredients',
+                context.l10n.ingredients,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(height: context.smallSpacing),
@@ -83,7 +86,7 @@ class Labels extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Labels',
+                context.l10n.labels,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(height: context.smallSpacing),
@@ -93,18 +96,21 @@ class Labels extends StatelessWidget {
                 children: [
                   if (product.isVegan == true)
                     Chip(
-                      label: Text('vegan'.tr(context)),
-                      backgroundColor: Colors.green[100],
+                      label: Text('vegan'.tr(context),
+                          style: TextStyle(color: AppColors.white)),
+                      backgroundColor: Colors.green[400],
                     ),
                   if (product.isVegetarian == true)
                     Chip(
-                      label: Text('vegetarian'.tr(context)),
-                      backgroundColor: Colors.green[100],
+                      label: Text('vegetarian'.tr(context),
+                          style: TextStyle(color: AppColors.white)),
+                      backgroundColor: Colors.green[400],
                     ),
                   if (product.palmOilFree == true)
                     Chip(
-                      label: Text('palmOilFree'.tr(context)),
-                      backgroundColor: Colors.green[100],
+                      label: Text('palmOilFree'.tr(context),
+                          style: TextStyle(color: AppColors.white)),
+                      backgroundColor: Colors.green[400],
                     ),
                 ],
               ),
@@ -126,13 +132,13 @@ class NutritionFacts extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Nutrition Facts (per 100g)',
+                context.l10n.nutritionFactsPer100g,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.energyKcal != null)
                 NutritionProgressBar(
-                  label: 'Energy',
+                  label: context.l10n.energy,
                   value: product.nutritionValues!.energyKcal!,
                   maxValue: 2000,
                   unit: 'kcal',
@@ -140,28 +146,28 @@ class NutritionFacts extends StatelessWidget {
               SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.proteins != null)
                 NutritionProgressBar(
-                  label: 'Proteins',
+                  label: context.l10n.proteins,
                   value: product.nutritionValues!.proteins!,
                   maxValue: 50,
                 ),
               SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.carbohydrates != null)
                 NutritionProgressBar(
-                  label: 'Carbohydrates',
+                  label: context.l10n.carbohydrates,
                   value: product.nutritionValues!.carbohydrates!,
                   maxValue: 275,
                 ),
               SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.sugars != null)
                 NutritionProgressBar(
-                  label: 'Sugars',
+                  label: context.l10n.sugars,
                   value: product.nutritionValues!.sugars!,
                   maxValue: 90,
                 ),
               SizedBox(height: context.smallSpacing),
               if (product.nutritionValues!.fat != null)
                 NutritionProgressBar(
-                  label: 'Fat',
+                  label: context.l10n.fat,
                   value: product.nutritionValues!.fat!,
                   maxValue: 70,
                 ),
@@ -183,9 +189,6 @@ class ProductDetailsScreen extends ConsumerWidget {
     final isFavorite = ref.watch(isFavoriteProvider(product.barcode));
     final isInComparison = ref.watch(isInComparisonProvider(product.barcode));
 
-    TalkerService.warning(
-        'Eco-Score: ${product.ecoscore}', 'ProductDetailsScreen');
-    TalkerService.warning('Labels: ${product.labels}', 'ProductDetailsScreen');
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -209,7 +212,7 @@ class ProductDetailsScreen extends ConsumerWidget {
               // Edit product button
               IconButton(
                 icon: const Icon(Icons.edit),
-                tooltip: 'Edit Product Info',
+                tooltip: context.l10n.editProductInfo,
                 onPressed: () {
                   context.pushNamed(
                     AppRouters.productForm,
@@ -242,7 +245,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                     children: [
                       // Product name and brand
                       Text(
-                        product.productName ?? 'Unknown Product',
+                        product.productName ?? context.l10n.unknownProduct,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       if (product.brands != null) ...[
@@ -269,7 +272,7 @@ class ProductDetailsScreen extends ConsumerWidget {
 
                       // Nutrition Scores
                       Text(
-                        'Nutrition Scores',
+                        context.l10n.nutritionScores,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       SizedBox(height: context.smallSpacing),
@@ -310,7 +313,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                                 ),
                                 SizedBox(height: context.smallSpacing / 2),
                                 Text(
-                                  'Eco-Score',
+                                  context.l10n.ecoScore,
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               ],
@@ -346,10 +349,31 @@ class ProductDetailsScreen extends ConsumerWidget {
                 .removeProduct(product.barcode);
           } else {
             ref.read(comparisonProvider.notifier).addProduct(product);
+            showSuccessFlushbar(
+              context,
+              context.l10n.productAddedToComparison,
+              position: FlushbarPosition.BOTTOM,
+              mainButton: TextButton(
+                onPressed: () {
+                  context.pushNamed(AppRouters.productComparison);
+                },
+                child: Text(
+                  context.l10n.compareProducts,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: AppColors.white),
+                ),
+              ),
+            );
           }
         },
-        icon: Icon(isInComparison ? Icons.remove : Icons.compare_arrows),
-        label: Text(isInComparison ? 'Remove from Compare' : 'Add to Compare'),
+        icon: Icon(isInComparison ? Icons.remove : Icons.compare_arrows,
+            color: AppColors.white),
+        label: Text(
+            isInComparison
+                ? context.l10n.removeFromCompare
+                : context.l10n.addToCompare,
+            style:
+                TextStyle(fontWeight: FontWeight.bold, color: AppColors.white)),
       ),
     );
   }

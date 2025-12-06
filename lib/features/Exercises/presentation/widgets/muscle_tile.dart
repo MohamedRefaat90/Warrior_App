@@ -1,4 +1,6 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/muscle_translations.dart';
+import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
@@ -19,6 +21,8 @@ class MuscleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translatedMuscleName = translateMuscleName(context, muscle.name);
+
     return Card(
       elevation: 20,
       child: ListTile(
@@ -43,7 +47,7 @@ class MuscleTile extends StatelessWidget {
           errorWidget: (context, url, error) => const ImageError(),
         ),
         title: Text(
-          muscle.name,
+          translatedMuscleName,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         trailing: Column(
@@ -56,7 +60,7 @@ class MuscleTile extends StatelessWidget {
                   ),
             ),
             Text(
-              "Exercise",
+              context.l10n.exercise,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

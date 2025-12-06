@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/localization/muscle_translations.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/image_error.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
@@ -101,7 +102,7 @@ class GridMuscleCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: context.smallSpacing),
               child: Text(
-                muscle.name,
+                translateMuscleName(context, muscle.name),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: isDark ? Colors.white : Colors.black,

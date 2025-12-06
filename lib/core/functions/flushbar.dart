@@ -44,7 +44,7 @@ void showErrorFlushbar(BuildContext context, String message,
 
 /// Show success flushbar
 void showSuccessFlushbar(BuildContext context, String message,
-    {FlushbarPosition position = FlushbarPosition.TOP}) {
+    {FlushbarPosition position = FlushbarPosition.TOP, Widget? mainButton}) {
   Flushbar(
     flushbarPosition: position,
     margin: const EdgeInsets.all(8),
@@ -60,6 +60,7 @@ void showSuccessFlushbar(BuildContext context, String message,
     messageColor: Colors.white,
     duration: const Duration(seconds: 3),
     leftBarIndicatorColor: Colors.green.shade900,
+    mainButton: mainButton,
   ).show(context);
 }
 

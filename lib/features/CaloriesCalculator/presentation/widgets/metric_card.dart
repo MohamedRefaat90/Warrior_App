@@ -1,4 +1,5 @@
 import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Metric card for displaying BMR/TDEE
@@ -44,7 +45,7 @@ class MetricCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: context.screenWidth * 0.030,
               fontWeight: FontWeight.bold,
               color: AppColors.black,
             ),

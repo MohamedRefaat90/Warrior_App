@@ -1,10 +1,10 @@
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
-import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/product_comparison/product_comparison_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -31,458 +31,43 @@ class ProductComparisonScreen extends ConsumerWidget {
             ),
         ],
       ),
-      body: comparisonProducts.isEmpty
-          ? EmptyStateWidget(
-              title: context.l10n.noProductsToCompare,
-              message: context.l10n.addProductsToCompare,
-              icon: Icons.compare_arrows,
-              actionLabel: context.l10n.searchProducts,
-              onAction: () {
-                context.pushNamed(AppRouters.advancedSearch);
-              },
-            )
-          : comparisonProducts.length == 1
-              ? _buildSingleProductView(context, comparisonProducts[0], ref)
-              : _buildComparisonView(context, comparisonProducts, ref),
+      body: _buildBody(context, comparisonProducts),
       floatingActionButton: comparisonProducts.length < 3
           ? FloatingActionButton.extended(
               onPressed: () {
                 context.pushNamed(AppRouters.advancedSearch);
               },
-              icon: const Icon(Icons.add),
-              label: Text('addProduct'.tr(context)),
+              icon: const Icon(Icons.add, color: AppColors.white),
+              label: Text(
+                'addProduct'.tr(context),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white,
+                ),
+              ),
             )
           : null,
     );
   }
 
-  Widget _buildComparisonSection(
-    BuildContext context,
-    String title,
-    List<Widget> values,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: context.smallSpacing,
-        horizontal: context.mediumSpacing,
-      ),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-          ...values.map((value) => Expanded(
-                flex: 1,
-                child: Center(child: value),
-              )),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildComparisonView(
-    BuildContext context,
-    List<FoodProductModel> products,
-    WidgetRef ref,
-  ) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Product headers
-          SizedBox(
-            height: ResponsiveUtils.value(context,
-                mobile: 200.0, tablet: 220.0, desktop: 240.0),
-            child: Row(
-              children: products
-                  .map((product) => Expanded(
-                        child: _buildProductHeader(context, product, ref),
-                      ))
-                  .toList(),
-            ),
-          ),
-          const Divider(thickness: 2),
-
-          // Comparison rows
-          _buildComparisonSection(
-            context,
-            context.l10n.nutriScore,
-            products
-                .map((p) => p.nutriScore != null
-                    ? NutritionScoreBadge(nutriScore: p.nutriScore, size: 50)
-                    : Text('na'.tr(context)))
-                .toList(),
-          ),
-          _buildComparisonSection(
-            context,
-            context.l10n.novaGroup,
-            products
-                .map((p) => Text(
-                      p.novaGroup != null
-                          ? '${context.l10n.group} ${p.novaGroup}'
-                          : 'na'.tr(context),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ))
-                .toList(),
-          ),
-          _buildComparisonSection(
-            context,
-            context.l10n.ecoScore,
-            products
-                .map((p) => p.ecoscore != null
-                    ? EcoscoreWidget(ecoscore: p.ecoscore, size: 50)
-                    : Text('na'.tr(context)))
-                .toList(),
-          ),
-
-          const Divider(thickness: 2),
-
-          // Nutrition comparison
-          if (products.any((p) => p.nutritionValues != null)) ...[
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                context.l10n.nutritionalValuesPer100g,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              '${context.l10n.energy} (kcal)',
-              products
-                  .map((p) =>
-                      p.nutritionValues?.energyKcal?.toStringAsFixed(0) ??
-                      'N/A')
-                  .toList(),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              context.l10n.proteins,
-              products
-                  .map((p) => p.nutritionValues?.proteins != null
-                      ? '${p.nutritionValues!.proteins!.toStringAsFixed(1)}g'
-                      : 'N/A')
-                  .toList(),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              context.l10n.carbohydrates,
-              products
-                  .map((p) => p.nutritionValues?.carbohydrates != null
-                      ? '${p.nutritionValues!.carbohydrates!.toStringAsFixed(1)}g'
-                      : 'N/A')
-                  .toList(),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              context.l10n.sugars,
-              products
-                  .map((p) => p.nutritionValues?.sugars != null
-                      ? '${p.nutritionValues!.sugars!.toStringAsFixed(1)}g'
-                      : 'N/A')
-                  .toList(),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              context.l10n.fat,
-              products
-                  .map((p) => p.nutritionValues?.fat != null
-                      ? '${p.nutritionValues!.fat!.toStringAsFixed(1)}g'
-                      : 'N/A')
-                  .toList(),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              context.l10n.saturatedFat,
-              products
-                  .map((p) => p.nutritionValues?.saturatedFat != null
-                      ? '${p.nutritionValues!.saturatedFat!.toStringAsFixed(1)}g'
-                      : 'N/A')
-                  .toList(),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              context.l10n.fiber,
-              products
-                  .map((p) => p.nutritionValues?.fiber != null
-                      ? '${p.nutritionValues!.fiber!.toStringAsFixed(1)}g'
-                      : 'N/A')
-                  .toList(),
-            ),
-            _buildNutritionComparisonRow(
-              context,
-              context.l10n.salt,
-              products
-                  .map((p) => p.nutritionValues?.salt != null
-                      ? '${p.nutritionValues!.salt!.toStringAsFixed(2)}g'
-                      : 'N/A')
-                  .toList(),
-            ),
-          ],
-
-          const Divider(thickness: 2),
-
-          // Dietary information
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              context.l10n.dietaryInformation,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-          _buildComparisonSection(
-            context,
-            context.l10n.vegan,
-            products
-                .map((p) => Icon(
-                      p.isVegan == true ? Icons.check_circle : Icons.cancel,
-                      color: p.isVegan == true ? Colors.green : Colors.red,
-                      size: 30,
-                    ))
-                .toList(),
-          ),
-          _buildComparisonSection(
-            context,
-            context.l10n.vegetarian,
-            products
-                .map((p) => Icon(
-                      p.isVegetarian == true
-                          ? Icons.check_circle
-                          : Icons.cancel,
-                      color: p.isVegetarian == true ? Colors.green : Colors.red,
-                      size: 30,
-                    ))
-                .toList(),
-          ),
-          _buildComparisonSection(
-            context,
-            context.l10n.palmOilFree,
-            products
-                .map((p) => Icon(
-                      p.palmOilFree == true ? Icons.check_circle : Icons.cancel,
-                      color: p.palmOilFree == true ? Colors.green : Colors.red,
-                      size: 30,
-                    ))
-                .toList(),
-          ),
-
-          const SizedBox(height: 32),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNutritionComparisonRow(
-    BuildContext context,
-    String label,
-    List<String> values,
-  ) {
-    // Find the best and worst values
-    final numericValues = values
-        .map((v) => double.tryParse(v.replaceAll(RegExp(r'[^0-9.]'), '')))
-        .toList();
-    final validValues =
-        numericValues.where((v) => v != null).cast<double>().toList();
-
-    double? minValue;
-    double? maxValue;
-    if (validValues.isNotEmpty) {
-      minValue = validValues.reduce((a, b) => a < b ? a : b);
-      maxValue = validValues.reduce((a, b) => a > b ? a : b);
+  Widget _buildBody(
+      BuildContext context, List<FoodProductModel> comparisonProducts) {
+    if (comparisonProducts.isEmpty) {
+      return EmptyStateWidget(
+        title: context.l10n.noProductsToCompare,
+        message: context.l10n.addProductsToCompare,
+        icon: Icons.compare_arrows,
+        actionLabel: context.l10n.searchProducts,
+        onAction: () {
+          context.pushNamed(AppRouters.advancedSearch);
+        },
+      );
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-          ...List.generate(values.length, (index) {
-            final value = values[index];
-            final numericValue = numericValues[index];
-            final isBest = numericValue != null &&
-                minValue != null &&
-                numericValue == minValue &&
-                label.toLowerCase().contains('energy') == false;
-            final isWorst = numericValue != null &&
-                maxValue != null &&
-                numericValue == maxValue &&
-                validValues.length > 1;
+    if (comparisonProducts.length == 1) {
+      return SingleProductView(product: comparisonProducts[0]);
+    }
 
-            return Expanded(
-              flex: 3,
-              child: Center(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: isBest
-                        ? Colors.green.withValues(alpha: 0.2)
-                        : isWorst
-                            ? Colors.red.withValues(alpha: 0.2)
-                            : null,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    value,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight:
-                              isBest || isWorst ? FontWeight.bold : null,
-                          color: isBest
-                              ? Colors.green[700]
-                              : isWorst
-                                  ? Colors.red[700]
-                                  : null,
-                        ),
-                  ),
-                ),
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductHeader(
-    BuildContext context,
-    FoodProductModel product,
-    WidgetRef ref,
-  ) {
-    return Card(
-      margin: const EdgeInsets.all(4),
-      child: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ProductImageWidget(
-                imageUrl: product.imageFrontUrl ?? product.imageUrl,
-                width: 80,
-                height: 80,
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  product.productName ?? context.l10n.unknownProduct,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (product.brands != null) ...[
-                const SizedBox(height: 4),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    product.brands!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.6),
-                        ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ],
-          ),
-          Positioned(
-            top: 4,
-            right: 4,
-            child: IconButton(
-              icon: const Icon(Icons.close, size: 20),
-              onPressed: () {
-                ref
-                    .read(comparisonProvider.notifier)
-                    .removeProduct(product.barcode);
-              },
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSingleProductView(
-    BuildContext context,
-    FoodProductModel product,
-    WidgetRef ref,
-  ) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ProductImageWidget(
-            imageUrl: product.imageFrontUrl ?? product.imageUrl,
-            width: 150,
-            height: 150,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            product.productName ?? context.l10n.unknownProduct,
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            context.l10n.addMoreProductsToCompare,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
-                ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              context.pushNamed(AppRouters.advancedSearch);
-            },
-            icon: const Icon(Icons.add),
-            label: Text('addAnotherProduct'.tr(context)),
-          ),
-        ],
-      ),
-    );
+    return ComparisonContentView(products: comparisonProducts);
   }
 }

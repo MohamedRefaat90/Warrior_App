@@ -137,7 +137,8 @@ class WorkoutDetails extends ConsumerWidget {
             : null,
         body: Column(
           children: [
-            const BannerAdWidget(),
+            const BannerAdWidget(
+                adUnitId: "ca-app-pub-7417773148722475/6577498120"),
             Expanded(child: WorkoutGridView(updatedWorkout)),
           ],
         ),

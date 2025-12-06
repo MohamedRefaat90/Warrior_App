@@ -5,6 +5,21 @@ import 'package:openfoodfacts/openfoodfacts.dart';
 /// Remote data source for Open Food Facts API
 /// Handles all API calls to Open Food Facts
 class FoodRemoteDataSource {
+  /// Fields needed for list view display (reduces payload significantly)
+  static const List<ProductField> _listViewFields = [
+    ProductField.BARCODE,
+    ProductField.NAME,
+    ProductField.BRANDS,
+    ProductField.QUANTITY,
+    ProductField.IMAGE_FRONT_URL,
+    ProductField.IMAGE_FRONT_SMALL_URL,
+    ProductField.NUTRISCORE,
+    ProductField.NOVA_GROUP,
+    ProductField.ECOSCORE_GRADE,
+    ProductField.NUTRIMENTS,
+    ProductField.INGREDIENTS_ANALYSIS_TAGS,
+  ];
+
   /// Add new product to Open Food Facts database
   Future<bool> addNewProduct(Product product, User user) async {
     try {
@@ -56,8 +71,7 @@ class FoodRemoteDataSource {
 
         // Filter and sort suggestions
         final suggestions = result.products!
-            .where((product) =>
-                product.productName != null && product.nutriments != null)
+            .where((product) => product.productName != null)
             .map((product) => product.productName!)
             .toSet() // Remove duplicates
             .where((name) {
@@ -116,7 +130,7 @@ class FoodRemoteDataSource {
           OpenFoodFactsLanguage.ENGLISH,
           OpenFoodFactsLanguage.ARABIC
         ],
-        fields: [ProductField.ALL],
+        fields: _listViewFields,
       );
 
       final SearchResult result =
@@ -167,7 +181,7 @@ class FoodRemoteDataSource {
           OpenFoodFactsLanguage.ENGLISH,
           OpenFoodFactsLanguage.ARABIC
         ],
-        fields: [ProductField.ALL],
+        fields: _listViewFields,
       );
 
       final SearchResult result =
@@ -247,7 +261,7 @@ class FoodRemoteDataSource {
           OpenFoodFactsLanguage.ENGLISH,
           OpenFoodFactsLanguage.ARABIC
         ],
-        fields: [ProductField.ALL],
+        fields: _listViewFields,
       );
 
       final SearchResult result =

@@ -91,7 +91,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       child: CategoryCard(
                           category: ref.read(homeProvider).categoryItems.last)),
                   const Spacer(),
-                  const BannerAdWidget(),
+                  const BannerAdWidget(
+                      adUnitId: "ca-app-pub-7417773148722475/3352321251"),
                 ],
               ),
             ),

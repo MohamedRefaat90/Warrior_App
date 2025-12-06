@@ -155,7 +155,8 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
               Column(
                 children: [
                   ConnectivityChecker.isOnline!
-                      ? const BannerAdWidget()
+                      ? const BannerAdWidget(
+                          adUnitId: "ca-app-pub-7417773148722475/6170304015")
                       : const SizedBox.shrink(),
                   Expanded(
                     child: FadeTransition(

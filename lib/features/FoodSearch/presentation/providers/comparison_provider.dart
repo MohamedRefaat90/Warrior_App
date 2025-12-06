@@ -1,50 +1,53 @@
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for product comparison
 final comparisonProvider =
-    NotifierProvider.autoDispose<ComparisonNotifier, List<FoodProductModel>>(
+    NotifierProvider<ComparisonNotifier, List<FoodProductModel>>(
         ComparisonNotifier.new);
 
-class ComparisonNotifier extends Notifier<List<FoodProductModel>> {
-  @override
-  List<FoodProductModel> build() {
-    ref.keepAlive();
-    return [];
-  }
+/// Provider to check if a product is in comparison
+final isInComparisonProvider = Provider.family<bool, String>((ref, barcode) {
+  final comparison = ref.watch(comparisonProvider);
+  return comparison.any((p) => p.barcode == barcode);
+});
 
+class ComparisonNotifier extends Notifier<List<FoodProductModel>> {
   void addProduct(FoodProductModel product) {
     if (state.length >= 3) {
+      HapticFeedback.heavyImpact();
       TalkerService.warning(
           'Cannot add more than 3 products for comparison', 'COMPARISON');
       return;
     }
     if (state.any((p) => p.barcode == product.barcode)) {
+      HapticFeedback.selectionClick();
       TalkerService.info('Product already in comparison list', 'COMPARISON');
       return;
     }
     state = [...state, product];
+    HapticFeedback.mediumImpact();
     TalkerService.info(
         'Added product ${product.productName} to comparison', 'COMPARISON');
   }
 
-  void removeProduct(String barcode) {
-    state = state.where((p) => p.barcode != barcode).toList();
-    TalkerService.info(
-        'Removed product with barcode $barcode from comparison', 'COMPARISON');
+  @override
+  List<FoodProductModel> build() {
+    return [];
   }
 
   void clearComparison() {
     state = [];
+    HapticFeedback.lightImpact();
     TalkerService.info('Cleared comparison list', 'COMPARISON');
   }
+
+  void removeProduct(String barcode) {
+    state = state.where((p) => p.barcode != barcode).toList();
+    HapticFeedback.lightImpact();
+    TalkerService.info(
+        'Removed product with barcode $barcode from comparison', 'COMPARISON');
+  }
 }
-
-/// Provider to check if a product is in comparison
-final isInComparisonProvider =
-    Provider.family.autoDispose<bool, String>((ref, barcode) {
-  final comparison = ref.watch(comparisonProvider);
-  return comparison.any((p) => p.barcode == barcode);
-});
-

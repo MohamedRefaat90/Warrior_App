@@ -1,5 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/services/interstitial_ad_manager.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/provider/calories_calculator_provider.dart';
 import 'package:Warrior/features/CaloriesCalculator/presentation/widgets/macro_pie_chart_painter.dart';
@@ -12,12 +14,34 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CaloriesResultsScreen extends ConsumerWidget {
+class CaloriesResultsScreen extends ConsumerStatefulWidget {
   const CaloriesResultsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CaloriesResultsScreen> createState() =>
+      _CaloriesResultsScreenState();
+}
+
+class _CaloriesResultsScreenState extends ConsumerState<CaloriesResultsScreen> {
+  late final InterstitialAdManager calorieCalculatorResultAd;
+
+  @override
+  void initState() {
+    calorieCalculatorResultAd = InterstitialAdManager.forAdUnit(
+        "ca-app-pub-7417773148722475/3073367386");
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    calorieCalculatorResultAd.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(caloriesCalculatorProvider);
+    final appSettings = ref.watch(appSettingsProvider.notifier);
 
     if (state.results == null) {
       return Scaffold(
@@ -77,7 +101,9 @@ class CaloriesResultsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'yourResults'.tr(context),
-          style: TextStyle(fontFamily: 'kings', fontWeight: FontWeight.w900),
+          style: TextStyle(
+              fontFamily: appSettings.fontFamily(),
+              fontWeight: FontWeight.w900),
         ),
         centerTitle: true,
         actions: [
@@ -241,8 +267,10 @@ class CaloriesResultsScreen extends ConsumerWidget {
                 width: double.infinity,
                 child: CustomBTN(
                   press: () {
-                    ref.read(caloriesCalculatorProvider.notifier).reset();
-                    Navigator.pop(context);
+                    calorieCalculatorResultAd.showAd(onAdDismissed: () {
+                      ref.read(caloriesCalculatorProvider.notifier).reset();
+                      Navigator.pop(context);
+                    });
                   },
                   color: AppColors.primaryColor,
                   radius: 15,

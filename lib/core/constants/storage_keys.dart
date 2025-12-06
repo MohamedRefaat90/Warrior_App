@@ -1,16 +1,23 @@
+/// Storage keys for shared preferences and secure storage.
 class StorageKeys {
-  /*
-  this class is used to store the keys for the shared preferences
-   */
-  static String token = 'Token';
-  static String deviceToken = 'deviceToken';
-  static String isFirstTime = 'isFirstTime';
-  static String workoutAlert = 'workoutAlert';
-  static String isGuestMode = 'isGuestMode';
-  static String numberOfWorkouts = 'numberOfWorkouts';
-  static String isRating = 'isRating';
-  static String caloriesCalculatorData = 'caloriesCalculatorData';
-  static String isGridView = 'isGridView';
-  static String themeMode = 'themeMode';
-  static String locale = 'locale';
+  // Authentication
+  static const String token = 'Token';
+
+  static const String deviceToken = 'deviceToken';
+  static const String isGuestMode = 'isGuestMode';
+  // User preferences
+  static const String isFirstTime = 'isFirstTime';
+
+  static const String workoutAlert = 'workoutAlert';
+  static const String numberOfWorkouts = 'numberOfWorkouts';
+  static const String isRating = 'isRating';
+  static const String caloriesCalculatorData = 'caloriesCalculatorData';
+  static const String isGridView = 'isGridView';
+  static const String themeMode = 'themeMode';
+  static const String locale = 'locale';
+  // Open Food Facts API credentials (secure storage)
+  static const String offUserId = 'off_user_id';
+
+  static const String offPassword = 'off_password';
+  StorageKeys._();
 }

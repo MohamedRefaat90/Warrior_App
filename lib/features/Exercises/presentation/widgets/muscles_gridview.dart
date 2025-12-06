@@ -1,3 +1,4 @@
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
@@ -91,7 +92,7 @@ class MusclesGridView extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        "You must add at least one exercise",
+                        context.l10n.mustAddAtLeastOneExercise,
                         style: TextStyle(
                           color: Colors.red.shade700,
                           fontSize: 14,

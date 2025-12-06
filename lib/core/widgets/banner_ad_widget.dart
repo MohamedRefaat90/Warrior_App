@@ -7,13 +7,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 /// This widget manages its own ad lifecycle and provides consistent
 /// ad placement across the app.
 class BannerAdWidget extends StatefulWidget {
-  /// Optional custom ad unit ID. If not provided, uses default banner IDs.
-  final String? adUnitId;
+  final String adUnitId;
 
-  const BannerAdWidget({
-    super.key,
-    this.adUnitId,
-  });
+  const BannerAdWidget({super.key, required this.adUnitId});
 
   @override
   State<BannerAdWidget> createState() => _BannerAdWidgetState();
@@ -49,10 +45,8 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   }
 
   void _loadAd() {
-    final adUnitId = widget.adUnitId ??
-        (kDebugMode
-            ? 'ca-app-pub-3940256099942544/6300978111' // Test ID
-            : 'ca-app-pub-7417773148722475/3352321251'); // Production ID
+    final adUnitId =
+        kDebugMode ? 'ca-app-pub-3940256099942544/9214589741' : widget.adUnitId;
 
     _bannerAd = BannerAd(
       size: AdSize.banner,

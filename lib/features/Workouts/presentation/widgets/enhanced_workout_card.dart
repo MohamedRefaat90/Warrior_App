@@ -373,7 +373,7 @@ class _EnhancedWorkoutCardState extends ConsumerState<EnhancedWorkoutCard>
               onPressed: () async {
                 ref
                     .read(workoutsProvider.notifier)
-                    .deleteWorkoutSet(widget.workout.id!, widget.index);
+                    .deleteWorkoutSet(widget.workout.id, widget.index);
                 if (context.mounted) {
                   Navigator.of(context).pop();
                 }

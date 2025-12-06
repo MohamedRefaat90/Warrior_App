@@ -26,7 +26,7 @@ class PredefinedWorkoutDetails extends ConsumerWidget {
         title: Text(
           workout.name ?? 'Workout',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontFamily: "Kings",
+                fontFamily: "Poppins",
                 fontWeight: FontWeight.bold,
               ),
         ),
@@ -39,7 +39,8 @@ class PredefinedWorkoutDetails extends ConsumerWidget {
           ),
           child: Column(
             children: [
-              const BannerAdWidget(),
+              const BannerAdWidget(
+                  adUnitId: "ca-app-pub-7417773148722475/7261407290"),
               Expanded(child: PredefinedExerciseGridView(workout)),
               AddWorkoutBtn(workout: workout, workoutNotifier: workoutNotifier),
             ],

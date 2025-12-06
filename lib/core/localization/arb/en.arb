@@ -1323,6 +1323,10 @@
   "@addToCompare": {
     "description": "Add to compare button"
   },
+  "productAddedToComparison": "Product added to comparison successfully",
+  "@productAddedToComparison": {
+    "description": "Snackbar message when product is added to comparison"
+  },
   "energy": "Energy",
   "@energy": {
     "description": "Energy nutrient label"
@@ -1556,5 +1560,135 @@
   "syncedWithServer": "Synced with server",
   "@syncedWithServer": {
     "description": "Success message after sync completes"
+  },
+  "removeFromFavorites": "Remove from Favorites",
+  "@removeFromFavorites": {
+    "description": "Dialog title for removing item from favorites"
+  },
+  "confirmRemoveFavorite": "Are you sure you want to remove {productName} from your favorites?",
+  "@confirmRemoveFavorite": {
+    "description": "Confirmation message for removing a favorite",
+    "placeholders": {
+      "productName": {
+        "type": "String",
+        "example": "Nutella"
+      }
+    }
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "Remove button text"
+  },
+  "removedFromFavorites": "{productName} removed from favorites",
+  "@removedFromFavorites": {
+    "description": "Snackbar message after removing favorite",
+    "placeholders": {
+      "productName": {
+        "type": "String",
+        "example": "Nutella"
+      }
+    }
+  },
+  "undo": "Undo",
+  "@undo": {
+    "description": "Undo action button text"
+  },
+  "sortBy": "Sort By",
+  "@sortBy": {
+    "description": "Sort by label"
+  },
+  "dateNewest": "Date Added (Newest)",
+  "@dateNewest": {
+    "description": "Sort by newest date"
+  },
+  "dateOldest": "Date Added (Oldest)",
+  "@dateOldest": {
+    "description": "Sort by oldest date"
+  },
+  "nameAZ": "Name (A-Z)",
+  "@nameAZ": {
+    "description": "Sort by name ascending"
+  },
+  "nameZA": "Name (Z-A)",
+  "@nameZA": {
+    "description": "Sort by name descending"
+  },
+  "brandAZ": "Brand (A-Z)",
+  "@brandAZ": {
+    "description": "Sort by brand ascending"
+  },
+  "brandZA": "Brand (Z-A)",
+  "@brandZA": {
+    "description": "Sort by brand descending"
+  },
+  "noMoreResults": "No more results",
+  "@noMoreResults": {
+    "description": "Message shown when all search results have been loaded"
+  },
+  "productNotFoundContribute": "This product is not in our database yet. Would you like to add it to help the community?",
+  "@productNotFoundContribute": {
+    "description": "Message shown when product not found, asking user to contribute"
+  },
+  "errorScanningBarcode": "Error scanning barcode",
+  "@errorScanningBarcode": {
+    "description": "Error message prefix for barcode scanning errors"
+  },
+  "muscleAbs": "Abs",
+  "@muscleAbs": {
+    "description": "Muscle name: Abs"
+  },
+  "muscleTriceps": "Triceps",
+  "@muscleTriceps": {
+    "description": "Muscle name: Triceps"
+  },
+  "muscleShoulders": "Shoulders",
+  "@muscleShoulders": {
+    "description": "Muscle name: Shoulders"
+  },
+  "muscleLegs": "Legs",
+  "@muscleLegs": {
+    "description": "Muscle name: Legs"
+  },
+  "muscleChest": "Chest",
+  "@muscleChest": {
+    "description": "Muscle name: Chest"
+  },
+  "muscleBiceps": "Biceps",
+  "@muscleBiceps": {
+    "description": "Muscle name: Biceps"
+  },
+  "muscleBack": "Back",
+  "@muscleBack": {
+    "description": "Muscle name: Back"
+  },
+  "muscleForearms": "Forearms",
+  "@muscleForearms": {
+    "description": "Muscle name: Forearms"
+  },
+  "muscleGlutes": "Glutes",
+  "@muscleGlutes": {
+    "description": "Muscle name: Glutes"
+  },
+  "muscleCalves": "Calves",
+  "@muscleCalves": {
+    "description": "Muscle name: Calves"
+  },
+  "muscleCore": "Core",
+  "@muscleCore": {
+    "description": "Muscle name: Core"
+  },
+  "muscleTraps": "Traps",
+  "@muscleTraps": {
+    "description": "Muscle name: Traps"
+  },
+  "exercise": "Exercise",
+  "@exercise": {
+    "description": "Label for exercise count"
+  },
+  "mustAddAtLeastOneExercise": "You must add at least one exercise",
+  "@mustAddAtLeastOneExercise": {
+    "description": "Warning message when no exercises are added to workout"
   }
 }
+
+

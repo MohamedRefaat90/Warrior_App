@@ -14,7 +14,6 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
 
   @override
   AdvancedSearchState build() {
-    ref.keepAlive();
     return AdvancedSearchState();
   }
 
@@ -23,21 +22,99 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
     TalkerService.info('Cleared all filters', 'ADVANCED_SEARCH');
   }
 
+  /// Loads more results for infinite scroll pagination.
+  Future<void> loadMoreResults() async {
+    if (state.isLoadingMore || !state.hasMoreResults || state.isLoading) return;
+
+    state = state.copyWith(isLoadingMore: true);
+    final nextPage = state.currentPage + 1;
+
+    try {
+      List<FoodProductModel> newResults = [];
+
+      if (state.query.isNotEmpty) {
+        newResults = await _repo.searchProductsByName(
+          state.query,
+          page: nextPage,
+          pageSize: AdvancedSearchState.pageSize,
+        );
+      } else if (state.selectedCategories.isNotEmpty) {
+        for (final category in state.selectedCategories) {
+          final categoryResults = await _repo.searchByCategory(
+            category,
+            page: nextPage,
+            pageSize: AdvancedSearchState.pageSize,
+          );
+          newResults.addAll(categoryResults);
+        }
+      } else if (state.selectedBrands.isNotEmpty) {
+        for (final brand in state.selectedBrands) {
+          final brandResults = await _repo.searchByBrand(
+            brand,
+            page: nextPage,
+            pageSize: AdvancedSearchState.pageSize,
+          );
+          newResults.addAll(brandResults);
+        }
+      }
+
+      // Apply additional filters
+      newResults = _applyFilters(newResults);
+
+      // Determine if there are more results
+      final hasMore = newResults.length >= AdvancedSearchState.pageSize;
+
+      state = state.copyWith(
+        results: [...state.results, ...newResults],
+        isLoadingMore: false,
+        currentPage: nextPage,
+        hasMoreResults: hasMore,
+      );
+
+      TalkerService.info(
+        'Loaded ${newResults.length} more products (page $nextPage)',
+        'ADVANCED_SEARCH',
+      );
+    } catch (e, stackTrace) {
+      TalkerService.error(
+          'Error loading more results', 'ADVANCED_SEARCH', e, stackTrace);
+      state = state.copyWith(isLoadingMore: false);
+    }
+  }
+
   Future<void> performSearch() async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      currentPage: 1,
+      hasMoreResults: true,
+      results: [],
+    );
     try {
       List<FoodProductModel> results = [];
 
       if (state.query.isNotEmpty) {
-        results = await _repo.searchProductsByName(state.query);
+        results = await _repo.searchProductsByName(
+          state.query,
+          page: 1,
+          pageSize: AdvancedSearchState.pageSize,
+        );
       } else if (state.selectedCategories.isNotEmpty) {
         for (final category in state.selectedCategories) {
-          final categoryResults = await _repo.searchByCategory(category);
+          final categoryResults = await _repo.searchByCategory(
+            category,
+            page: 1,
+            pageSize: AdvancedSearchState.pageSize,
+          );
           results.addAll(categoryResults);
         }
       } else if (state.selectedBrands.isNotEmpty) {
         for (final brand in state.selectedBrands) {
-          final brandResults = await _repo.searchByBrand(brand);
+          final brandResults = await _repo.searchByBrand(
+            brand,
+            page: 1,
+            pageSize: AdvancedSearchState.pageSize,
+          );
           results.addAll(brandResults);
         }
       }
@@ -45,9 +122,13 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
       // Apply additional filters
       results = _applyFilters(results);
 
+      // Determine if there are more results
+      final hasMore = results.length >= AdvancedSearchState.pageSize;
+
       state = state.copyWith(
         results: results,
         isLoading: false,
+        hasMoreResults: hasMore,
       );
 
       TalkerService.info('Found ${results.length} products', 'ADVANCED_SEARCH');
@@ -62,11 +143,19 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
   }
 
   void setNovaGroup(int? novaGroup) {
-    state = state.copyWith(selectedNovaGroup: novaGroup);
+    if (novaGroup == null) {
+      state = state.copyWith(clearNovaGroup: true);
+    } else {
+      state = state.copyWith(selectedNovaGroup: novaGroup);
+    }
   }
 
   void setNutriScore(String? nutriScore) {
-    state = state.copyWith(selectedNutriScore: nutriScore);
+    if (nutriScore == null) {
+      state = state.copyWith(clearNutriScore: true);
+    } else {
+      state = state.copyWith(selectedNutriScore: nutriScore);
+    }
   }
 
   void toggleAllergen(String allergen) {
@@ -158,6 +247,7 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
 
 /// State for advanced search form
 class AdvancedSearchState {
+  static const int pageSize = 25;
   final String query;
   final List<String> selectedCategories;
   final List<String> selectedBrands;
@@ -168,8 +258,11 @@ class AdvancedSearchState {
   final bool palmOilFree;
   final List<String> excludedAllergens;
   final bool isLoading;
+  final bool isLoadingMore;
   final List<FoodProductModel> results;
   final String? errorMessage;
+  final int currentPage;
+  final bool hasMoreResults;
 
   AdvancedSearchState({
     this.query = '',
@@ -182,8 +275,11 @@ class AdvancedSearchState {
     this.palmOilFree = false,
     this.excludedAllergens = const [],
     this.isLoading = false,
+    this.isLoadingMore = false,
     this.results = const [],
     this.errorMessage,
+    this.currentPage = 1,
+    this.hasMoreResults = true,
   });
 
   bool get hasActiveFilters =>
@@ -196,6 +292,10 @@ class AdvancedSearchState {
       palmOilFree ||
       excludedAllergens.isNotEmpty;
 
+  /// Creates a copy with optional field updates.
+  ///
+  /// Use [clearNutriScore], [clearNovaGroup], and [clearErrorMessage]
+  /// to explicitly set these nullable fields to null.
   AdvancedSearchState copyWith({
     String? query,
     List<String>? selectedCategories,
@@ -207,22 +307,35 @@ class AdvancedSearchState {
     bool? palmOilFree,
     List<String>? excludedAllergens,
     bool? isLoading,
+    bool? isLoadingMore,
     List<FoodProductModel>? results,
     String? errorMessage,
+    int? currentPage,
+    bool? hasMoreResults,
+    bool clearNutriScore = false,
+    bool clearNovaGroup = false,
+    bool clearErrorMessage = false,
   }) {
     return AdvancedSearchState(
       query: query ?? this.query,
       selectedCategories: selectedCategories ?? this.selectedCategories,
       selectedBrands: selectedBrands ?? this.selectedBrands,
-      selectedNutriScore: selectedNutriScore ?? this.selectedNutriScore,
-      selectedNovaGroup: selectedNovaGroup ?? this.selectedNovaGroup,
+      selectedNutriScore: clearNutriScore
+          ? null
+          : (selectedNutriScore ?? this.selectedNutriScore),
+      selectedNovaGroup: clearNovaGroup
+          ? null
+          : (selectedNovaGroup ?? this.selectedNovaGroup),
       veganOnly: veganOnly ?? this.veganOnly,
       vegetarianOnly: vegetarianOnly ?? this.vegetarianOnly,
       palmOilFree: palmOilFree ?? this.palmOilFree,
       excludedAllergens: excludedAllergens ?? this.excludedAllergens,
       isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       results: results ?? this.results,
-      errorMessage: errorMessage,
+      errorMessage: clearErrorMessage ? null : errorMessage,
+      currentPage: currentPage ?? this.currentPage,
+      hasMoreResults: hasMoreResults ?? this.hasMoreResults,
     );
   }
 }

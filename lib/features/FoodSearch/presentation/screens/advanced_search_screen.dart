@@ -1,4 +1,5 @@
-import 'package:Warrior/core/constants/colors.dart';
+import 'dart:async';
+
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/advanced_search_provider.dart';
@@ -7,6 +8,7 @@ import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_wid
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 /// Advanced search screen with filters and autocomplete
 class AdvancedSearchScreen extends ConsumerStatefulWidget {
@@ -25,6 +27,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
   bool _showFilters = false;
   late AnimationController _filterAnimationController;
   late Animation<double> _filterAnimation;
+  Timer? _debounceTimer;
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +77,19 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                     ),
                   ),
                   onChanged: (value) {
-                    searchNotifier.updateQuery(value);
+                    // Cancel previous debounce timer
+                    _debounceTimer?.cancel();
+                    // Start new debounce timer (400ms delay)
+                    _debounceTimer =
+                        Timer(const Duration(milliseconds: 400), () {
+                      searchNotifier.updateQuery(value);
+                    });
                   },
                   onSubmitted: (value) {
+                    // Cancel debounce and search immediately on submit
+                    _debounceTimer?.cancel();
                     if (value.isNotEmpty) {
+                      searchNotifier.updateQuery(value);
                       searchNotifier.performSearch();
                     }
                   },
@@ -128,7 +140,12 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                             ),
                           );
                         },
-                        loading: () => const SizedBox.shrink(),
+                        loading: () => Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: context.smallSpacing,
+                          ),
+                          child: const LinearProgressIndicator(),
+                        ),
                         error: (_, __) => const SizedBox.shrink(),
                       );
                     },
@@ -144,7 +161,11 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                             ? Icons.filter_alt
                             : Icons.filter_alt_outlined),
                         label: Text(
-                            '${_showFilters ? context.l10n.hideFilters : context.l10n.showFilters} ${searchState.hasActiveFilters ? '(${_getActiveFilterCount(searchState)})' : ''}'),
+                          '${_showFilters ? context.l10n.hideFilters : context.l10n.showFilters} ${searchState.hasActiveFilters ? '(${_getActiveFilterCount(searchState)})' : ''}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(width: context.mediumSpacing),
@@ -160,8 +181,14 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                                 child: const CircularProgressIndicator(
                                     strokeWidth: 2),
                               )
-                            : const Icon(Icons.search),
-                        label: Text('search'.tr(context)),
+                            : const Icon(
+                                Icons.search,
+                                color: Colors.white,
+                              ),
+                        label: Text('search'.tr(context),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700)),
                       ),
                     ),
                   ],
@@ -304,6 +331,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _searchController.dispose();
     _filterAnimationController.dispose();
     super.dispose();
@@ -352,7 +380,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
 
   Widget _buildResults(AdvancedSearchState searchState) {
     if (searchState.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const LoadingProductGrid();
     }
 
     if (searchState.errorMessage != null) {
@@ -371,20 +399,82 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
       );
     }
 
-    return GridView.builder(
-      padding: context.screenPadding,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: ResponsiveUtils.getGridColumns(context,
-            mobile: 2, tablet: 3, desktop: 4),
-        crossAxisSpacing: context.smallSpacing,
-        mainAxisSpacing: context.smallSpacing,
-        childAspectRatio: 0.7,
-      ),
-      itemCount: searchState.results.length,
-      itemBuilder: (context, index) {
-        final product = searchState.results[index];
-        return ProductCard(product: product);
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.read(advancedSearchProvider.notifier).performSearch();
       },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (scrollInfo) {
+          // Trigger load more when near the bottom
+          if (scrollInfo.metrics.pixels >=
+                  scrollInfo.metrics.maxScrollExtent - 200 &&
+              searchState.hasMoreResults &&
+              !searchState.isLoadingMore &&
+              !searchState.isLoading) {
+            ref.read(advancedSearchProvider.notifier).loadMoreResults();
+          }
+          return false;
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: context.screenPadding,
+              sliver: SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: ResponsiveUtils.getGridColumns(context,
+                      mobile: 2, tablet: 3, desktop: 4),
+                  crossAxisSpacing: context.smallSpacing,
+                  mainAxisSpacing: context.smallSpacing,
+                  childAspectRatio: 0.85,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final product = searchState.results[index];
+                    return AnimationConfiguration.staggeredGrid(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      columnCount: ResponsiveUtils.getGridColumns(context,
+                          mobile: 2, tablet: 3, desktop: 4),
+                      child: ScaleAnimation(
+                        child: FadeInAnimation(
+                          child: ProductCard(product: product),
+                        ),
+                      ),
+                    );
+                  },
+                  childCount: searchState.results.length,
+                ),
+              ),
+            ),
+            // Loading indicator at the bottom
+            if (searchState.isLoadingMore)
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              ),
+            // End of results indicator
+            if (!searchState.hasMoreResults && searchState.results.isNotEmpty)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(
+                      context.l10n.noMoreResults,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.5),
+                          ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 

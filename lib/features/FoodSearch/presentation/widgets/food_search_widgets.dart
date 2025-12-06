@@ -1,3 +1,4 @@
+import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -143,8 +144,10 @@ class EmptyStateWidget extends StatelessWidget {
               SizedBox(height: context.largeSpacing),
               ElevatedButton.icon(
                 onPressed: onAction,
-                icon: const Icon(Icons.add),
-                label: Text(actionLabel!),
+                icon: const Icon(Icons.add, color: AppColors.white),
+                label: Text(actionLabel!,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: AppColors.white)),
               ),
             ],
           ],
@@ -207,6 +210,37 @@ class ErrorStateWidget extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Loading grid with skeleton shimmer for product lists.
+///
+/// Displays a responsive grid of skeleton loaders while data is loading.
+class LoadingProductGrid extends StatelessWidget {
+  /// The number of skeleton items to display.
+  final int itemCount;
+
+  /// Creates a [LoadingProductGrid] with the specified [itemCount].
+  const LoadingProductGrid({super.key, this.itemCount = 6});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: context.screenPadding,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: ResponsiveUtils.getGridColumns(
+          context,
+          mobile: 2,
+          tablet: 3,
+          desktop: 4,
+        ),
+        crossAxisSpacing: context.smallSpacing,
+        mainAxisSpacing: context.smallSpacing,
+        childAspectRatio: 0.7,
+      ),
+      itemCount: itemCount,
+      itemBuilder: (context, index) => const LoadingProductShimmer(),
     );
   }
 }

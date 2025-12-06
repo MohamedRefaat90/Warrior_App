@@ -1,5 +1,8 @@
+import 'package:Warrior/core/extensions/translation_ext.dart';
+import 'package:Warrior/core/localization/muscle_translations.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/loader.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
@@ -21,6 +24,9 @@ class ExercisesScreen extends ConsumerWidget {
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final translatedMuscleName = translateMuscleName(context, muscle['name']);
+    final appSettings = ref.watch(appSettingsProvider);
+    final appSettingsNotifier = ref.watch(appSettingsProvider.notifier);
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         // Reset select mode when navigating back using device back button
@@ -37,11 +43,12 @@ class ExercisesScreen extends ConsumerWidget {
               },
               icon: const Icon(Icons.arrow_back_ios_new)),
           title: Text(
-            '${muscle['name']} Exercises',
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(fontFamily: "Kings", fontWeight: FontWeight.bold),
+            appSettings.locale.languageCode == "ar"
+                ? 'تمارين $translatedMuscleName'
+                : '$translatedMuscleName Exercises',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontFamily: appSettingsNotifier.fontFamily(),
+                fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),

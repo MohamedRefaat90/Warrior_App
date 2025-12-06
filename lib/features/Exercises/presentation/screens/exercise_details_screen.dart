@@ -33,7 +33,6 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
@@ -65,7 +64,8 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       ),
       body: Column(
         children: [
-          const BannerAdWidget(),
+          const BannerAdWidget(
+              adUnitId: "ca-app-pub-7417773148722475/6306035388"),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),

@@ -1015,6 +1015,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addToCompare => 'Add to Compare';
 
   @override
+  String get productAddedToComparison =>
+      'Product added to comparison successfully';
+
+  @override
   String get energy => 'Energy';
 
   @override
@@ -1193,4 +1197,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncedWithServer => 'Synced with server';
+
+  @override
+  String get removeFromFavorites => 'Remove from Favorites';
+
+  @override
+  String confirmRemoveFavorite(String productName) {
+    return 'Are you sure you want to remove $productName from your favorites?';
+  }
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String removedFromFavorites(String productName) {
+    return '$productName removed from favorites';
+  }
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get dateNewest => 'Date Added (Newest)';
+
+  @override
+  String get dateOldest => 'Date Added (Oldest)';
+
+  @override
+  String get nameAZ => 'Name (A-Z)';
+
+  @override
+  String get nameZA => 'Name (Z-A)';
+
+  @override
+  String get brandAZ => 'Brand (A-Z)';
+
+  @override
+  String get brandZA => 'Brand (Z-A)';
+
+  @override
+  String get noMoreResults => 'No more results';
+
+  @override
+  String get productNotFoundContribute =>
+      'This product is not in our database yet. Would you like to add it to help the community?';
+
+  @override
+  String get muscleAbs => 'Abs';
+
+  @override
+  String get muscleTriceps => 'Triceps';
+
+  @override
+  String get muscleShoulders => 'Shoulders';
+
+  @override
+  String get muscleLegs => 'Legs';
+
+  @override
+  String get muscleChest => 'Chest';
+
+  @override
+  String get muscleBiceps => 'Biceps';
+
+  @override
+  String get muscleBack => 'Back';
+
+  @override
+  String get muscleForearms => 'Forearms';
+
+  @override
+  String get muscleGlutes => 'Glutes';
+
+  @override
+  String get muscleCalves => 'Calves';
+
+  @override
+  String get muscleCore => 'Core';
+
+  @override
+  String get muscleTraps => 'Traps';
+
+  @override
+  String get exercise => 'Exercise';
+
+  @override
+  String get mustAddAtLeastOneExercise => 'You must add at least one exercise';
 }

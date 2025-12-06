@@ -119,36 +119,42 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     }
   }
 
-  Future<void> deleteWorkoutSet(int workoutID, int index) async {
+  Future<void> deleteWorkoutSet(int? workoutID, int index) async {
     try {
-      if (workoutID <= 0) {
-        state = ProviderStates(errorMessage: 'Invalid workout ID');
-        TalkerService.warning(
-            'Attempted to delete workout with invalid ID: $workoutID',
-            'WORKOUT');
-        return;
-      }
+      // Check if this is an offline-created workout (no server ID)
+      final isOfflineWorkout = workoutID == null || workoutID <= 0;
 
-      if (_isOnline) {
-        // Online: Delete from server
-        _workoutRepo.deleteWorkoutSet(workoutID);
-        TalkerService.info('Workout deleted online: ID $workoutID', 'WORKOUT');
+      if (!isOfflineWorkout) {
+        // Workout has a valid server ID
+        if (_isOnline) {
+          // Online: Delete from server
+          _workoutRepo.deleteWorkoutSet(workoutID);
+          TalkerService.info(
+              'Workout deleted online: ID $workoutID', 'WORKOUT');
+        } else {
+          // Offline: Track for later sync
+          await HiveManager.addPendingOperation(
+            PendingOperation(
+              entityType: 'workout',
+              operationType: SyncOperationType.delete,
+              id: workoutID,
+              timestamp: DateTime.now(),
+            ),
+          );
+          TalkerService.info(
+              'Workout deletion queued for sync: ID $workoutID', 'WORKOUT');
+        }
+        // Update UI - remove by ID
+        workoutList.removeWhere((workout) => workout.id == workoutID);
       } else {
-        // Offline: Track for later sync
-        await HiveManager.addPendingOperation(
-          PendingOperation(
-            entityType: 'workout',
-            operationType: SyncOperationType.delete,
-            id: workoutID,
-            timestamp: DateTime.now(),
-          ),
-        );
-        TalkerService.info(
-            'Workout deletion queued for sync: ID $workoutID', 'WORKOUT');
+        // Offline-created workout without server ID
+        // Just remove locally by index, no sync needed
+        if (index >= 0 && index < workoutList.length) {
+          workoutList.removeAt(index);
+          TalkerService.info(
+              'Offline workout deleted locally at index: $index', 'WORKOUT');
+        }
       }
-
-      // Update UI
-      workoutList.removeWhere((workout) => workout.id == workoutID);
 
       // Remove from Hive safely
       if (index >= 0 && index < HiveManager.workoutsBox.length) {
@@ -551,6 +557,10 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
               timestamp: DateTime.now(),
             ),
           );
+
+          // Refresh the workout list from Hive to update UI
+          workoutList = HiveManager.workoutsBox.values.toList();
+
           TalkerService.info(
               'Workout update queued for sync: ${workout.name}', 'WORKOUT');
         } else {

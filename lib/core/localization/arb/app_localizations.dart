@@ -2024,6 +2024,12 @@ abstract class AppLocalizations {
   /// **'Add to Compare'**
   String get addToCompare;
 
+  /// Snackbar message when product is added to comparison
+  ///
+  /// In en, this message translates to:
+  /// **'Product added to comparison successfully'**
+  String get productAddedToComparison;
+
   /// Energy nutrient label
   ///
   /// In en, this message translates to:
@@ -2234,7 +2240,7 @@ abstract class AppLocalizations {
   /// **'This product is not in our database yet. Would you like to add it to help the community?'**
   String get productNotInDatabase;
 
-  /// Error scanning barcode message
+  /// Error message prefix for barcode scanning errors
   ///
   /// In en, this message translates to:
   /// **'Error scanning barcode'**
@@ -2365,6 +2371,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Synced with server'**
   String get syncedWithServer;
+
+  /// Dialog title for removing item from favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from Favorites'**
+  String get removeFromFavorites;
+
+  /// Confirmation message for removing a favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove {productName} from your favorites?'**
+  String confirmRemoveFavorite(String productName);
+
+  /// Remove button text
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// Snackbar message after removing favorite
+  ///
+  /// In en, this message translates to:
+  /// **'{productName} removed from favorites'**
+  String removedFromFavorites(String productName);
+
+  /// Undo action button text
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// Sort by label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// Sort by newest date
+  ///
+  /// In en, this message translates to:
+  /// **'Date Added (Newest)'**
+  String get dateNewest;
+
+  /// Sort by oldest date
+  ///
+  /// In en, this message translates to:
+  /// **'Date Added (Oldest)'**
+  String get dateOldest;
+
+  /// Sort by name ascending
+  ///
+  /// In en, this message translates to:
+  /// **'Name (A-Z)'**
+  String get nameAZ;
+
+  /// Sort by name descending
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Z-A)'**
+  String get nameZA;
+
+  /// Sort by brand ascending
+  ///
+  /// In en, this message translates to:
+  /// **'Brand (A-Z)'**
+  String get brandAZ;
+
+  /// Sort by brand descending
+  ///
+  /// In en, this message translates to:
+  /// **'Brand (Z-A)'**
+  String get brandZA;
+
+  /// Message shown when all search results have been loaded
+  ///
+  /// In en, this message translates to:
+  /// **'No more results'**
+  String get noMoreResults;
+
+  /// Message shown when product not found, asking user to contribute
+  ///
+  /// In en, this message translates to:
+  /// **'This product is not in our database yet. Would you like to add it to help the community?'**
+  String get productNotFoundContribute;
+
+  /// Muscle name: Abs
+  ///
+  /// In en, this message translates to:
+  /// **'Abs'**
+  String get muscleAbs;
+
+  /// Muscle name: Triceps
+  ///
+  /// In en, this message translates to:
+  /// **'Triceps'**
+  String get muscleTriceps;
+
+  /// Muscle name: Shoulders
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get muscleShoulders;
+
+  /// Muscle name: Legs
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get muscleLegs;
+
+  /// Muscle name: Chest
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get muscleChest;
+
+  /// Muscle name: Biceps
+  ///
+  /// In en, this message translates to:
+  /// **'Biceps'**
+  String get muscleBiceps;
+
+  /// Muscle name: Back
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get muscleBack;
+
+  /// Muscle name: Forearms
+  ///
+  /// In en, this message translates to:
+  /// **'Forearms'**
+  String get muscleForearms;
+
+  /// Muscle name: Glutes
+  ///
+  /// In en, this message translates to:
+  /// **'Glutes'**
+  String get muscleGlutes;
+
+  /// Muscle name: Calves
+  ///
+  /// In en, this message translates to:
+  /// **'Calves'**
+  String get muscleCalves;
+
+  /// Muscle name: Core
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get muscleCore;
+
+  /// Muscle name: Traps
+  ///
+  /// In en, this message translates to:
+  /// **'Traps'**
+  String get muscleTraps;
+
+  /// Label for exercise count
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get exercise;
+
+  /// Warning message when no exercises are added to workout
+  ///
+  /// In en, this message translates to:
+  /// **'You must add at least one exercise'**
+  String get mustAddAtLeastOneExercise;
 }
 
 class _AppLocalizationsDelegate

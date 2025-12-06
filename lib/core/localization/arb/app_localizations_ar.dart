@@ -12,13 +12,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'المحارب';
 
   @override
-  String get darkMode => 'الوضع الغامق';
+  String get darkMode => 'الوضع الداكن';
 
   @override
   String get language => 'اللغة';
 
   @override
-  String get unleashYourPower => '💪 طلّع قوتك';
+  String get unleashYourPower => '💪 أتمرن صح';
 
   @override
   String get shareApp => 'شارك التطبيق';
@@ -420,7 +420,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myWorkouts => 'تماريني';
 
   @override
-  String get predefinedWorkouts => 'تمارين جاهزة';
+  String get predefinedWorkouts => 'التمارين الجاهزة';
 
   @override
   String get caloriesCalculator => 'حاسبة السعرات';
@@ -504,19 +504,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterWeightValue => 'أدخل قيمة الوزن';
 
   @override
-  String get selectWeight => 'اختر الوزن';
+  String get selectWeight => 'اختار الوزن';
 
   @override
-  String get updateWeight => 'تحديث الوزن';
+  String get updateWeight => 'حدث الوزن';
 
   @override
   String get lastWeight => 'آخر وزن';
 
   @override
-  String get deleteWorkoutConfirm => 'هل تريد حذف هذا التمرين؟';
+  String get deleteWorkoutConfirm => 'عايز تحذف مجموعة التمارين دي ؟';
 
   @override
-  String get noExercisesYet => 'لا يوجد تمارين بعد';
+  String get noExercisesYet => 'مفيش تمارين متاحة';
 
   @override
   String get workoutReadyForExercises => 'التمرين جاهز للتمارين';
@@ -728,13 +728,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newCalculation => 'حساب جديد';
 
   @override
-  String get metabolicMetrics => 'المقاييس الأيضية';
+  String get metabolicMetrics => 'معدلات الحرق';
 
   @override
-  String get bmr => 'معدل الأيض الأساسي';
+  String get bmr => 'معدل الحرق الأساسي';
 
   @override
-  String get basalMetabolicRate => 'معدل الأيض الأساسي';
+  String get basalMetabolicRate => 'معدل الحرق الأساسي';
 
   @override
   String get tdee => 'إجمالي الطاقة اليومية';
@@ -788,14 +788,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get close => 'إغلاق';
 
   @override
-  String get updateYourWorkoutSet => 'حدّث مجموعة تماريناتك';
+  String get updateYourWorkoutSet => 'حدّث مجموعة تمارينك';
 
   @override
-  String get finishYourWorkoutSet => 'أكمل مجموعة تماريناتك';
+  String get finishYourWorkoutSet => 'أكمل مجموعة تمارينك';
 
   @override
   String workoutAddedSuccessfully(String name) {
-    return 'تم إضافة التمرين بنجاح';
+    return 'تم انشاء مجموعة التمارين بنجاح';
   }
 
   @override
@@ -992,6 +992,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addToCompare => 'إضافة للمقارنة';
 
   @override
+  String get productAddedToComparison => 'تم إضافة المنتج للمقارنة بنجاح';
+
+  @override
   String get energy => 'الطاقة';
 
   @override
@@ -1168,4 +1171,93 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get syncedWithServer => 'تمت المزامنة مع الخادم';
+
+  @override
+  String get removeFromFavorites => 'إزالة من المفضلة';
+
+  @override
+  String confirmRemoveFavorite(String productName) {
+    return 'هل أنت متأكد من إزالة $productName من مفضلتك؟';
+  }
+
+  @override
+  String get remove => 'إزالة';
+
+  @override
+  String removedFromFavorites(String productName) {
+    return 'تمت إزالة $productName من المفضلة';
+  }
+
+  @override
+  String get undo => 'تراجع';
+
+  @override
+  String get sortBy => 'ترتيب حسب';
+
+  @override
+  String get dateNewest => 'تاريخ الإضافة (الأحدث)';
+
+  @override
+  String get dateOldest => 'تاريخ الإضافة (الأقدم)';
+
+  @override
+  String get nameAZ => 'الاسم (أ-ي)';
+
+  @override
+  String get nameZA => 'الاسم (ي-أ)';
+
+  @override
+  String get brandAZ => 'العلامة التجارية (أ-ي)';
+
+  @override
+  String get brandZA => 'العلامة التجارية (ي-أ)';
+
+  @override
+  String get noMoreResults => 'لا توجد نتائج أخرى';
+
+  @override
+  String get productNotFoundContribute =>
+      'المنتج ده مش موجود في قاعدة البيانات. عايز تضيفه وتساعد المجتمع؟';
+
+  @override
+  String get muscleAbs => 'البطن';
+
+  @override
+  String get muscleTriceps => 'الترايسبس';
+
+  @override
+  String get muscleShoulders => 'الأكتاف';
+
+  @override
+  String get muscleLegs => 'الأرجل';
+
+  @override
+  String get muscleChest => 'الصدر';
+
+  @override
+  String get muscleBiceps => 'الباي';
+
+  @override
+  String get muscleBack => 'الظهر';
+
+  @override
+  String get muscleForearms => 'الساعد';
+
+  @override
+  String get muscleGlutes => 'المؤخرة';
+
+  @override
+  String get muscleCalves => 'السمانة';
+
+  @override
+  String get muscleCore => 'الجذع';
+
+  @override
+  String get muscleTraps => 'الترابس';
+
+  @override
+  String get exercise => 'تمرين';
+
+  @override
+  String get mustAddAtLeastOneExercise => 'يجب إضافة تمرين واحد على الأقل';
 }

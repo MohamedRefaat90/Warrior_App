@@ -4,7 +4,7 @@
   "@appTitle": {
     "description": "The application title"
   },
-  "darkMode": "الوضع الغامق",
+  "darkMode": "الوضع الداكن",
   "@darkMode": {
     "description": "Label for dark mode setting"
   },
@@ -12,7 +12,7 @@
   "@language": {
     "description": "Label for language setting"
   },
-  "unleashYourPower": "💪 طلّع قوتك",
+  "unleashYourPower": "💪 أتمرن صح",
   "@unleashYourPower": {
     "description": "Tagline in drawer header"
   },
@@ -630,7 +630,7 @@
   "@myWorkouts": {
     "description": "My workouts screen title"
   },
-  "predefinedWorkouts": "تمارين جاهزة",
+  "predefinedWorkouts": "التمارين الجاهزة",
   "@predefinedWorkouts": {
     "description": "Predefined workouts screen title"
   },
@@ -742,11 +742,11 @@
   "@enterWeightValue": {
     "description": "Enter weight value instruction"
   },
-  "selectWeight": "اختر الوزن",
+  "selectWeight": "اختار الوزن",
   "@selectWeight": {
     "description": "Select weight label"
   },
-  "updateWeight": "تحديث الوزن",
+  "updateWeight": "حدث الوزن",
   "@updateWeight": {
     "description": "Update weight button"
   },
@@ -754,11 +754,11 @@
   "@lastWeight": {
     "description": "Last weight label"
   },
-  "deleteWorkoutConfirm": "هل تريد حذف هذا التمرين؟",
+  "deleteWorkoutConfirm": "عايز تحذف مجموعة التمارين دي ؟",
   "@deleteWorkoutConfirm": {
     "description": "Delete workout confirmation"
   },
-  "noExercisesYet": "لا يوجد تمارين بعد",
+  "noExercisesYet": "مفيش تمارين متاحة",
   "@noExercisesYet": {
     "description": "No exercises empty state"
   },
@@ -1038,15 +1038,15 @@
   "@newCalculation": {
     "description": "New calculation button"
   },
-  "metabolicMetrics": "المقاييس الأيضية",
+  "metabolicMetrics": "معدلات الحرق",
   "@metabolicMetrics": {
     "description": "Metabolic metrics section title"
   },
-  "bmr": "معدل الأيض الأساسي",
+  "bmr": "معدل الحرق الأساسي",
   "@bmr": {
     "description": "BMR label"
   },
-  "basalMetabolicRate": "معدل الأيض الأساسي",
+  "basalMetabolicRate": "معدل الحرق الأساسي",
   "@basalMetabolicRate": {
     "description": "Basal metabolic rate full name"
   },
@@ -1118,15 +1118,15 @@
   "@close": {
     "description": "Close button"
   },
-  "updateYourWorkoutSet": "حدّث مجموعة تماريناتك",
+  "updateYourWorkoutSet": "حدّث مجموعة تمارينك",
   "@updateYourWorkoutSet": {
     "description": "Update workout set instruction"
   },
-  "finishYourWorkoutSet": "أكمل مجموعة تماريناتك",
+  "finishYourWorkoutSet": "أكمل مجموعة تمارينك",
   "@finishYourWorkoutSet": {
     "description": "Finish workout set instruction"
   },
-  "workoutAddedSuccessfully": "تم إضافة التمرين بنجاح",
+  "workoutAddedSuccessfully": "تم انشاء مجموعة التمارين بنجاح",
   "@workoutAddedSuccessfully": {
     "description": "Workout added success message"
   },
@@ -1291,6 +1291,10 @@
   "addToCompare": "إضافة للمقارنة",
   "@addToCompare": {
     "description": "Add to compare button"
+  },
+  "productAddedToComparison": "تم إضافة المنتج للمقارنة بنجاح",
+  "@productAddedToComparison": {
+    "description": "Snackbar message when product is added to comparison"
   },
   "energy": "الطاقة",
   "@energy": {
@@ -1525,5 +1529,131 @@
   "syncedWithServer": "تمت المزامنة مع الخادم",
   "@syncedWithServer": {
     "description": "Success message after sync completes"
+  },
+  "removeFromFavorites": "إزالة من المفضلة",
+  "@removeFromFavorites": {
+    "description": "Dialog title for removing item from favorites"
+  },
+  "confirmRemoveFavorite": "هل أنت متأكد من إزالة {productName} من مفضلتك؟",
+  "@confirmRemoveFavorite": {
+    "description": "Confirmation message for removing a favorite",
+    "placeholders": {
+      "productName": {
+        "type": "String",
+        "example": "Nutella"
+      }
+    }
+  },
+  "remove": "إزالة",
+  "@remove": {
+    "description": "Remove button text"
+  },
+  "removedFromFavorites": "تمت إزالة {productName} من المفضلة",
+  "@removedFromFavorites": {
+    "description": "Snackbar message after removing favorite",
+    "placeholders": {
+      "productName": {
+        "type": "String",
+        "example": "Nutella"
+      }
+    }
+  },
+  "undo": "تراجع",
+  "@undo": {
+    "description": "Undo action button text"
+  },
+  "sortBy": "ترتيب حسب",
+  "@sortBy": {
+    "description": "Sort by label"
+  },
+  "dateNewest": "تاريخ الإضافة (الأحدث)",
+  "@dateNewest": {
+    "description": "Sort by newest date"
+  },
+  "dateOldest": "تاريخ الإضافة (الأقدم)",
+  "@dateOldest": {
+    "description": "Sort by oldest date"
+  },
+  "nameAZ": "الاسم (أ-ي)",
+  "@nameAZ": {
+    "description": "Sort by name ascending"
+  },
+  "nameZA": "الاسم (ي-أ)",
+  "@nameZA": {
+    "description": "Sort by name descending"
+  },
+  "brandAZ": "العلامة التجارية (أ-ي)",
+  "@brandAZ": {
+    "description": "Sort by brand ascending"
+  },
+  "brandZA": "العلامة التجارية (ي-أ)",
+  "@brandZA": {
+    "description": "Sort by brand descending"
+  },
+  "noMoreResults": "لا توجد نتائج أخرى",
+  "@noMoreResults": {
+    "description": "Message shown when all search results have been loaded"
+  },
+  "productNotFoundContribute": "المنتج ده مش موجود في قاعدة البيانات. عايز تضيفه وتساعد المجتمع؟",
+  "@productNotFoundContribute": {
+    "description": "Message shown when product not found, asking user to contribute"
+  },
+  "muscleAbs": "البطن",
+  "@muscleAbs": {
+    "description": "Muscle name: Abs"
+  },
+  "muscleTriceps": "الترايسبس",
+  "@muscleTriceps": {
+    "description": "Muscle name: Triceps"
+  },
+  "muscleShoulders": "الأكتاف",
+  "@muscleShoulders": {
+    "description": "Muscle name: Shoulders"
+  },
+  "muscleLegs": "الأرجل",
+  "@muscleLegs": {
+    "description": "Muscle name: Legs"
+  },
+  "muscleChest": "الصدر",
+  "@muscleChest": {
+    "description": "Muscle name: Chest"
+  },
+  "muscleBiceps": "الباي",
+  "@muscleBiceps": {
+    "description": "Muscle name: Biceps"
+  },
+  "muscleBack": "الظهر",
+  "@muscleBack": {
+    "description": "Muscle name: Back"
+  },
+  "muscleForearms": "الساعد",
+  "@muscleForearms": {
+    "description": "Muscle name: Forearms"
+  },
+  "muscleGlutes": "المؤخرة",
+  "@muscleGlutes": {
+    "description": "Muscle name: Glutes"
+  },
+  "muscleCalves": "السمانة",
+  "@muscleCalves": {
+    "description": "Muscle name: Calves"
+  },
+  "muscleCore": "الجذع",
+  "@muscleCore": {
+    "description": "Muscle name: Core"
+  },
+  "muscleTraps": "الترابس",
+  "@muscleTraps": {
+    "description": "Muscle name: Traps"
+  },
+  "exercise": "تمرين",
+  "@exercise": {
+    "description": "Label for exercise count"
+  },
+  "mustAddAtLeastOneExercise": "يجب إضافة تمرين واحد على الأقل",
+  "@mustAddAtLeastOneExercise": {
+    "description": "Warning message when no exercises are added to workout"
   }
 }
+
+

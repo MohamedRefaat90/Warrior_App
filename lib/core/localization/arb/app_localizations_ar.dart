@@ -1114,10 +1114,13 @@ class AppLocalizationsAr extends AppLocalizations {
       '* حقول مطلوبة\n\nبإرسالك، توافق على المساهمة بهذه المعلومات في قاعدة بيانات Open Food Facts تحت رخصة قاعدة البيانات المفتوحة.';
 
   @override
-  String get scanNutritionLabel => 'مسح ملصق القيم الغذائية';
+  String get scanNutritionLabel => 'افحص ملصق القيم الغذائية';
 
   @override
   String get positionNutritionLabel => 'ضع ملصق القيم الغذائية داخل الإطار';
+
+  @override
+  String get captureAndCropInstructions => 'التقط واقتصص ملصق القيم الغذائية';
 
   @override
   String get gallery => 'المعرض';

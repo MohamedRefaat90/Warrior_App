@@ -77,7 +77,7 @@ class ScanningOverlayPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final cutoutWidth = size.width * 0.85;
-    final cutoutHeight = cutoutWidth * 0.65;
+    final cutoutHeight = cutoutWidth * 0.85;
 
     final cutoutRect = Rect.fromCenter(
       center: center,

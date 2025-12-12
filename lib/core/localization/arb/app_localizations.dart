@@ -2270,6 +2270,12 @@ abstract class AppLocalizations {
   /// **'Position the nutrition label within the frame'**
   String get positionNutritionLabel;
 
+  /// Instruction for OCR scanner with cropping
+  ///
+  /// In en, this message translates to:
+  /// **'Capture & crop the nutrition label'**
+  String get captureAndCropInstructions;
+
   /// Gallery button label
   ///
   /// In en, this message translates to:

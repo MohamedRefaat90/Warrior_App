@@ -1,4 +1,5 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/services/image_cropper_service.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
@@ -145,6 +146,7 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
   bool _hasHandledSuccess = false;
 
   final ImagePicker _imagePicker = ImagePicker();
+  final ImageCropperService _imageCropper = ImageCropperService();
   late ConfettiController _confettiController;
 
   @override
@@ -157,7 +159,10 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('scanNutritionLabel'.tr(context)),
+        title: Text(
+          context.l10n.scanNutritionLabel,
+          style: TextStyle(fontSize: 16),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
@@ -188,8 +193,7 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
             right: 0,
             child: Center(
               child: ScannerInstructions(
-                text: 'positionNutritionLabel'.tr(context),
-              ),
+                  text: 'positionNutritionLabel'.tr(context)),
             ),
           ),
 
@@ -295,7 +299,7 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'positionNutritionLabel'.tr(context),
+              context.l10n.captureAndCropInstructions,
               style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
@@ -447,7 +451,21 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
     try {
       HapticFeedback.mediumImpact();
       final XFile image = await _cameraController!.takePicture();
-      await ref.read(ocrScannerProvider.notifier).processImage(image.path);
+
+      // Allow user to crop the image for better OCR accuracy
+      if (!mounted) return;
+      final croppedImage = await _imageCropper.cropImage(
+        imagePath: image.path,
+        context: context,
+      );
+
+      if (croppedImage != null) {
+        await ref
+            .read(ocrScannerProvider.notifier)
+            .processImage(croppedImage.path);
+      } else {
+        TalkerService.debug('Image cropping cancelled', 'OCR');
+      }
     } catch (e) {
       TalkerService.error('Failed to capture image', 'OCR', e);
     }
@@ -573,7 +591,21 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
 
     if (image != null) {
       HapticFeedback.mediumImpact();
-      await ref.read(ocrScannerProvider.notifier).processImage(image.path);
+
+      // Allow user to crop the image for better OCR accuracy
+      if (!mounted) return;
+      final croppedImage = await _imageCropper.cropImage(
+        imagePath: image.path,
+        context: context,
+      );
+
+      if (croppedImage != null) {
+        await ref
+            .read(ocrScannerProvider.notifier)
+            .processImage(croppedImage.path);
+      } else {
+        TalkerService.debug('Image cropping cancelled', 'OCR');
+      }
     }
   }
 

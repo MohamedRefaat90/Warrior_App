@@ -1146,6 +1146,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Position the nutrition label within the frame';
 
   @override
+  String get captureAndCropInstructions => 'Capture & crop the nutrition label';
+
+  @override
   String get gallery => 'Gallery';
 
   @override

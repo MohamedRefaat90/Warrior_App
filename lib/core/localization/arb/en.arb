@@ -1487,6 +1487,10 @@
   "@positionNutritionLabel": {
     "description": "Instruction for OCR scanner"
   },
+  "captureAndCropInstructions": "Capture & crop the nutrition label",
+  "@captureAndCropInstructions": {
+    "description": "Instruction for OCR scanner with cropping"
+  },
   "gallery": "Gallery",
   "@gallery": {
     "description": "Gallery button label"

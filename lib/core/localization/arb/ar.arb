@@ -1448,13 +1448,17 @@
   "@openFoodFactsDisclaimer": {
     "description": "Open Food Facts disclaimer"
   },
-  "scanNutritionLabel": "مسح ملصق القيم الغذائية",
+  "scanNutritionLabel": "افحص ملصق القيم الغذائية",
   "@scanNutritionLabel": {
     "description": "Title for OCR scanner screen"
   },
   "positionNutritionLabel": "ضع ملصق القيم الغذائية داخل الإطار",
   "@positionNutritionLabel": {
     "description": "Instruction for OCR scanner"
+  },
+  "captureAndCropInstructions": "التقط واقتصص ملصق القيم الغذائية",
+  "@captureAndCropInstructions": {
+    "description": "Instruction for OCR scanner with cropping"
   },
   "gallery": "المعرض",
   "@gallery": {

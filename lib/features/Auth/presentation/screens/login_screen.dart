@@ -4,6 +4,7 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/functions/validators.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/btn_loader.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
@@ -122,11 +123,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: context.smallSpacing * 2),
           Text('login'.tr(context),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontFamily: "Poppins",
+                  fontFamily:
+                      ref.watch(appSettingsProvider.notifier).fontFamily(),
                   color: isDark ? AppColors.white : AppColors.black)),
-          SizedBox(height: context.smallSpacing),
+          SizedBox(height: context.smallSpacing * 4),
           CustomTextField(
               placeholderText: 'email'.tr(context),
               isObscure: false,

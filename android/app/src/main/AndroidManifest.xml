@@ -40,6 +40,8 @@
 		<!-- Default notification color (optional) -->
 		<meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/notification_color" />
 		<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-7417773148722475~7594818599" />
+		<!-- UCropActivity for image_cropper plugin -->
+		<activity android:name="com.yalantis.ucrop.UCropActivity" android:screenOrientation="portrait" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
 	<!--

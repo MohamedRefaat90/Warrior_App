@@ -16,6 +16,7 @@ import 'package:Warrior/features/Exercises/data/repo/exercises_repo.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/download_progress_indicator.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/error_card.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/muscle_body_view.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_gridview.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/workout_alert_dialog.dart';
@@ -27,13 +28,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class MusclesContent extends StatelessWidget {
   final List<MuscleModel> muscles;
-  final bool isGridView;
+  final int viewMode; // 0=grid, 1=list, 2=body
   final bool isComingFromWorkoutScreen;
   final bool appendToExistingWorkoutSet;
   const MusclesContent(
       {super.key,
       required this.muscles,
-      required this.isGridView,
+      required this.viewMode,
       required this.isComingFromWorkoutScreen,
       required this.appendToExistingWorkoutSet});
 
@@ -53,24 +54,35 @@ class MusclesContent extends StatelessWidget {
         );
       },
       child: Container(
-        key: ValueKey(isGridView),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
+        key: ValueKey(viewMode),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(32),
             topRight: Radius.circular(32),
           ),
         ),
-        child: isGridView
-            ? MusclesGridView(
-                muscles: muscles,
-                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-              )
-            : MusclesListView(
-                muscles: muscles,
-                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-              ),
+        child: switch (viewMode) {
+          0 => MusclesGridView(
+              muscles: muscles,
+              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+            ),
+          1 => MusclesListView(
+              muscles: muscles,
+              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+            ),
+          2 => MuscleBodyView(
+              muscles: muscles,
+              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+            ),
+          _ => MusclesGridView(
+              muscles: muscles,
+              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+            ),
+        },
       ),
     );
   }
@@ -95,7 +107,8 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  bool _isGridView = SharedPref.getBool(StorageKeys.isGridView) ?? false;
+  int _viewMode = SharedPref.getInt(StorageKeys.muscleViewMode) ??
+      2; // 0=grid, 1=list, 2=body (default)
 
   @override
   Widget build(BuildContext context) {
@@ -132,20 +145,27 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                   );
                 },
                 child: Icon(
-                  _isGridView
-                      ? Icons.view_list_rounded
-                      : Icons.grid_view_rounded,
-                  key: ValueKey(_isGridView),
+                  switch (_viewMode) {
+                    0 => Icons.view_list_rounded, // grid -> show list icon
+                    1 =>
+                      Icons.accessibility_new_rounded, // list -> show body icon
+                    _ => Icons.grid_view_rounded, // body -> show grid icon
+                  },
+                  key: ValueKey(_viewMode),
                   color: AppColors.primaryColor,
                 ),
               ),
               onPressed: () {
                 setState(() {
-                  _isGridView = !_isGridView;
-                  SharedPref.setBool(StorageKeys.isGridView, _isGridView);
+                  _viewMode = (_viewMode + 1) % 3; // Cycle: 0 -> 1 -> 2 -> 0
+                  SharedPref.setInt(StorageKeys.muscleViewMode, _viewMode);
                 });
               },
-              tooltip: _isGridView ? 'List View' : 'Grid View',
+              tooltip: switch (_viewMode) {
+                0 => 'Switch to List View',
+                1 => 'Switch to Body View',
+                _ => 'Switch to Grid View',
+              },
             ),
           ],
         ),
@@ -178,7 +198,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
 
                                     return MusclesContent(
                                         muscles: muscles,
-                                        isGridView: _isGridView,
+                                        viewMode: _viewMode,
                                         isComingFromWorkoutScreen:
                                             widget.isComingFromWorkoutScreen,
                                         appendToExistingWorkoutSet:
@@ -204,7 +224,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                                   final muscles = box.values.toList();
                                   return MusclesContent(
                                       muscles: muscles,
-                                      isGridView: _isGridView,
+                                      viewMode: _viewMode,
                                       isComingFromWorkoutScreen:
                                           widget.isComingFromWorkoutScreen,
                                       appendToExistingWorkoutSet:

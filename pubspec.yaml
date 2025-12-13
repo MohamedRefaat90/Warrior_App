@@ -102,6 +102,7 @@ flutter:
     - assets/images/onboarding/
     - assets/images/signup/
     - assets/images/home/
+    - assets/images/muscles/
     - assets/animation/
     - shorebird.yaml
   #   - images/a_dot_ham.jpeg

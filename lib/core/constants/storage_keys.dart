@@ -13,6 +13,7 @@ class StorageKeys {
   static const String isRating = 'isRating';
   static const String caloriesCalculatorData = 'caloriesCalculatorData';
   static const String isGridView = 'isGridView';
+  static const String muscleViewMode = 'muscleViewMode';
   static const String themeMode = 'themeMode';
   static const String locale = 'locale';
   // Open Food Facts API credentials (secure storage)

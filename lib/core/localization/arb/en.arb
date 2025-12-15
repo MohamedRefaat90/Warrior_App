@@ -538,6 +538,14 @@
   "@muscles": {
     "description": "Muscles category title"
   },
+  "bodyViewFront": "Front",
+  "@bodyViewFront": {
+    "description": "Front body view button label"
+  },
+  "bodyViewBack": "Back",
+  "@bodyViewBack": {
+    "description": "Back body view button label"
+  },
   "myWorkouts": "My Workouts",
   "@myWorkouts": {
     "description": "My workouts category title"

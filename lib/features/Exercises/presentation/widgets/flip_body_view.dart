@@ -78,9 +78,16 @@ class _FlipBodyViewState extends ConsumerState<FlipBodyView>
   @override
   void initState() {
     super.initState();
+
+    // Sync initial animation state with provider
+    final currentView = ref.read(bodyDiagramProvider);
+    final initialValue = currentView == BodyView.back ? 1.0 : 0.0;
+    _showFront = currentView == BodyView.front;
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
+      value: initialValue, // Start at correct position based on provider state
     );
 
     _animation = Tween<double>(begin: 0, end: 1).animate(

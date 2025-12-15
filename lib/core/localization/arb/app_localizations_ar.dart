@@ -417,6 +417,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get muscles => 'العضلات';
 
   @override
+  String get bodyViewFront => 'الجسم الامامي';
+
+  @override
+  String get bodyViewBack => 'الجسم الخلفي';
+
+  @override
   String get myWorkouts => 'تماريني';
 
   @override

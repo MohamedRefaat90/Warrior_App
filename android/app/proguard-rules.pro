@@ -28,6 +28,24 @@
 -keep class com.google.android.gms.auth.** { *; }
 -keep class com.google.android.gms.common.** { *; }
 
+# ===== GOOGLE ML KIT TEXT RECOGNITION =====
+# Keep all ML Kit text recognition classes
+-keep class com.google.mlkit.vision.text.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text_common.** { *; }
+
+# Keep language-specific text recognizers (even if not used)
+-keep class com.google.mlkit.vision.text.chinese.** { *; }
+-keep class com.google.mlkit.vision.text.devanagari.** { *; }
+-keep class com.google.mlkit.vision.text.japanese.** { *; }
+-keep class com.google.mlkit.vision.text.korean.** { *; }
+-keep class com.google.mlkit.vision.text.latin.** { *; }
+
+# Don't warn about optional ML Kit dependencies
+-dontwarn com.google.mlkit.vision.text.chinese.**
+-dontwarn com.google.mlkit.vision.text.devanagari.**
+-dontwarn com.google.mlkit.vision.text.japanese.**
+-dontwarn com.google.mlkit.vision.text.korean.**
+
 # ===== NETWORKING (Dio) =====
 # Keep HTTP-related classes
 -keep class okhttp3.** { *; }

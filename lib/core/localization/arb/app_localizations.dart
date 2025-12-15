@@ -902,6 +902,18 @@ abstract class AppLocalizations {
   /// **'Muscles'**
   String get muscles;
 
+  /// Front body view button label
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get bodyViewFront;
+
+  /// Back body view button label
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get bodyViewBack;
+
   /// My workouts category title
   ///
   /// In en, this message translates to:

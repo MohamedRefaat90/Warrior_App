@@ -1,61 +1,19 @@
 import 'package:Warrior/core/constants/assets.dart';
+import 'package:Warrior/core/constants/colors.dart';
+import 'package:Warrior/core/extensions/translation_ext.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
-import 'package:flutter/foundation.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/create_workout_warning.dart';
+import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/body_diagram_provider.dart';
 import 'flip_body_view.dart';
-import 'hotspot_debug_painter.dart';
-import 'muscle_hotspot_layer.dart';
+import 'muscle_labels_overlay.dart';
 
-/// Stateless toggle button widget (Flutter best practice)
-class BodyViewToggleButton extends ConsumerWidget {
-  final BodyView currentView;
-
-  const BodyViewToggleButton({super.key, required this.currentView});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SegmentedButton<BodyView>(
-        segments: const [
-          ButtonSegment(value: BodyView.front, label: Text('Front')),
-          ButtonSegment(value: BodyView.back, label: Text('Back')),
-        ],
-        selected: {currentView},
-        onSelectionChanged: (selection) {
-          ref.read(bodyDiagramProvider.notifier).setView(selection.first);
-        },
-        style: SegmentedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          selectedBackgroundColor: Theme.of(context).colorScheme.primary,
-          selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
-        ),
-      ),
-    );
-  }
-}
-
-/// Debug mode toggle widget (only shown in debug builds)
-class DebugModeToggle extends ConsumerWidget {
-  const DebugModeToggle({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isDebugMode = ref.watch(hotspotDebugModeProvider);
-    return SwitchListTile.adaptive(
-      title: const Text('Show Hotspot Debug Overlay'),
-      value: isDebugMode,
-      onChanged: (value) =>
-          ref.read(hotspotDebugModeProvider.notifier).setEnabled(value),
-      dense: true,
-    );
-  }
-}
-
-/// Main widget combining body image with hotspot layer
+/// Main widget combining body image with label cards and arrows
 class MuscleBodyView extends ConsumerStatefulWidget {
   final List<MuscleModel> muscles;
   final bool isComingFromWorkoutScreen;
@@ -72,6 +30,50 @@ class MuscleBodyView extends ConsumerStatefulWidget {
   ConsumerState<MuscleBodyView> createState() => _MuscleBodyViewState();
 }
 
+// Toggle button for front/back view
+class _BodyViewToggle extends ConsumerWidget {
+  final BodyView currentView;
+
+  const _BodyViewToggle({required this.currentView});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final fontFamily = ref.watch(appSettingsProvider.notifier).fontFamily();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      child: SegmentedButton<BodyView>(
+        selectedIcon: Icon(Icons.check_circle),
+        segments: [
+          ButtonSegment(
+              value: BodyView.front,
+              label: Text(
+                context.l10n.bodyViewFront,
+              )),
+          ButtonSegment(
+              value: BodyView.back,
+              label: Text(
+                context.l10n.bodyViewBack,
+              )),
+        ],
+        selected: {currentView},
+        onSelectionChanged: (selection) {
+          ref.read(bodyDiagramProvider.notifier).setView(selection.first);
+        },
+        style: SegmentedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            selectedBackgroundColor: Color(0xffEA2253),
+            selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.white : Colors.black,
+                fontFamily: fontFamily),
+            iconColor: Colors.white),
+      ),
+    );
+  }
+}
+
 class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
   Size _imageSize = Size.zero;
   final GlobalKey _frontImageKey = GlobalKey();
@@ -80,38 +82,57 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
   @override
   Widget build(BuildContext context) {
     final currentView = ref.watch(bodyDiagramProvider);
+    final workoutNotifier = ref.read(workoutsProvider.notifier);
 
-    return Column(
+    return Stack(
+      alignment: Alignment.topCenter,
       children: [
-        // Toggle button
-        BodyViewToggleButton(currentView: currentView),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Spacer(),
 
-        // Debug toggle (only in debug builds)
-        if (kDebugMode) const DebugModeToggle(),
+            // Body diagram with labels
+            Expanded(
+              flex: 5,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return FlipBodyView(
+                    frontWidget: _buildBodyStack(
+                      AppAssets.frontBody,
+                      constraints,
+                      BodyView.front,
+                      _frontImageKey,
+                    ),
+                    backWidget: _buildBodyStack(
+                      AppAssets.backBody,
+                      constraints,
+                      BodyView.back,
+                      _backImageKey,
+                    ),
+                  );
+                },
+              ),
+            ),
 
-        const SizedBox(height: 16),
+            if (widget.isComingFromWorkoutScreen == true &&
+                (workoutNotifier.newWorkout.workoutItems == null ||
+                    workoutNotifier.newWorkout.workoutItems!.isEmpty)) ...[
+              const SizedBox(height: 16),
+              CreateWorkoutWarning()
+            ],
 
-        // Body diagram with hotspots
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return FlipBodyView(
-                frontWidget: _buildBodyStack(
-                  AppAssets.frontBody,
-                  constraints,
-                  BodyView.front,
-                  _frontImageKey,
-                ),
-                backWidget: _buildBodyStack(
-                  AppAssets.backBody,
-                  constraints,
-                  BodyView.back,
-                  _backImageKey,
-                ),
-              );
-            },
-          ),
+            if (widget.isComingFromWorkoutScreen) ...[
+              FinishBTN(
+                  primaryColor: AppColors.darkPrimary,
+                  appendToExistingWorkoutSet:
+                      widget.appendToExistingWorkoutSet),
+              const SizedBox(height: 16),
+            ]
+          ],
         ),
+        // Toggle button
+        Positioned(top: 20, child: _BodyViewToggle(currentView: currentView)),
       ],
     );
   }
@@ -119,7 +140,6 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
   @override
   void initState() {
     super.initState();
-    // Precache images for smooth flip animation
     WidgetsBinding.instance.addPostFrameCallback((_) {
       precacheImage(const AssetImage(AppAssets.frontBody), context);
       precacheImage(const AssetImage(AppAssets.backBody), context);
@@ -132,11 +152,7 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
     BodyView view,
     GlobalKey imageKey,
   ) {
-    final showDebug = ref.watch(hotspotDebugModeProvider);
-    final hotspots = ref
-        .watch(muscleHotspotsProvider)
-        .where((h) => h.bodyView == view)
-        .toList();
+    final containerSize = Size(constraints.maxWidth, constraints.maxHeight);
 
     return Stack(
       alignment: Alignment.center,
@@ -156,24 +172,15 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
           },
         ),
 
-        // Debug overlay to visualize hotspots
-        if (showDebug && _imageSize != Size.zero)
-          Positioned.fill(
-            child: CustomPaint(
-              painter: HotspotDebugPainter(
-                hotspots: hotspots,
-                imageSize: _imageSize,
-              ),
-            ),
-          ),
-
-        // Hotspot detection layer
+        // Labels and arrows overlay
         if (_imageSize != Size.zero)
           Positioned.fill(
-            child: MuscleHotspotLayer(
+            child: MuscleLabelsOverlay(
               muscles: widget.muscles,
               isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
+              containerSize: containerSize,
               imageSize: _imageSize,
+              bodyView: view,
             ),
           ),
       ],

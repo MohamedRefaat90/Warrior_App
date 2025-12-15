@@ -626,6 +626,14 @@
   "@muscles": {
     "description": "Muscles screen title"
   },
+  "bodyViewFront": "الجسم الامامي",
+  "@bodyViewFront": {
+    "description": "Front body view button label"
+  },
+  "bodyViewBack": "الجسم الخلفي",
+  "@bodyViewBack": {
+    "description": "Back body view button label"
+  },
   "myWorkouts": "تماريني",
   "@myWorkouts": {
     "description": "My workouts screen title"

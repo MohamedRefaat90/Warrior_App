@@ -2,6 +2,7 @@ import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/create_workout_warning.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/grid_muscle_card.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
@@ -75,34 +76,7 @@ class MusclesGridView extends ConsumerWidget {
             if (isComingFromWorkoutScreen == true &&
                 (workoutNotifier.newWorkout.workoutItems == null ||
                     workoutNotifier.newWorkout.workoutItems!.isEmpty))
-              Container(
-                padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.red.withOpacity(0.3),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.warning_rounded, color: Colors.red.shade700),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        context.l10n.mustAddAtLeastOneExercise,
-                        style: TextStyle(
-                          color: Colors.red.shade700,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              CreateWorkoutWarning(),
             const SizedBox(height: 12),
             if (isComingFromWorkoutScreen ?? false)
               FinishBTN(

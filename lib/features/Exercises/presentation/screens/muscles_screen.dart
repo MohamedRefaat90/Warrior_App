@@ -18,7 +18,7 @@ import 'package:Warrior/features/Exercises/presentation/widgets/download_progres
 import 'package:Warrior/features/Exercises/presentation/widgets/error_card.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscle_body_view.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_gridview.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
+// import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/workout_alert_dialog.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class MusclesContent extends StatelessWidget {
   final List<MuscleModel> muscles;
-  final int viewMode; // 0=grid, 1=list, 2=body
+  final int viewMode; // 0=body, 1=grid
   final bool isComingFromWorkoutScreen;
   final bool appendToExistingWorkoutSet;
   const MusclesContent(
@@ -62,21 +62,21 @@ class MusclesContent extends StatelessWidget {
           ),
         ),
         child: switch (viewMode) {
-          0 => MusclesGridView(
+          0 => MuscleBodyView(
               muscles: muscles,
               isComingFromWorkoutScreen: isComingFromWorkoutScreen,
               appendToExistingWorkoutSet: appendToExistingWorkoutSet,
             ),
-          1 => MusclesListView(
-              muscles: muscles,
-              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-            ),
-          2 => MuscleBodyView(
-              muscles: muscles,
-              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-            ),
+          // 1 => MusclesListView(
+          //     muscles: muscles,
+          //     isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+          //     appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+          //   ),
+          // 1 => MusclesGridView(
+          //     muscles: muscles,
+          //     isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+          //     appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+          //   ),
           _ => MusclesGridView(
               muscles: muscles,
               isComingFromWorkoutScreen: isComingFromWorkoutScreen,
@@ -146,10 +146,10 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                 },
                 child: Icon(
                   switch (_viewMode) {
-                    0 => Icons.view_list_rounded, // grid -> show list icon
-                    1 =>
-                      Icons.accessibility_new_rounded, // list -> show body icon
-                    _ => Icons.grid_view_rounded, // body -> show grid icon
+                    0 => Icons.grid_view_rounded, // grid -> show list icon
+                    // 1 => Icons.grid_view_rounded, // list -> show body icon
+                    _ =>
+                      Icons.accessibility_new_rounded, // body -> show grid icon
                   },
                   key: ValueKey(_viewMode),
                   color: AppColors.primaryColor,
@@ -157,12 +157,12 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
               ),
               onPressed: () {
                 setState(() {
-                  _viewMode = (_viewMode + 1) % 3; // Cycle: 0 -> 1 -> 2 -> 0
+                  _viewMode = (_viewMode + 1) % 2; // Cycle: 0 -> 1 -> 0
                   SharedPref.setInt(StorageKeys.muscleViewMode, _viewMode);
                 });
               },
               tooltip: switch (_viewMode) {
-                0 => 'Switch to List View',
+                // 0 => 'Switch to List View',
                 1 => 'Switch to Body View',
                 _ => 'Switch to Grid View',
               },
@@ -170,6 +170,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
           ],
         ),
         body: SafeArea(
+          bottom: false,
           child: Stack(
             children: [
               Column(

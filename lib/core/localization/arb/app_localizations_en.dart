@@ -420,6 +420,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get muscles => 'Muscles';
 
   @override
+  String get bodyViewFront => 'Front';
+
+  @override
+  String get bodyViewBack => 'Back';
+
+  @override
   String get myWorkouts => 'My Workouts';
 
   @override

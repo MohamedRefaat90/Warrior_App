@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/features/Auth/data/models/user_model.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
@@ -68,7 +66,7 @@ void main() {
 
       // Assert - Method was called (email is normalized inside login method)
       verify(() => mockAuthRepo.login(
-            email,  // Already lowercase in test, will be normalized in actual call
+            email, // Already lowercase in test, will be normalized in actual call
             password,
             'test_fcm_token_12345',
             'android',

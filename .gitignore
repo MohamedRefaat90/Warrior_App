@@ -50,3 +50,5 @@ app.*.map.json
 sentry.properties
 
 sentry.properties
+
+/macos/

@@ -173,7 +173,7 @@ class NutritionParsingService {
   /// Pattern for extracting values with units.
   /// Matches: "25g", "0.5 mg", "100 kcal", "13 g", etc.
   static final RegExp _valueWithUnitPattern = RegExp(
-    r'(\d+[.,]?\d*)\s*(g|mg|kg|kcal|kj|cal|جم|جرام|مجم|كيلو جول)\b',
+    r'(\d+[.,]?\d*)\s*(g|mg|kg|kcal|kj|cal|جم|جرام|مجم|كيلو جول)(?:\b|(?=\s)|$)',
     caseSensitive: false,
   );
 
@@ -388,17 +388,10 @@ class NutritionParsingService {
               nutrientKey,
             );
 
-            // Convert unit to standard (e.g., mg to g for sodium/salt)
-            double finalValue = standardValue;
-            if (unit?.toLowerCase() == 'mg' &&
-                (nutrientKey == 'sodium' || nutrientKey == 'salt')) {
-              finalValue = standardValue / 1000;
-            }
-
             // Only update if confidence is higher
             if (!results.containsKey(nutrientKey) ||
                 conf > (confidence[nutrientKey] ?? 0)) {
-              results[nutrientKey] = finalValue;
+              results[nutrientKey] = standardValue;
               confidence[nutrientKey] = conf;
             }
           }

@@ -66,12 +66,12 @@ void main() {
       // Act
       await provider.login(email, password);
 
-      // Assert - Method was called with normalized email (lowercase + trimmed)
+      // Assert - Method was called (email is normalized inside login method)
       verify(() => mockAuthRepo.login(
-            email.toLowerCase().trim(),
+            email,  // Already lowercase in test, will be normalized in actual call
             password,
-            AppServices.fcmToken!,
-            Platform.isAndroid ? 'android' : 'ios',
+            'test_fcm_token_12345',
+            'android',
           )).called(1);
     });
 

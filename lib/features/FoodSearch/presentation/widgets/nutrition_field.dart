@@ -167,13 +167,13 @@ class _NutritionFieldState extends State<NutritionField> {
           color: colorScheme.onSurfaceVariant,
           fontSize: 14,
         ),
-        // prefixIcon: widget.data.icon != null
-        //     ? Icon(widget.data.icon,
-        //         size: 20, color: isLow ? Colors.orange : null)
-        //     : (isLow
-        //         ? const Icon(Icons.warning_amber_rounded,
-        //             size: 20, color: Colors.orange)
-        //         : null),
+        prefixIcon: widget.data.icon != null
+            ? Icon(widget.data.icon,
+                size: 20, color: isLow ? Colors.orange : null)
+            : (isLow
+                ? const Icon(Icons.warning_amber_rounded,
+                    size: 20, color: Colors.orange)
+                : null),
         suffixIcon: hasConfidence
             ? Padding(
                 padding: const EdgeInsets.only(right: 8),

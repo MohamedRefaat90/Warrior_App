@@ -388,10 +388,17 @@ class NutritionParsingService {
               nutrientKey,
             );
 
+            // Convert unit to standard (e.g., mg to g for sodium/salt)
+            double finalValue = standardValue;
+            if (unit?.toLowerCase() == 'mg' &&
+                (nutrientKey == 'sodium' || nutrientKey == 'salt')) {
+              finalValue = standardValue / 1000;
+            }
+
             // Only update if confidence is higher
             if (!results.containsKey(nutrientKey) ||
                 conf > (confidence[nutrientKey] ?? 0)) {
-              results[nutrientKey] = standardValue;
+              results[nutrientKey] = finalValue;
               confidence[nutrientKey] = conf;
             }
           }

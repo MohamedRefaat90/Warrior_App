@@ -38,7 +38,7 @@ class MuscleLabelsData {
           'chest',
           BodyView.front,
           labelX: 0.20,
-          labelY: 0.08,
+          labelY: 0.085,
           anchorX: 0.40,
           anchorY: 0.25,
         ),
@@ -48,7 +48,7 @@ class MuscleLabelsData {
           labelX: 0.2,
           labelY: 0.50,
           anchorX: 0.45,
-          anchorY: 0.38,
+          anchorY: 0.40,
         ),
         MuscleLabel(
           'biceps',
@@ -62,9 +62,9 @@ class MuscleLabelsData {
           'legs',
           BodyView.front,
           labelX: 0.80,
-          labelY: 0.85,
+          labelY: 0.82,
           anchorX: 0.67,
-          anchorY: 0.70,
+          anchorY: 0.72,
         ),
 
         // === BACK BODY ===

@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/create_workout_dialog.dart';
@@ -31,7 +32,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: false,
       backgroundColor: isDark ? Colors.black : Colors.grey[50],
       floatingActionButton: workoutNotifier.createWorkoutBtnState()
@@ -121,6 +122,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       final workoutAd = InterstitialAdManager.forAdUnit(
           "ca-app-pub-7417773148722475/3568191408");
       workoutAd.loadAd();
+      TalkerService.debug('Workout ad loaded', 'WORKOUT_AD');
     });
   }
 }

@@ -57,6 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       drawer: const FancyDrawer(),
       body: SafeArea(
+        bottom: false,
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: ResponsiveUtils.horizontalPadding(context)),

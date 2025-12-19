@@ -782,7 +782,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get years => 'سنة';
 
   @override
-  String get bar => 'شريط';
+  String get bar => 'بلاطة';
 
   @override
   String get createWorkoutSetWarning => 'لم تكمل إنشاء مجموعة التمارين بعد';
@@ -797,7 +797,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateYourWorkoutSet => 'حدّث مجموعة تمارينك';
 
   @override
-  String get finishYourWorkoutSet => 'أكمل مجموعة تمارينك';
+  String get finishYourWorkoutSet => 'أنشئ مجموعة تمارينك';
 
   @override
   String workoutAddedSuccessfully(String name) {
@@ -1109,9 +1109,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'هذا المنتج غير موجود في قاعدة البيانات. هل تريد إضافته لمساعدة المجتمع؟';
 
   @override
-  String get errorScanningBarcode => 'خطأ في فحص الباركود';
-
-  @override
   String get contributionMessage =>
       'مساهمتك هتساعد ملايين المستخدمين حول العالم في اتخاذ خيارات غذائية أفضل!';
 
@@ -1229,6 +1226,9 @@ class AppLocalizationsAr extends AppLocalizations {
       'المنتج ده مش موجود في قاعدة البيانات. عايز تضيفه وتساعد المجتمع؟';
 
   @override
+  String get errorScanningBarcode => 'خطأ في فحص الباركود';
+
+  @override
   String get muscleAbs => 'البطن';
 
   @override
@@ -1269,4 +1269,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get mustAddAtLeastOneExercise => 'يجب إضافة تمرين واحد على الأقل';
+
+  @override
+  String get tipOrganizeExercisesIntoSets =>
+      'نصيحة: نظّم تماريناتك في مجموعات لتتبعها بشكل أفضل';
+
+  @override
+  String get addWorkoutDetails => 'أضف تفاصيل التمرين';
+
+  @override
+  String get workoutNameExample => 'مثال : تمرينة صدر - تمرينة كتف';
 }

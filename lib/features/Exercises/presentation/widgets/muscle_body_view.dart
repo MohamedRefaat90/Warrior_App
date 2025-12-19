@@ -1,11 +1,7 @@
 import 'package:Warrior/core/constants/assets.dart';
-import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/create_workout_warning.dart';
-import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,19 +14,21 @@ class MuscleBodyView extends ConsumerStatefulWidget {
   final List<MuscleModel> muscles;
   final bool isComingFromWorkoutScreen;
   final bool appendToExistingWorkoutSet;
+  final bool hasBannerAd;
 
   const MuscleBodyView({
     super.key,
     required this.muscles,
     required this.isComingFromWorkoutScreen,
     required this.appendToExistingWorkoutSet,
+    this.hasBannerAd = false,
   });
 
   @override
   ConsumerState<MuscleBodyView> createState() => _MuscleBodyViewState();
 }
 
-// Toggle button for front/back view
+/// Toggle button for front/back body view
 class _BodyViewToggle extends ConsumerWidget {
   final BodyView currentView;
 
@@ -40,35 +38,36 @@ class _BodyViewToggle extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final fontFamily = ref.watch(appSettingsProvider.notifier).fontFamily();
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SegmentedButton<BodyView>(
-        selectedIcon: Icon(Icons.check_circle),
+        selectedIcon: const Icon(Icons.check_circle),
         segments: [
           ButtonSegment(
-              value: BodyView.front,
-              label: Text(
-                context.l10n.bodyViewFront,
-              )),
+            value: BodyView.front,
+            label: Text(context.l10n.bodyViewFront),
+          ),
           ButtonSegment(
-              value: BodyView.back,
-              label: Text(
-                context.l10n.bodyViewBack,
-              )),
+            value: BodyView.back,
+            label: Text(context.l10n.bodyViewBack),
+          ),
         ],
         selected: {currentView},
         onSelectionChanged: (selection) {
           ref.read(bodyDiagramProvider.notifier).setView(selection.first);
         },
         style: SegmentedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            selectedBackgroundColor: Color(0xffEA2253),
-            selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
-            textStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black,
-                fontFamily: fontFamily),
-            iconColor: Colors.white),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          selectedBackgroundColor: const Color(0xffEA2253),
+          selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
+          textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontFamily: fontFamily,
+          ),
+          iconColor: Colors.white,
+        ),
       ),
     );
   }
@@ -82,58 +81,47 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
   @override
   Widget build(BuildContext context) {
     final currentView = ref.watch(bodyDiagramProvider);
-    final workoutNotifier = ref.read(workoutsProvider.notifier);
 
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate responsive sizes based on available space
+        final availableHeight = constraints.maxHeight;
+        final availableWidth = constraints.maxWidth;
+        final toggleHeight = 48.0;
+        // Adjust spacing based on banner ad presence
+        final spacing = widget.hasBannerAd
+            ? availableHeight * 0.07
+            : availableHeight * 0.13;
+        final bodyHeight = availableHeight - toggleHeight - spacing;
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Spacer(),
-
-            // Body diagram with labels
-            Expanded(
-              flex: 5,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return FlipBodyView(
-                    frontWidget: _buildBodyStack(
-                      AppAssets.frontBody,
-                      constraints,
-                      BodyView.front,
-                      _frontImageKey,
-                    ),
-                    backWidget: _buildBodyStack(
-                      AppAssets.backBody,
-                      constraints,
-                      BodyView.back,
-                      _backImageKey,
-                    ),
-                  );
-                },
+            _BodyViewToggle(currentView: currentView),
+            SizedBox(height: spacing),
+            SizedBox(
+              height: bodyHeight,
+              width: availableWidth,
+              child: FlipBodyView(
+                frontWidget: _buildBodyStack(
+                  imagePath: AppAssets.frontBody,
+                  imageKey: _frontImageKey,
+                  view: BodyView.front,
+                  maxHeight: bodyHeight,
+                  maxWidth: availableWidth,
+                ),
+                backWidget: _buildBodyStack(
+                  imagePath: AppAssets.backBody,
+                  imageKey: _backImageKey,
+                  view: BodyView.back,
+                  maxHeight: bodyHeight,
+                  maxWidth: availableWidth,
+                ),
               ),
             ),
-
-            if (widget.isComingFromWorkoutScreen == true &&
-                (workoutNotifier.newWorkout.workoutItems == null ||
-                    workoutNotifier.newWorkout.workoutItems!.isEmpty)) ...[
-              const SizedBox(height: 16),
-              CreateWorkoutWarning()
-            ],
-
-            if (widget.isComingFromWorkoutScreen) ...[
-              FinishBTN(
-                  primaryColor: AppColors.darkPrimary,
-                  appendToExistingWorkoutSet:
-                      widget.appendToExistingWorkoutSet),
-              const SizedBox(height: 16),
-            ]
           ],
-        ),
-        // Toggle button
-        Positioned(top: 20, child: _BodyViewToggle(currentView: currentView)),
-      ],
+        );
+      },
     );
   }
 
@@ -146,24 +134,22 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
     });
   }
 
-  Widget _buildBodyStack(
-    String imagePath,
-    BoxConstraints constraints,
-    BodyView view,
-    GlobalKey imageKey,
-  ) {
-    final containerSize = Size(constraints.maxWidth, constraints.maxHeight);
-
+  Widget _buildBodyStack({
+    required String imagePath,
+    required GlobalKey imageKey,
+    required BodyView view,
+    required double maxHeight,
+    required double maxWidth,
+  }) {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Body image
         Image.asset(
           imagePath,
           key: imageKey,
           fit: BoxFit.contain,
-          width: constraints.maxWidth,
-          height: constraints.maxHeight,
+          height: maxHeight,
+          width: maxWidth,
           frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _updateImageSize(imageKey);
@@ -171,14 +157,12 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
             return child;
           },
         ),
-
-        // Labels and arrows overlay
         if (_imageSize != Size.zero)
           Positioned.fill(
             child: MuscleLabelsOverlay(
               muscles: widget.muscles,
               isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
-              containerSize: containerSize,
+              containerSize: Size(maxWidth, maxHeight),
               imageSize: _imageSize,
               bodyView: view,
             ),
@@ -188,6 +172,8 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
   }
 
   void _updateImageSize(GlobalKey key) {
+    if (!mounted) return;
+
     final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null && renderBox.hasSize && _imageSize == Size.zero) {
       setState(() => _imageSize = renderBox.size);

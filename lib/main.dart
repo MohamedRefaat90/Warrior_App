@@ -44,7 +44,7 @@ void main() async {
     appRunner: () => runApp(
       ProviderScope(
         observers: [
-          TalkerRiverpodObserver(talker: TalkerService.instance),
+          // TalkerRiverpodObserver(talker: TalkerService.instance),
         ],
         child: SentryWidget(
           child: kDebugMode

@@ -1134,9 +1134,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'This product is not in our database yet. Would you like to add it to help the community?';
 
   @override
-  String get errorScanningBarcode => 'Error scanning barcode';
-
-  @override
   String get contributionMessage =>
       'Your contribution will help millions of users worldwide make better food choices!';
 
@@ -1255,6 +1252,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'This product is not in our database yet. Would you like to add it to help the community?';
 
   @override
+  String get errorScanningBarcode => 'Error scanning barcode';
+
+  @override
   String get muscleAbs => 'Abs';
 
   @override
@@ -1295,4 +1295,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mustAddAtLeastOneExercise => 'You must add at least one exercise';
+
+  @override
+  String get tipOrganizeExercisesIntoSets =>
+      'Tip: Organize your exercises into sets for better tracking';
+
+  @override
+  String get addWorkoutDetails => 'Add workout details';
+
+  @override
+  String get workoutNameExample => 'Example: Chest - Shoulders';
 }

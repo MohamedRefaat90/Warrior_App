@@ -1110,7 +1110,7 @@
   "@years": {
     "description": "Years unit"
   },
-  "bar": "شريط",
+  "bar": "بلاطة",
   "@bar": {
     "description": "Bar unit"
   },
@@ -1130,7 +1130,7 @@
   "@updateYourWorkoutSet": {
     "description": "Update workout set instruction"
   },
-  "finishYourWorkoutSet": "أكمل مجموعة تمارينك",
+  "finishYourWorkoutSet": "أنشئ مجموعة تمارينك",
   "@finishYourWorkoutSet": {
     "description": "Finish workout set instruction"
   },
@@ -1665,6 +1665,18 @@
   "mustAddAtLeastOneExercise": "يجب إضافة تمرين واحد على الأقل",
   "@mustAddAtLeastOneExercise": {
     "description": "Warning message when no exercises are added to workout"
+  },
+  "tipOrganizeExercisesIntoSets": "نصيحة: نظّم تماريناتك في مجموعات لتتبعها بشكل أفضل",
+  "@tipOrganizeExercisesIntoSets": {
+    "description": "Tip to organize exercises into sets"
+  },
+  "addWorkoutDetails": "أضف تفاصيل التمرين",
+  "@addWorkoutDetails": {
+    "description": "Add workout details instruction"
+  },
+  "workoutNameExample": "مثال : تمرينة صدر - تمرينة كتف",
+  "@workoutNameExample": {
+    "description": "Workout name example"
   }
 }
 

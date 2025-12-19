@@ -54,14 +54,14 @@ class DioHandler {
         dio.interceptors.add(TalkerDioLogger(
           talker: TalkerService.instance,
           settings: const TalkerDioLoggerSettings(
-            printRequestHeaders: true,
+            printRequestHeaders: false,
             printResponseHeaders: false,
-            printResponseMessage: true,
-            printResponseData: true,
-            printErrorData: true,
+            printResponseMessage: false,
+            printResponseData: false,
+            printErrorData: false,
             printErrorHeaders: false,
-            printErrorMessage: true,
-            printRequestData: true,
+            printErrorMessage: false,
+            printRequestData: false,
           ),
         ));
       } else {

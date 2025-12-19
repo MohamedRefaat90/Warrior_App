@@ -205,10 +205,8 @@ class ExerciseCacheManager {
       if (box.containsKey(exercise.id)) {
         final cachedExercise = box.get(exercise.id);
         if (cachedExercise != null && await _isExerciseCached(cachedExercise)) {
-          TalkerService.debug(
-            'Exercise ${exercise.id} already cached',
-            'CACHE',
-          );
+          // TalkerService.debug(
+          //     'Exercise ${exercise.id} already cached', 'CACHE');
           return true;
         }
       }

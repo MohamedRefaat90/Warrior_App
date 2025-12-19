@@ -1,15 +1,9 @@
-import 'dart:ui';
-
 import 'package:Warrior/core/constants/colors.dart';
-import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/core/services/interstitial_ad_manager.dart';
-import 'package:Warrior/core/widgets/custom_text_field.dart';
-import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/create_workout_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class EmptyWorkoutList extends ConsumerStatefulWidget {
   const EmptyWorkoutList({super.key});
@@ -31,6 +25,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final fontFamily = ref.watch(appSettingsProvider.notifier).fontFamily();
 
     return Center(
       child: FadeTransition(
@@ -85,7 +80,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                 Text(
                   'noWorkoutsYet'.tr(context),
                   style: TextStyle(
-                    fontFamily: 'poppins',
+                    fontFamily: fontFamily,
                     fontWeight: FontWeight.bold,
                     fontSize: 28,
                     color: isDark ? Colors.white : Colors.black87,
@@ -98,7 +93,7 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                 Text(
                   'startBuildingFitness'.tr(context),
                   style: TextStyle(
-                    fontFamily: 'poppins',
+                    fontFamily: fontFamily,
                     fontSize: 15,
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
                     height: 1.5,
@@ -118,12 +113,19 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                     );
                   },
                   child: ElevatedButton.icon(
-                    onPressed: () => _showCreateDialog(context),
+                    onPressed: () => showCreateWorkoutDialog(
+                      context,
+                      nameController: _nameController,
+                      descriptionController: _descriptionController,
+                      formKey: _formKey,
+                      ref: ref,
+                    ),
                     icon: const Icon(Icons.add_rounded, size: 28),
                     label: Text(
-                      'Create Workout Set',
+                      'createWorkoutSet'.tr(context),
                       style: TextStyle(
-                        fontSize: 18,
+                        fontFamily: fontFamily,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
                       ),
@@ -167,8 +169,9 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Tip: Organize exercises into sets for better workout tracking',
+                          context.l10n.tipOrganizeExercisesIntoSets,
                           style: TextStyle(
+                            fontFamily: fontFamily,
                             fontSize: 13,
                             color: isDark ? Colors.grey[400] : Colors.grey[700],
                             height: 1.4,
@@ -220,152 +223,5 @@ class _EmptyWorkoutListState extends ConsumerState<EmptyWorkoutList>
     );
 
     _animationController.forward();
-  }
-
-  void _showCreateDialog(BuildContext context) {
-    final workoutNotifier = ref.read(workoutsProvider.notifier);
-    _nameController.clear();
-    _descriptionController.clear();
-
-    HapticFeedback.mediumImpact();
-
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'Create Workout',
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return Container();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-        );
-
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
-          child: FadeTransition(
-            opacity: curvedAnimation,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 5 * animation.value,
-                sigmaY: 5 * animation.value,
-              ),
-              child: AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                elevation: 10,
-                title: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.fitness_center_rounded,
-                        color: AppColors.primaryColor,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text('createWorkoutSet'.tr(context)),
-                    ),
-                  ],
-                ),
-                content: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Workout Name',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        CustomTextField(
-                          placeholderText: 'e.g., Full Body Blast',
-                          textEditingController: _nameController,
-                          isObscure: false,
-                          validator: (value) => value!.isEmpty
-                              ? 'nameRequired'.tr(context)
-                              : null,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'descriptionOptional'.tr(context),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        CustomTextField(
-                          textEditingController: _descriptionController,
-                          isTextArea: true,
-                          isObscure: false,
-                          placeholderText: 'Add workout details...',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('cancel'.tr(context)),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).pop();
-                        HapticFeedback.lightImpact();
-
-                        InterstitialAdManager.instance.showAd(
-                          onAdDismissed: () {
-                            workoutNotifier.fillNewWorkout(
-                              name: _nameController.text,
-                              description: _descriptionController.text,
-                              workoutItems: [],
-                            );
-                            context.pushNamed(
-                              AppRouters.muscles,
-                              extra: {
-                                "isComingFromWorkoutScreen": true,
-                                "appendToExistingWorkoutSet": false,
-                              },
-                            );
-                          },
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text('create'.tr(context)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 }

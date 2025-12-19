@@ -2252,12 +2252,6 @@ abstract class AppLocalizations {
   /// **'This product is not in our database yet. Would you like to add it to help the community?'**
   String get productNotInDatabase;
 
-  /// Error message prefix for barcode scanning errors
-  ///
-  /// In en, this message translates to:
-  /// **'Error scanning barcode'**
-  String get errorScanningBarcode;
-
   /// Contribution help message
   ///
   /// In en, this message translates to:
@@ -2474,6 +2468,12 @@ abstract class AppLocalizations {
   /// **'This product is not in our database yet. Would you like to add it to help the community?'**
   String get productNotFoundContribute;
 
+  /// Error message prefix for barcode scanning errors
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning barcode'**
+  String get errorScanningBarcode;
+
   /// Muscle name: Abs
   ///
   /// In en, this message translates to:
@@ -2557,6 +2557,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must add at least one exercise'**
   String get mustAddAtLeastOneExercise;
+
+  /// Tip to organize exercises into sets
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Organize your exercises into sets for better tracking'**
+  String get tipOrganizeExercisesIntoSets;
+
+  /// Add workout details instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Add workout details'**
+  String get addWorkoutDetails;
+
+  /// Workout name example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Chest - Shoulders'**
+  String get workoutNameExample;
 }
 
 class _AppLocalizationsDelegate

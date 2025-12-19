@@ -1475,10 +1475,6 @@
   "@productNotInDatabase": {
     "description": "Product not in database message"
   },
-  "errorScanningBarcode": "Error scanning barcode",
-  "@errorScanningBarcode": {
-    "description": "Error scanning barcode message"
-  },
   "contributionMessage": "Your contribution will help millions of users worldwide make better food choices!",
   "@contributionMessage": {
     "description": "Contribution help message"
@@ -1700,6 +1696,18 @@
   "mustAddAtLeastOneExercise": "You must add at least one exercise",
   "@mustAddAtLeastOneExercise": {
     "description": "Warning message when no exercises are added to workout"
+  },
+  "tipOrganizeExercisesIntoSets": "Tip: Organize your exercises into sets for better tracking",
+  "@tipOrganizeExercisesIntoSets": {
+    "description": "Tip to organize exercises into sets"
+  },
+  "addWorkoutDetails": "Add workout details",
+  "@addWorkoutDetails": {
+    "description": "Add workout details instruction"
+  },
+  "workoutNameExample": "Example: Chest - Shoulders",
+  "@workoutNameExample": {
+    "description": "Workout name example"
   }
 }
 

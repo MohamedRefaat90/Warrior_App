@@ -1,5 +1,4 @@
 import 'package:Warrior/core/constants/colors.dart';
-import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
@@ -14,32 +13,71 @@ import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/data/repo/exercises_repo.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/create_workout_warning.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/download_progress_indicator.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/error_card.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscle_body_view.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_gridview.dart';
-// import 'package:Warrior/features/Exercises/presentation/widgets/muscles_listview.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/workout_alert_dialog.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class MusclesContent extends StatelessWidget {
+class MusclesContent extends ConsumerWidget {
   final List<MuscleModel> muscles;
   final int viewMode; // 0=body, 1=grid
   final bool isComingFromWorkoutScreen;
   final bool appendToExistingWorkoutSet;
-  const MusclesContent(
-      {super.key,
-      required this.muscles,
-      required this.viewMode,
-      required this.isComingFromWorkoutScreen,
-      required this.appendToExistingWorkoutSet});
+  final bool hasBannerAd;
+
+  const MusclesContent({
+    super.key,
+    required this.muscles,
+    required this.viewMode,
+    required this.isComingFromWorkoutScreen,
+    required this.appendToExistingWorkoutSet,
+    this.hasBannerAd = false,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Body view - no scroll, takes available space
+    if (viewMode == 0) {
+      return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        switchInCurve: Curves.easeInOut,
+        switchOutCurve: Curves.easeInOut,
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: Column(
+          key: ValueKey(viewMode),
+          children: [
+            Expanded(
+              child: MuscleBodyView(
+                muscles: muscles,
+                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+                hasBannerAd: hasBannerAd,
+              ),
+            ),
+            WorkoutCreationAndWarning(
+                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                appendToExistingWorkoutSet: appendToExistingWorkoutSet),
+          ],
+        ),
+      );
+    }
+
+    // Grid view - scrollable
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
       switchInCurve: Curves.easeInOut,
@@ -53,36 +91,21 @@ class MusclesContent extends StatelessWidget {
           ),
         );
       },
-      child: Container(
+      child: SingleChildScrollView(
         key: ValueKey(viewMode),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(32),
-            topRight: Radius.circular(32),
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MusclesGridView(
+              muscles: muscles,
+              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+            ),
+            WorkoutCreationAndWarning(
+                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                appendToExistingWorkoutSet: appendToExistingWorkoutSet),
+          ],
         ),
-        child: switch (viewMode) {
-          0 => MuscleBodyView(
-              muscles: muscles,
-              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-            ),
-          // 1 => MusclesListView(
-          //     muscles: muscles,
-          //     isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-          //     appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-          //   ),
-          // 1 => MusclesGridView(
-          //     muscles: muscles,
-          //     isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-          //     appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-          //   ),
-          _ => MusclesGridView(
-              muscles: muscles,
-              isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-              appendToExistingWorkoutSet: appendToExistingWorkoutSet,
-            ),
-        },
       ),
     );
   }
@@ -194,7 +217,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                                     // Start caching all exercises in the background
                                     WidgetsBinding.instance
                                         .addPostFrameCallback((_) {
-                                      _startCachingAllExercises(ref, muscles);
+                                      // _startCachingAllExercises(ref, muscles);
                                     });
 
                                     return MusclesContent(
@@ -203,7 +226,9 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                                         isComingFromWorkoutScreen:
                                             widget.isComingFromWorkoutScreen,
                                         appendToExistingWorkoutSet:
-                                            widget.appendToExistingWorkoutSet);
+                                            widget.appendToExistingWorkoutSet,
+                                        hasBannerAd:
+                                            ConnectivityChecker.isOnline!);
                                   },
                                   error: (error, stackTrace) =>
                                       ref.read(musclesProvider).isRefreshing
@@ -229,7 +254,9 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                                       isComingFromWorkoutScreen:
                                           widget.isComingFromWorkoutScreen,
                                       appendToExistingWorkoutSet:
-                                          widget.appendToExistingWorkoutSet);
+                                          widget.appendToExistingWorkoutSet,
+                                      hasBannerAd:
+                                          ConnectivityChecker.isOnline!);
                                 },
                               ),
                       ),
@@ -284,17 +311,17 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
         ref.read(workoutsProvider.notifier).selectMode = false;
       }
 
-      if (router.state.matchedLocation == AppRouters.muscles &&
-          (widget.isComingFromWorkoutScreen == true) &&
-          (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
-              SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
-        TalkerService.info('Showing workout dialog...', 'MUSCLES');
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => WorkoutDialog(),
-        );
-      }
+      // if (router.state.matchedLocation == AppRouters.muscles &&
+      //     (widget.isComingFromWorkoutScreen == true) &&
+      //     (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
+      //         SharedPref.getBool(StorageKeys.workoutAlert) == false)) {
+      //   TalkerService.info('Showing workout dialog...', 'MUSCLES');
+      //   showDialog(
+      //     context: context,
+      //     barrierDismissible: false,
+      //     builder: (context) => WorkoutDialog(),
+      //   );
+      // }
     });
   }
 
@@ -316,5 +343,32 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
     } catch (e) {
       TalkerService.error('Failed to start caching all exercises', 'CACHE', e);
     }
+  }
+}
+
+class WorkoutCreationAndWarning extends ConsumerWidget {
+  final bool isComingFromWorkoutScreen;
+  final bool appendToExistingWorkoutSet;
+  const WorkoutCreationAndWarning(
+      {super.key,
+      required this.isComingFromWorkoutScreen,
+      required this.appendToExistingWorkoutSet});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final workoutNotifier = ref.read(workoutsProvider.notifier);
+    return Column(children: [
+      if (isComingFromWorkoutScreen == true &&
+          (workoutNotifier.newWorkout.workoutItems == null ||
+              workoutNotifier.newWorkout.workoutItems!.isEmpty)) ...[
+        CreateWorkoutWarning(),
+        const SizedBox(height: 8),
+      ],
+      if (isComingFromWorkoutScreen) ...[
+        FinishBTN(
+            primaryColor: AppColors.darkPrimary,
+            appendToExistingWorkoutSet: appendToExistingWorkoutSet),
+        const SizedBox(height: 16),
+      ]
+    ]);
   }
 }

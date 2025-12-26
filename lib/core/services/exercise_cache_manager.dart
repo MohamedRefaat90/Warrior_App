@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Progress information for cache operations
 class CacheProgress {
@@ -53,6 +55,12 @@ enum CacheStatus { idle, downloading, completed, failed }
 
 /// Manages caching and persistence of exercise media assets
 class ExerciseCacheManager {
+  /// Unique cache key for exercise permanent cache
+  static const String _cacheKey = 'exercisePermanentCache';
+
+  /// Migration preference key
+  static const String _migrationKey = 'exercise_cache_migrated_v1';
+
   final CacheManager _cacheManager;
 
   // Prevent concurrent operations on the same resource
@@ -62,12 +70,86 @@ class ExerciseCacheManager {
   final StreamController<CacheProgress> _progressController =
       StreamController<CacheProgress>.broadcast();
 
-  ExerciseCacheManager({
-    CacheManager? cacheManager,
-  }) : _cacheManager = cacheManager ?? DefaultCacheManager();
+  ExerciseCacheManager()
+      : _cacheManager = CacheManager(
+          Config(
+            _cacheKey,
+            // 10 years - effectively permanent caching
+            stalePeriod: const Duration(days: 365 * 10),
+            // Increased limit: 3 files per exercise (image, video, muscle diagram)
+            // 1000 files ≈ 333 exercises
+            maxNrOfCacheObjects: 1000,
+          ),
+        );
 
   /// Stream of cache progress updates
   Stream<CacheProgress> get progressStream => _progressController.stream;
+
+  /// Caches a single exercise and its media assets (image, video, targeted muscles).
+  ///
+  /// Returns `true` if the exercise was successfully cached (or already cached),
+  /// `false` if caching failed for any asset.
+  ///
+  /// This method is used to cache individual exercises, particularly useful
+  /// when caching exercises from workouts that weren't previously downloaded.
+  Future<bool> cacheExercise(
+    Box<ExerciseModel> box,
+    ExerciseModel exercise,
+  ) async {
+    try {
+      // Skip if already cached and exists in Hive with valid local paths
+      if (box.containsKey(exercise.id)) {
+        final cachedExercise = box.get(exercise.id);
+        if (cachedExercise != null && await _isExerciseCached(cachedExercise)) {
+          // TalkerService.debug(
+          //     'Exercise ${exercise.id} already cached', 'CACHE');
+          return true;
+        }
+      }
+
+      // Cache all media assets in parallel
+      final results = await Future.wait([
+        _cacheMedia(exercise.image),
+        _cacheMedia(exercise.targetedMuscles),
+        _cacheMedia(exercise.video),
+      ]);
+
+      final imagePath = results[0];
+      final targetedMusclesPath = results[1];
+      final videoPath = results[2];
+
+      // Only save if all assets were cached successfully
+      if (imagePath == null ||
+          targetedMusclesPath == null ||
+          videoPath == null) {
+        TalkerService.warning(
+          'Incomplete cache for exercise ${exercise.id}',
+          'CACHE',
+        );
+        return false;
+      }
+
+      // Persist to Hive with local paths
+      await box.put(
+        exercise.id,
+        exercise.copyWith(
+          image: imagePath,
+          targetedMuscles: targetedMusclesPath,
+          video: videoPath,
+        ),
+      );
+
+      return true;
+    } catch (e, stackTrace) {
+      TalkerService.error(
+        'Failed to cache exercise ${exercise.id}',
+        'CACHE',
+        e,
+        stackTrace,
+      );
+      return false;
+    }
+  }
 
   /// Preloads and caches exercise media assets
   ///
@@ -113,7 +195,7 @@ class ExerciseCacheManager {
 
       // Process each exercise in the batch sequentially to show progress
       for (final exercise in batch) {
-        final success = await _cacheExercise(box, exercise);
+        final success = await cacheExercise(box, exercise);
 
         if (success) {
           successCount++;
@@ -195,66 +277,6 @@ class ExerciseCacheManager {
         : ExerciseCacheStatus.notDownloaded;
   }
 
-  /// Caches a single exercise and its media assets
-  Future<bool> _cacheExercise(
-    Box<ExerciseModel> box,
-    ExerciseModel exercise,
-  ) async {
-    try {
-      // Skip if already cached and exists in Hive with valid local paths
-      if (box.containsKey(exercise.id)) {
-        final cachedExercise = box.get(exercise.id);
-        if (cachedExercise != null && await _isExerciseCached(cachedExercise)) {
-          // TalkerService.debug(
-          //     'Exercise ${exercise.id} already cached', 'CACHE');
-          return true;
-        }
-      }
-
-      // Cache all media assets in parallel
-      final results = await Future.wait([
-        _cacheMedia(exercise.image),
-        _cacheMedia(exercise.targetedMuscles),
-        _cacheMedia(exercise.video),
-      ]);
-
-      final imagePath = results[0];
-      final targetedMusclesPath = results[1];
-      final videoPath = results[2];
-
-      // Only save if all assets were cached successfully
-      if (imagePath == null ||
-          targetedMusclesPath == null ||
-          videoPath == null) {
-        TalkerService.warning(
-          'Incomplete cache for exercise ${exercise.id}',
-          'CACHE',
-        );
-        return false;
-      }
-
-      // Persist to Hive with local paths
-      await box.put(
-        exercise.id,
-        exercise.copyWith(
-          image: imagePath,
-          targetedMuscles: targetedMusclesPath,
-          video: videoPath,
-        ),
-      );
-
-      return true;
-    } catch (e, stackTrace) {
-      TalkerService.error(
-        'Failed to cache exercise ${exercise.id}',
-        'CACHE',
-        e,
-        stackTrace,
-      );
-      return false;
-    }
-  }
-
   /// Caches a single media file and returns its local path
   Future<String?> _cacheMedia(String url) async {
     if (url.isEmpty) return null;
@@ -334,6 +356,55 @@ class ExerciseCacheManager {
   /// Checks if a path is a local file path
   bool _isLocalPath(String path) {
     return path.startsWith('/') || path.contains(':\\');
+  }
+
+  /// Migrates from DefaultCacheManager to permanent cache (one-time operation)
+  ///
+  /// This should be called during app initialization, before any caching operations.
+  /// It clears the old DefaultCacheManager cache and Hive exercise data,
+  /// allowing fresh downloads into the new permanent cache.
+  static Future<void> migrateFromDefaultCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final hasMigrated = prefs.getBool(_migrationKey) ?? false;
+
+      if (!hasMigrated) {
+        TalkerService.info(
+          'Starting migration from DefaultCacheManager to permanent cache...',
+          'CACHE_MIGRATION',
+        );
+
+        // Step 1: Clear the old DefaultCacheManager cache
+        await DefaultCacheManager().emptyCache();
+        TalkerService.info(
+          'Cleared old DefaultCacheManager cache',
+          'CACHE_MIGRATION',
+        );
+
+        // Step 2: Clear Hive exercise box (old local paths are now invalid)
+        await HiveManager.exercisesBox.clear();
+        TalkerService.info(
+          'Cleared Hive exercises box (old paths invalidated)',
+          'CACHE_MIGRATION',
+        );
+
+        // Step 3: Mark migration as complete
+        await prefs.setBool(_migrationKey, true);
+
+        TalkerService.info(
+          'Migration complete! Exercises will use permanent cache on next download.',
+          'CACHE_MIGRATION',
+        );
+      }
+    } catch (e, stackTrace) {
+      TalkerService.error(
+        'Failed to migrate cache (non-fatal, will retry on next launch)',
+        'CACHE_MIGRATION',
+        e,
+        stackTrace,
+      );
+      // Don't rethrow - migration failure shouldn't crash the app
+    }
   }
 }
 

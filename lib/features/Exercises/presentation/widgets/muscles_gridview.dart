@@ -60,11 +60,14 @@ class MusclesGridView extends ConsumerWidget {
             },
           ),
           Center(
-            child: GridMuscleCard(
-                muscle: muscles.last,
-                isComingFromWorkoutScreen: isComingFromWorkoutScreen,
-                isDark: isDark,
-                primaryColor: AppColors.darkPrimary),
+            child: SizedBox(
+              width: context.screenWidth * 0.45,
+              child: GridMuscleCard(
+                  muscle: muscles.last,
+                  isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                  isDark: isDark,
+                  primaryColor: AppColors.darkPrimary),
+            ),
           ),
         ],
       ),

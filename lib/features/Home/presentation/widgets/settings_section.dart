@@ -68,7 +68,7 @@ class SettingsSection extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -85,7 +85,7 @@ class SettingsSection extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
                 ),

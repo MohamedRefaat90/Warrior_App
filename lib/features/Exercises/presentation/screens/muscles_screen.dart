@@ -4,6 +4,7 @@ import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/providers/cache_provider.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
@@ -19,10 +20,12 @@ import 'package:Warrior/features/Exercises/presentation/widgets/download_progres
 import 'package:Warrior/features/Exercises/presentation/widgets/error_card.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscle_body_view.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_gridview.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/workout_creation_and_warning.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MusclesContent extends ConsumerWidget {
@@ -131,7 +134,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   int _viewMode = SharedPref.getInt(StorageKeys.muscleViewMode) ??
-      2; // 0=grid, 1=list, 2=body (default)
+      0; // 0=Body, 1=Grid (default)
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +220,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                                     // Start caching all exercises in the background
                                     WidgetsBinding.instance
                                         .addPostFrameCallback((_) {
-                                      // _startCachingAllExercises(ref, muscles);
+                                      _startCachingAllExercises(ref, muscles);
                                     });
 
                                     return MusclesContent(
@@ -283,9 +286,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
+        vsync: this, duration: const Duration(milliseconds: 800));
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
@@ -294,9 +295,8 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
-    );
+    ).animate(CurvedAnimation(
+        parent: _animationController, curve: Curves.easeOutCubic));
 
     _animationController.forward();
 
@@ -311,6 +311,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
         ref.read(workoutsProvider.notifier).selectMode = false;
       }
 
+      InterstitialAdManager.instance.loadAd();
       // if (router.state.matchedLocation == AppRouters.muscles &&
       //     (widget.isComingFromWorkoutScreen == true) &&
       //     (SharedPref.getBool(StorageKeys.workoutAlert) == null ||
@@ -343,32 +344,5 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
     } catch (e) {
       TalkerService.error('Failed to start caching all exercises', 'CACHE', e);
     }
-  }
-}
-
-class WorkoutCreationAndWarning extends ConsumerWidget {
-  final bool isComingFromWorkoutScreen;
-  final bool appendToExistingWorkoutSet;
-  const WorkoutCreationAndWarning(
-      {super.key,
-      required this.isComingFromWorkoutScreen,
-      required this.appendToExistingWorkoutSet});
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final workoutNotifier = ref.read(workoutsProvider.notifier);
-    return Column(children: [
-      if (isComingFromWorkoutScreen == true &&
-          (workoutNotifier.newWorkout.workoutItems == null ||
-              workoutNotifier.newWorkout.workoutItems!.isEmpty)) ...[
-        CreateWorkoutWarning(),
-        const SizedBox(height: 8),
-      ],
-      if (isComingFromWorkoutScreen) ...[
-        FinishBTN(
-            primaryColor: AppColors.darkPrimary,
-            appendToExistingWorkoutSet: appendToExistingWorkoutSet),
-        const SizedBox(height: 16),
-      ]
-    ]);
   }
 }

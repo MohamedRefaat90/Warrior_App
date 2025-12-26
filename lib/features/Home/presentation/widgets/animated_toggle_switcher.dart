@@ -16,7 +16,12 @@ class AnimatedToggleSwitcher extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        ref.read(appSettingsProvider.notifier).toggleTheme();
+        // Toggle based on current VISUAL state, not just enum value
+        if (isDark) {
+          ref.read(appSettingsProvider.notifier).setLightMode();
+        } else {
+          ref.read(appSettingsProvider.notifier).setDarkMode();
+        }
       },
       child: Container(
         width: 70,

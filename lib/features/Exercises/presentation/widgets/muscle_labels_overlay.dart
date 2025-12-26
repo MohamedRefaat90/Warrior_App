@@ -108,10 +108,10 @@ class _ArrowPainter extends CustomPainter {
 class _MuscleLabelsOverlayState extends State<MuscleLabelsOverlay> {
   final Map<String, Offset> _draggedPositions = {};
 
-  // Calculate image offset (centered in container)
+  // Calculate image offset (horizontally centered, bottom aligned)
   Offset get _imageOffset => Offset(
         (widget.containerSize.width - widget.imageSize.width) / 2,
-        (widget.containerSize.height - widget.imageSize.height) / 2,
+        widget.containerSize.height - widget.imageSize.height, // Bottom aligned
       );
 
   @override

@@ -48,6 +48,10 @@ class AppSettingsNotifier extends Notifier<AppSettings> {
     return _loadSettings();
   }
 
+  String fontFamily() {
+    return state.locale.languageCode == 'ar' ? 'Cairo' : 'Poppins';
+  }
+
   /// Set dark mode
   Future<void> setDarkMode() async {
     state = state.copyWith(themeMode: ThemeMode.dark);
@@ -77,15 +81,6 @@ class AppSettingsNotifier extends Notifier<AppSettings> {
     state = state.copyWith(themeMode: ThemeMode.system);
     await _persistTheme(ThemeMode.system);
     TalkerService.info('Theme changed to system mode', 'SETTINGS');
-  }
-
-  /// Toggle between light and dark mode (ignores system)
-  Future<void> toggleTheme() async {
-    if (state.themeMode == ThemeMode.light) {
-      await setDarkMode();
-    } else {
-      await setLightMode();
-    }
   }
 
   /// Load locale from SharedPreferences
@@ -195,9 +190,5 @@ class AppSettingsNotifier extends Notifier<AppSettings> {
     } catch (e) {
       TalkerService.error('Failed to persist theme mode', 'SETTINGS', e);
     }
-  }
-
-  String fontFamily() {
-    return state.locale.languageCode == 'ar' ? 'Cairo' : 'Poppins';
   }
 }

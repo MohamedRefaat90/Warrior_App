@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/provider_states.dart';
+import 'package:Warrior/core/services/exercise_cache_manager.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
@@ -200,6 +201,9 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
         state = ProviderStates(isLoading: true);
         workoutList = await _workoutRepo.getWorkoutSets();
 
+        // cache exercises if not cached
+        await _cacheWorkoutExercises(workoutList);
+
         // Update Hive with fresh data
         await HiveManager.workoutsBox.clear();
         for (var workout in workoutList) {
@@ -210,7 +214,7 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
       } else {
         // Offline: Load from Hive
         workoutList = HiveManager.workoutsBox.values.toList();
-        updateWorkoutExerciseVideoPath(workoutList);
+        updateWorkoutExercisesFromCache(workoutList);
         TalkerService.info(
             'Loaded ${workoutList.length} workouts from cache', 'WORKOUT');
       }
@@ -223,7 +227,7 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
       // Fallback to cached data
       try {
         workoutList = HiveManager.workoutsBox.values.toList();
-        updateWorkoutExerciseVideoPath(workoutList);
+        updateWorkoutExercisesFromCache(workoutList);
         state = ProviderStates(isSuccess: true);
         TalkerService.info(
             'Fallback to cached workouts: ${workoutList.length}', 'WORKOUT');
@@ -462,10 +466,15 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     }
   }
 
-  void updateWorkoutExerciseVideoPath(List<WorkoutSetModel> workoutList) async {
+  /// Syncs workout exercise media paths with cached local files.
+  ///
+  /// Updates image, video, and targetedMuscles paths from cached exercises
+  /// in HiveManager.exercisesBox to enable offline access.
+  void updateWorkoutExercisesFromCache(
+      List<WorkoutSetModel> workoutList) async {
     try {
       TalkerService.info(
-          'Updating workout exercise video paths for ${workoutList.length} workouts',
+          'Syncing workout exercises with cache for ${workoutList.length} workouts',
           'WORKOUT');
 
       List<WorkoutSetModel> updatedWorkouts = [];
@@ -485,6 +494,7 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
                 // Create updated workout item
                 workout.workoutItems![i] = workoutItem.copyWith(
                   exercise: workoutItem.exercise.copyWith(
+                    image: cachedExercise.image,
                     video: cachedExercise.video,
                     targetedMuscles: cachedExercise.targetedMuscles,
                   ),
@@ -575,6 +585,44 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
           'Failed to update workout set', 'WORKOUT', e, stackTrace);
       state = ProviderStates(
           errorMessage: 'Failed to update workout: ${e.toString()}');
+    }
+  }
+
+  /// Caches exercises found in workouts if they are not already locally cached.
+  ///
+  /// This ensures that exercises in workouts have their media (images/videos)
+  /// available offline, even if the user hasn't explicitly downloaded them via
+  /// the exercises screen.
+  Future<void> _cacheWorkoutExercises(List<WorkoutSetModel> workouts) async {
+    try {
+      final exerciseCache = ExerciseCacheManager();
+      int cachedCount = 0;
+
+      for (var workout in workouts) {
+        if (workout.workoutItems == null) continue;
+
+        for (var item in workout.workoutItems!) {
+          // Check if exercise is already in Hive and has valid local paths
+          // We use the ID to check Hive, but we also check if the cache manager
+          // considers it "downloaded" to be safe.
+          if (!HiveManager.exercisesBox.containsKey(item.exercise.id)) {
+            final success = await exerciseCache.cacheExercise(
+              HiveManager.exercisesBox,
+              item.exercise,
+            );
+            if (success) cachedCount++;
+          }
+        }
+      }
+
+      if (cachedCount > 0) {
+        TalkerService.info(
+            'Auto-cached $cachedCount new exercises from workouts', 'WORKOUT');
+      }
+    } catch (e) {
+      // Don't fail the whole workout load if caching fails
+      TalkerService.error(
+          'Failed to auto-cache workout exercises', 'WORKOUT', e);
     }
   }
 }

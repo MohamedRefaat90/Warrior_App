@@ -74,7 +74,9 @@ class _BodyViewToggle extends ConsumerWidget {
 }
 
 class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
-  Size _imageSize = Size.zero;
+  // Natural image dimensions (loaded once)
+  Size? _frontNaturalSize;
+  Size? _backNaturalSize;
   final GlobalKey _frontImageKey = GlobalKey();
   final GlobalKey _backImageKey = GlobalKey();
 
@@ -84,24 +86,26 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Calculate responsive sizes based on available space
         final availableHeight = constraints.maxHeight;
         final availableWidth = constraints.maxWidth;
         final toggleHeight = 48.0;
-        // Adjust spacing based on banner ad presence
-        final spacing = widget.hasBannerAd
-            ? availableHeight * 0.07
-            : availableHeight * 0.13;
-        final bodyHeight = availableHeight - toggleHeight - spacing;
+        final bodyHeight = availableHeight - toggleHeight;
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
+        return Stack(
           children: [
-            _BodyViewToggle(currentView: currentView),
-            SizedBox(height: spacing),
-            SizedBox(
+            // Toggle button at the top
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _BodyViewToggle(currentView: currentView),
+            ),
+            // Body diagram anchored to the bottom
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
               height: bodyHeight,
-              width: availableWidth,
               child: FlipBodyView(
                 frontWidget: _buildBodyStack(
                   imagePath: AppAssets.frontBody,
@@ -128,10 +132,7 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      precacheImage(const AssetImage(AppAssets.frontBody), context);
-      precacheImage(const AssetImage(AppAssets.backBody), context);
-    });
+    _loadImageDimensions();
   }
 
   Widget _buildBodyStack({
@@ -141,8 +142,17 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
     required double maxHeight,
     required double maxWidth,
   }) {
+    // Get natural size for this view
+    final naturalSize =
+        view == BodyView.front ? _frontNaturalSize : _backNaturalSize;
+
+    // Calculate actual rendered size based on BoxFit.contain
+    final renderedSize = naturalSize != null
+        ? _calculateRenderedSize(naturalSize, maxWidth, maxHeight)
+        : Size.zero;
+
     return Stack(
-      alignment: Alignment.center,
+      alignment: Alignment.bottomCenter,
       children: [
         Image.asset(
           imagePath,
@@ -150,20 +160,15 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
           fit: BoxFit.contain,
           height: maxHeight,
           width: maxWidth,
-          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _updateImageSize(imageKey);
-            });
-            return child;
-          },
+          alignment: Alignment.bottomCenter,
         ),
-        if (_imageSize != Size.zero)
+        if (renderedSize != Size.zero)
           Positioned.fill(
             child: MuscleLabelsOverlay(
               muscles: widget.muscles,
               isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
               containerSize: Size(maxWidth, maxHeight),
-              imageSize: _imageSize,
+              imageSize: renderedSize,
               bodyView: view,
             ),
           ),
@@ -171,12 +176,49 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
     );
   }
 
-  void _updateImageSize(GlobalKey key) {
-    if (!mounted) return;
+  /// Calculate actual rendered size after BoxFit.contain is applied
+  Size _calculateRenderedSize(
+      Size naturalSize, double maxWidth, double maxHeight) {
+    final imageAspect = naturalSize.width / naturalSize.height;
+    final containerAspect = maxWidth / maxHeight;
 
-    final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
-    if (renderBox != null && renderBox.hasSize && _imageSize == Size.zero) {
-      setState(() => _imageSize = renderBox.size);
+    if (imageAspect > containerAspect) {
+      // Image is wider than container - width limited
+      return Size(maxWidth, maxWidth / imageAspect);
+    } else {
+      // Image is taller than container - height limited
+      return Size(maxHeight * imageAspect, maxHeight);
     }
+  }
+
+  /// Load natural image dimensions for accurate BoxFit.contain calculations
+  Future<void> _loadImageDimensions() async {
+    // Load front image dimensions
+    final frontImage = AssetImage(AppAssets.frontBody);
+    final frontStream = frontImage.resolve(ImageConfiguration.empty);
+    frontStream.addListener(ImageStreamListener((info, _) {
+      if (mounted && _frontNaturalSize == null) {
+        setState(() {
+          _frontNaturalSize = Size(
+            info.image.width.toDouble(),
+            info.image.height.toDouble(),
+          );
+        });
+      }
+    }));
+
+    // Load back image dimensions
+    final backImage = AssetImage(AppAssets.backBody);
+    final backStream = backImage.resolve(ImageConfiguration.empty);
+    backStream.addListener(ImageStreamListener((info, _) {
+      if (mounted && _backNaturalSize == null) {
+        setState(() {
+          _backNaturalSize = Size(
+            info.image.width.toDouble(),
+            info.image.height.toDouble(),
+          );
+        });
+      }
+    }));
   }
 }

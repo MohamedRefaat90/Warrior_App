@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,6 +85,42 @@ class ExerciseCacheManager {
 
   /// Stream of cache progress updates
   Stream<CacheProgress> get progressStream => _progressController.stream;
+
+  /// Auto-caches exercises found in a list of workouts.
+  ///
+  /// Iterates through all exercises in the provided workouts and ensures they are
+  /// cached locally using [cacheExercise]. This is crucial for offline access.
+  Future<void> autoCacheWorkoutExercises(List<WorkoutSetModel> workouts) async {
+    try {
+      int cachedCount = 0;
+      final box = HiveManager.exercisesBox;
+
+      for (var workout in workouts) {
+        if (workout.workoutItems == null) continue;
+
+        for (var item in workout.workoutItems!) {
+          // Check if exercise is already in Hive
+          if (!box.containsKey(item.exercise.id)) {
+            final success = await cacheExercise(box, item.exercise);
+            if (success) cachedCount++;
+          }
+        }
+      }
+
+      if (cachedCount > 0) {
+        TalkerService.info(
+          'Auto-cached $cachedCount new exercises from workouts',
+          'CACHE',
+        );
+      }
+    } catch (e) {
+      TalkerService.error(
+        'Failed to auto-cache workout exercises',
+        'CACHE',
+        e,
+      );
+    }
+  }
 
   /// Caches a single exercise and its media assets (image, video, targeted muscles).
   ///
@@ -275,6 +312,55 @@ class ExerciseCacheManager {
     return isCached
         ? ExerciseCacheStatus.downloaded
         : ExerciseCacheStatus.notDownloaded;
+  }
+
+  /// Syncs workout exercise media paths with cached local files.
+  ///
+  /// Updates image, video, and targetedMuscles paths in the provided workouts
+  /// using the locally cached files from [HiveManager.exercisesBox].
+  void syncWorkoutExercisesWithCache(List<WorkoutSetModel> workouts) {
+    try {
+      final box = HiveManager.exercisesBox;
+      int updatedCount = 0;
+
+      for (var workout in workouts) {
+        if (workout.workoutItems == null) continue;
+        bool modified = false;
+
+        for (int i = 0; i < workout.workoutItems!.length; i++) {
+          final item = workout.workoutItems![i];
+          final cached = box.get(item.exercise.id);
+
+          if (cached != null) {
+            if (item.exercise.video != cached.video ||
+                item.exercise.image != cached.image) {
+              workout.workoutItems![i] = item.copyWith(
+                exercise: item.exercise.copyWith(
+                  image: cached.image,
+                  video: cached.video,
+                  targetedMuscles: cached.targetedMuscles,
+                ),
+              );
+              modified = true;
+            }
+          }
+        }
+        if (modified) updatedCount++;
+      }
+
+      if (updatedCount > 0) {
+        TalkerService.info(
+          'Synced exercises for $updatedCount workouts from cache',
+          'CACHE',
+        );
+      }
+    } catch (e) {
+      TalkerService.error(
+        'Failed to sync workout exercises with cache',
+        'CACHE',
+        e,
+      );
+    }
   }
 
   /// Caches a single media file and returns its local path

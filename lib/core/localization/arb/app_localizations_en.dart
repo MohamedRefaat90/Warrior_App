@@ -1305,4 +1305,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workoutNameExample => 'Example: Chest - Shoulders';
+
+  @override
+  String get workoutSets => 'Workout Sets';
+
+  @override
+  String get noSetsRecorded => 'No sets recorded yet';
+
+  @override
+  String get reps => 'reps';
+
+  @override
+  String get addSet => 'Add Set';
+
+  @override
+  String get saveSets => 'Save Sets';
+
+  @override
+  String get deleteSet => 'Delete Set';
+
+  @override
+  String get confirmDeleteSet => 'Are you sure you want to delete this set?';
+
+  @override
+  String get maxSetsReached => 'Maximum 5 sets allowed';
+
+  @override
+  String get setsUpdated => 'Sets updated successfully';
+
+  @override
+  String get errorUpdatingSets => 'Failed to update sets';
+
+  @override
+  String get setsUpdatedOffline => 'Sets saved locally, will sync when online';
 }

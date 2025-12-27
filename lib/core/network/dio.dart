@@ -61,7 +61,7 @@ class DioHandler {
             printErrorData: false,
             printErrorHeaders: false,
             printErrorMessage: false,
-            printRequestData: false,
+            printRequestData: true,
           ),
         ));
       } else {

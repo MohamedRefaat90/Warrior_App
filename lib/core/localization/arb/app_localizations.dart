@@ -1352,7 +1352,7 @@ abstract class AppLocalizations {
   /// **'Basic Information'**
   String get basicInformation;
 
-  /// Weight field label
+  /// Weight label
   ///
   /// In en, this message translates to:
   /// **'Weight'**
@@ -2575,6 +2575,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Example: Chest - Shoulders'**
   String get workoutNameExample;
+
+  /// Workout sets section title
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Sets'**
+  String get workoutSets;
+
+  /// Empty state when no workout sets are available
+  ///
+  /// In en, this message translates to:
+  /// **'No sets recorded yet'**
+  String get noSetsRecorded;
+
+  /// Repetitions label
+  ///
+  /// In en, this message translates to:
+  /// **'reps'**
+  String get reps;
+
+  /// Button to add a new set
+  ///
+  /// In en, this message translates to:
+  /// **'Add Set'**
+  String get addSet;
+
+  /// Button to save workout sets
+  ///
+  /// In en, this message translates to:
+  /// **'Save Sets'**
+  String get saveSets;
+
+  /// Button to delete a set
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Set'**
+  String get deleteSet;
+
+  /// Confirmation message for deleting a set
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this set?'**
+  String get confirmDeleteSet;
+
+  /// Message when max sets limit is reached
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 5 sets allowed'**
+  String get maxSetsReached;
+
+  /// Success message when sets are updated
+  ///
+  /// In en, this message translates to:
+  /// **'Sets updated successfully'**
+  String get setsUpdated;
+
+  /// Error message when sets update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update sets'**
+  String get errorUpdatingSets;
+
+  /// Message when sets are saved in offline mode
+  ///
+  /// In en, this message translates to:
+  /// **'Sets saved locally, will sync when online'**
+  String get setsUpdatedOffline;
 }
 
 class _AppLocalizationsDelegate

@@ -1708,6 +1708,62 @@
   "workoutNameExample": "Example: Chest - Shoulders",
   "@workoutNameExample": {
     "description": "Workout name example"
+  },
+  "workoutSets": "Workout Sets",
+  "@workoutSets": {
+    "description": "Workout sets section title"
+  },
+  "noSetsRecorded": "No sets recorded yet",
+  "@noSetsRecorded": {
+    "description": "Empty state when no workout sets are available"
+  },
+  "reps": "reps",
+  "@reps": {
+    "description": "Repetitions label"
+  },
+  "addSet": "Add Set",
+  "@addSet": {
+    "description": "Button to add a new set"
+  },
+  "saveSets": "Save Sets",
+  "@saveSets": {
+    "description": "Button to save workout sets"
+  },
+  "deleteSet": "Delete Set",
+  "@deleteSet": {
+    "description": "Button to delete a set"
+  },
+  "confirmDeleteSet": "Are you sure you want to delete this set?",
+  "@confirmDeleteSet": {
+    "description": "Confirmation message for deleting a set"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "maxSetsReached": "Maximum 5 sets allowed",
+  "@maxSetsReached": {
+    "description": "Message when max sets limit is reached"
+  },
+  "setsUpdated": "Sets updated successfully",
+  "@setsUpdated": {
+    "description": "Success message when sets are updated"
+  },
+  "errorUpdatingSets": "Failed to update sets",
+  "@errorUpdatingSets": {
+    "description": "Error message when sets update fails"
+  },
+  "setsUpdatedOffline": "Sets saved locally, will sync when online",
+  "@setsUpdatedOffline": {
+    "description": "Message when sets are saved in offline mode"
+  },
+  "weight": "Weight",
+  "@weight": {
+    "description": "Weight label"
   }
 }
 

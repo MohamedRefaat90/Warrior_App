@@ -26,6 +26,10 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
       reorderWorkoutList: (fields[7] as List?)
           ?.map((dynamic e) => (e as Map).cast<String, dynamic>())
           ?.toList(),
+      sets: (fields[8] as List?)
+          ?.map((dynamic e) => (e as Map).cast<String, dynamic>())
+          ?.toList(),
+      workoutSetId: fields[9] as int?,
       timestamp: fields[6] as DateTime?,
     );
   }
@@ -33,7 +37,7 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
   @override
   void write(BinaryWriter writer, PendingOperation obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.entityType)
       ..writeByte(1)
@@ -49,7 +53,11 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
       ..writeByte(6)
       ..write(obj.timestamp)
       ..writeByte(7)
-      ..write(obj.reorderWorkoutList);
+      ..write(obj.reorderWorkoutList)
+      ..writeByte(8)
+      ..write(obj.sets)
+      ..writeByte(9)
+      ..write(obj.workoutSetId);
   }
 
   @override

@@ -1677,6 +1677,62 @@
   "workoutNameExample": "مثال : تمرينة صدر - تمرينة كتف",
   "@workoutNameExample": {
     "description": "Workout name example"
+  },
+  "workoutSets": "مجموعات التمرين",
+  "@workoutSets": {
+    "description": "Workout sets section title"
+  },
+  "noSetsRecorded": "لا توجد مجموعات مسجلة بعد",
+  "@noSetsRecorded": {
+    "description": "Empty state when no workout sets are available"
+  },
+  "reps": "تكرارات",
+  "@reps": {
+    "description": "Repetitions label"
+  },
+  "addSet": "إضافة مجموعة",
+  "@addSet": {
+    "description": "Button to add a new set"
+  },
+  "saveSets": "حفظ المجموعات",
+  "@saveSets": {
+    "description": "Button to save workout sets"
+  },
+  "deleteSet": "حذف المجموعة",
+  "@deleteSet": {
+    "description": "Button to delete a set"
+  },
+  "confirmDeleteSet": "هل أنت متأكد من حذف هذه المجموعة؟",
+  "@confirmDeleteSet": {
+    "description": "Confirmation message for deleting a set"
+  },
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "delete": "حذف",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "maxSetsReached": "الحد الأقصى 5 مجموعات",
+  "@maxSetsReached": {
+    "description": "Message when max sets limit is reached"
+  },
+  "setsUpdated": "تم تحديث المجموعات بنجاح",
+  "@setsUpdated": {
+    "description": "Success message when sets are updated"
+  },
+  "errorUpdatingSets": "فشل تحديث المجموعات",
+  "@errorUpdatingSets": {
+    "description": "Error message when sets update fails"
+  },
+  "setsUpdatedOffline": "تم حفظ المجموعات محلياً، سيتم المزامنة عند الاتصال",
+  "@setsUpdatedOffline": {
+    "description": "Message when sets are saved in offline mode"
+  },
+  "weight": "الوزن",
+  "@weight": {
+    "description": "Weight label"
   }
 }
 

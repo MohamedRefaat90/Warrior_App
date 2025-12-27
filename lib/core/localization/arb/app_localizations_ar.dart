@@ -58,7 +58,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cancel => 'إلغاء';
 
   @override
-  String get delete => 'امسح';
+  String get delete => 'حذف';
 
   @override
   String get edit => 'تعديل';
@@ -1279,4 +1279,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get workoutNameExample => 'مثال : تمرينة صدر - تمرينة كتف';
+
+  @override
+  String get workoutSets => 'مجموعات التمرين';
+
+  @override
+  String get noSetsRecorded => 'لا توجد مجموعات مسجلة بعد';
+
+  @override
+  String get reps => 'تكرارات';
+
+  @override
+  String get addSet => 'إضافة مجموعة';
+
+  @override
+  String get saveSets => 'حفظ المجموعات';
+
+  @override
+  String get deleteSet => 'حذف المجموعة';
+
+  @override
+  String get confirmDeleteSet => 'هل أنت متأكد من حذف هذه المجموعة؟';
+
+  @override
+  String get maxSetsReached => 'الحد الأقصى 5 مجموعات';
+
+  @override
+  String get setsUpdated => 'تم تحديث المجموعات بنجاح';
+
+  @override
+  String get errorUpdatingSets => 'فشل تحديث المجموعات';
+
+  @override
+  String get setsUpdatedOffline =>
+      'تم حفظ المجموعات محلياً، سيتم المزامنة عند الاتصال';
 }

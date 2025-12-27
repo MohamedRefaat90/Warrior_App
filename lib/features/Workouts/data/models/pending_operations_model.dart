@@ -3,25 +3,10 @@ import 'package:hive/hive.dart';
 
 part 'pending_operations_model.g.dart';
 
-@HiveType(typeId: 6)
-enum SyncOperationType {
-  @HiveField(0)
-  create,
-
-  @HiveField(1)
-  update,
-
-  @HiveField(2)
-  delete,
-
-  @HiveField(3)
-  reorder
-}
-
 @HiveType(typeId: 5)
 class PendingOperation extends HiveObject {
   @HiveField(0)
-  final String entityType; // e.g., "workout", "workout_weight"
+  final String entityType; // e.g., "workout", "workout_weight", "workout_sets"
 
   @HiveField(1)
   final SyncOperationType operationType;
@@ -44,6 +29,12 @@ class PendingOperation extends HiveObject {
   @HiveField(7)
   final List<Map<String, dynamic>>? reorderWorkoutList;
 
+  @HiveField(8)
+  final List<Map<String, dynamic>>? sets;
+
+  @HiveField(9)
+  final int? workoutSetId;
+
   PendingOperation({
     required this.entityType,
     required this.operationType,
@@ -52,6 +43,23 @@ class PendingOperation extends HiveObject {
     this.exerciseId,
     this.weight,
     this.reorderWorkoutList,
+    this.sets,
+    this.workoutSetId,
     DateTime? timestamp,
   }) : timestamp = timestamp ?? DateTime.now();
+}
+
+@HiveType(typeId: 6)
+enum SyncOperationType {
+  @HiveField(0)
+  create,
+
+  @HiveField(1)
+  update,
+
+  @HiveField(2)
+  delete,
+
+  @HiveField(3)
+  reorder
 }

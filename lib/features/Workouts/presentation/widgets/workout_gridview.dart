@@ -6,7 +6,7 @@ import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.da
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/empty_workout_exercises.dart';
-import 'package:Warrior/features/Workouts/presentation/widgets/last_weight_selector.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/value_selection_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -96,18 +96,33 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                           padding: 2,
                           press: () async {
                             final newWeight = await showModalBottomSheet<num>(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                constraints: BoxConstraints(
-                                  maxHeight:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                ),
-                                builder: (context) => LastWeightSelector(
-                                    workout: widget.workout,
-                                    workoutExercise: workoutExercise));
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => ValueSelectionBottomSheet(
+                                mode: ValueSelectionMode.weight,
+                                currentValue: workoutExercise.lastWeight,
+                                title: workoutExercise.exercise.name,
+                                subtitle: context.l10n.selectWeight,
+                                isMachine:
+                                    workoutExercise.exercise.equipmentType ==
+                                        "machine",
+                                primaryColor: AppColors.green,
+                              ),
+                            );
 
-                            if (newWeight != null) {
+                            if (newWeight != null &&
+                                newWeight != workoutExercise.lastWeight) {
+                              // Update Provider
+                              await ref
+                                  .read(workoutsProvider.notifier)
+                                  .updateLastWeight(
+                                    widget.workout.id,
+                                    workoutExercise.exercise.id,
+                                    newWeight,
+                                    workout: widget.workout,
+                                  );
+
                               setState(() {
                                 workoutExercise.lastWeight = newWeight;
                               });

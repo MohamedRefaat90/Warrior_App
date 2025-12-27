@@ -11,6 +11,8 @@ import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/smart_input_button.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/value_selection_bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
@@ -37,72 +39,6 @@ class ExerciseDetailsScreen extends StatefulWidget {
 
   @override
   State<ExerciseDetailsScreen> createState() => _ExerciseDetailsScreenState();
-}
-
-/// Compact input field for reps/weight.
-class _CompactInput extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final bool isDark;
-  final bool allowDecimal;
-
-  const _CompactInput({
-    required this.controller,
-    required this.label,
-    required this.isDark,
-    this.allowDecimal = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
-      inputFormatters: [
-        if (allowDecimal)
-          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))
-        else
-          FilteringTextInputFormatter.digitsOnly,
-      ],
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: isDark ? Colors.white : Colors.black87,
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(
-          fontSize: 11,
-          color: isDark ? Colors.white54 : Colors.black45,
-        ),
-        filled: true,
-        fillColor: isDark
-            ? Colors.white.withOpacity(0.08)
-            : Colors.white.withOpacity(0.8),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: isDark
-                ? Colors.white.withOpacity(0.1)
-                : Colors.black.withOpacity(0.08),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: isDark ? AppColors.darkSecondary : AppColors.primaryColor,
-            width: 1.5,
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 /// Mutable set data for editing.
@@ -137,12 +73,13 @@ class _EditableSet {
   }
 }
 
-/// Editable set row with text fields for reps and weight.
+/// Editable set row with value selection buttons.
 class _EditableSetRow extends ConsumerWidget {
   final int setNumber;
   final TextEditingController repsController;
   final TextEditingController weightController;
   final String? equipmentType;
+  final String exerciseName;
   final VoidCallback onDelete;
 
   const _EditableSetRow({
@@ -150,6 +87,7 @@ class _EditableSetRow extends ConsumerWidget {
     required this.repsController,
     required this.weightController,
     this.equipmentType,
+    required this.exerciseName,
     required this.onDelete,
   });
 
@@ -188,8 +126,7 @@ class _EditableSetRow extends ConsumerWidget {
                   fontFamily: appSettings.fontFamily(),
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color:
-                      isDark ? AppColors.darkSecondary : AppColors.primaryColor,
+                  color: isDark ? AppColors.white : AppColors.primaryColor,
                 ),
               ),
             ),
@@ -197,20 +134,69 @@ class _EditableSetRow extends ConsumerWidget {
           const SizedBox(width: 12),
           // Reps input
           Expanded(
-            child: _CompactInput(
-              controller: repsController,
-              label: context.l10n.reps,
-              isDark: isDark,
+            child: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: repsController,
+              builder: (context, value, _) {
+                return SmartInputButton(
+                  label: context.l10n.reps,
+                  value: value.text.isEmpty ? '0' : value.text,
+                  isDark: isDark,
+                  color: Colors.orange,
+                  onTap: () async {
+                    final current = num.tryParse(repsController.text) ?? 0;
+                    final result = await showModalBottomSheet<num>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => ValueSelectionBottomSheet(
+                        mode: ValueSelectionMode.reps,
+                        currentValue: current,
+                        title: exerciseName,
+                        subtitle: context.l10n.reps,
+                        primaryColor: Colors.orange,
+                      ),
+                    );
+                    if (result != null) {
+                      repsController.text = result.toInt().toString();
+                    }
+                  },
+                );
+              },
             ),
           ),
           const SizedBox(width: 8),
           // Weight input
           Expanded(
-            child: _CompactInput(
-              controller: weightController,
-              label: weightUnit,
-              isDark: isDark,
-              allowDecimal: true,
+            child: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: weightController,
+              builder: (context, value, _) {
+                return SmartInputButton(
+                  label: weightUnit,
+                  value: value.text.isEmpty ? '0' : value.text,
+                  isDark: isDark,
+                  color: AppColors.primaryColor,
+                  onTap: () async {
+                    final current = num.tryParse(weightController.text) ?? 0;
+                    final result = await showModalBottomSheet<num>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => ValueSelectionBottomSheet(
+                        mode: ValueSelectionMode.weight,
+                        currentValue: current,
+                        title: exerciseName, // Exercise name for weight
+                        subtitle: context.l10n.selectWeight,
+                        isMachine: isMachine,
+                        primaryColor: AppColors.primaryColor,
+                      ),
+                    );
+                    if (result != null) {
+                      weightController.text = result.toStringAsFixed(
+                          result.truncateToDouble() == result ? 0 : 2);
+                    }
+                  },
+                );
+              },
             ),
           ),
           const SizedBox(width: 8),
@@ -1184,6 +1170,7 @@ class _WorkoutLoggingSectionState
                 repsController: set.repsController,
                 weightController: set.weightController,
                 equipmentType: widget.workoutItem.exercise.equipmentType,
+                exerciseName: widget.workoutItem.exercise.name,
                 onDelete: () => _confirmDeleteSet(index),
               );
             },

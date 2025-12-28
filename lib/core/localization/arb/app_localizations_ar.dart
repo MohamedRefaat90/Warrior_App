@@ -1333,4 +1333,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String maxWeightUpdateSuccess(String weight) {
     return 'عمل رائع! لقد قمت بتحديث أقصى وزن لك في هذا التمرين بمقدار $weight كجم';
   }
+
+  @override
+  String get weightSelectionTooltipGridView =>
+      'من هنا تقدر تحدد الوزن الافتراضي للتمرين ده, و بالتالي هيطبق علي كل المجموعات, لو عايز تتحكم في وزن كل مجموعة انتقل لصفحة التمرين . ';
+
+  @override
+  String get weightSelectionTooltipDetails =>
+      'من هنا تقدر تحدد الوزن اللي بتلعب بيه في كل مجموعة للتمرين ده';
+
+  @override
+  String get repsSelectionTooltipDetails =>
+      'من هنا تقدر تختار عدد العدات اللي بتلعبها في كل مجموعة  للتمرين ده';
+
+  @override
+  String get weightSelectionTitleGridView => 'حدد الوزن لكل المجاميع';
+
+  @override
+  String get weightSelectionSubtitleGridView =>
+      'هيغير الوزن في كل المجموعات الحالية';
 }

@@ -35,7 +35,7 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
   /// Updates the weight for ALL sets of an exercise to the specified value.
   /// Also updates the lastWeight default for future sets.
-  /// Returns the weight_change from the API if available.
+  /// Returns the weight_change locally calculated for immediate UI feedback.
   Future<num?> applyWeightToAllSets(
     int? workoutID,
     int exerciseID,
@@ -43,21 +43,17 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     WorkoutSetModel? workout,
   }) async {
     try {
-      state = ProviderStates(isLoading: true);
-
       // 1. Resolve Workout and Item
       WorkoutSetModel? resolvedWorkout = workout;
       if (resolvedWorkout == null && workoutID != null) {
         try {
           resolvedWorkout = workoutList.firstWhere((w) => w.id == workoutID);
-        } catch (_) {
-          // Ignore
-        }
+        } catch (_) {}
       }
 
       if (resolvedWorkout == null) {
         state = ProviderStates(errorMessage: 'Workout not found');
-        return null; // Changed to return null
+        return null;
       }
 
       final itemIndex = resolvedWorkout.workoutItems?.indexWhere(
@@ -67,55 +63,62 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
       if (itemIndex < 0) {
         state = ProviderStates(errorMessage: 'Exercise not found');
-        return null; // Changed to return null
+        return null;
       }
 
-      // 2. Update Last Weight (The Default)
-      final weightChange = await updateLastWeight(
-          workoutID, exerciseID, newWeight,
-          workout: resolvedWorkout);
-
-      // 3. Update ALL Sets
       final workoutItem = resolvedWorkout.workoutItems![itemIndex];
-      final currentSets = workoutItem.sets ?? [];
+      final originalWeight = workoutItem.lastWeight;
 
-      // Always update all sets
-      final updatedSetsData = currentSets.asMap().entries.map((entry) {
-        final set = entry.value;
-        return {
-          'set_number': set.setNumber,
-          'reps': set.reps,
-          'weight': newWeight, // Force update
-        };
+      // Calculate local weight change for immediate animation
+      final localWeightChange = newWeight - originalWeight;
+
+      // 2. Optimistic Local Update
+      // Update Exercise Last Weight (Default for future sets)
+      workoutItem.lastWeight = newWeight;
+
+      // Update ALL existing sets in the workout item
+      final updatedSets = (workoutItem.sets ?? []).asMap().entries.map((entry) {
+        return entry.value.copyWith(weight: newWeight);
       }).toList();
 
-      if (updatedSetsData.isNotEmpty) {
+      resolvedWorkout.workoutItems![itemIndex] =
+          workoutItem.copyWith(sets: updatedSets);
+
+      // 3. Save to Hive immediately
+      final hiveIndex = HiveManager.workoutsBox.values.toList().indexWhere((w) {
         if (workoutID != null && workoutID > 0) {
-          // Online or valid ID
-          await updateExerciseSets(
-            workoutSetId: workoutID,
-            exerciseId: exerciseID,
-            sets: updatedSetsData,
-          );
+          return w.id == workoutID;
         } else {
-          // Offline/No-ID
-          await _updateExerciseSetsForOfflineWorkout(
-            resolvedWorkout,
-            exerciseID,
-            updatedSetsData,
-          );
+          return w == resolvedWorkout;
         }
-        TalkerService.info(
-            'Updated weight to $newWeight for ALL sets of exercise $exerciseID',
-            'WORKOUT');
+      });
+
+      if (hiveIndex >= 0) {
+        await HiveManager.workoutsBox.putAt(hiveIndex, resolvedWorkout);
+        workoutList = HiveManager.workoutsBox.values.toList();
       }
 
+      // 4. Notify UI immediately (Success state triggers rebuilds)
       state = ProviderStates(isSuccess: true);
-      return weightChange;
+
+      TalkerService.info(
+          'Optimistically updated weight to $newWeight for ALL sets',
+          'WORKOUT');
+
+      // 5. Trigger Background Sync (Fire and Forget)
+      _syncWeightUpdateInBackground(
+        workoutID: workoutID,
+        exerciseID: exerciseID,
+        newWeight: newWeight,
+        updatedSets: updatedSets,
+        resolvedWorkout: resolvedWorkout,
+      );
+
+      // Return local change so animation can start instantly in the UI
+      return localWeightChange;
     } catch (e, stack) {
       TalkerService.error(
-          'Failed to apply weight to all sets', 'WORKOUT', e, stack);
-      state = ProviderStates(errorMessage: 'Failed to update sets');
+          'Failed optimistic apply weight', 'WORKOUT', e, stack);
       return null;
     }
   }
@@ -719,49 +722,64 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     }
   }
 
-  /// Helper to update sets for offline workouts without an ID
-  Future<void> _updateExerciseSetsForOfflineWorkout(
-    WorkoutSetModel workout,
-    int exerciseId,
-    List<Map<String, dynamic>> sets,
-  ) async {
+  /// Helper to synchronize weight updates in the background.
+  void _syncWeightUpdateInBackground({
+    required int? workoutID,
+    required int exerciseID,
+    required num newWeight,
+    required List<ExerciseSetRecordModel> updatedSets,
+    required WorkoutSetModel resolvedWorkout,
+  }) async {
     try {
-      final index = HiveManager.workoutsBox.values
-          .toList()
-          .indexWhere((element) => element == workout);
+      final setsData = updatedSets
+          .map((s) => {
+                'set_number': s.setNumber,
+                'reps': s.reps,
+                'weight': s.weight,
+              })
+          .toList();
 
-      if (index < 0) return;
+      if (_isOnline && workoutID != null && workoutID > 0) {
+        // Online: Update server
+        // 1. Update Default Weight
+        await _workoutRepo.updateLastWeight(workoutID, exerciseID, newWeight);
 
-      final storedWorkout = HiveManager.workoutsBox.getAt(index);
-      if (storedWorkout == null) return;
-
-      final exerciseIndex = storedWorkout.workoutItems?.indexWhere(
-            (element) => element.exercise.id == exerciseId,
-          ) ??
-          -1;
-
-      if (exerciseIndex < 0) return;
-
-      final updatedSets = sets.asMap().entries.map((entry) {
-        final setData = entry.value;
-        return ExerciseSetRecordModel(
-          id: 0,
-          setNumber: entry.key + 1,
-          reps: (setData['reps'] as num?)?.toInt() ?? 0,
-          weight: (setData['weight'] as num?) ?? 0.0,
+        // 2. Update All Sets
+        await _workoutRepo.updateExerciseSets(
+          workoutSetId: workoutID,
+          exerciseId: exerciseID,
+          sets: setsData,
         );
-      }).toList();
 
-      final oldItem = storedWorkout.workoutItems![exerciseIndex];
-      storedWorkout.workoutItems![exerciseIndex] = oldItem.copyWith(
-        sets: updatedSets,
-      );
+        TalkerService.info(
+            'Background sync successful for weight update', 'WORKOUT');
+      } else {
+        // Offline: Add to pending operations
+        if (workoutID != null && workoutID > 0) {
+          // Track weight change
+          await HiveManager.addPendingOperation(PendingOperation(
+            entityType: 'workout_weight',
+            operationType: SyncOperationType.update,
+            workout: resolvedWorkout,
+            exerciseId: exerciseID,
+            weight: newWeight,
+          ));
 
-      await HiveManager.workoutsBox.putAt(index, storedWorkout);
-      workoutList = HiveManager.workoutsBox.values.toList();
-    } catch (e) {
-      TalkerService.error(
-          'Failed to update offline sets locally', 'WORKOUT', e);
+          // Track sets change
+          await HiveManager.addPendingOperation(PendingOperation(
+            entityType: 'workout_sets',
+            operationType: SyncOperationType.update,
+            workout: resolvedWorkout,
+            workoutSetId: workoutID,
+            exerciseId: exerciseID,
+            sets: setsData,
+          ));
+
+          TalkerService.info('Weight update queued for sync', 'WORKOUT');
+        }
+      }
+    } catch (e, stack) {
+      TalkerService.error('Background sync failed', 'WORKOUT', e, stack);
     }
   }
 

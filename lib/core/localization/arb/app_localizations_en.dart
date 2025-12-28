@@ -1358,4 +1358,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String maxWeightUpdateSuccess(String weight) {
     return 'Great job! You updated your max weight in this exercise with $weight kg';
   }
+
+  @override
+  String get weightSelectionTooltipGridView =>
+      'This will update the weight for all current sets of this exercise in this workout. To edit individual sets, tap the exercise card.';
+
+  @override
+  String get weightSelectionTooltipDetails =>
+      'Select the weight for this specific set.';
+
+  @override
+  String get repsSelectionTooltipDetails =>
+      'Select the number of repetitions for this set.';
+
+  @override
+  String get weightSelectionTitleGridView => 'Set Weight for All Sets';
+
+  @override
+  String get weightSelectionSubtitleGridView => 'Updates all current sets';
 }

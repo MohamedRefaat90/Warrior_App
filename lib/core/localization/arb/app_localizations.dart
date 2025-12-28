@@ -2671,6 +2671,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Great job! You updated your max weight in this exercise with {weight} kg'**
   String maxWeightUpdateSuccess(String weight);
+
+  /// Tooltip message in grid view explaining that weight update applies to all sets
+  ///
+  /// In en, this message translates to:
+  /// **'This will update the weight for all current sets of this exercise in this workout. To edit individual sets, tap the exercise card.'**
+  String get weightSelectionTooltipGridView;
+
+  /// Tooltip message in details screen for weight selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select the weight for this specific set.'**
+  String get weightSelectionTooltipDetails;
+
+  /// Tooltip message in details screen for reps selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select the number of repetitions for this set.'**
+  String get repsSelectionTooltipDetails;
+
+  /// Title for weight selection bottom sheet in grid view
+  ///
+  /// In en, this message translates to:
+  /// **'Set Weight for All Sets'**
+  String get weightSelectionTitleGridView;
+
+  /// Subtitle for weight selection bottom sheet in grid view
+  ///
+  /// In en, this message translates to:
+  /// **'Updates all current sets'**
+  String get weightSelectionSubtitleGridView;
 }
 
 class _AppLocalizationsDelegate

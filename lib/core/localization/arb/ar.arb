@@ -1747,6 +1747,26 @@
         "example": "5.5"
       }
     }
+  },
+  "weightSelectionTooltipGridView": "من هنا تقدر تحدد الوزن الافتراضي للتمرين ده, و بالتالي هيطبق علي كل المجموعات, لو عايز تتحكم في وزن كل مجموعة انتقل لصفحة التمرين . ",
+  "@weightSelectionTooltipGridView": {
+    "description": "Tooltip message in grid view explaining that weight update applies to all sets"
+  },
+  "weightSelectionTooltipDetails": "من هنا تقدر تحدد الوزن اللي بتلعب بيه في كل مجموعة للتمرين ده",
+  "@weightSelectionTooltipDetails": {
+    "description": "Tooltip message in details screen for weight selection"
+  },
+  "repsSelectionTooltipDetails": "من هنا تقدر تختار عدد العدات اللي بتلعبها في كل مجموعة  للتمرين ده",
+  "@repsSelectionTooltipDetails": {
+    "description": "Tooltip message in details screen for reps selection"
+  },
+  "weightSelectionTitleGridView": "حدد الوزن لكل المجاميع",
+  "@weightSelectionTitleGridView": {
+    "description": "Title for weight selection bottom sheet in grid view"
+  },
+  "weightSelectionSubtitleGridView": "هيغير الوزن في كل المجموعات الحالية",
+  "@weightSelectionSubtitleGridView": {
+    "description": "Subtitle for weight selection bottom sheet in grid view"
   }
 }
 

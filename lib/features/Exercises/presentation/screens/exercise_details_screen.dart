@@ -155,6 +155,8 @@ class _EditableSetRow extends ConsumerWidget {
                         subtitle: context.l10n.selectWeight,
                         isMachine: isMachine,
                         primaryColor: Colors.blue,
+                        tooltipMessage:
+                            context.l10n.weightSelectionTooltipDetails,
                       ),
                     );
                     if (result != null) {
@@ -189,6 +191,8 @@ class _EditableSetRow extends ConsumerWidget {
                         title: exerciseName,
                         subtitle: context.l10n.reps,
                         primaryColor: Colors.green,
+                        tooltipMessage:
+                            context.l10n.repsSelectionTooltipDetails,
                       ),
                     );
                     if (result != null) {

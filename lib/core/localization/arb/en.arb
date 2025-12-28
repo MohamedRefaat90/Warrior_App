@@ -1790,6 +1790,26 @@
         "example": "5.5"
       }
     }
+  },
+  "weightSelectionTooltipGridView": "This will update the weight for all current sets of this exercise in this workout. To edit individual sets, tap the exercise card.",
+  "@weightSelectionTooltipGridView": {
+    "description": "Tooltip message in grid view explaining that weight update applies to all sets"
+  },
+  "weightSelectionTooltipDetails": "Select the weight for this specific set.",
+  "@weightSelectionTooltipDetails": {
+    "description": "Tooltip message in details screen for weight selection"
+  },
+  "repsSelectionTooltipDetails": "Select the number of repetitions for this set.",
+  "@repsSelectionTooltipDetails": {
+    "description": "Tooltip message in details screen for reps selection"
+  },
+  "weightSelectionTitleGridView": "Set Weight for All Sets",
+  "@weightSelectionTitleGridView": {
+    "description": "Title for weight selection bottom sheet in grid view"
+  },
+  "weightSelectionSubtitleGridView": "Updates all current sets",
+  "@weightSelectionSubtitleGridView": {
+    "description": "Subtitle for weight selection bottom sheet in grid view"
   }
 }
 

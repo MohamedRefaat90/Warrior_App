@@ -14,6 +14,7 @@ class ValueSelectionBottomSheet extends ConsumerStatefulWidget {
   final String? subtitle;
   final bool isMachine; // Only relevant for weight mode
   final Color? primaryColor; // distinct color for this sheet
+  final String? tooltipMessage; // Dynamic message for the help tooltip
 
   const ValueSelectionBottomSheet({
     super.key,
@@ -23,6 +24,7 @@ class ValueSelectionBottomSheet extends ConsumerStatefulWidget {
     this.subtitle,
     this.isMachine = false,
     this.primaryColor,
+    this.tooltipMessage,
   });
 
   @override
@@ -329,69 +331,117 @@ class _ValueSelectionBottomSheetState
   Widget _buildHeader(BuildContext context, bool isDark, double cornerRadius) {
     final appSettings = ref.watch(appSettingsProvider.notifier);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      decoration: BoxDecoration(
-        color: _primaryColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(cornerRadius),
-          topRight: Radius.circular(cornerRadius),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: _primaryColor.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24)
+              .copyWith(top: 20, bottom: 30),
+          decoration: BoxDecoration(
+            color: _primaryColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(cornerRadius),
+              topRight: Radius.circular(cornerRadius),
             ),
-            child: Icon(
-              widget.mode == ValueSelectionMode.weight
-                  ? Icons.fitness_center_rounded
-                  : Icons.refresh_rounded,
-              color: Colors.white,
-              size: 24,
-            ),
+            boxShadow: [
+              BoxShadow(
+                color: _primaryColor.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontFamily: appSettings.fontFamily(),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    overflow: TextOverflow.ellipsis,
-                    color: Colors.white,
-                  ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                if (widget.subtitle != null)
-                  Text(
-                    widget.subtitle!,
-                    style: TextStyle(
-                      fontFamily: appSettings.fontFamily(),
-                      fontSize: 13,
-                      color: Colors.white.withOpacity(0.9),
+                child: Icon(
+                  widget.mode == ValueSelectionMode.weight
+                      ? Icons.fitness_center_rounded
+                      : Icons.refresh_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontFamily: appSettings.fontFamily(),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        overflow: TextOverflow.ellipsis,
+                        color: Colors.white,
+                      ),
                     ),
+                    if (widget.subtitle != null)
+                      Text(
+                        widget.subtitle!,
+                        style: TextStyle(
+                          fontFamily: appSettings.fontFamily(),
+                          fontSize: 13,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              _buildCurrentValueBadge(context, appSettings),
+            ],
+          ),
+        ),
+        if (widget.tooltipMessage != null)
+          Positioned(
+            bottom: 6,
+            left: 10,
+            child: Tooltip(
+              message: widget.tooltipMessage!,
+              triggerMode: TooltipTriggerMode.tap,
+              preferBelow: false,
+              showDuration: Duration(seconds: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey[850] : Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
-              ],
+                ],
+              ),
+              textStyle: TextStyle(
+                color: isDark ? Colors.white : Colors.black87,
+                fontSize: 13,
+                fontFamily: appSettings.fontFamily(),
+                fontWeight: FontWeight.w500,
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withOpacity(0.4)),
+                ),
+                child: const Icon(
+                  Icons.question_mark_rounded,
+                  color: Colors.white,
+                  size: 14,
+                ),
+              ),
             ),
           ),
-          _buildCurrentValueBadge(context, appSettings),
-        ],
-      ),
+      ],
     );
   }
 

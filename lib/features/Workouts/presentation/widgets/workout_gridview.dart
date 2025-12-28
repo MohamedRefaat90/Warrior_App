@@ -106,12 +106,15 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                                 mode: ValueSelectionMode.weight,
                                 currentValue: workoutExercise.lastWeight,
                                 title:
-                                    "Set Weight for All Sets", // Clear action title
-                                subtitle: "Updates all current sets",
+                                    context.l10n.weightSelectionTitleGridView,
+                                subtitle: context
+                                    .l10n.weightSelectionSubtitleGridView,
                                 isMachine:
                                     workoutExercise.exercise.equipmentType ==
                                         "machine",
                                 primaryColor: AppColors.primaryColor,
+                                tooltipMessage:
+                                    context.l10n.weightSelectionTooltipGridView,
                               ),
                             );
 
@@ -126,10 +129,6 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                                     newWeight,
                                     workout: widget.workout,
                                   );
-
-                              setState(() {
-                                workoutExercise.lastWeight = newWeight;
-                              });
 
                               TalkerService.instance
                                   .warning("Weight change: $weightChange");

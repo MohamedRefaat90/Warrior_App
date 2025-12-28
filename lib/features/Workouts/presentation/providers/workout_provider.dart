@@ -35,7 +35,8 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
   /// Updates the weight for ALL sets of an exercise to the specified value.
   /// Also updates the lastWeight default for future sets.
-  Future<void> applyWeightToAllSets(
+  /// Returns the weight_change from the API if available.
+  Future<num?> applyWeightToAllSets(
     int? workoutID,
     int exerciseID,
     num newWeight, {
@@ -56,7 +57,7 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
       if (resolvedWorkout == null) {
         state = ProviderStates(errorMessage: 'Workout not found');
-        return;
+        return null; // Changed to return null
       }
 
       final itemIndex = resolvedWorkout.workoutItems?.indexWhere(
@@ -66,11 +67,12 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
       if (itemIndex < 0) {
         state = ProviderStates(errorMessage: 'Exercise not found');
-        return;
+        return null; // Changed to return null
       }
 
       // 2. Update Last Weight (The Default)
-      await updateLastWeight(workoutID, exerciseID, newWeight,
+      final weightChange = await updateLastWeight(
+          workoutID, exerciseID, newWeight,
           workout: resolvedWorkout);
 
       // 3. Update ALL Sets
@@ -109,10 +111,12 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
       }
 
       state = ProviderStates(isSuccess: true);
+      return weightChange;
     } catch (e, stack) {
       TalkerService.error(
           'Failed to apply weight to all sets', 'WORKOUT', e, stack);
       state = ProviderStates(errorMessage: 'Failed to update sets');
+      return null;
     }
   }
 
@@ -499,7 +503,8 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
   /// Updates last weight for a workout exercise
   /// Works for both online workouts (with ID) and offline workouts (without ID)
-  Future<void> updateLastWeight(int? workoutID, int exerciseID, num weight,
+  /// Returns weight_change if online
+  Future<num?> updateLastWeight(int? workoutID, int exerciseID, num weight,
       {WorkoutSetModel? workout}) async {
     try {
       // Validate inputs
@@ -508,7 +513,7 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
         TalkerService.warning(
             'Invalid data for weight update: exercise=$exerciseID, weight=$weight',
             'WORKOUT');
-        return;
+        return null;
       }
 
       // For offline workouts without ID, we need the workout object
@@ -517,13 +522,16 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
             errorMessage: 'Either workoutID or workout object is required');
         TalkerService.warning(
             'Missing both workoutID and workout object', 'WORKOUT');
-        return;
+        return null;
       }
+
+      num? weightChange;
 
       if (_isOnline && workoutID != null && workoutID > 0) {
         // Online: Update on server (only if workout has a server ID)
         state = ProviderStates(isLoading: true);
-        await _workoutRepo.updateLastWeight(workoutID, exerciseID, weight);
+        weightChange =
+            await _workoutRepo.updateLastWeight(workoutID, exerciseID, weight);
         updateLastWeightLocal(workoutID, exerciseID, weight);
         TalkerService.info(
             'Weight updated online: workout=$workoutID, exercise=$exerciseID, weight=$weight',
@@ -561,11 +569,13 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
       }
 
       state = ProviderStates(isSuccess: true);
+      return weightChange;
     } catch (e, stackTrace) {
       TalkerService.error(
           'Failed to update last weight', 'WORKOUT', e, stackTrace);
       state = ProviderStates(
           errorMessage: 'Failed to update weight: ${e.toString()}');
+      return null;
     }
   }
 

@@ -1268,6 +1268,18 @@ abstract class AppLocalizations {
   /// **'Enter barcode number'**
   String get enterBarcodeNumber;
 
+  /// Positive feedback message after weight update
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! You\'re getting stronger!'**
+  String get weightUpdatePositive;
+
+  /// Negative feedback message after weight update
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t worry, you can do better next time.'**
+  String get weightUpdateNegative;
+
   /// Rate app dialog title
   ///
   /// In en, this message translates to:
@@ -2641,6 +2653,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sets saved locally, will sync when online'**
   String get setsUpdatedOffline;
+
+  /// Message shown when weight increases
+  ///
+  /// In en, this message translates to:
+  /// **'UNSTOPPABLE! You just leveled up! Keep that fire burning! 🔥'**
+  String get weightIncreased;
+
+  /// Message shown when weight decreases
+  ///
+  /// In en, this message translates to:
+  /// **'Performance decline. Don\'t let it stop you! You\'ll bounce back! 💪'**
+  String get weightDecreased;
+
+  /// Notification message when max weight increases
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! You updated your max weight in this exercise with {weight} kg'**
+  String maxWeightUpdateSuccess(String weight);
 }
 
 class _AppLocalizationsDelegate

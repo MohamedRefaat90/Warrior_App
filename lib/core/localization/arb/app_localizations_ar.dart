@@ -58,7 +58,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cancel => 'إلغاء';
 
   @override
-  String get delete => 'حذف';
+  String get delete => 'امسح';
 
   @override
   String get edit => 'تعديل';
@@ -598,6 +598,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get enterBarcodeNumber => 'أدخل رقم الباركود';
+
+  @override
+  String get weightUpdatePositive => 'عمل رائع! أنت تصبح أقوى!';
+
+  @override
+  String get weightUpdateNegative =>
+      'لا تقلق، يمكنك القيام بعمل أفضل في المرة القادمة.';
 
   @override
   String get enjoyingWarrior => 'هل تستمتع بتطبيق المحارب؟';
@@ -1313,4 +1320,17 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get setsUpdatedOffline =>
       'تم حفظ المجموعات محلياً، سيتم المزامنة عند الاتصال';
+
+  @override
+  String get weightIncreased =>
+      'عاش يا وحش! القوة بتزيد وفورمتك بتطور.. كمل يا بطل! 🔥';
+
+  @override
+  String get weightDecreased =>
+      'الأداء قل شوية.. ولا يهمك يا بطل، بكرة هتعوضها وتكسر الدنيا! 💪';
+
+  @override
+  String maxWeightUpdateSuccess(String weight) {
+    return 'عمل رائع! لقد قمت بتحديث أقصى وزن لك في هذا التمرين بمقدار $weight كجم';
+  }
 }

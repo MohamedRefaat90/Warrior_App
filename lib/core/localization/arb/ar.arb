@@ -798,6 +798,14 @@
   "@enterProductBarcode": {
     "description": "Enter product barcode instruction"
   },
+  "weightUpdatePositive": "عمل رائع! أنت تصبح أقوى!",
+  "@weightUpdatePositive": {
+    "description": "Positive feedback message after weight update"
+  },
+  "weightUpdateNegative": "لا تقلق، يمكنك القيام بعمل أفضل في المرة القادمة.",
+  "@weightUpdateNegative": {
+    "description": "Negative feedback message after weight update"
+  },
   "barcodeIsRequired": "الباركود مطلوب",
   "@barcodeIsRequired": {
     "description": "Barcode is required validation"
@@ -925,10 +933,6 @@
   "basicInformation": "المعلومات الأساسية",
   "@basicInformation": {
     "description": "Basic information section title"
-  },
-  "weight": "الوزن",
-  "@weight": {
-    "description": "Weight field label"
   },
   "enterWeight": "أدخل الوزن",
   "@enterWeight": {
@@ -1706,14 +1710,6 @@
   "@confirmDeleteSet": {
     "description": "Confirmation message for deleting a set"
   },
-  "cancel": "إلغاء",
-  "@cancel": {
-    "description": "Cancel button text"
-  },
-  "delete": "حذف",
-  "@delete": {
-    "description": "Delete button text"
-  },
   "maxSetsReached": "الحد الأقصى 5 مجموعات",
   "@maxSetsReached": {
     "description": "Message when max sets limit is reached"
@@ -1733,6 +1729,24 @@
   "weight": "الوزن",
   "@weight": {
     "description": "Weight label"
+  },
+  "weightIncreased": "عاش يا وحش! القوة بتزيد وفورمتك بتطور.. كمل يا بطل! 🔥",
+  "@weightIncreased": {
+    "description": "Message shown when weight increases"
+  },
+  "weightDecreased": "الأداء قل شوية.. ولا يهمك يا بطل، بكرة هتعوضها وتكسر الدنيا! 💪",
+  "@weightDecreased": {
+    "description": "Message shown when weight decreases"
+  },
+  "maxWeightUpdateSuccess": "عمل رائع! لقد قمت بتحديث أقصى وزن لك في هذا التمرين بمقدار {weight} كجم",
+  "@maxWeightUpdateSuccess": {
+    "description": "Notification message when max weight increases",
+    "placeholders": {
+      "weight": {
+        "type": "String",
+        "example": "5.5"
+      }
+    }
   }
 }
 

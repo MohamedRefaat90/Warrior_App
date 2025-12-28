@@ -784,6 +784,14 @@
   "@enterBarcodeNumber": {
     "description": "Barcode number input hint"
   },
+  "weightUpdatePositive": "Great job! You're getting stronger!",
+  "@weightUpdatePositive": {
+    "description": "Positive feedback message after weight update"
+  },
+  "weightUpdateNegative": "Don't worry, you can do better next time.",
+  "@weightUpdateNegative": {
+    "description": "Negative feedback message after weight update"
+  },
 
   "enjoyingWarrior": "Enjoying Warrior?",
   "@enjoyingWarrior": {
@@ -1764,6 +1772,24 @@
   "weight": "Weight",
   "@weight": {
     "description": "Weight label"
+  },
+  "weightIncreased": "UNSTOPPABLE! You just leveled up! Keep that fire burning! 🔥",
+  "@weightIncreased": {
+    "description": "Message shown when weight increases"
+  },
+  "weightDecreased": "Performance decline. Don't let it stop you! You'll bounce back! 💪",
+  "@weightDecreased": {
+    "description": "Message shown when weight decreases"
+  },
+  "maxWeightUpdateSuccess": "Great job! You updated your max weight in this exercise with {weight} kg",
+  "@maxWeightUpdateSuccess": {
+    "description": "Notification message when max weight increases",
+    "placeholders": {
+      "weight": {
+        "type": "String",
+        "example": "5.5"
+      }
+    }
   }
 }
 

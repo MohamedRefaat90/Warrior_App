@@ -217,14 +217,20 @@ class WorkoutRepo {
     }
   }
 
-  Future<void> updateLastWeight(
+  Future<num?> updateLastWeight(
       int workoutID, int exerciseID, num weight) async {
     try {
-      await dio
+      final response = await dio
           .patch("${ApisUrl.workouts}/$workoutID/update_last_weight/", data: {
         "exercise_id": exerciseID,
         "last_weight": weight,
       });
+
+      if (response.data is Map &&
+          response.data['data']['weight_change'] != null) {
+        return response.data['data']['weight_change'] as num;
+      }
+      return null;
     } on DioException {
       rethrow;
     }

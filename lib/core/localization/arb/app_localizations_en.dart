@@ -610,6 +610,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterBarcodeNumber => 'Enter barcode number';
 
   @override
+  String get weightUpdatePositive => 'Great job! You\'re getting stronger!';
+
+  @override
+  String get weightUpdateNegative =>
+      'Don\'t worry, you can do better next time.';
+
+  @override
   String get enjoyingWarrior => 'Enjoying Warrior?';
 
   @override
@@ -1338,4 +1345,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setsUpdatedOffline => 'Sets saved locally, will sync when online';
+
+  @override
+  String get weightIncreased =>
+      'UNSTOPPABLE! You just leveled up! Keep that fire burning! 🔥';
+
+  @override
+  String get weightDecreased =>
+      'Performance decline. Don\'t let it stop you! You\'ll bounce back! 💪';
+
+  @override
+  String maxWeightUpdateSuccess(String weight) {
+    return 'Great job! You updated your max weight in this exercise with $weight kg';
+  }
 }

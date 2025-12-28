@@ -57,7 +57,7 @@ class DioHandler {
             printRequestHeaders: false,
             printResponseHeaders: false,
             printResponseMessage: false,
-            printResponseData: false,
+            printResponseData: true,
             printErrorData: false,
             printErrorHeaders: false,
             printErrorMessage: false,

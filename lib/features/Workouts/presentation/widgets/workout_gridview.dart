@@ -102,21 +102,22 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                               builder: (context) => ValueSelectionBottomSheet(
                                 mode: ValueSelectionMode.weight,
                                 currentValue: workoutExercise.lastWeight,
-                                title: workoutExercise.exercise.name,
-                                subtitle: context.l10n.selectWeight,
+                                title:
+                                    "Set Weight for All Sets", // Clear action title
+                                subtitle: "Updates all current sets",
                                 isMachine:
                                     workoutExercise.exercise.equipmentType ==
                                         "machine",
-                                primaryColor: AppColors.green,
+                                primaryColor: AppColors.primaryColor,
                               ),
                             );
 
                             if (newWeight != null &&
                                 newWeight != workoutExercise.lastWeight) {
-                              // Update Provider
+                              // Update Provider: Apply to ALL sets
                               await ref
                                   .read(workoutsProvider.notifier)
-                                  .updateLastWeight(
+                                  .applyWeightToAllSets(
                                     widget.workout.id,
                                     workoutExercise.exercise.id,
                                     newWeight,

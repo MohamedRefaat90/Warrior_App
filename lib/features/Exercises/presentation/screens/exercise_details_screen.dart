@@ -132,39 +132,6 @@ class _EditableSetRow extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 12),
-          // Reps input
-          Expanded(
-            child: ValueListenableBuilder<TextEditingValue>(
-              valueListenable: repsController,
-              builder: (context, value, _) {
-                return SmartInputButton(
-                  label: context.l10n.reps,
-                  value: value.text.isEmpty ? '0' : value.text,
-                  isDark: isDark,
-                  color: Colors.orange,
-                  onTap: () async {
-                    final current = num.tryParse(repsController.text) ?? 0;
-                    final result = await showModalBottomSheet<num>(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => ValueSelectionBottomSheet(
-                        mode: ValueSelectionMode.reps,
-                        currentValue: current,
-                        title: exerciseName,
-                        subtitle: context.l10n.reps,
-                        primaryColor: Colors.orange,
-                      ),
-                    );
-                    if (result != null) {
-                      repsController.text = result.toInt().toString();
-                    }
-                  },
-                );
-              },
-            ),
-          ),
-          const SizedBox(width: 8),
           // Weight input
           Expanded(
             child: ValueListenableBuilder<TextEditingValue>(
@@ -174,7 +141,7 @@ class _EditableSetRow extends ConsumerWidget {
                   label: weightUnit,
                   value: value.text.isEmpty ? '0' : value.text,
                   isDark: isDark,
-                  color: AppColors.primaryColor,
+                  color: Colors.blue,
                   onTap: () async {
                     final current = num.tryParse(weightController.text) ?? 0;
                     final result = await showModalBottomSheet<num>(
@@ -187,7 +154,7 @@ class _EditableSetRow extends ConsumerWidget {
                         title: exerciseName, // Exercise name for weight
                         subtitle: context.l10n.selectWeight,
                         isMachine: isMachine,
-                        primaryColor: AppColors.primaryColor,
+                        primaryColor: Colors.blue,
                       ),
                     );
                     if (result != null) {
@@ -199,6 +166,40 @@ class _EditableSetRow extends ConsumerWidget {
               },
             ),
           ),
+          const SizedBox(width: 12),
+          // Reps input
+          Expanded(
+            child: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: repsController,
+              builder: (context, value, _) {
+                return SmartInputButton(
+                  label: context.l10n.reps,
+                  value: value.text.isEmpty ? '0' : value.text,
+                  isDark: isDark,
+                  color: Colors.green,
+                  onTap: () async {
+                    final current = num.tryParse(repsController.text) ?? 0;
+                    final result = await showModalBottomSheet<num>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => ValueSelectionBottomSheet(
+                        mode: ValueSelectionMode.reps,
+                        currentValue: current,
+                        title: exerciseName,
+                        subtitle: context.l10n.reps,
+                        primaryColor: Colors.green,
+                      ),
+                    );
+                    if (result != null) {
+                      repsController.text = result.toInt().toString();
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+
           const SizedBox(width: 8),
           // Delete button
           IconButton(

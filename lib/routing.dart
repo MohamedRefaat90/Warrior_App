@@ -155,10 +155,26 @@ class RoutersManager {
     GoRoute(
       path: AppRouters.exerciseDetails,
       name: AppRouters.exerciseDetails,
-      pageBuilder: (context, state) => CustomTransition(
-        child: ExerciseDetailsScreen(exercise: state.extra as ExerciseModel),
-        transitionType: PageTransitionType.fade,
-      ),
+      pageBuilder: (context, state) {
+        final extra = state.extra;
+        // Support both ExerciseModel (browsing) and Map with WorkoutItemModel (from workout)
+        if (extra is Map<String, dynamic>) {
+          final workoutItem = extra['workoutItem'] as WorkoutItemModel;
+          final workoutSetId = extra['workoutSetId'] as int?;
+          return CustomTransition(
+            child: ExerciseDetailsScreen(
+              exercise: workoutItem.exercise,
+              workoutItem: workoutItem,
+              workoutSetId: workoutSetId,
+            ),
+            transitionType: PageTransitionType.fade,
+          );
+        }
+        return CustomTransition(
+          child: ExerciseDetailsScreen(exercise: extra as ExerciseModel),
+          transitionType: PageTransitionType.fade,
+        );
+      },
     ),
     GoRoute(
       path: AppRouters.workouts,

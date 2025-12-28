@@ -1,5 +1,6 @@
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/dio.dart';
+import 'package:Warrior/core/services/exercise_cache_manager.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
 import 'package:Warrior/core/services/talker_service.dart';
@@ -220,6 +221,8 @@ abstract class AppServices {
             break;
           case 'Hive':
             await HiveManager.init();
+            // Migrate old exercise cache to permanent cache (one-time)
+            await ExerciseCacheManager.migrateFromDefaultCache();
             break;
         }
         TalkerService.info('$serviceName initialized successfully', 'SERVICES');

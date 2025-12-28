@@ -600,6 +600,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterBarcodeNumber => 'أدخل رقم الباركود';
 
   @override
+  String get weightUpdatePositive => 'عمل رائع! أنت تصبح أقوى!';
+
+  @override
+  String get weightUpdateNegative =>
+      'لا تقلق، يمكنك القيام بعمل أفضل في المرة القادمة.';
+
+  @override
   String get enjoyingWarrior => 'هل تستمتع بتطبيق المحارب؟';
 
   @override
@@ -782,7 +789,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get years => 'سنة';
 
   @override
-  String get bar => 'شريط';
+  String get bar => 'بلاطة';
 
   @override
   String get createWorkoutSetWarning => 'لم تكمل إنشاء مجموعة التمارين بعد';
@@ -797,7 +804,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateYourWorkoutSet => 'حدّث مجموعة تمارينك';
 
   @override
-  String get finishYourWorkoutSet => 'أكمل مجموعة تمارينك';
+  String get finishYourWorkoutSet => 'أنشئ مجموعة تمارينك';
 
   @override
   String workoutAddedSuccessfully(String name) {
@@ -1109,9 +1116,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'هذا المنتج غير موجود في قاعدة البيانات. هل تريد إضافته لمساعدة المجتمع؟';
 
   @override
-  String get errorScanningBarcode => 'خطأ في فحص الباركود';
-
-  @override
   String get contributionMessage =>
       'مساهمتك هتساعد ملايين المستخدمين حول العالم في اتخاذ خيارات غذائية أفضل!';
 
@@ -1229,6 +1233,9 @@ class AppLocalizationsAr extends AppLocalizations {
       'المنتج ده مش موجود في قاعدة البيانات. عايز تضيفه وتساعد المجتمع؟';
 
   @override
+  String get errorScanningBarcode => 'خطأ في فحص الباركود';
+
+  @override
   String get muscleAbs => 'البطن';
 
   @override
@@ -1269,4 +1276,80 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get mustAddAtLeastOneExercise => 'يجب إضافة تمرين واحد على الأقل';
+
+  @override
+  String get tipOrganizeExercisesIntoSets =>
+      'نصيحة: نظّم تماريناتك في مجموعات لتتبعها بشكل أفضل';
+
+  @override
+  String get addWorkoutDetails => 'أضف تفاصيل التمرين';
+
+  @override
+  String get workoutNameExample => 'مثال : تمرينة صدر - تمرينة كتف';
+
+  @override
+  String get workoutSets => 'مجموعات التمرين';
+
+  @override
+  String get noSetsRecorded => 'لا توجد مجموعات مسجلة بعد';
+
+  @override
+  String get reps => 'تكرارات';
+
+  @override
+  String get addSet => 'إضافة مجموعة';
+
+  @override
+  String get saveSets => 'حفظ المجموعات';
+
+  @override
+  String get deleteSet => 'حذف المجموعة';
+
+  @override
+  String get confirmDeleteSet => 'هل أنت متأكد من حذف هذه المجموعة؟';
+
+  @override
+  String get maxSetsReached => 'الحد الأقصى 5 مجموعات';
+
+  @override
+  String get setsUpdated => 'تم تحديث المجموعات بنجاح';
+
+  @override
+  String get errorUpdatingSets => 'فشل تحديث المجموعات';
+
+  @override
+  String get setsUpdatedOffline =>
+      'تم حفظ المجموعات محلياً، سيتم المزامنة عند الاتصال';
+
+  @override
+  String get weightIncreased =>
+      'عاش يا وحش! القوة بتزيد وفورمتك بتطور.. كمل يا بطل! 🔥';
+
+  @override
+  String get weightDecreased =>
+      'الأداء قل شوية.. ولا يهمك يا بطل، بكرة هتعوضها وتكسر الدنيا! 💪';
+
+  @override
+  String maxWeightUpdateSuccess(String weight) {
+    return 'عمل رائع! لقد قمت بتحديث أقصى وزن لك في هذا التمرين بمقدار $weight كجم';
+  }
+
+  @override
+  String get weightSelectionTooltipGridView =>
+      'من هنا تقدر تحدد الوزن الافتراضي للتمرين ده, و بالتالي هيطبق علي كل المجموعات, لو عايز تتحكم في وزن كل مجموعة انتقل لصفحة التمرين . ';
+
+  @override
+  String get weightSelectionTooltipDetails =>
+      'من هنا تقدر تحدد الوزن اللي بتلعب بيه في كل مجموعة للتمرين ده';
+
+  @override
+  String get repsSelectionTooltipDetails =>
+      'من هنا تقدر تختار عدد العدات اللي بتلعبها في كل مجموعة  للتمرين ده';
+
+  @override
+  String get weightSelectionTitleGridView => 'حدد الوزن لكل المجاميع';
+
+  @override
+  String get weightSelectionSubtitleGridView =>
+      'هيغير الوزن في كل المجموعات الحالية';
 }

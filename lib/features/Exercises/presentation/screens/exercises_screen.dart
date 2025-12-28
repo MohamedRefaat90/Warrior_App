@@ -1,4 +1,3 @@
-import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/localization/muscle_translations.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';

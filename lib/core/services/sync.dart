@@ -252,6 +252,21 @@ class SyncService extends Notifier<SyncState> {
             op.exerciseId!,
             op.weight!,
           );
+        } else if (op.entityType == 'workout_sets') {
+          // Sync exercise sets update
+          if (op.workoutSetId != null &&
+              op.exerciseId != null &&
+              op.sets != null) {
+            await workoutRepository.updateExerciseSets(
+              workoutSetId: op.workoutSetId!,
+              exerciseId: op.exerciseId!,
+              sets: op.sets!,
+            );
+            TalkerService.info(
+              'Synced exercise sets: workout=${op.workoutSetId}, exercise=${op.exerciseId}',
+              'SYNC',
+            );
+          }
         }
       } on Exception catch (e) {
         TalkerService.error('Error processing operation ${op.id}', 'SYNC', e);

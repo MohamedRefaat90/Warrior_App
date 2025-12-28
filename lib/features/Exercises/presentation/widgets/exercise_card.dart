@@ -17,8 +17,21 @@ import '../../../../core/widgets/loading_widget.dart';
 class ExerciseCard extends ConsumerStatefulWidget {
   final ExerciseModel exercise;
   final bool? isComingFromWorkoutScreen;
-  const ExerciseCard(
-      {super.key, required this.exercise, this.isComingFromWorkoutScreen});
+
+  /// Optional WorkoutItemModel to pass full workout data when navigating
+  /// to exercise details from a workout context.
+  final WorkoutItemModel? workoutItem;
+
+  /// Optional workout set ID for API calls.
+  final int? workoutSetId;
+
+  const ExerciseCard({
+    super.key,
+    required this.exercise,
+    this.isComingFromWorkoutScreen,
+    this.workoutItem,
+    this.workoutSetId,
+  });
 
   @override
   ConsumerState<ExerciseCard> createState() => _ExerciseCardState();
@@ -33,8 +46,15 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
 
     return RepaintBoundary(
       child: GestureDetector(
-        onTap: () => context.pushNamed(AppRouters.exerciseDetails,
-            extra: widget.exercise),
+        onTap: () => context.pushNamed(
+          AppRouters.exerciseDetails,
+          extra: widget.workoutItem != null
+              ? {
+                  'workoutItem': widget.workoutItem,
+                  'workoutSetId': widget.workoutSetId,
+                }
+              : widget.exercise,
+        ),
         child: Card(
           elevation: 50,
           color: Color.fromARGB(36, 82, 165, 207),

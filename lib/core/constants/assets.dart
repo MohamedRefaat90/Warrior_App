@@ -24,4 +24,7 @@ abstract class AppAssets {
       "assets/animation/horizontal_loader.json";
   static const String stars = "assets/animation/stars.json";
   static const String newUpdate = "assets/animation/New_Update.json";
+  static const String clap = "assets/animation/clap.json";
+  static const String fire = "assets/animation/Fire.json";
+  static const String downArrow = "assets/animation/DownArrow.json";
 }

@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/widgets/custom_text_field.dart';
+import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +30,7 @@ void showCreateWorkoutDialog(
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
-    barrierLabel: 'Create Workout',
+    barrierLabel: 'createWorkout'.tr(context),
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 300),
     pageBuilder: (context, animation, secondaryAnimation) {
@@ -56,7 +56,7 @@ class _CreateWorkoutDialogContent extends StatelessWidget {
   final TextEditingController descriptionController;
   final GlobalKey<FormState> formKey;
   final bool isDark;
-  final dynamic workoutNotifier;
+  final WorkoutsNotifier workoutNotifier;
   const _CreateWorkoutDialogContent({
     required this.animation,
     required this.nameController,
@@ -129,7 +129,7 @@ class _DialogActions extends ConsumerWidget {
 
   final TextEditingController nameController;
   final TextEditingController descriptionController;
-  final dynamic workoutNotifier;
+  final WorkoutsNotifier workoutNotifier;
   const _DialogActions({
     required this.formKey,
     required this.nameController,
@@ -187,7 +187,16 @@ class _DialogActions extends ConsumerWidget {
 
   void _handleCreate(BuildContext context) {
     if (formKey.currentState!.validate()) {
-      Navigator.of(context).pop();
+      workoutNotifier.newWorkout = WorkoutSetModel(
+        name: nameController.text,
+        description: descriptionController.text,
+        workoutItems: [],
+      );
+      context.pop();
+      context.pushNamed(AppRouters.muscles, extra: {
+        "isComingFromWorkoutScreen": true,
+        "appendToExistingWorkoutSet": false,
+      });
       HapticFeedback.lightImpact();
     }
   }
@@ -225,15 +234,15 @@ class _DialogForm extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             CustomTextField(
-              placeholderText: 'e.g., Full Body Blast',
+              placeholderText: context.l10n.workoutNameExample,
               isObscure: false,
               textEditingController: nameController,
               validator: (value) =>
-                  value!.isEmpty ? 'nameRequired'.tr(context) : null,
+                  value!.isEmpty ? context.l10n.nameRequired : null,
             ),
             const SizedBox(height: 16),
             Text(
-              'descriptionOptional'.tr(context),
+              context.l10n.descriptionOptional,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -245,7 +254,7 @@ class _DialogForm extends StatelessWidget {
               textEditingController: descriptionController,
               isTextArea: true,
               isObscure: false,
-              placeholderText: 'Add workout details...',
+              placeholderText: context.l10n.addWorkoutDetails,
             ),
           ],
         ),

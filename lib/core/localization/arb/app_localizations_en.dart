@@ -610,6 +610,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterBarcodeNumber => 'Enter barcode number';
 
   @override
+  String get weightUpdatePositive => 'Great job! You\'re getting stronger!';
+
+  @override
+  String get weightUpdateNegative =>
+      'Don\'t worry, you can do better next time.';
+
+  @override
   String get enjoyingWarrior => 'Enjoying Warrior?';
 
   @override
@@ -1134,9 +1141,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'This product is not in our database yet. Would you like to add it to help the community?';
 
   @override
-  String get errorScanningBarcode => 'Error scanning barcode';
-
-  @override
   String get contributionMessage =>
       'Your contribution will help millions of users worldwide make better food choices!';
 
@@ -1255,6 +1259,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'This product is not in our database yet. Would you like to add it to help the community?';
 
   @override
+  String get errorScanningBarcode => 'Error scanning barcode';
+
+  @override
   String get muscleAbs => 'Abs';
 
   @override
@@ -1295,4 +1302,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mustAddAtLeastOneExercise => 'You must add at least one exercise';
+
+  @override
+  String get tipOrganizeExercisesIntoSets =>
+      'Tip: Organize your exercises into sets for better tracking';
+
+  @override
+  String get addWorkoutDetails => 'Add workout details';
+
+  @override
+  String get workoutNameExample => 'Example: Chest - Shoulders';
+
+  @override
+  String get workoutSets => 'Workout Sets';
+
+  @override
+  String get noSetsRecorded => 'No sets recorded yet';
+
+  @override
+  String get reps => 'reps';
+
+  @override
+  String get addSet => 'Add Set';
+
+  @override
+  String get saveSets => 'Save Sets';
+
+  @override
+  String get deleteSet => 'Delete Set';
+
+  @override
+  String get confirmDeleteSet => 'Are you sure you want to delete this set?';
+
+  @override
+  String get maxSetsReached => 'Maximum 5 sets allowed';
+
+  @override
+  String get setsUpdated => 'Sets updated successfully';
+
+  @override
+  String get errorUpdatingSets => 'Failed to update sets';
+
+  @override
+  String get setsUpdatedOffline => 'Sets saved locally, will sync when online';
+
+  @override
+  String get weightIncreased =>
+      'UNSTOPPABLE! You just leveled up! Keep that fire burning! 🔥';
+
+  @override
+  String get weightDecreased =>
+      'Performance decline. Don\'t let it stop you! You\'ll bounce back! 💪';
+
+  @override
+  String maxWeightUpdateSuccess(String weight) {
+    return 'Great job! You updated your max weight in this exercise with $weight kg';
+  }
+
+  @override
+  String get weightSelectionTooltipGridView =>
+      'This will update the weight for all current sets of this exercise in this workout. To edit individual sets, tap the exercise card.';
+
+  @override
+  String get weightSelectionTooltipDetails =>
+      'Select the weight for this specific set.';
+
+  @override
+  String get repsSelectionTooltipDetails =>
+      'Select the number of repetitions for this set.';
+
+  @override
+  String get weightSelectionTitleGridView => 'Set Weight for All Sets';
+
+  @override
+  String get weightSelectionSubtitleGridView => 'Updates all current sets';
 }

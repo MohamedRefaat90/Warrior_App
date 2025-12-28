@@ -57,6 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       drawer: const FancyDrawer(),
       body: SafeArea(
+        bottom: false,
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: ResponsiveUtils.horizontalPadding(context)),
@@ -70,6 +71,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const Spacer(),
                   GridView.builder(
                     shrinkWrap: true,
+                    padding:
+                        EdgeInsets.only(bottom: context.screenHeight * 0.016),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: ResponsiveUtils.getGridColumns(context),
                       mainAxisSpacing: 16,
@@ -84,10 +87,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ref.read(homeProvider).categoryItems[index]);
                     },
                   ),
-                  SizedBox(height: context.screenHeight * 0.02),
                   SizedBox(
                       width: context.screenWidth * 0.44,
-                      height: context.screenHeight * 0.167,
+                      height: context.screenHeight * 0.165,
                       child: CategoryCard(
                           category: ref.read(homeProvider).categoryItems.last)),
                   const Spacer(),

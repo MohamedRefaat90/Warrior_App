@@ -1,4 +1,5 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class EmptyWorkoutExercises extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final fontFamily = ref.watch(appSettingsProvider.notifier).fontFamily();
     return Center(
       child: Padding(
         padding: context.screenPadding,
@@ -26,7 +28,7 @@ class EmptyWorkoutExercises extends ConsumerWidget {
             Text(
               'noExercisesYet'.tr(context),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontFamily: 'Kings',
+                    fontFamily: fontFamily,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey[700],
                   ),

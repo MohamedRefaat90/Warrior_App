@@ -1268,6 +1268,18 @@ abstract class AppLocalizations {
   /// **'Enter barcode number'**
   String get enterBarcodeNumber;
 
+  /// Positive feedback message after weight update
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! You\'re getting stronger!'**
+  String get weightUpdatePositive;
+
+  /// Negative feedback message after weight update
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t worry, you can do better next time.'**
+  String get weightUpdateNegative;
+
   /// Rate app dialog title
   ///
   /// In en, this message translates to:
@@ -1352,7 +1364,7 @@ abstract class AppLocalizations {
   /// **'Basic Information'**
   String get basicInformation;
 
-  /// Weight field label
+  /// Weight label
   ///
   /// In en, this message translates to:
   /// **'Weight'**
@@ -2252,12 +2264,6 @@ abstract class AppLocalizations {
   /// **'This product is not in our database yet. Would you like to add it to help the community?'**
   String get productNotInDatabase;
 
-  /// Error message prefix for barcode scanning errors
-  ///
-  /// In en, this message translates to:
-  /// **'Error scanning barcode'**
-  String get errorScanningBarcode;
-
   /// Contribution help message
   ///
   /// In en, this message translates to:
@@ -2474,6 +2480,12 @@ abstract class AppLocalizations {
   /// **'This product is not in our database yet. Would you like to add it to help the community?'**
   String get productNotFoundContribute;
 
+  /// Error message prefix for barcode scanning errors
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning barcode'**
+  String get errorScanningBarcode;
+
   /// Muscle name: Abs
   ///
   /// In en, this message translates to:
@@ -2557,6 +2569,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must add at least one exercise'**
   String get mustAddAtLeastOneExercise;
+
+  /// Tip to organize exercises into sets
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Organize your exercises into sets for better tracking'**
+  String get tipOrganizeExercisesIntoSets;
+
+  /// Add workout details instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Add workout details'**
+  String get addWorkoutDetails;
+
+  /// Workout name example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Chest - Shoulders'**
+  String get workoutNameExample;
+
+  /// Workout sets section title
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Sets'**
+  String get workoutSets;
+
+  /// Empty state when no workout sets are available
+  ///
+  /// In en, this message translates to:
+  /// **'No sets recorded yet'**
+  String get noSetsRecorded;
+
+  /// Repetitions label
+  ///
+  /// In en, this message translates to:
+  /// **'reps'**
+  String get reps;
+
+  /// Button to add a new set
+  ///
+  /// In en, this message translates to:
+  /// **'Add Set'**
+  String get addSet;
+
+  /// Button to save workout sets
+  ///
+  /// In en, this message translates to:
+  /// **'Save Sets'**
+  String get saveSets;
+
+  /// Button to delete a set
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Set'**
+  String get deleteSet;
+
+  /// Confirmation message for deleting a set
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this set?'**
+  String get confirmDeleteSet;
+
+  /// Message when max sets limit is reached
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 5 sets allowed'**
+  String get maxSetsReached;
+
+  /// Success message when sets are updated
+  ///
+  /// In en, this message translates to:
+  /// **'Sets updated successfully'**
+  String get setsUpdated;
+
+  /// Error message when sets update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update sets'**
+  String get errorUpdatingSets;
+
+  /// Message when sets are saved in offline mode
+  ///
+  /// In en, this message translates to:
+  /// **'Sets saved locally, will sync when online'**
+  String get setsUpdatedOffline;
+
+  /// Message shown when weight increases
+  ///
+  /// In en, this message translates to:
+  /// **'UNSTOPPABLE! You just leveled up! Keep that fire burning! 🔥'**
+  String get weightIncreased;
+
+  /// Message shown when weight decreases
+  ///
+  /// In en, this message translates to:
+  /// **'Performance decline. Don\'t let it stop you! You\'ll bounce back! 💪'**
+  String get weightDecreased;
+
+  /// Notification message when max weight increases
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! You updated your max weight in this exercise with {weight} kg'**
+  String maxWeightUpdateSuccess(String weight);
+
+  /// Tooltip message in grid view explaining that weight update applies to all sets
+  ///
+  /// In en, this message translates to:
+  /// **'This will update the weight for all current sets of this exercise in this workout. To edit individual sets, tap the exercise card.'**
+  String get weightSelectionTooltipGridView;
+
+  /// Tooltip message in details screen for weight selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select the weight for this specific set.'**
+  String get weightSelectionTooltipDetails;
+
+  /// Tooltip message in details screen for reps selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select the number of repetitions for this set.'**
+  String get repsSelectionTooltipDetails;
+
+  /// Title for weight selection bottom sheet in grid view
+  ///
+  /// In en, this message translates to:
+  /// **'Set Weight for All Sets'**
+  String get weightSelectionTitleGridView;
+
+  /// Subtitle for weight selection bottom sheet in grid view
+  ///
+  /// In en, this message translates to:
+  /// **'Updates all current sets'**
+  String get weightSelectionSubtitleGridView;
 }
 
 class _AppLocalizationsDelegate

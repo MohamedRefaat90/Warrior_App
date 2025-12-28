@@ -145,6 +145,23 @@ class WorkoutRepo {
     }
   }
 
+  /// Fetches a single workout by ID from the server.
+  /// Used to refresh workout data after updates.
+  Future<WorkoutSetModel> fetchWorkoutById(int workoutId) async {
+    try {
+      final response = await dio.get('${ApisUrl.workouts}$workoutId/');
+      final data = response.data['data'] as Map<String, dynamic>?;
+      if (data != null) {
+        return WorkoutSetModel.fromMap(data);
+      }
+      // Fallback: some APIs return data directly
+      return WorkoutSetModel.fromMap(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      TalkerService.error('fetchWorkoutById failed', 'WORKOUT_REPO', e);
+      rethrow;
+    }
+  }
+
   Future<List<WorkoutSetModel>> getWorkoutSets() async {
     try {
       final response = await dio.get(ApisUrl.workouts);
@@ -177,14 +194,43 @@ class WorkoutRepo {
     }
   }
 
-  Future<void> updateLastWeight(
+  /// Updates the sets for a specific exercise within a workout.
+  ///
+  /// This endpoint handles add/edit/delete operations for sets.
+  /// The server replaces the existing sets with the provided list.
+  Future<void> updateExerciseSets({
+    required int workoutSetId,
+    required int exerciseId,
+    required List<Map<String, dynamic>> sets,
+  }) async {
+    try {
+      await dio.patch(
+        "${ApisUrl.workouts}$workoutSetId/update_sets/",
+        data: {
+          'exercise_id': exerciseId,
+          'sets': sets,
+        },
+      );
+    } on DioException catch (e) {
+      TalkerService.error('updateExerciseSets failed', 'WORKOUT_REPO', e);
+      rethrow;
+    }
+  }
+
+  Future<num?> updateLastWeight(
       int workoutID, int exerciseID, num weight) async {
     try {
-      await dio
+      final response = await dio
           .patch("${ApisUrl.workouts}/$workoutID/update_last_weight/", data: {
         "exercise_id": exerciseID,
         "last_weight": weight,
       });
+
+      if (response.data is Map &&
+          response.data['data']['weight_change'] != null) {
+        return response.data['data']['weight_change'] as num;
+      }
+      return null;
     } on DioException {
       rethrow;
     }

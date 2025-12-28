@@ -19,17 +19,26 @@ class WorkoutItemModelAdapter extends TypeAdapter<WorkoutItemModel> {
     return WorkoutItemModel(
       exercise: fields[0] as ExerciseModel,
       lastWeight: fields[1] as num,
+      sets: (fields[2] as List?)?.cast<ExerciseSetRecordModel>(),
+      previousMaxWeight: fields[3] as num?,
+      weightChange: fields[4] as num?,
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkoutItemModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.exercise)
       ..writeByte(1)
-      ..write(obj.lastWeight);
+      ..write(obj.lastWeight)
+      ..writeByte(2)
+      ..write(obj.sets)
+      ..writeByte(3)
+      ..write(obj.previousMaxWeight)
+      ..writeByte(4)
+      ..write(obj.weightChange);
   }
 
   @override

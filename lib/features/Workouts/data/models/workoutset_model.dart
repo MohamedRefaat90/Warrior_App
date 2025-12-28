@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:Warrior/features/Workouts/data/models/exercise_set_record_model.dart';
 import 'package:hive/hive.dart';
 
 part 'workoutset_model.g.dart';
@@ -15,9 +16,21 @@ class WorkoutItemModel {
   @HiveField(1)
   num lastWeight;
 
+  @HiveField(2)
+  final List<ExerciseSetRecordModel>? sets;
+
+  @HiveField(3)
+  final num? previousMaxWeight;
+
+  @HiveField(4)
+  final num? weightChange;
+
   WorkoutItemModel({
     required this.exercise,
     required this.lastWeight,
+    this.sets,
+    this.previousMaxWeight,
+    this.weightChange,
   });
 
   factory WorkoutItemModel.fromMap(Map<String, dynamic> map) {
@@ -43,9 +56,60 @@ class WorkoutItemModel {
         lastWeight = 0.0;
       }
 
+      // Safely parse sets array
+      List<ExerciseSetRecordModel>? sets;
+      try {
+        final setsData = map['sets'];
+        if (setsData != null && setsData is List) {
+          sets = [];
+          for (var setItem in setsData) {
+            try {
+              if (setItem is Map<String, dynamic>) {
+                sets.add(ExerciseSetRecordModel.fromMap(setItem));
+              }
+            } catch (e) {
+              TalkerService.warning(
+                  'Skipping invalid set record', 'WORKOUT_ITEM', e);
+              continue;
+            }
+          }
+        }
+      } catch (e) {
+        TalkerService.warning(
+            'Error parsing sets, defaulting to null', 'WORKOUT_ITEM', e);
+        sets = null;
+      }
+
+      // Safely parse previous_max_weight
+      num? previousMaxWeight;
+      try {
+        if (map['previous_max_weight'] != null) {
+          previousMaxWeight =
+              double.tryParse(map['previous_max_weight'].toString());
+        }
+      } catch (e) {
+        TalkerService.warning(
+            'Error parsing previous_max_weight', 'WORKOUT_ITEM', e);
+        previousMaxWeight = null;
+      }
+
+      // Safely parse weight_change
+      num? weightChange;
+      try {
+        if (map['weight_change'] != null) {
+          weightChange = double.tryParse(map['weight_change'].toString());
+        }
+      } catch (e) {
+        TalkerService.warning('Error parsing weight_change', 'WORKOUT_ITEM', e);
+        weightChange = null;
+      }
+
       return WorkoutItemModel(
         exercise: exercise,
         lastWeight: lastWeight,
+        sets: sets,
+        previousMaxWeight: previousMaxWeight,
+        weightChange: weightChange,
       );
     } catch (e) {
       TalkerService.error('Error parsing WorkoutItemModel', 'WORKOUT_ITEM', e);
@@ -56,10 +120,16 @@ class WorkoutItemModel {
   WorkoutItemModel copyWith({
     ExerciseModel? exercise,
     num? lastWeight,
+    List<ExerciseSetRecordModel>? sets,
+    num? previousMaxWeight,
+    num? weightChange,
   }) {
     return WorkoutItemModel(
       exercise: exercise ?? this.exercise,
       lastWeight: lastWeight ?? this.lastWeight,
+      sets: sets ?? this.sets,
+      previousMaxWeight: previousMaxWeight ?? this.previousMaxWeight,
+      weightChange: weightChange ?? this.weightChange,
     );
   }
 
@@ -70,6 +140,16 @@ class WorkoutItemModel {
       'exercise': exercise.toMap(),
       'last_weight': lastWeight,
     };
+
+    if (sets != null) {
+      map['sets'] = sets!.map((s) => s.toMap()).toList();
+    }
+    if (previousMaxWeight != null) {
+      map['previous_max_weight'] = previousMaxWeight;
+    }
+    if (weightChange != null) {
+      map['weight_change'] = weightChange;
+    }
 
     return map;
   }

@@ -18,7 +18,8 @@ abstract class AppColors {
   static const Color darkSurface = Color(0xFF1A1B2E); // Lighter purple-navy
   static const Color darkSurfaceVariant =
       Color(0xFF252538); // Even lighter purple-navy
-  static const Color darkPrimary = Color(0xFF333BC4); // Vibrant red
+  static const Color darkPrimary =
+      Color.fromARGB(255, 19, 67, 139); // Dark Blue
   static const Color darkSecondary =
       Color.fromARGB(255, 98, 50, 230); // Purple accent
   static const Color darkOnSurface =

@@ -6,6 +6,7 @@ import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart'
 import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
 import 'package:Warrior/features/FoodSearch/data/models/search_history_model.dart';
+import 'package:Warrior/features/Workouts/data/models/exercise_set_record_model.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -71,6 +72,7 @@ class HiveManager {
     Hive.registerAdapter(MuscleModelAdapter());
     Hive.registerAdapter(WorkoutSetModelAdapter());
     Hive.registerAdapter(WorkoutItemModelAdapter());
+    Hive.registerAdapter(ExerciseSetRecordModelAdapter());
     Hive.registerAdapter(PendingOperationAdapter());
     Hive.registerAdapter(SyncOperationTypeAdapter());
 

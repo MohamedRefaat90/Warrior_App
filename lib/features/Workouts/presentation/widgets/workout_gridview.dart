@@ -1,14 +1,17 @@
+import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/translation_ext.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/widgets/empty_workout_exercises.dart';
-import 'package:Warrior/features/Workouts/presentation/widgets/last_weight_selector.dart';
+import 'package:Warrior/features/Workouts/presentation/widgets/value_selection_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 
 class WorkoutGridView extends ConsumerStatefulWidget {
   final WorkoutSetModel workout;
@@ -52,6 +55,8 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                       child: ExerciseCard(
                         exercise: workoutExercise.exercise,
                         isComingFromWorkoutScreen: workoutNotifier.selectMode,
+                        workoutItem: workoutExercise,
+                        workoutSetId: widget.workout.id,
                       ),
                     ),
                     Positioned(
@@ -94,21 +99,42 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                           padding: 2,
                           press: () async {
                             final newWeight = await showModalBottomSheet<num>(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                constraints: BoxConstraints(
-                                  maxHeight:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                ),
-                                builder: (context) => LastWeightSelector(
-                                    workout: widget.workout,
-                                    workoutExercise: workoutExercise));
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => ValueSelectionBottomSheet(
+                                mode: ValueSelectionMode.weight,
+                                currentValue: workoutExercise.lastWeight,
+                                title:
+                                    context.l10n.weightSelectionTitleGridView,
+                                subtitle: context
+                                    .l10n.weightSelectionSubtitleGridView,
+                                isMachine:
+                                    workoutExercise.exercise.equipmentType ==
+                                        "machine",
+                                primaryColor: AppColors.primaryColor,
+                                tooltipMessage:
+                                    context.l10n.weightSelectionTooltipGridView,
+                              ),
+                            );
 
-                            if (newWeight != null) {
-                              setState(() {
-                                workoutExercise.lastWeight = newWeight;
-                              });
+                            if (newWeight != null &&
+                                newWeight != workoutExercise.lastWeight) {
+                              // Update Provider: Apply to ALL sets
+                              final weightChange = await ref
+                                  .read(workoutsProvider.notifier)
+                                  .applyWeightToAllSets(
+                                    widget.workout.id,
+                                    workoutExercise.exercise.id,
+                                    newWeight,
+                                    workout: widget.workout,
+                                  );
+
+                              TalkerService.instance
+                                  .warning("Weight change: $weightChange");
+                              if (weightChange != null && mounted) {
+                                _showFeedbackOverlay(context, weightChange);
+                              }
                             }
                           },
                         ))
@@ -127,6 +153,54 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
           SliverToBoxAdapter(child: SizedBox(height: context.mediumSpacing)),
         ],
       ),
+    );
+  }
+
+  void _showFeedbackOverlay(BuildContext context, num weightChange) {
+    if (weightChange == 0) return;
+
+    final isPositive = weightChange > 0;
+    final animationFile = isPositive ? AppAssets.fire : AppAssets.downArrow;
+    final message = isPositive
+        ? context.l10n.weightIncreased
+        : context.l10n.weightDecreased;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black54,
+      builder: (context) {
+        Future.delayed(const Duration(seconds: 3), () {
+          if (context.mounted) Navigator.of(context).pop();
+        });
+
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                animationFile,
+                width: isPositive ? 300 : 200,
+                height: isPositive ? 300 : 200,
+                repeat: true,
+              ),
+              const SizedBox(height: 16),
+              Material(
+                color: Colors.transparent,
+                child: Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

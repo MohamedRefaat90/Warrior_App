@@ -12,9 +12,9 @@
 [![Tests](https://img.shields.io/badge/Tests-63%20Passing-brightgreen?style=flat-square)](tests)
 [![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)](pubspec.yaml)
 
-*Your personal fitness companion for creating and managing custom workout routines*
+_Your personal fitness companion for creating and managing custom workout routines_
 
-[🚀 Features](#-features) • [🏗️ Architecture](#️-architecture) • [📱 Screenshots](#-screenshots)
+[🚀 Features](#-features) • [🏗️ Architecture](#️-architecture) • [📄 Project Overview](./PROJECT_OVERVIEW.md) • [📱 Screenshots](#-screenshots)
 
 </div>
 
@@ -38,14 +38,14 @@
 
 ### 💪 Core Functionality
 
-| Feature | Description | Status |
-|---------|-------------|--------|
-| **Muscle Groups** | Browse exercises organized by muscle groups | ✅ Complete |
-| **Exercise Library** | Comprehensive database of fitness exercises | ✅ Complete |
-| **Workout Sets** | Create, edit, and delete custom workout routines | ✅ Complete |
-| **Workout Management** | Add/remove exercises from workout sets | ✅ Complete |
-| **Offline Mode** | Full app functionality without internet | ✅ Complete |
-| **Data Sync** | Automatic synchronization when online | ✅ Complete |
+| Feature                | Description                                      | Status      |
+| ---------------------- | ------------------------------------------------ | ----------- |
+| **Muscle Groups**      | Browse exercises organized by muscle groups      | ✅ Complete |
+| **Exercise Library**   | Comprehensive database of fitness exercises      | ✅ Complete |
+| **Workout Sets**       | Create, edit, and delete custom workout routines | ✅ Complete |
+| **Workout Management** | Add/remove exercises from workout sets           | ✅ Complete |
+| **Offline Mode**       | Full app functionality without internet          | ✅ Complete |
+| **Data Sync**          | Automatic synchronization when online            | ✅ Complete |
 
 ### 🔧 Technical Features
 
@@ -93,12 +93,12 @@ flutter test test/integration/
 
 ### 📊 Test Results
 
-| Test Suite | Tests | Status | Coverage |
-|------------|-------|--------|----------|
-| **Unit Tests** | 34 | ✅ Passing | Models, Providers, Repositories |
-| **Widget Tests** | 21 | ✅ Passing | UI Components, Interactions |
-| **Integration Tests** | 8 | ✅ Passing | App Functionality |
-| **Total** | **63** | ✅ **100% Pass Rate** | Comprehensive Coverage |
+| Test Suite            | Tests  | Status                | Coverage                        |
+| --------------------- | ------ | --------------------- | ------------------------------- |
+| **Unit Tests**        | 34     | ✅ Passing            | Models, Providers, Repositories |
+| **Widget Tests**      | 21     | ✅ Passing            | UI Components, Interactions     |
+| **Integration Tests** | 8      | ✅ Passing            | App Functionality               |
+| **Total**             | **63** | ✅ **100% Pass Rate** | Comprehensive Coverage          |
 
 ---
 
@@ -107,16 +107,20 @@ flutter test test/integration/
 <div align="center">
 
 ### 🏠 Home Dashboard
-*Main navigation with muscle groups and workout access*
+
+_Main navigation with muscle groups and workout access_
 
 ### 💪 Muscle Groups
-*Browse exercises organized by muscle groups*
+
+_Browse exercises organized by muscle groups_
 
 ### 🏋️ Workout Management
-*Create and manage custom workout sets*
+
+_Create and manage custom workout sets_
 
 ### ⚙️ Exercise Selection
-*Add exercises to workout sets with weight tracking*
+
+_Add exercises to workout sets with weight tracking_
 
 </div>
 
@@ -125,26 +129,28 @@ flutter test test/integration/
 ## 🔧 Key Dependencies
 
 ### Core Dependencies
+
 ```yaml
 dependencies:
-  flutter_riverpod: ^2.4.0      # State management
-  go_router: ^12.0.0            # Navigation
-  hive: ^2.2.3                  # Local database
-  dio: ^5.3.0                   # HTTP client
-  firebase_core: ^2.15.0        # Firebase integration
-  google_sign_in: ^6.1.5        # Google authentication
-  flutter_screenutil: ^5.9.0    # Responsive design
-  cached_network_image: ^3.3.0  # Image caching
-  connectivity_plus: ^5.0.1     # Network connectivity
+  flutter_riverpod: ^2.4.0 # State management
+  go_router: ^12.0.0 # Navigation
+  hive: ^2.2.3 # Local database
+  dio: ^5.3.0 # HTTP client
+  firebase_core: ^2.15.0 # Firebase integration
+  google_sign_in: ^6.1.5 # Google authentication
+  flutter_screenutil: ^5.9.0 # Responsive design
+  cached_network_image: ^3.3.0 # Image caching
+  connectivity_plus: ^5.0.1 # Network connectivity
 ```
 
 ### Development Dependencies
+
 ```yaml
 dev_dependencies:
-  build_runner: ^2.4.7          # Code generation
-  hive_generator: ^2.0.1        # Hive adapters
-  mockito: ^5.4.4               # Testing mocks
-  integration_test:             # Integration testing
+  build_runner: ^2.4.7 # Code generation
+  hive_generator: ^2.0.1 # Hive adapters
+  mockito: ^5.4.4 # Testing mocks
+  integration_test: # Integration testing
     sdk: flutter
 ```
 
@@ -181,16 +187,18 @@ flutter build ipa --release
 The project includes comprehensive CI/CD automation with three main workflows:
 
 #### 1. **Tests & Quality Checks** (`.github/workflows/tests.yaml`)
+
 **Triggers**: Pushes to `main` branch only
 
-| Job | Purpose | Duration |
-|-----|---------|----------|
-| **Tests & Quality** | Unit tests, widget tests, code analysis, formatting | ~3-5 mins |
-| **Integration Tests** | End-to-end integration testing | ~2-3 mins |
-| **Build Validation** | Release APK build and validation | ~5-7 mins |
-| **Summary** | Results summary and status report | ~30 secs |
+| Job                   | Purpose                                             | Duration  |
+| --------------------- | --------------------------------------------------- | --------- |
+| **Tests & Quality**   | Unit tests, widget tests, code analysis, formatting | ~3-5 mins |
+| **Integration Tests** | End-to-end integration testing                      | ~2-3 mins |
+| **Build Validation**  | Release APK build and validation                    | ~5-7 mins |
+| **Summary**           | Results summary and status report                   | ~30 secs  |
 
 #### 2. **Android Firebase Distribution** (`.github/workflows/android_fastlane_firebaseDestribution.yaml`)
+
 **Triggers**: Pushes to `main` branch only
 
 - **Automated APK Build**: Release APK generation
@@ -198,6 +206,7 @@ The project includes comprehensive CI/CD automation with three main workflows:
 - **Fastlane Integration**: Streamlined deployment process
 
 #### 3. **Shorebird Deploy** (`.github/workflows/shorebird_deploy.yaml`)
+
 **Triggers**: Pushes to `main`, version changes, manual dispatch
 
 - **Over-the-Air Updates**: Instant patches for bug fixes and small features
@@ -208,6 +217,7 @@ The project includes comprehensive CI/CD automation with three main workflows:
 ### 🎯 **Workflow Features**
 
 #### ✅ **Quality Assurance**
+
 ```yaml
 # Automated checks on main branch pushes
 - Code analysis (flutter analyze)
@@ -219,6 +229,7 @@ The project includes comprehensive CI/CD automation with three main workflows:
 ```
 
 #### ✅ **Automated Deployment**
+
 ```yaml
 # Parallel execution on main branch
 - CI tests run in parallel with deployment
@@ -228,6 +239,7 @@ The project includes comprehensive CI/CD automation with three main workflows:
 ```
 
 #### ✅ **Developer Experience**
+
 - **Simple Workflow**: Only triggers on main branch pushes
 - **Parallel Execution**: Tests and deployment run simultaneously
 - **Clear Status**: Detailed success/failure reporting
@@ -249,15 +261,15 @@ Push to Main Branch
 └─────────────────────┴─────────────────────┘
 ```
 
-
 <div align="center">
 
 **Built with ❤️ using Flutter**
 
-*Empowering your fitness journey, one workout at a time*
+_Empowering your fitness journey, one workout at a time_
 
 ⭐ **Star this repository if you find it helpful!**
 
 </div>
-#   T r i g g e r   w o r k f l o w   -   0 6 / 2 0 / 2 0 2 5   2 0 : 5 5 : 3 3  
+#   T r i g g e r   w o r k f l o w   -   0 6 / 2 0 / 2 0 2 5   2 0 : 5 5 : 3 3 
+ 
  

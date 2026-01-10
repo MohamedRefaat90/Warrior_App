@@ -22,6 +22,13 @@ class CaloriesCalculatorRepo {
     'extra_active': 1.9,
   };
 
+  /// Calculate BMI (Body Mass Index)
+  double calculateBMI(double weightKg, double heightCm) {
+    if (heightCm <= 0) return 0;
+    final heightMeters = heightCm / 100;
+    return weightKg / (heightMeters * heightMeters);
+  }
+
   /// Calculate BMR using Mifflin-St Jeor Equation
   /// Most accurate equation recommended by dietitians
   /// Men: BMR = 10 * weight(kg) + 6.25 * height(cm) - 5 * age + 5
@@ -49,8 +56,8 @@ class CaloriesCalculatorRepo {
   /// Maintain: Keep TDEE
   ///
   /// Note: 1 kg of body weight ≈ 7700 calories
-  double calculateDailyCaloricNeeds(
-      double tdee, String goal, double weeklyGoalKg) {
+  double calculateDailyCaloricNeeds(double tdee, double bmr, String goal,
+      double weeklyGoalKg, double bmi, String gender) {
     try {
       if (goal == 'maintain') {
         return tdee;
@@ -59,17 +66,33 @@ class CaloriesCalculatorRepo {
       // Calculate daily calorie adjustment
       // 7700 calories per kg of body weight
       final dailyAdjustment = (weeklyGoalKg * 7700) / 7;
-
-      final dailyCalories = goal == 'weight_loss'
+      double dailyCalories = goal == 'weight_loss'
           ? tdee - dailyAdjustment
           : tdee + dailyAdjustment;
 
-      // Ensure minimum calorie intake (1200 for women, 1500 for men)
-      final minCalories = 1200.0;
+      // MEDICAL ADJUSTMENT for Obesity (BMI > 30)
+      // When BMI is high, standard TDEE deficits can be too slow or maintenance too high.
+      // Clinical strategy: For Class II/III obesity, eating near BMR is a safe and effective fast-loss strategy.
+      if (goal == 'weight_loss' && bmi >= 30) {
+        // If the calculated deficit is still much higher than BMR,
+        // we steer it closer to BMR for more effective clinical loss.
+        final bmrLimit = bmr * 1.0;
+        if (dailyCalories > bmrLimit) {
+          // Slowly transition towards BMR based on how high the BMI is
+          // At BMI 30, we take a 50/50 mix, at BMI 35+ we favor BMR.
+          double weight = (bmi - 30) / 10; // 0 at BMI 30, 1.0 at BMI 40
+          weight = weight.clamp(0.0, 1.0);
+          dailyCalories = (dailyCalories * (1 - weight)) + (bmrLimit * weight);
+        }
+      }
+
+      // Ensure minimum calorie intake floor
+      // Medical minimums: 1300 for women, 1500 for men.
+      final minCalories = gender == 'male' ? 1500.0 : 1300.0;
       final adjustedCalories = max(dailyCalories, minCalories);
 
       TalkerService.info(
-        'Daily caloric needs: $adjustedCalories',
+        'Daily caloric needs (BMI: ${bmi.toStringAsFixed(1)}): $adjustedCalories',
         'CALORIES_CALCULATOR',
       );
       return adjustedCalories;
@@ -105,57 +128,71 @@ class CaloriesCalculatorRepo {
     double dailyCalories,
     String goal,
     double weightKg,
+    double heightCm,
     String gender,
   ) {
     try {
-      // Step 1: Calculate Protein based on body weight
+      // Step 1: Calculate Protein based on body weight and BMI
+      final bmi = calculateBMI(weightKg, heightCm);
+
       double proteinGramsPerKg;
+      final isObese = bmi >= 30;
 
       if (gender == 'male') {
-        // Males: 1.6-2.5g per kg
-        switch (goal) {
-          case 'weight_loss':
-            proteinGramsPerKg = 1.6;
-            break;
-          case 'muscle_gain':
-            proteinGramsPerKg = 1.8;
-            break;
-          case 'maintain':
-          default:
-            proteinGramsPerKg = 1.8;
-            break;
+        if (isObese) {
+          // Clinical recommendation for obese individuals: 1.1 - 1.3g/kg
+          // to protect lean mass without excessive calories/waste.
+          proteinGramsPerKg = 1.1;
+        } else {
+          switch (goal) {
+            case 'weight_loss':
+              proteinGramsPerKg = 1.6;
+              break;
+            case 'muscle_gain':
+              proteinGramsPerKg = 2.0;
+              break;
+            case 'maintain':
+            default:
+              proteinGramsPerKg = 1.8;
+              break;
+          }
         }
       } else {
-        // Females: 0.8-1.2g per kg
-        switch (goal) {
-          case 'weight_loss':
-            proteinGramsPerKg = 1.2;
-            break;
-          case 'muscle_gain':
-            proteinGramsPerKg = 1.2;
-            break;
-          case 'maintain':
-          default:
-            proteinGramsPerKg = 1.0;
-            break;
+        if (isObese) {
+          proteinGramsPerKg = 1.0;
+        } else {
+          switch (goal) {
+            case 'weight_loss':
+              proteinGramsPerKg = 1.3;
+              break;
+            case 'muscle_gain':
+              proteinGramsPerKg = 1.5;
+              break;
+            case 'maintain':
+            default:
+              proteinGramsPerKg = 1.1;
+              break;
+          }
         }
       }
 
       final proteinGrams = weightKg * proteinGramsPerKg;
       final proteinCalories = proteinGrams * 4; // 4 calories per gram
 
-      // Step 2: Calculate Fats (20-30% of total calories)
+      // Step 2: Calculate Fats (20-35% of total calories)
       double fatsPercent;
       switch (goal) {
         case 'weight_loss':
-          fatsPercent = 0.20; // 20% for weight loss
+          // For obesity weight loss, fats are kept around 25% for hormonal health
+          // and satiety, closely matching your diet team's 70g (~26%).
+          fatsPercent = isObese ? 0.25 : 0.20;
           break;
         case 'muscle_gain':
-          fatsPercent = 0.25; // 25% for muscle gain
+          fatsPercent = 0.25;
           break;
         case 'maintain':
         default:
-          fatsPercent = 0.30; // 30% for maintenance
+          fatsPercent = 0.30;
           break;
       }
 
@@ -202,14 +239,22 @@ class CaloriesCalculatorRepo {
   /// Calculate complete results
   CaloriesResultModel calculateResults(UserDataModel userData) {
     try {
+      final bmi = calculateBMI(userData.weight, userData.height);
       final bmr = calculateBMR(userData);
       final tdee = calculateTDEE(bmr, userData.activityLevel);
-      final dailyCaloricNeeds =
-          calculateDailyCaloricNeeds(tdee, userData.goal, userData.weeklyGoal);
+      final dailyCaloricNeeds = calculateDailyCaloricNeeds(
+        tdee,
+        bmr,
+        userData.goal,
+        userData.weeklyGoal,
+        bmi,
+        userData.gender,
+      );
       final macros = calculateMacros(
         dailyCaloricNeeds,
         userData.goal,
         userData.weight,
+        userData.height,
         userData.gender,
       );
 

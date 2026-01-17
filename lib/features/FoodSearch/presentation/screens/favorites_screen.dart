@@ -52,7 +52,7 @@ class FavoritesScreen extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final favorite = favorites[index];
                   return Dismissible(
-                    key: Key(favorite.foodProduct.barcode),
+                    key: Key(favorite.barcode),
                     direction: DismissDirection.endToStart,
                     background: Container(
                       alignment: Alignment.centerRight,
@@ -74,7 +74,7 @@ class FavoritesScreen extends ConsumerWidget {
                           title: Text(context.l10n.removeFromFavorites),
                           content: Text(
                             context.l10n.confirmRemoveFavorite(
-                              favorite.foodProduct.productName ??
+                              favorite.productName ??
                                   context.l10n.unknownProduct,
                             ),
                           ),
@@ -98,12 +98,12 @@ class FavoritesScreen extends ConsumerWidget {
                     onDismissed: (direction) {
                       ref
                           .read(favoritesProvider.notifier)
-                          .removeFavorite(favorite.foodProduct.barcode);
+                          .removeFavorite(favorite.barcode);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             context.l10n.removedFromFavorites(
-                              favorite.foodProduct.productName ??
+                              favorite.productName ??
                                   context.l10n.unknownProduct,
                             ),
                           ),
@@ -112,13 +112,13 @@ class FavoritesScreen extends ConsumerWidget {
                             onPressed: () {
                               ref
                                   .read(favoritesProvider.notifier)
-                                  .addFavorite(favorite.foodProduct);
+                                  .addFavorite(favorite);
                             },
                           ),
                         ),
                       );
                     },
-                    child: ProductCard(product: favorite.foodProduct),
+                    child: ProductCard(product: favorite),
                   );
                 },
               ),

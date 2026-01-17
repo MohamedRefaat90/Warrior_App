@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_comparison/product_comparison_widgets.dart';
@@ -51,7 +51,7 @@ class ProductComparisonScreen extends ConsumerWidget {
   }
 
   Widget _buildBody(
-      BuildContext context, List<FoodProductModel> comparisonProducts) {
+      BuildContext context, List<ProductEntity> comparisonProducts) {
     if (comparisonProducts.isEmpty) {
       return EmptyStateWidget(
         title: context.l10n.noProductsToCompare,

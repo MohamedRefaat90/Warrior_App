@@ -1,16 +1,14 @@
-import 'dart:collection';
-
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/product_use_cases_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for filtered products
 final filteredProductsProvider =
-    Provider.autoDispose<List<FoodProductModel>>((ref) {
-  final repo = ref.read(foodSearchRepoProvider);
+    Provider.autoDispose<List<ProductEntity>>((ref) {
+  final useCases = ref.watch(productUseCasesProvider);
   final filters = ref.watch(searchFiltersProvider);
 
-  return repo.filterProducts(
+  return useCases.filterProducts(
     nutriScore: filters.nutriScore,
     vegan: filters.vegan,
     vegetarian: filters.vegetarian,
@@ -39,9 +37,9 @@ final productSuggestionsProvider =
     return cached;
   }
 
-  // Fetch from API
-  final repo = ref.read(foodSearchRepoProvider);
-  final suggestions = await repo.getProductSuggestions(query);
+  // Fetch from USE CASE
+  final useCases = ref.watch(productUseCasesProvider);
+  final suggestions = await useCases.getSuggestions(query);
 
   // Cache the result
   _SuggestionsLRUCache.put(cacheKey, suggestions);
@@ -51,9 +49,9 @@ final productSuggestionsProvider =
 
 /// Provider for recently scanned products
 final recentlyScannedProvider =
-    Provider.autoDispose<List<FoodProductModel>>((ref) {
-  final repo = ref.read(foodSearchRepoProvider);
-  return repo.getRecentlyScanned(limit: 10);
+    Provider.autoDispose<List<ProductEntity>>((ref) {
+  final useCases = ref.watch(productUseCasesProvider);
+  return useCases.getRecentlyScanned(limit: 10);
 });
 
 /// State provider for current search filters
@@ -63,16 +61,16 @@ final searchFiltersProvider =
 
 /// Provider for searching product by barcode
 final searchProductByBarcodeProvider = FutureProvider.family
-    .autoDispose<FoodProductModel?, String>((ref, barcode) async {
-  final repo = ref.read(foodSearchRepoProvider);
-  return await repo.searchProductByBarcode(barcode);
+    .autoDispose<ProductEntity?, String>((ref, barcode) async {
+  final useCases = ref.watch(productUseCasesProvider);
+  return await useCases.searchByBarcode(barcode);
 });
 
 /// Provider for searching products by name
 final searchProductsByNameProvider = FutureProvider.family
-    .autoDispose<List<FoodProductModel>, String>((ref, query) async {
-  final repo = ref.read(foodSearchRepoProvider);
-  return await repo.searchProductsByName(query);
+    .autoDispose<List<ProductEntity>, String>((ref, query) async {
+  final useCases = ref.watch(productUseCasesProvider);
+  return await useCases.searchByName(query);
 });
 
 /// Model for search filters
@@ -147,7 +145,7 @@ class _SuggestionCacheEntry {
 class _SuggestionsLRUCache {
   static const int _maxSize = 50;
   static const Duration _expiry = Duration(minutes: 5);
-  static final _cache = LinkedHashMap<String, _SuggestionCacheEntry>();
+  static final _cache = <String, _SuggestionCacheEntry>{};
 
   /// Clear all cached entries.
   static void clear() => _cache.clear();

@@ -1,3 +1,5 @@
+import 'package:Warrior/features/FoodSearch/domain/entities/search_history_entity.dart'
+    as entity;
 import 'package:hive/hive.dart';
 
 part 'search_history_model.g.dart';
@@ -37,15 +39,6 @@ class SearchHistoryModel extends HiveObject {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'search_query': searchQuery,
-      'timestamp': timestamp.toIso8601String(),
-      'result_count': resultCount,
-      'search_type': searchType.name,
-    };
-  }
-
   SearchHistoryModel copyWith({
     String? searchQuery,
     DateTime? timestamp,
@@ -58,6 +51,59 @@ class SearchHistoryModel extends HiveObject {
       resultCount: resultCount ?? this.resultCount,
       searchType: searchType ?? this.searchType,
     );
+  }
+
+  entity.SearchHistoryEntity toEntity() {
+    return entity.SearchHistoryEntity(
+      searchQuery: searchQuery,
+      timestamp: timestamp,
+      resultCount: resultCount,
+      searchType: _mapSearchTypeToEntity(searchType),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'search_query': searchQuery,
+      'timestamp': timestamp.toIso8601String(),
+      'result_count': resultCount,
+      'search_type': searchType.name,
+    };
+  }
+
+  entity.SearchType _mapSearchTypeToEntity(SearchType type) {
+    switch (type) {
+      case SearchType.barcode:
+        return entity.SearchType.barcode;
+      case SearchType.text:
+        return entity.SearchType.text;
+      case SearchType.category:
+        return entity.SearchType.category;
+      case SearchType.brand:
+        return entity.SearchType.brand;
+    }
+  }
+
+  static SearchHistoryModel fromEntity(entity.SearchHistoryEntity entityModel) {
+    return SearchHistoryModel(
+      searchQuery: entityModel.searchQuery,
+      timestamp: entityModel.timestamp,
+      resultCount: entityModel.resultCount,
+      searchType: _mapSearchTypeFromEntity(entityModel.searchType),
+    );
+  }
+
+  static SearchType _mapSearchTypeFromEntity(entity.SearchType type) {
+    switch (type) {
+      case entity.SearchType.barcode:
+        return SearchType.barcode;
+      case entity.SearchType.text:
+        return SearchType.text;
+      case entity.SearchType.category:
+        return SearchType.category;
+      case entity.SearchType.brand:
+        return SearchType.brand;
+    }
   }
 }
 
@@ -75,4 +121,3 @@ enum SearchType {
   @HiveField(3)
   brand,
 }
-

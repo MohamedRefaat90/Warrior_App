@@ -1,13 +1,13 @@
 import 'package:Warrior/core/services/talker_service.dart';
-import 'package:Warrior/features/FoodSearch/data/models/favorite_food_model.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
+import 'package:Warrior/features/FoodSearch/domain/usecases/product_use_cases.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/product_use_cases_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for favorites list with state management
 final favoritesProvider =
-    NotifierProvider<FavoritesNotifier, List<FavoriteFoodModel>>(
+    NotifierProvider<FavoritesNotifier, List<ProductEntity>>(
         FavoritesNotifier.new);
 
 /// Provider for current favorites sort option.
@@ -18,50 +18,50 @@ final favoritesSortProvider =
 /// Provider to check if a product is favorite
 final isFavoriteProvider = Provider.family<bool, String>((ref, barcode) {
   final favorites = ref.watch(favoritesProvider);
-  return favorites.any((fav) => fav.foodProduct.barcode == barcode);
+  return favorites.any((fav) => fav.barcode == barcode);
 });
 
 /// Provider for sorted favorites list.
-final sortedFavoritesProvider = Provider<List<FavoriteFoodModel>>((ref) {
+final sortedFavoritesProvider = Provider<List<ProductEntity>>((ref) {
   final favorites = ref.watch(favoritesProvider);
   final sortOption = ref.watch(favoritesSortProvider);
 
   // Create a copy to avoid modifying the original list
-  final sorted = List<FavoriteFoodModel>.from(favorites);
+  final sorted = List<ProductEntity>.from(favorites);
 
   switch (sortOption) {
     case FavoritesSortOption.dateNewest:
-      sorted.sort((a, b) => b.addedDate.compareTo(a.addedDate));
+      sorted.sort((a, b) => b.lastUpdated.compareTo(a.lastUpdated));
     case FavoritesSortOption.dateOldest:
-      sorted.sort((a, b) => a.addedDate.compareTo(b.addedDate));
+      sorted.sort((a, b) => a.lastUpdated.compareTo(b.lastUpdated));
     case FavoritesSortOption.nameAsc:
-      sorted.sort((a, b) => (a.foodProduct.productName ?? '')
+      sorted.sort((a, b) => (a.productName ?? '')
           .toLowerCase()
-          .compareTo((b.foodProduct.productName ?? '').toLowerCase()));
+          .compareTo((b.productName ?? '').toLowerCase()));
     case FavoritesSortOption.nameDesc:
-      sorted.sort((a, b) => (b.foodProduct.productName ?? '')
+      sorted.sort((a, b) => (b.productName ?? '')
           .toLowerCase()
-          .compareTo((a.foodProduct.productName ?? '').toLowerCase()));
+          .compareTo((a.productName ?? '').toLowerCase()));
     case FavoritesSortOption.brandAsc:
-      sorted.sort((a, b) => (a.foodProduct.brands ?? '')
+      sorted.sort((a, b) => (a.brands ?? '')
           .toLowerCase()
-          .compareTo((b.foodProduct.brands ?? '').toLowerCase()));
+          .compareTo((b.brands ?? '').toLowerCase()));
     case FavoritesSortOption.brandDesc:
-      sorted.sort((a, b) => (b.foodProduct.brands ?? '')
+      sorted.sort((a, b) => (b.brands ?? '')
           .toLowerCase()
-          .compareTo((a.foodProduct.brands ?? '').toLowerCase()));
+          .compareTo((a.brands ?? '').toLowerCase()));
   }
 
   return sorted;
 });
 
-class FavoritesNotifier extends Notifier<List<FavoriteFoodModel>> {
-  FoodSearchRepo get _repo => ref.read(foodSearchRepoProvider);
+class FavoritesNotifier extends Notifier<List<ProductEntity>> {
+  ProductUseCases get _useCases => ref.read(productUseCasesProvider);
 
-  Future<void> addFavorite(FoodProductModel product) async {
+  Future<void> addFavorite(ProductEntity product) async {
     try {
-      await _repo.addToFavorites(product);
-      state = _repo.getFavorites();
+      await _useCases.addToFavorites(product);
+      state = _useCases.getFavorites();
       HapticFeedback.mediumImpact();
       TalkerService.info(
           'Added to favorites: ${product.productName}', 'FAVORITES');
@@ -72,18 +72,18 @@ class FavoritesNotifier extends Notifier<List<FavoriteFoodModel>> {
   }
 
   @override
-  List<FavoriteFoodModel> build() {
-    return _repo.getFavorites();
+  List<ProductEntity> build() {
+    return _useCases.getFavorites();
   }
 
   void refresh() {
-    state = _repo.getFavorites();
+    state = _useCases.getFavorites();
   }
 
   Future<void> removeFavorite(String barcode) async {
     try {
-      await _repo.removeFromFavorites(barcode);
-      state = _repo.getFavorites();
+      await _useCases.removeFromFavorites(barcode);
+      state = _useCases.getFavorites();
       HapticFeedback.lightImpact();
       TalkerService.info('Removed from favorites: $barcode', 'FAVORITES');
     } catch (e, stackTrace) {
@@ -92,9 +92,11 @@ class FavoritesNotifier extends Notifier<List<FavoriteFoodModel>> {
     }
   }
 
-  void toggleFavorite(FoodProductModel product) {
-    final isFavorite =
-        state.any((fav) => fav.foodProduct.barcode == product.barcode);
+  void toggleFavorite(ProductEntity product) {
+    // We can use the UseCase directly but we want to update state
+    // UseCase's toggleFavorite doesn't return new state, so we handle logic here or refactor UseCase
+    // For now, let's keep logic here to update UI reliably
+    final isFavorite = state.any((fav) => fav.barcode == product.barcode);
     if (isFavorite) {
       removeFavorite(product.barcode);
     } else {

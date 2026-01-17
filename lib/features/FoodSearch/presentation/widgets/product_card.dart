@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
@@ -10,14 +11,14 @@ import 'package:go_router/go_router.dart';
 
 /// Compact product card for lists
 class ProductCard extends ConsumerWidget {
-  final FoodProductModel product;
+  final ProductEntity product;
 
   const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isFavorite = ref.watch(isFavoriteProvider(product.barcode));
-
+    final lang = ref.watch(appSettingsProvider).locale;
     return Card(
       elevation: 8,
       shape: RoundedRectangleBorder(
@@ -40,7 +41,7 @@ class ProductCard extends ConsumerWidget {
                     children: [
                       Center(
                         child: ProductImageWidget(
-                          imageUrl: product.imageFrontUrl ?? product.imageUrl,
+                          imageUrl: product.imageUrl,
                           width: double.infinity,
                           height: ResponsiveUtils.value(context,
                               mobile: 105.0, tablet: 130.0, desktop: 150.0),
@@ -98,9 +99,12 @@ class ProductCard extends ConsumerWidget {
               ),
             ),
             // if (isFavorite)
-            Positioned(
+            Positioned.directional(
+              textDirection: lang.countryCode == 'en'
+                  ? TextDirection.ltr
+                  : TextDirection.rtl,
               bottom: 0,
-              left: 0,
+              end: 0,
               child: IconButton(
                 icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
                     color: isFavorite ? Colors.red : Colors.grey),

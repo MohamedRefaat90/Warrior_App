@@ -6,7 +6,7 @@ import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:Warrior/routing.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,7 @@ class TestSyncService extends SyncService {
   SyncState build() {
     // Initialize repository but don't start sync
     workoutRepository = ref.read(workoutRepo);
-    foodSearchRepository = ref.read(foodSearchRepoProvider);
+    foodSearchRepository = ref.read(productWriteRepositoryProvider);
     // Don't call _initSync() to avoid creating timers in tests
     return const SyncState();
   }

@@ -1,13 +1,13 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// View displayed when only one product is in the comparison list.
 class SingleProductView extends StatelessWidget {
-  final FoodProductModel product;
+  final ProductEntity product;
 
   const SingleProductView({
     super.key,
@@ -21,7 +21,7 @@ class SingleProductView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ProductImageWidget(
-            imageUrl: product.imageFrontUrl ?? product.imageUrl,
+            imageUrl: product.imageUrl,
             width: 150,
             height: 150,
           ),
@@ -31,6 +31,13 @@ class SingleProductView extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
+          if (product.brands != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              product.brands!,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
           const SizedBox(height: 8),
           Text(
             context.l10n.addMoreProductsToCompare,

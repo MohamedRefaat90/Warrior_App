@@ -2,20 +2,19 @@ import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/off_credentials_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_facts_bottom_sheet.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_form/product_form_widgets.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:openfoodfacts/openfoodfacts.dart';
 
 /// Product form screen for adding/editing products in Open Food Facts.
 class ProductFormScreen extends ConsumerStatefulWidget {
-  final FoodProductModel? product;
+  final ProductEntity? product;
   final String? barcode;
 
   const ProductFormScreen({
@@ -161,6 +160,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       _ingredientsController.text = widget.product!.ingredients ?? '';
       _servingSizeController.text = widget.product!.servingSize ?? '';
       _countriesController.text = widget.product!.countries ?? '';
+      _scannedNutrition = widget.product!.nutrition;
     } else if (widget.barcode != null) {
       _barcodeController.text = widget.barcode!;
     }
@@ -181,27 +181,27 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     });
 
     try {
-      final product = Product(
+      final product = ProductEntity(
         barcode: _barcodeController.text.trim(),
         productName: _productNameController.text.trim(),
         brands: _brandsController.text.trim(),
         quantity: _quantityController.text.trim(),
-        ingredientsText: _ingredientsController.text.trim(),
+        ingredients: _ingredientsController.text.trim(),
         servingSize: _servingSizeController.text.trim(),
         countries: _countriesController.text.trim(),
+        nutrition: _scannedNutrition,
+        lastUpdated: DateTime.now(),
       );
 
       // Get credentials from secure storage
       final user = await OpenFoodFactsCredentialsService.getUser();
 
-      final repo = ref.read(foodSearchRepoProvider);
-      bool success;
-
-      if (widget.product != null) {
-        success = await repo.updateProduct(product, user);
-      } else {
-        success = await repo.addNewProduct(product, user);
-      }
+      final repo = ref.read(productWriteRepositoryProvider);
+      final success = await repo.submitProduct(
+        product: product,
+        user: user,
+        isUpdate: widget.product != null,
+      );
 
       if (!mounted) return;
 

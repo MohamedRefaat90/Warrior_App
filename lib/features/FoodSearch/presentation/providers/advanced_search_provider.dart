@@ -1,6 +1,7 @@
 import 'package:Warrior/core/services/talker_service.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
+import 'package:Warrior/features/FoodSearch/domain/usecases/product_use_cases.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/product_use_cases_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for advanced search state
@@ -10,7 +11,7 @@ final advancedSearchProvider =
 
 /// Advanced search notifier
 class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
-  FoodSearchRepo get _repo => ref.read(foodSearchRepoProvider);
+  ProductUseCases get _useCases => ref.read(productUseCasesProvider);
 
   @override
   AdvancedSearchState build() {
@@ -30,29 +31,29 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
     final nextPage = state.currentPage + 1;
 
     try {
-      List<FoodProductModel> newResults = [];
+      List<ProductEntity> newResults = [];
 
       if (state.query.isNotEmpty) {
-        newResults = await _repo.searchProductsByName(
+        newResults = await _useCases.searchByName(
           state.query,
           page: nextPage,
-          pageSize: AdvancedSearchState.pageSize,
+          size: AdvancedSearchState.pageSize,
         );
       } else if (state.selectedCategories.isNotEmpty) {
         for (final category in state.selectedCategories) {
-          final categoryResults = await _repo.searchByCategory(
+          final categoryResults = await _useCases.searchByCategory(
             category,
             page: nextPage,
-            pageSize: AdvancedSearchState.pageSize,
+            size: AdvancedSearchState.pageSize,
           );
           newResults.addAll(categoryResults);
         }
       } else if (state.selectedBrands.isNotEmpty) {
         for (final brand in state.selectedBrands) {
-          final brandResults = await _repo.searchByBrand(
+          final brandResults = await _useCases.searchByBrand(
             brand,
             page: nextPage,
-            pageSize: AdvancedSearchState.pageSize,
+            size: AdvancedSearchState.pageSize,
           );
           newResults.addAll(brandResults);
         }
@@ -91,29 +92,29 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
       results: [],
     );
     try {
-      List<FoodProductModel> results = [];
+      List<ProductEntity> results = [];
 
       if (state.query.isNotEmpty) {
-        results = await _repo.searchProductsByName(
+        results = await _useCases.searchByName(
           state.query,
           page: 1,
-          pageSize: AdvancedSearchState.pageSize,
+          size: AdvancedSearchState.pageSize,
         );
       } else if (state.selectedCategories.isNotEmpty) {
         for (final category in state.selectedCategories) {
-          final categoryResults = await _repo.searchByCategory(
+          final categoryResults = await _useCases.searchByCategory(
             category,
             page: 1,
-            pageSize: AdvancedSearchState.pageSize,
+            size: AdvancedSearchState.pageSize,
           );
           results.addAll(categoryResults);
         }
       } else if (state.selectedBrands.isNotEmpty) {
         for (final brand in state.selectedBrands) {
-          final brandResults = await _repo.searchByBrand(
+          final brandResults = await _useCases.searchByBrand(
             brand,
             page: 1,
-            pageSize: AdvancedSearchState.pageSize,
+            size: AdvancedSearchState.pageSize,
           );
           results.addAll(brandResults);
         }
@@ -204,7 +205,7 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
     state = state.copyWith(query: query);
   }
 
-  List<FoodProductModel> _applyFilters(List<FoodProductModel> products) {
+  List<ProductEntity> _applyFilters(List<ProductEntity> products) {
     var filtered = products;
 
     if (state.selectedNutriScore != null) {
@@ -259,7 +260,7 @@ class AdvancedSearchState {
   final List<String> excludedAllergens;
   final bool isLoading;
   final bool isLoadingMore;
-  final List<FoodProductModel> results;
+  final List<ProductEntity> results;
   final String? errorMessage;
   final int currentPage;
   final bool hasMoreResults;
@@ -308,7 +309,7 @@ class AdvancedSearchState {
     List<String>? excludedAllergens,
     bool? isLoading,
     bool? isLoadingMore,
-    List<FoodProductModel>? results,
+    List<ProductEntity>? results,
     String? errorMessage,
     int? currentPage,
     bool? hasMoreResults,
@@ -323,9 +324,8 @@ class AdvancedSearchState {
       selectedNutriScore: clearNutriScore
           ? null
           : (selectedNutriScore ?? this.selectedNutriScore),
-      selectedNovaGroup: clearNovaGroup
-          ? null
-          : (selectedNovaGroup ?? this.selectedNovaGroup),
+      selectedNovaGroup:
+          clearNovaGroup ? null : (selectedNovaGroup ?? this.selectedNovaGroup),
       veganOnly: veganOnly ?? this.veganOnly,
       vegetarianOnly: vegetarianOnly ?? this.vegetarianOnly,
       palmOilFree: palmOilFree ?? this.palmOilFree,

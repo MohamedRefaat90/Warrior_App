@@ -1,6 +1,6 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_comparison/comparison_section_row.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 /// The main comparison view displaying multiple products side by side.
 class ComparisonContentView extends StatelessWidget {
-  final List<FoodProductModel> products;
+  final List<ProductEntity> products;
 
   const ComparisonContentView({
     super.key,
@@ -42,7 +42,7 @@ class ComparisonContentView extends StatelessWidget {
           const Divider(thickness: 2),
 
           // Nutrition comparison
-          if (products.any((p) => p.nutritionValues != null))
+          if (products.any((p) => p.nutrition != null))
             _buildNutritionComparisons(context),
 
           const Divider(thickness: 2),
@@ -118,62 +118,62 @@ class ComparisonContentView extends StatelessWidget {
           label: '${context.l10n.energy} (kcal)',
           values: products
               .map((p) =>
-                  p.nutritionValues?.energyKcal?.toStringAsFixed(0) ?? 'N/A')
+                  p.nutrition?.energyKcal100g?.toStringAsFixed(0) ?? 'N/A')
               .toList(),
         ),
         NutritionComparisonRow(
           label: context.l10n.proteins,
           values: products
-              .map((p) => p.nutritionValues?.proteins != null
-                  ? '${p.nutritionValues!.proteins!.toStringAsFixed(1)}g'
+              .map((p) => p.nutrition?.proteins100g != null
+                  ? '${p.nutrition!.proteins100g!.toStringAsFixed(1)}g'
                   : 'N/A')
               .toList(),
         ),
         NutritionComparisonRow(
           label: context.l10n.carbohydrates,
           values: products
-              .map((p) => p.nutritionValues?.carbohydrates != null
-                  ? '${p.nutritionValues!.carbohydrates!.toStringAsFixed(1)}g'
+              .map((p) => p.nutrition?.carbohydrates100g != null
+                  ? '${p.nutrition!.carbohydrates100g!.toStringAsFixed(1)}g'
                   : 'N/A')
               .toList(),
         ),
         NutritionComparisonRow(
           label: context.l10n.sugars,
           values: products
-              .map((p) => p.nutritionValues?.sugars != null
-                  ? '${p.nutritionValues!.sugars!.toStringAsFixed(1)}g'
+              .map((p) => p.nutrition?.sugars100g != null
+                  ? '${p.nutrition!.sugars100g!.toStringAsFixed(1)}g'
                   : 'N/A')
               .toList(),
         ),
         NutritionComparisonRow(
           label: context.l10n.fat,
           values: products
-              .map((p) => p.nutritionValues?.fat != null
-                  ? '${p.nutritionValues!.fat!.toStringAsFixed(1)}g'
+              .map((p) => p.nutrition?.fat100g != null
+                  ? '${p.nutrition!.fat100g!.toStringAsFixed(1)}g'
                   : 'N/A')
               .toList(),
         ),
         NutritionComparisonRow(
           label: context.l10n.saturatedFat,
           values: products
-              .map((p) => p.nutritionValues?.saturatedFat != null
-                  ? '${p.nutritionValues!.saturatedFat!.toStringAsFixed(1)}g'
+              .map((p) => p.nutrition?.saturatedFat100g != null
+                  ? '${p.nutrition!.saturatedFat100g!.toStringAsFixed(1)}g'
                   : 'N/A')
               .toList(),
         ),
         NutritionComparisonRow(
           label: context.l10n.fiber,
           values: products
-              .map((p) => p.nutritionValues?.fiber != null
-                  ? '${p.nutritionValues!.fiber!.toStringAsFixed(1)}g'
+              .map((p) => p.nutrition?.fiber100g != null
+                  ? '${p.nutrition!.fiber100g!.toStringAsFixed(1)}g'
                   : 'N/A')
               .toList(),
         ),
         NutritionComparisonRow(
           label: context.l10n.salt,
           values: products
-              .map((p) => p.nutritionValues?.salt != null
-                  ? '${p.nutritionValues!.salt!.toStringAsFixed(2)}g'
+              .map((p) => p.nutrition?.salt100g != null
+                  ? '${p.nutrition!.salt100g!.toStringAsFixed(2)}g'
                   : 'N/A')
               .toList(),
         ),

@@ -1,7 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/features/FoodSearch/data/models/search_history_model.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/search_history_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/search_history_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -98,13 +98,13 @@ class _SearchHistoryScreenState extends ConsumerState<SearchHistoryScreen> {
   Future<void> _handleHistoryItemTap(
     BuildContext context,
     WidgetRef ref,
-    SearchHistoryModel item,
+    SearchHistoryEntity item,
   ) async {
-    final repo = ref.read(foodSearchRepoProvider);
+    final readRepo = ref.read(productReadRepositoryProvider);
 
     if (item.searchType == SearchType.barcode) {
       // For barcode searches, try to get from cache first
-      final cachedProduct = repo.getProductFromCache(item.searchQuery);
+      final cachedProduct = readRepo.getProductFromCache(item.searchQuery);
 
       if (cachedProduct != null) {
         // Product found in cache, navigate directly to details
@@ -115,7 +115,8 @@ class _SearchHistoryScreenState extends ConsumerState<SearchHistoryScreen> {
       } else {
         // Product not in cache, search again
         try {
-          final product = await repo.searchProductByBarcode(item.searchQuery);
+          final product =
+              await readRepo.searchProductByBarcode(item.searchQuery);
           if (!context.mounted) return;
 
           if (product != null) {

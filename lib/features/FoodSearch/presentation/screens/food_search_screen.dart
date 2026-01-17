@@ -2,7 +2,6 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
-import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
@@ -22,20 +21,6 @@ class FoodSearchScreen extends ConsumerStatefulWidget {
 
 class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
   late final InterstitialAdManager foodSearchAd;
-
-  @override
-  void initState() {
-    foodSearchAd = InterstitialAdManager.forAdUnit(
-        'ca-app-pub-7417773148722475/5173643464');
-    foodSearchAd.loadAd();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    foodSearchAd.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,6 +290,20 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    foodSearchAd.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    foodSearchAd = InterstitialAdManager.forAdUnit(
+        'ca-app-pub-7417773148722475/5173643464');
+    foodSearchAd.loadAd();
+    super.initState();
   }
 }
 

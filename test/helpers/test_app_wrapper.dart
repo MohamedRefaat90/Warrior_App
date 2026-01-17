@@ -1,7 +1,7 @@
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,7 +62,7 @@ class TestSyncService extends SyncService {
   @override
   SyncState build() {
     workoutRepository = ref.read(workoutRepo);
-    foodSearchRepository = ref.read(foodSearchRepoProvider);
+    foodSearchRepository = ref.read(productWriteRepositoryProvider);
     return const SyncState();
   }
 

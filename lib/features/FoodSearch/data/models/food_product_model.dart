@@ -1,4 +1,5 @@
 import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:hive/hive.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
@@ -106,6 +107,34 @@ class FoodProductModel extends HiveObject {
     this.packagingText,
     this.countries,
   });
+
+  /// Create from domain entity
+  factory FoodProductModel.fromEntity(ProductEntity entity) {
+    return FoodProductModel(
+      barcode: entity.barcode,
+      productName: entity.productName,
+      brands: entity.brands,
+      quantity: entity.quantity,
+      imageUrl: entity.imageUrl,
+      nutriScore: entity.nutriScore,
+      novaGroup: entity.novaGroup,
+      ecoscore: entity.ecoscore,
+      nutritionValues: entity.nutrition != null
+          ? NutritionValuesModel.fromEntity(entity.nutrition!)
+          : null,
+      ingredients: entity.ingredients,
+      allergens: entity.allergens,
+      additives: entity.additives,
+      categories: entity.categories,
+      labels: entity.labels,
+      isVegan: entity.isVegan,
+      isVegetarian: entity.isVegetarian,
+      palmOilFree: entity.palmOilFree,
+      lastUpdated: entity.lastUpdated,
+      servingSize: entity.servingSize,
+      countries: entity.countries,
+    );
+  }
 
   factory FoodProductModel.fromMap(Map<String, dynamic> map) {
     return FoodProductModel(
@@ -257,6 +286,32 @@ class FoodProductModel extends HiveObject {
       servingSize: servingSize ?? this.servingSize,
       packagingText: packagingText ?? this.packagingText,
       countries: countries ?? this.countries,
+    );
+  }
+
+  /// Convert to domain entity
+  ProductEntity toEntity() {
+    return ProductEntity(
+      barcode: barcode,
+      productName: productName,
+      brands: brands,
+      quantity: quantity,
+      imageUrl: imageUrl,
+      nutriScore: nutriScore,
+      novaGroup: novaGroup,
+      ecoscore: ecoscore,
+      nutrition: nutritionValues?.toEntity(),
+      ingredients: ingredients,
+      allergens: allergens,
+      additives: additives,
+      categories: categories,
+      labels: labels,
+      isVegan: isVegan,
+      isVegetarian: isVegetarian,
+      palmOilFree: palmOilFree,
+      lastUpdated: lastUpdated,
+      servingSize: servingSize,
+      countries: countries,
     );
   }
 

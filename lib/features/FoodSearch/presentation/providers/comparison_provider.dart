@@ -1,11 +1,11 @@
 import 'package:Warrior/core/services/talker_service.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for product comparison
 final comparisonProvider =
-    NotifierProvider<ComparisonNotifier, List<FoodProductModel>>(
+    NotifierProvider<ComparisonNotifier, List<ProductEntity>>(
         ComparisonNotifier.new);
 
 /// Provider to check if a product is in comparison
@@ -14,8 +14,8 @@ final isInComparisonProvider = Provider.family<bool, String>((ref, barcode) {
   return comparison.any((p) => p.barcode == barcode);
 });
 
-class ComparisonNotifier extends Notifier<List<FoodProductModel>> {
-  void addProduct(FoodProductModel product) {
+class ComparisonNotifier extends Notifier<List<ProductEntity>> {
+  void addProduct(ProductEntity product) {
     if (state.length >= 3) {
       HapticFeedback.heavyImpact();
       TalkerService.warning(
@@ -34,7 +34,7 @@ class ComparisonNotifier extends Notifier<List<FoodProductModel>> {
   }
 
   @override
-  List<FoodProductModel> build() {
+  List<ProductEntity> build() {
     return [];
   }
 

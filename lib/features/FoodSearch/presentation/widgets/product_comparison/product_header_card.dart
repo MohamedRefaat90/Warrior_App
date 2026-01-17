@@ -1,6 +1,6 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 
 /// A card widget displaying a product in the comparison header.
 class ProductHeaderCard extends ConsumerWidget {
-  final FoodProductModel product;
+  final ProductEntity product;
 
   const ProductHeaderCard({
     super.key,
@@ -44,7 +44,7 @@ class ProductHeaderCard extends ConsumerWidget {
                       child: Hero(
                         tag: 'comparison_${product.barcode}',
                         child: ProductImageWidget(
-                          imageUrl: product.imageFrontUrl ?? product.imageUrl,
+                          imageUrl: product.imageUrl,
                           width: double.infinity,
                           height: double.infinity,
                           fit: BoxFit.contain,

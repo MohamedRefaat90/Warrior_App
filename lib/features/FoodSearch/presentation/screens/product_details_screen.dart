@@ -2,9 +2,8 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
-import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
@@ -16,7 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class Allergens extends StatelessWidget {
-  final FoodProductModel product;
+  final ProductEntity product;
 
   const Allergens({super.key, required this.product});
 
@@ -46,7 +45,7 @@ class Allergens extends StatelessWidget {
 }
 
 class Ingredients extends StatelessWidget {
-  final FoodProductModel product;
+  final ProductEntity product;
 
   const Ingredients({super.key, required this.product});
 
@@ -73,7 +72,7 @@ class Ingredients extends StatelessWidget {
 }
 
 class Labels extends StatelessWidget {
-  final FoodProductModel product;
+  final ProductEntity product;
 
   const Labels({super.key, required this.product});
 
@@ -120,67 +119,9 @@ class Labels extends StatelessWidget {
   }
 }
 
-class NutritionFacts extends StatelessWidget {
-  final FoodProductModel product;
-
-  const NutritionFacts({super.key, required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return product.nutritionValues != null
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.l10n.nutritionFactsPer100g,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              SizedBox(height: context.smallSpacing),
-              if (product.nutritionValues!.energyKcal != null)
-                NutritionProgressBar(
-                  label: context.l10n.energy,
-                  value: product.nutritionValues!.energyKcal!,
-                  maxValue: 2000,
-                  unit: 'kcal',
-                ),
-              SizedBox(height: context.smallSpacing),
-              if (product.nutritionValues!.proteins != null)
-                NutritionProgressBar(
-                  label: context.l10n.proteins,
-                  value: product.nutritionValues!.proteins!,
-                  maxValue: 50,
-                ),
-              SizedBox(height: context.smallSpacing),
-              if (product.nutritionValues!.carbohydrates != null)
-                NutritionProgressBar(
-                  label: context.l10n.carbohydrates,
-                  value: product.nutritionValues!.carbohydrates!,
-                  maxValue: 275,
-                ),
-              SizedBox(height: context.smallSpacing),
-              if (product.nutritionValues!.sugars != null)
-                NutritionProgressBar(
-                  label: context.l10n.sugars,
-                  value: product.nutritionValues!.sugars!,
-                  maxValue: 90,
-                ),
-              SizedBox(height: context.smallSpacing),
-              if (product.nutritionValues!.fat != null)
-                NutritionProgressBar(
-                  label: context.l10n.fat,
-                  value: product.nutritionValues!.fat!,
-                  maxValue: 70,
-                ),
-              SizedBox(height: context.largeSpacing),
-            ],
-          )
-        : const SizedBox.shrink();
-  }
-}
-
 /// Comprehensive product details screen
 class ProductDetailsScreen extends ConsumerWidget {
-  final FoodProductModel product;
+  final ProductEntity product;
 
   const ProductDetailsScreen({super.key, required this.product});
 
@@ -200,7 +141,7 @@ class ProductDetailsScreen extends ConsumerWidget {
               background: Hero(
                 tag: 'product_${product.barcode}',
                 child: ProductImageWidget(
-                  imageUrl: product.imageFrontUrl ?? product.imageUrl,
+                  imageUrl: product.imageUrl,
                   width: double.infinity,
                   height: ResponsiveUtils.value(context,
                       mobile: 300.0, tablet: 350.0, desktop: 400.0),
@@ -322,9 +263,6 @@ class ProductDetailsScreen extends ConsumerWidget {
                       ),
                       SizedBox(height: context.largeSpacing),
 
-                      // Nutrition Facts
-                      NutritionFacts(product: product),
-
                       // Allergens
                       Allergens(product: product),
 
@@ -332,7 +270,8 @@ class ProductDetailsScreen extends ConsumerWidget {
                       Ingredients(product: product),
 
                       // Labels
-                      Labels(product: product)
+                      Labels(product: product),
+                      ProductNutritionFacts(product: product),
                     ],
                   ),
                 ),
@@ -376,5 +315,63 @@ class ProductDetailsScreen extends ConsumerWidget {
                 TextStyle(fontWeight: FontWeight.bold, color: AppColors.white)),
       ),
     );
+  }
+}
+
+class ProductNutritionFacts extends StatelessWidget {
+  final ProductEntity product;
+
+  const ProductNutritionFacts({super.key, required this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    return product.nutrition != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n.nutritionFactsPer100g,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              SizedBox(height: context.smallSpacing),
+              if (product.nutrition!.energyKcal100g != null)
+                NutritionProgressBar(
+                  label: context.l10n.energy,
+                  value: product.nutrition!.energyKcal100g!,
+                  maxValue: 2000,
+                  unit: 'kcal',
+                ),
+              SizedBox(height: context.smallSpacing),
+              if (product.nutrition!.proteins100g != null)
+                NutritionProgressBar(
+                  label: context.l10n.proteins,
+                  value: product.nutrition!.proteins100g!,
+                  maxValue: 50,
+                ),
+              SizedBox(height: context.smallSpacing),
+              if (product.nutrition!.carbohydrates100g != null)
+                NutritionProgressBar(
+                  label: context.l10n.carbohydrates,
+                  value: product.nutrition!.carbohydrates100g!,
+                  maxValue: 275,
+                ),
+              SizedBox(height: context.smallSpacing),
+              if (product.nutrition!.sugars100g != null)
+                NutritionProgressBar(
+                  label: context.l10n.sugars,
+                  value: product.nutrition!.sugars100g!,
+                  maxValue: 90,
+                ),
+              SizedBox(height: context.smallSpacing),
+              if (product.nutrition!.fat100g != null)
+                NutritionProgressBar(
+                  label: context.l10n.fat,
+                  value: product.nutrition!.fat100g!,
+                  maxValue: 70,
+                ),
+              SizedBox(height: context.largeSpacing),
+            ],
+          )
+        : const SizedBox.shrink();
   }
 }

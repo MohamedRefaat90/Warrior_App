@@ -18,7 +18,7 @@ import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/exercises_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/screens/muscles_screen.dart';
-import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/advanced_search_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/barcode_scanner_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/favorites_screen.dart';
@@ -299,7 +299,7 @@ class RoutersManager {
       path: AppRouters.productDetails,
       name: AppRouters.productDetails,
       pageBuilder: (context, state) => CustomTransition(
-        child: ProductDetailsScreen(product: state.extra as FoodProductModel),
+        child: ProductDetailsScreen(product: state.extra as ProductEntity),
         transitionType: PageTransitionType.fade,
       ),
     ),
@@ -346,7 +346,7 @@ class RoutersManager {
         final extra = state.extra as Map<String, dynamic>?;
         return CustomTransition(
           child: ProductFormScreen(
-            product: extra?['product'] as FoodProductModel?,
+            product: extra?['product'] as ProductEntity?,
             barcode: extra?['barcode'] as String?,
           ),
           transitionType: PageTransitionType.fade,

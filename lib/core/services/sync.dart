@@ -5,7 +5,8 @@ import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
-import 'package:Warrior/features/FoodSearch/data/repo/food_search_repo.dart';
+import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
+import 'package:Warrior/features/FoodSearch/domain/repositories/product_write_repository.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,14 @@ class SyncService extends Notifier<SyncState> {
   static const Duration _maxDelay = Duration(minutes: 5);
 
   late WorkoutRepo workoutRepository;
-  late FoodSearchRepo foodSearchRepository;
+  late ProductWriteRepository foodSearchRepository;
 
   bool get isLoading => state.isLoading;
 
   @override
   SyncState build() {
     workoutRepository = ref.read(workoutRepo);
-    foodSearchRepository = ref.read(foodSearchRepoProvider);
+    foodSearchRepository = ref.read(productWriteRepositoryProvider);
     _initSync();
     return SyncState(
       pendingWorkouts: HiveManager.pendingOpsBox.length,
@@ -108,29 +109,6 @@ class SyncService extends Notifier<SyncState> {
     }
   }
 
-  /// Reconstructs a Product from pending upload data.
-  Product _reconstructProduct(PendingProductUpload upload) {
-    final data = upload.productData;
-    final nutrition = upload.nutritionFacts;
-
-    return Product(
-      barcode: upload.barcode,
-      productName: data['productName'] as String?,
-      brands: data['brands'] as String?,
-      countries: data['countries'] as String?,
-      quantity: data['quantity'] as String?,
-      servingSize: data['servingSize'] as String?,
-      categories: data['categories'] as String?,
-      labels: data['labels'] as String?,
-      packaging: data['packaging'] as String?,
-      stores: data['stores'] as String?,
-      ingredientsText: data['ingredientsText'] as String?,
-      nutriments: nutrition != null
-          ? Nutriments.fromJson(nutrition.toOFFNutriments())
-          : null,
-    );
-  }
-
   /// Syncs pending product uploads with exponential backoff.
   Future<void> _syncProducts() async {
     final pendingUploads = HiveManager.getPendingProductUploads();
@@ -156,16 +134,19 @@ class SyncService extends Notifier<SyncState> {
       }
 
       try {
-        // Reconstruct Product from stored data
-        final product = _reconstructProduct(upload);
+        // Use the domain entity conversion
+        final entity = upload.toEntity();
 
         // Create a temporary user for sync (would normally come from auth)
         final user = User(userId: 'sync-user', password: '');
 
-        // Attempt submission
-        final success = upload.operationType == SyncOperationType.update
-            ? await foodSearchRepository.updateProduct(product, user)
-            : await foodSearchRepository.addNewProduct(product, user);
+        // Attempt submission using the new repository method
+        final success = await foodSearchRepository.submitProduct(
+          product: entity,
+          user: user,
+          imagePath: upload.imagePath,
+          isUpdate: upload.operationType == SyncOperationType.update,
+        );
 
         if (success) {
           TalkerService.info(

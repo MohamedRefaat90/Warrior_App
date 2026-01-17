@@ -1,4 +1,5 @@
 import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:hive/hive.dart';
 
@@ -53,6 +54,21 @@ class PendingProductUpload extends HiveObject {
   /// Increments the retry count.
   void incrementRetryCount() {
     retryCount++;
+  }
+
+  /// Converts this pending upload to a [ProductEntity].
+  ProductEntity toEntity() {
+    return ProductEntity(
+      barcode: barcode,
+      productName: productData['productName'] as String?,
+      brands: productData['brands'] as String?,
+      countries: productData['countries'] as String?,
+      quantity: productData['quantity'] as String?,
+      servingSize: productData['servingSize'] as String?,
+      ingredients: productData['ingredientsText'] as String?,
+      nutrition: nutritionFacts?.toEntity(),
+      lastUpdated: timestamp,
+    );
   }
 
   @override

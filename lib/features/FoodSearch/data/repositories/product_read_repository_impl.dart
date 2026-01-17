@@ -7,8 +7,13 @@ import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart'
 import 'package:Warrior/features/FoodSearch/domain/repositories/product_read_repository.dart';
 
 class ProductReadRepositoryImpl implements ProductReadRepository {
+  // LRU Cache for suggestions
+  static const int _maxCacheSize = 50;
+  static const Duration _cacheExpiry = Duration(minutes: 5);
+
   final FoodRemoteDataSource _remoteDataSource;
   final FoodLocalDataSource _localDataSource;
+  final _suggestionsCache = <String, _SuggestionCacheEntry>{};
 
   ProductReadRepositoryImpl({
     required FoodRemoteDataSource remoteDataSource,
@@ -29,47 +34,11 @@ class ProductReadRepositoryImpl implements ProductReadRepository {
   }
 
   @override
-  List<ProductEntity> filterProducts({
-    String? nutriScore,
-    bool? vegan,
-    bool? vegetarian,
-    bool? palmOilFree,
-    List<String>? allergens,
-    int? novaGroup,
-  }) {
-    var products = _localDataSource.getCachedProducts();
-
-    if (nutriScore != null) {
-      products = products
-          .where((p) => p.nutriScore?.toUpperCase() == nutriScore.toUpperCase())
-          .toList();
-    }
-
-    if (vegan == true) {
-      products = products.where((p) => p.isVegan == true).toList();
-    }
-
-    if (vegetarian == true) {
-      products = products.where((p) => p.isVegetarian == true).toList();
-    }
-
-    if (palmOilFree == true) {
-      products = products.where((p) => p.palmOilFree == true).toList();
-    }
-
-    if (novaGroup != null) {
-      products = products.where((p) => p.novaGroup == novaGroup).toList();
-    }
-
-    if (allergens != null && allergens.isNotEmpty) {
-      products = products.where((p) {
-        if (p.allergens == null) return true;
-        return !p.allergens!.any((allergen) => allergens
-            .any((a) => allergen.toLowerCase().contains(a.toLowerCase())));
-      }).toList();
-    }
-
-    return products.map((p) => p.toEntity()).toList();
+  List<ProductEntity> getAllCachedProducts() {
+    return _localDataSource
+        .getCachedProducts()
+        .map((p) => p.toEntity())
+        .toList();
   }
 
   @override
@@ -80,10 +49,35 @@ class ProductReadRepositoryImpl implements ProductReadRepository {
   @override
   Future<List<String>> getProductSuggestions(String query) async {
     try {
+      // Check cache first
+      final cacheKey = query.toLowerCase().trim();
+      final cachedEntry = _suggestionsCache[cacheKey];
+
+      if (cachedEntry != null) {
+        if (cachedEntry.isValid(_cacheExpiry)) {
+          // LRU promotion: separate remove/put to move to end
+          _suggestionsCache.remove(cacheKey);
+          _suggestionsCache[cacheKey] = cachedEntry;
+          return cachedEntry.suggestions;
+        } else {
+          _suggestionsCache.remove(cacheKey);
+        }
+      }
+
       if (ConnectivityChecker.isOnline != true) {
         return [];
       }
-      return await _remoteDataSource.getProductSuggestions(query);
+
+      final suggestions = await _remoteDataSource.getProductSuggestions(query);
+
+      // Update cache
+      if (_suggestionsCache.length >= _maxCacheSize) {
+        _suggestionsCache.remove(_suggestionsCache.keys.first);
+      }
+      _suggestionsCache[cacheKey] =
+          _SuggestionCacheEntry(suggestions, DateTime.now());
+
+      return suggestions;
     } catch (e, stackTrace) {
       TalkerService.error(
           'Error in getProductSuggestions', 'FOOD_READ_REPO', e, stackTrace);
@@ -254,5 +248,16 @@ class ProductReadRepositoryImpl implements ProductReadRepository {
             p.barcode.contains(query))
         .map((p) => p.toEntity())
         .toList();
+  }
+}
+
+class _SuggestionCacheEntry {
+  final List<String> suggestions;
+  final DateTime timestamp;
+
+  _SuggestionCacheEntry(this.suggestions, this.timestamp);
+
+  bool isValid(Duration expiry) {
+    return DateTime.now().difference(timestamp) < expiry;
   }
 }

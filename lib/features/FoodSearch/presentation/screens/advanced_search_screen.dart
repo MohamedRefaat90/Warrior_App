@@ -107,7 +107,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                           return Container(
                             constraints: BoxConstraints(
                                 maxHeight: ResponsiveUtils.value(context,
-                                    mobile: 200.0,
+                                    mobile: 100.0,
                                     tablet: 250.0,
                                     desktop: 280.0)),
                             decoration: BoxDecoration(

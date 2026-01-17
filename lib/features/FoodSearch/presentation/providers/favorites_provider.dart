@@ -1,6 +1,6 @@
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
-import 'package:Warrior/features/FoodSearch/domain/usecases/product_use_cases.dart';
+import 'package:Warrior/features/FoodSearch/domain/usecases/usecases.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/product_use_cases_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,12 +56,18 @@ final sortedFavoritesProvider = Provider<List<ProductEntity>>((ref) {
 });
 
 class FavoritesNotifier extends Notifier<List<ProductEntity>> {
-  ProductUseCases get _useCases => ref.read(productUseCasesProvider);
+  // Individual use cases
+  AddToFavoritesUseCase get _addToFavoritesUseCase =>
+      ref.read(addToFavoritesUseCaseProvider);
+  GetFavoritesUseCase get _getFavoritesUseCase =>
+      ref.read(getFavoritesUseCaseProvider);
+  RemoveFromFavoritesUseCase get _removeFromFavoritesUseCase =>
+      ref.read(removeFromFavoritesUseCaseProvider);
 
   Future<void> addFavorite(ProductEntity product) async {
     try {
-      await _useCases.addToFavorites(product);
-      state = _useCases.getFavorites();
+      await _addToFavoritesUseCase(product);
+      state = _getFavoritesUseCase();
       HapticFeedback.mediumImpact();
       TalkerService.info(
           'Added to favorites: ${product.productName}', 'FAVORITES');
@@ -73,17 +79,17 @@ class FavoritesNotifier extends Notifier<List<ProductEntity>> {
 
   @override
   List<ProductEntity> build() {
-    return _useCases.getFavorites();
+    return _getFavoritesUseCase();
   }
 
   void refresh() {
-    state = _useCases.getFavorites();
+    state = _getFavoritesUseCase();
   }
 
   Future<void> removeFavorite(String barcode) async {
     try {
-      await _useCases.removeFromFavorites(barcode);
-      state = _useCases.getFavorites();
+      await _removeFromFavoritesUseCase(barcode);
+      state = _getFavoritesUseCase();
       HapticFeedback.lightImpact();
       TalkerService.info('Removed from favorites: $barcode', 'FAVORITES');
     } catch (e, stackTrace) {
@@ -93,9 +99,6 @@ class FavoritesNotifier extends Notifier<List<ProductEntity>> {
   }
 
   void toggleFavorite(ProductEntity product) {
-    // We can use the UseCase directly but we want to update state
-    // UseCase's toggleFavorite doesn't return new state, so we handle logic here or refactor UseCase
-    // For now, let's keep logic here to update UI reliably
     final isFavorite = state.any((fav) => fav.barcode == product.barcode);
     if (isFavorite) {
       removeFavorite(product.barcode);

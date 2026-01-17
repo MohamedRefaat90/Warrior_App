@@ -4,15 +4,8 @@ abstract class ProductReadRepository {
   /// Compare multiple products by their barcodes
   Future<List<ProductEntity>> compareProducts(List<String> barcodes);
 
-  /// Filter cached products based on criteria
-  List<ProductEntity> filterProducts({
-    String? nutriScore,
-    bool? vegan,
-    bool? vegetarian,
-    bool? palmOilFree,
-    List<String>? allergens,
-    int? novaGroup,
-  });
+  /// Get all cached products (for filtering in use cases)
+  List<ProductEntity> getAllCachedProducts();
 
   /// Get product from local cache by barcode
   ProductEntity? getProductFromCache(String barcode);

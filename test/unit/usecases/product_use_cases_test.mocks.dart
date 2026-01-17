@@ -75,26 +75,10 @@ class MockProductReadRepository extends _i1.Mock
       ) as _i4.Future<List<_i2.ProductEntity>>);
 
   @override
-  List<_i2.ProductEntity> filterProducts({
-    String? nutriScore,
-    bool? vegan,
-    bool? vegetarian,
-    bool? palmOilFree,
-    List<String>? allergens,
-    int? novaGroup,
-  }) =>
-      (super.noSuchMethod(
+  List<_i2.ProductEntity> getAllCachedProducts() => (super.noSuchMethod(
         Invocation.method(
-          #filterProducts,
+          #getAllCachedProducts,
           [],
-          {
-            #nutriScore: nutriScore,
-            #vegan: vegan,
-            #vegetarian: vegetarian,
-            #palmOilFree: palmOilFree,
-            #allergens: allergens,
-            #novaGroup: novaGroup,
-          },
         ),
         returnValue: <_i2.ProductEntity>[],
       ) as List<_i2.ProductEntity>);

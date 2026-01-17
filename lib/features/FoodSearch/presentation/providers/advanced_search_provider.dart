@@ -1,6 +1,6 @@
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
-import 'package:Warrior/features/FoodSearch/domain/usecases/product_use_cases.dart';
+import 'package:Warrior/features/FoodSearch/domain/usecases/usecases.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/product_use_cases_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +11,13 @@ final advancedSearchProvider =
 
 /// Advanced search notifier
 class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
-  ProductUseCases get _useCases => ref.read(productUseCasesProvider);
+  SearchProductsByBrandUseCase get _searchByBrandUseCase =>
+      ref.read(searchProductsByBrandUseCaseProvider);
+  SearchProductsByCategoryUseCase get _searchByCategoryUseCase =>
+      ref.read(searchProductsByCategoryUseCaseProvider);
+  // Individual use cases
+  SearchProductsByNameUseCase get _searchByNameUseCase =>
+      ref.read(searchProductsByNameUseCaseProvider);
 
   @override
   AdvancedSearchState build() {
@@ -34,26 +40,26 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
       List<ProductEntity> newResults = [];
 
       if (state.query.isNotEmpty) {
-        newResults = await _useCases.searchByName(
+        newResults = await _searchByNameUseCase(
           state.query,
           page: nextPage,
-          size: AdvancedSearchState.pageSize,
+          pageSize: AdvancedSearchState.pageSize,
         );
       } else if (state.selectedCategories.isNotEmpty) {
         for (final category in state.selectedCategories) {
-          final categoryResults = await _useCases.searchByCategory(
+          final categoryResults = await _searchByCategoryUseCase(
             category,
             page: nextPage,
-            size: AdvancedSearchState.pageSize,
+            pageSize: AdvancedSearchState.pageSize,
           );
           newResults.addAll(categoryResults);
         }
       } else if (state.selectedBrands.isNotEmpty) {
         for (final brand in state.selectedBrands) {
-          final brandResults = await _useCases.searchByBrand(
+          final brandResults = await _searchByBrandUseCase(
             brand,
             page: nextPage,
-            size: AdvancedSearchState.pageSize,
+            pageSize: AdvancedSearchState.pageSize,
           );
           newResults.addAll(brandResults);
         }
@@ -95,26 +101,26 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
       List<ProductEntity> results = [];
 
       if (state.query.isNotEmpty) {
-        results = await _useCases.searchByName(
+        results = await _searchByNameUseCase(
           state.query,
           page: 1,
-          size: AdvancedSearchState.pageSize,
+          pageSize: AdvancedSearchState.pageSize,
         );
       } else if (state.selectedCategories.isNotEmpty) {
         for (final category in state.selectedCategories) {
-          final categoryResults = await _useCases.searchByCategory(
+          final categoryResults = await _searchByCategoryUseCase(
             category,
             page: 1,
-            size: AdvancedSearchState.pageSize,
+            pageSize: AdvancedSearchState.pageSize,
           );
           results.addAll(categoryResults);
         }
       } else if (state.selectedBrands.isNotEmpty) {
         for (final brand in state.selectedBrands) {
-          final brandResults = await _useCases.searchByBrand(
+          final brandResults = await _searchByBrandUseCase(
             brand,
             page: 1,
-            size: AdvancedSearchState.pageSize,
+            pageSize: AdvancedSearchState.pageSize,
           );
           results.addAll(brandResults);
         }
@@ -205,6 +211,11 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
     state = state.copyWith(query: query);
   }
 
+  /// Applies local filtering to search results.
+  ///
+  /// Note: This duplicates filtering logic. In a future refactor, consider
+  /// using FilterProductsUseCase directly, but that would require caching
+  /// all products first, which may not be desirable for search results.
   List<ProductEntity> _applyFilters(List<ProductEntity> products) {
     var filtered = products;
 

@@ -172,6 +172,10 @@
   "@foodSearch": {
     "description": "Food search screen title"
   },
+  "foodSearchDescription": "Currently, search is available only for packaged supermarket products.\nYou can scan barcodes, compare products, and save favorites for easy access.\nSupport for fresh foods and daily food logging will be coming soon.",
+  "@foodSearchDescription": {
+    "description": "Description of the food search feature shown in a dialog"
+  },
   "scan": "Scan",
   "@scan": {
     "description": "Scan button text"
@@ -424,7 +428,6 @@
   "@tip5": {
     "description": "Tip 5"
   },
-
   "login": "Login",
   "@login": {
     "description": "Login button and title"
@@ -533,7 +536,6 @@
   "@mustContainSpecialChar": {
     "description": "Password special character validation"
   },
-
   "muscles": "Muscles",
   "@muscles": {
     "description": "Muscles category title"
@@ -610,7 +612,6 @@
   "@extraActiveDesc": {
     "description": "Extra active description"
   },
-
   "newWorkout": "New Workout",
   "@newWorkout": {
     "description": "New workout button"
@@ -691,7 +692,6 @@
   "@addExercisesToStart": {
     "description": "Add exercises prompt"
   },
-
   "editProduct": "Edit Product",
   "@editProduct": {
     "description": "Edit product title"
@@ -792,7 +792,6 @@
   "@weightUpdateNegative": {
     "description": "Negative feedback message after weight update"
   },
-
   "enjoyingWarrior": "Enjoying Warrior?",
   "@enjoyingWarrior": {
     "description": "Rate app dialog title"
@@ -821,7 +820,6 @@
   "@updateNow": {
     "description": "Update now button"
   },
-
   "onboardingTitle1": "Target Every Muscle",
   "@onboardingTitle1": {
     "description": "Onboarding page 1 title"
@@ -846,7 +844,6 @@
   "@onboardingDesc3": {
     "description": "Onboarding page 3 description"
   },
-
   "basicInformation": "Basic Information",
   "@basicInformation": {
     "description": "Basic information section title"
@@ -1261,7 +1258,6 @@
   "@perDay": {
     "description": "Per day text"
   },
-
   "advancedSearchTooltip": "Advanced Search",
   "@advancedSearchTooltip": {
     "description": "Advanced search tooltip"
@@ -1302,7 +1298,6 @@
   "@enterManually": {
     "description": "Barcode scanner instruction"
   },
-
   "unknownProduct": "Unknown Product",
   "@unknownProduct": {
     "description": "Unknown product placeholder"
@@ -1812,5 +1807,3 @@
     "description": "Subtitle for weight selection bottom sheet in grid view"
   }
 }
-
-

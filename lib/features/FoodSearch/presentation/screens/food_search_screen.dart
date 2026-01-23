@@ -1,10 +1,14 @@
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
+import 'package:Warrior/core/services/shared_pref.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_dialog.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -304,6 +308,18 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
         'ca-app-pub-7417773148722475/5173643464');
     foodSearchAd.loadAd();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bool? foodSearchAlert =
+          SharedPref.getBool(StorageKeys.foodSearchAlert);
+      if (foodSearchAlert == null || foodSearchAlert == false) {
+        TalkerService.info('Showing food search dialog...', 'FOOD_SEARCH');
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const FoodSearchDialog(),
+        );
+      }
+    });
   }
 }
 

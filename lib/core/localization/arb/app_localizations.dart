@@ -356,6 +356,12 @@ abstract class AppLocalizations {
   /// **'Food Search'**
   String get foodSearch;
 
+  /// Description of the food search feature shown in a dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Discover nutritional facts, scan barcodes, and compare products to fuel your warrior journey with the right nutrition.'**
+  String get foodSearchDescription;
+
   /// Scan button text
   ///
   /// In en, this message translates to:

@@ -14,8 +14,6 @@ import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/data/repo/exercises_repo.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/FinishBTN.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/create_workout_warning.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/download_progress_indicator.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/error_card.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscle_body_view.dart';
@@ -25,7 +23,6 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MusclesContent extends ConsumerWidget {

@@ -172,6 +172,10 @@
   "@foodSearch": {
     "description": "Food search screen title"
   },
+  "foodSearchDescription": "حاليًا البحث متاح للمنتجات الغذائية المعلبة الموجودة في السوبرماركت فقط.\nتقدر تفحص الباركود، تقارن المنتجات، وتحفظ المفضل عندك للرجوع له بسهولة.\nدعم الخضروات والأطعمة الطازجة، وتسجيل أكلك اليومي، هيكون متاح قريبًا.",
+  "@foodSearchDescription": {
+    "description": "Description of the food search feature shown in a dialog"
+  },
   "scan": "افحص",
   "@scan": {
     "description": "Scan button text"
@@ -472,7 +476,6 @@
   "@perDay": {
     "description": "Per day text"
   },
-
   "advancedSearchTooltip": "بحث متقدم",
   "@advancedSearchTooltip": {
     "description": "Advanced search tooltip"
@@ -509,11 +512,10 @@
   "@positionTheBarcodeWithinTheFrame": {
     "description": "Barcode scanner instruction"
   },
-  "enterManually":"أدخل يدويًا",
-  "@enterManually":{
+  "enterManually": "أدخل يدويًا",
+  "@enterManually": {
     "description": "Barcode scanner instruction"
   },
-
   "login": "تسجيل الدخول",
   "@login": {
     "description": "Login button text"
@@ -1267,7 +1269,6 @@
   "@addToMyWorkouts": {
     "description": "Add to my workouts button"
   },
-
   "unknownProduct": "منتج غير معروف",
   "@unknownProduct": {
     "description": "Unknown product placeholder"
@@ -1769,5 +1770,3 @@
     "description": "Subtitle for weight selection bottom sheet in grid view"
   }
 }
-
-

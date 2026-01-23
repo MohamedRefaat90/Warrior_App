@@ -139,6 +139,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get foodSearch => 'البحث عن الطعام';
 
   @override
+  String get foodSearchDescription =>
+      'اكتشف الحقائق الغذائية، امسح الباركود، وقارن المنتجات لدعم رحلتك القتالية بالتغذية المناسبة.';
+
+  @override
   String get scan => 'افحص';
 
   @override

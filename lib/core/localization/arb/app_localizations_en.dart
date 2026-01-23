@@ -139,6 +139,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foodSearch => 'Food Search';
 
   @override
+  String get foodSearchDescription =>
+      'Discover nutritional facts, scan barcodes, and compare products to fuel your warrior journey with the right nutrition.';
+
+  @override
   String get scan => 'Scan';
 
   @override

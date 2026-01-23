@@ -9,6 +9,7 @@ class StorageKeys {
   static const String isFirstTime = 'isFirstTime';
 
   static const String workoutAlert = 'workoutAlert';
+  static const String foodSearchAlert = 'foodSearchAlert';
   static const String numberOfWorkouts = 'numberOfWorkouts';
   static const String isRating = 'isRating';
   static const String caloriesCalculatorData = 'caloriesCalculatorData';

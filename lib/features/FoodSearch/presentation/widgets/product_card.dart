@@ -37,27 +37,36 @@ class ProductCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Product image with favorite button
-                  Stack(
-                    children: [
-                      Center(
-                        child: ProductImageWidget(
-                          imageUrl: product.imageUrl,
-                          width: double.infinity,
-                          height: ResponsiveUtils.value(context,
-                              mobile: 105.0, tablet: 130.0, desktop: 150.0),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      if (product.nutriScore != null)
-                        Positioned(
-                          bottom: 4,
-                          left: 4,
-                          child: NutritionScoreBadge(
-                            nutriScore: product.nutriScore,
-                            size: 32,
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      // Get the actual available width from parent constraints
+                      final availableWidth = constraints.maxWidth.isFinite
+                          ? constraints.maxWidth
+                          : MediaQuery.of(context).size.width * 0.9;
+
+                      return Stack(
+                        children: [
+                          Center(
+                            child: ProductImageWidget(
+                              imageUrl: product.imageUrl,
+                              width: availableWidth,
+                              height: ResponsiveUtils.value(context,
+                                  mobile: 105.0, tablet: 130.0, desktop: 150.0),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                    ],
+                          if (product.nutriScore != null)
+                            Positioned(
+                              bottom: 4,
+                              left: 4,
+                              child: NutritionScoreBadge(
+                                nutriScore: product.nutriScore,
+                                size: 32,
+                              ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                   SizedBox(height: context.smallSpacing),
                   // Product name
@@ -101,8 +110,8 @@ class ProductCard extends ConsumerWidget {
             // if (isFavorite)
             Positioned.directional(
               textDirection: lang.countryCode == 'en'
-                  ? TextDirection.ltr
-                  : TextDirection.rtl,
+                  ? TextDirection.rtl
+                  : TextDirection.ltr,
               bottom: 0,
               end: 0,
               child: IconButton(

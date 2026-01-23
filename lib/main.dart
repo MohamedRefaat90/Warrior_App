@@ -8,11 +8,13 @@ import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/theme/app_theme.dart';
 import 'package:Warrior/routing.dart';
+import 'package:Warrior/test_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
@@ -144,6 +146,14 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
               Locale('ar'),
             ],
             routerConfig: RoutersManager.router,
+            // routerConfig: GoRouter(
+            //   routes: [
+            //     GoRoute(
+            //       path: '/',
+            //       builder: (context, state) => const TestScreen(),
+            //     ),
+            //   ],
+            // ),
             // DevicePreview configuration
             builder: _useDevicePreview ? DevicePreview.appBuilder : null,
           ),

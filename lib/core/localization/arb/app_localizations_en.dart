@@ -140,7 +140,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get foodSearchDescription =>
-      'Discover nutritional facts, scan barcodes, and compare products to fuel your warrior journey with the right nutrition.';
+      'Currently, search is available only for packaged supermarket products.\nYou can scan barcodes, compare products, and save favorites for easy access.\nSupport for fresh foods and daily food logging will be coming soon.';
 
   @override
   String get scan => 'Scan';

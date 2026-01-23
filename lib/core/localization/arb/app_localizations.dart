@@ -359,7 +359,7 @@ abstract class AppLocalizations {
   /// Description of the food search feature shown in a dialog
   ///
   /// In en, this message translates to:
-  /// **'Discover nutritional facts, scan barcodes, and compare products to fuel your warrior journey with the right nutrition.'**
+  /// **'Currently, search is available only for packaged supermarket products.\nYou can scan barcodes, compare products, and save favorites for easy access.\nSupport for fresh foods and daily food logging will be coming soon.'**
   String get foodSearchDescription;
 
   /// Scan button text

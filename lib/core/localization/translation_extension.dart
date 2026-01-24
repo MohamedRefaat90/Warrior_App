@@ -433,7 +433,7 @@ extension TranslationExtension on String {
       case 'productImage':
         return localizations.productImage;
       case 'searchByNameBrandCategory':
-        return localizations.searchByNameBrandCategory;
+        return localizations.searchByName;
       case 'enterBarcodeNumber':
         return localizations.enterBarcodeNumber;
 

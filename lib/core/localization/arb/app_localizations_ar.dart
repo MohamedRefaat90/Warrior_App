@@ -598,7 +598,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productImage => 'صورة المنتج';
 
   @override
-  String get searchByNameBrandCategory => 'ابحث بالاسم أو العلامة أو الفئة';
+  String get searchByName => 'ابحث بالاسم';
 
   @override
   String get enterBarcodeNumber => 'أدخل رقم الباركود';

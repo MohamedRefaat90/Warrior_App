@@ -11,10 +11,6 @@ final advancedSearchProvider =
 
 /// Advanced search notifier
 class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
-  SearchProductsByBrandUseCase get _searchByBrandUseCase =>
-      ref.read(searchProductsByBrandUseCaseProvider);
-  SearchProductsByCategoryUseCase get _searchByCategoryUseCase =>
-      ref.read(searchProductsByCategoryUseCaseProvider);
   // Individual use cases
   SearchProductsByNameUseCase get _searchByNameUseCase =>
       ref.read(searchProductsByNameUseCaseProvider);
@@ -45,24 +41,6 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
           page: nextPage,
           pageSize: AdvancedSearchState.pageSize,
         );
-      } else if (state.selectedCategories.isNotEmpty) {
-        for (final category in state.selectedCategories) {
-          final categoryResults = await _searchByCategoryUseCase(
-            category,
-            page: nextPage,
-            pageSize: AdvancedSearchState.pageSize,
-          );
-          newResults.addAll(categoryResults);
-        }
-      } else if (state.selectedBrands.isNotEmpty) {
-        for (final brand in state.selectedBrands) {
-          final brandResults = await _searchByBrandUseCase(
-            brand,
-            page: nextPage,
-            pageSize: AdvancedSearchState.pageSize,
-          );
-          newResults.addAll(brandResults);
-        }
       }
 
       // Apply additional filters
@@ -106,24 +84,6 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
           page: 1,
           pageSize: AdvancedSearchState.pageSize,
         );
-      } else if (state.selectedCategories.isNotEmpty) {
-        for (final category in state.selectedCategories) {
-          final categoryResults = await _searchByCategoryUseCase(
-            category,
-            page: 1,
-            pageSize: AdvancedSearchState.pageSize,
-          );
-          results.addAll(categoryResults);
-        }
-      } else if (state.selectedBrands.isNotEmpty) {
-        for (final brand in state.selectedBrands) {
-          final brandResults = await _searchByBrandUseCase(
-            brand,
-            page: 1,
-            pageSize: AdvancedSearchState.pageSize,
-          );
-          results.addAll(brandResults);
-        }
       }
 
       // Apply additional filters
@@ -173,26 +133,6 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
       allergens.add(allergen);
     }
     state = state.copyWith(excludedAllergens: allergens);
-  }
-
-  void toggleBrand(String brand) {
-    final brands = List<String>.from(state.selectedBrands);
-    if (brands.contains(brand)) {
-      brands.remove(brand);
-    } else {
-      brands.add(brand);
-    }
-    state = state.copyWith(selectedBrands: brands);
-  }
-
-  void toggleCategory(String category) {
-    final categories = List<String>.from(state.selectedCategories);
-    if (categories.contains(category)) {
-      categories.remove(category);
-    } else {
-      categories.add(category);
-    }
-    state = state.copyWith(selectedCategories: categories);
   }
 
   void togglePalmOilFree() {
@@ -261,8 +201,6 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
 class AdvancedSearchState {
   static const int pageSize = 25;
   final String query;
-  final List<String> selectedCategories;
-  final List<String> selectedBrands;
   final String? selectedNutriScore;
   final int? selectedNovaGroup;
   final bool veganOnly;
@@ -278,8 +216,6 @@ class AdvancedSearchState {
 
   AdvancedSearchState({
     this.query = '',
-    this.selectedCategories = const [],
-    this.selectedBrands = const [],
     this.selectedNutriScore,
     this.selectedNovaGroup,
     this.veganOnly = false,
@@ -295,8 +231,6 @@ class AdvancedSearchState {
   });
 
   bool get hasActiveFilters =>
-      selectedCategories.isNotEmpty ||
-      selectedBrands.isNotEmpty ||
       selectedNutriScore != null ||
       selectedNovaGroup != null ||
       veganOnly ||
@@ -310,8 +244,6 @@ class AdvancedSearchState {
   /// to explicitly set these nullable fields to null.
   AdvancedSearchState copyWith({
     String? query,
-    List<String>? selectedCategories,
-    List<String>? selectedBrands,
     String? selectedNutriScore,
     int? selectedNovaGroup,
     bool? veganOnly,
@@ -330,8 +262,6 @@ class AdvancedSearchState {
   }) {
     return AdvancedSearchState(
       query: query ?? this.query,
-      selectedCategories: selectedCategories ?? this.selectedCategories,
-      selectedBrands: selectedBrands ?? this.selectedBrands,
       selectedNutriScore: clearNutriScore
           ? null
           : (selectedNutriScore ?? this.selectedNutriScore),

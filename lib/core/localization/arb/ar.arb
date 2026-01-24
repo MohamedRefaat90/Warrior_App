@@ -872,8 +872,8 @@
   "@productImage": {
     "description": "Product image label"
   },
-  "searchByNameBrandCategory": "ابحث بالاسم أو العلامة أو الفئة",
-  "@searchByNameBrandCategory": {
+  "searchByName": "ابحث بالاسم",
+  "@searchByName": {
     "description": "Search placeholder"
   },
   "enterBarcodeNumber": "أدخل رقم الباركود",

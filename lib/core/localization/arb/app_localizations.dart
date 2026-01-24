@@ -1265,8 +1265,8 @@ abstract class AppLocalizations {
   /// Search hint
   ///
   /// In en, this message translates to:
-  /// **'Search by name, brand, or category...'**
-  String get searchByNameBrandCategory;
+  /// **'Search by name'**
+  String get searchByName;
 
   /// Barcode number input hint
   ///

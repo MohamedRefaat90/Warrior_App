@@ -4,6 +4,10 @@ import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/advanced_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/filters/allergens_filter.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/filters/dietary_preferences_filter.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/filters/nova_group_filter.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/filters/nutri_score_filter.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +64,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: context.l10n.searchByNameBrandCategory,
+                    hintText: context.l10n.searchByName,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
@@ -162,7 +166,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                             : Icons.filter_alt_outlined),
                         label: Text(
                           '${_showFilters ? context.l10n.hideFilters : context.l10n.showFilters} ${searchState.hasActiveFilters ? '(${_getActiveFilterCount(searchState)})' : ''}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -175,18 +179,18 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                             ? null
                             : () => searchNotifier.performSearch(),
                         icon: searchState.isLoading
-                            ? SizedBox(
+                            ? const SizedBox(
                                 width: 16,
                                 height: 16,
-                                child: const CircularProgressIndicator(
-                                    strokeWidth: 2),
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
                               )
                             : const Icon(
                                 Icons.search,
                                 color: Colors.white,
                               ),
                         label: Text('search'.tr(context),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700)),
                       ),
@@ -202,7 +206,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
             sizeFactor: _filterAnimation,
             axisAlignment: -1.0,
             child: SizedBox(
-              height: context.screenHeight * 0.25,
+              height: context.screenHeight * 0.35,
               child: SingleChildScrollView(
                 padding:
                     EdgeInsets.symmetric(horizontal: context.mediumSpacing),
@@ -210,106 +214,34 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Nutri-Score filter
-                    _buildFilterSection(
-                      context.l10n.nutriScore,
-                      Wrap(
-                        spacing: context.smallSpacing,
-                        children: ['A', 'B', 'C', 'D', 'E'].map((score) {
-                          final isSelected =
-                              searchState.selectedNutriScore == score;
-                          return FilterChip(
-                            label: Text(
-                              score,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              searchNotifier
-                                  .setNutriScore(selected ? score : null);
-                            },
-                            backgroundColor: _getNutriScoreColor(score)
-                                .withValues(alpha: 0.2),
-                            selectedColor: _getNutriScoreColor(score),
-                          );
-                        }).toList(),
-                      ),
+                    NutriScoreFilter(
+                      selectedScore: searchState.selectedNutriScore,
+                      onSelected: searchNotifier.setNutriScore,
                     ),
                     SizedBox(height: context.mediumSpacing),
 
                     // NOVA Group filter
-                    _buildFilterSection(
-                      context.l10n.novaGroup,
-                      Wrap(
-                        spacing: context.smallSpacing,
-                        children: [1, 2, 3, 4].map((group) {
-                          final isSelected =
-                              searchState.selectedNovaGroup == group;
-                          return FilterChip(
-                            label: Text('${context.l10n.group} $group'),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              searchNotifier
-                                  .setNovaGroup(selected ? group : null);
-                            },
-                          );
-                        }).toList(),
-                      ),
+                    NovaGroupFilter(
+                      selectedGroup: searchState.selectedNovaGroup,
+                      onSelected: searchNotifier.setNovaGroup,
                     ),
                     SizedBox(height: context.mediumSpacing),
 
                     // Dietary preferences
-                    _buildFilterSection(
-                      context.l10n.dietaryPreferences,
-                      Column(
-                        children: [
-                          SwitchListTile(
-                            title: Text('veganOnly'.tr(context)),
-                            value: searchState.veganOnly,
-                            onChanged: (_) => searchNotifier.toggleVegan(),
-                          ),
-                          SwitchListTile(
-                            title: Text('vegetarianOnly'.tr(context)),
-                            value: searchState.vegetarianOnly,
-                            onChanged: (_) => searchNotifier.toggleVegetarian(),
-                          ),
-                          SwitchListTile(
-                            title: Text(context.l10n.palmOilFree),
-                            value: searchState.palmOilFree,
-                            onChanged: (_) =>
-                                searchNotifier.togglePalmOilFree(),
-                          ),
-                        ],
-                      ),
+                    DietaryPreferencesFilter(
+                      veganOnly: searchState.veganOnly,
+                      vegetarianOnly: searchState.vegetarianOnly,
+                      palmOilFree: searchState.palmOilFree,
+                      onToggleVegan: searchNotifier.toggleVegan,
+                      onToggleVegetarian: searchNotifier.toggleVegetarian,
+                      onTogglePalmOilFree: searchNotifier.togglePalmOilFree,
                     ),
                     SizedBox(height: context.mediumSpacing),
 
                     // Common allergens
-                    _buildFilterSection(
-                      context.l10n.excludeAllergens,
-                      Wrap(
-                        spacing: context.smallSpacing,
-                        children: {
-                          'milk': context.l10n.milk,
-                          'eggs': context.l10n.eggs,
-                          'peanuts': context.l10n.peanuts,
-                          'tree nuts': context.l10n.treeNuts,
-                          'soy': context.l10n.soy,
-                          'wheat': context.l10n.wheat,
-                          'fish': context.l10n.fish,
-                          'shellfish': context.l10n.shellfish,
-                        }.entries.map((entry) {
-                          final isSelected =
-                              searchState.excludedAllergens.contains(entry.key);
-                          return FilterChip(
-                            label: Text(entry.value),
-                            selected: isSelected,
-                            onSelected: (_) =>
-                                searchNotifier.toggleAllergen(entry.key),
-                          );
-                        }).toList(),
-                      ),
+                    AllergensFilter(
+                      excludedAllergens: searchState.excludedAllergens,
+                      onToggleAllergen: searchNotifier.toggleAllergen,
                     ),
                     SizedBox(height: context.mediumSpacing),
                   ],
@@ -360,22 +292,6 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
         ref.read(advancedSearchProvider.notifier).performSearch();
       });
     }
-  }
-
-  Widget _buildFilterSection(String title, Widget content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        SizedBox(height: context.smallSpacing),
-        content,
-      ],
-    );
   }
 
   Widget _buildResults(AdvancedSearchState searchState) {
@@ -487,23 +403,6 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
     if (state.palmOilFree) count++;
     count += state.excludedAllergens.length;
     return count;
-  }
-
-  Color _getNutriScoreColor(String score) {
-    switch (score.toUpperCase()) {
-      case 'A':
-        return Colors.green;
-      case 'B':
-        return Colors.lightGreen;
-      case 'C':
-        return Colors.yellow;
-      case 'D':
-        return Colors.orange;
-      case 'E':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
   }
 
   void _toggleFilters() {

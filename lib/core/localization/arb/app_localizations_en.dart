@@ -607,8 +607,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productImage => 'Product Image';
 
   @override
-  String get searchByNameBrandCategory =>
-      'Search by name, brand, or category...';
+  String get searchByName => 'Search by name';
 
   @override
   String get enterBarcodeNumber => 'Enter barcode number';

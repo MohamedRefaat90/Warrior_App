@@ -776,8 +776,8 @@
   "@productImage": {
     "description": "Product image field"
   },
-  "searchByNameBrandCategory": "Search by name, brand, or category...",
-  "@searchByNameBrandCategory": {
+  "searchByName": "Search by name",
+  "@searchByName": {
     "description": "Search hint"
   },
   "enterBarcodeNumber": "Enter barcode number",

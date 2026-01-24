@@ -109,11 +109,11 @@ class ProductCard extends ConsumerWidget {
             ),
             // if (isFavorite)
             Positioned.directional(
-              textDirection: lang.countryCode == 'en'
+              textDirection: lang.languageCode == 'en'
                   ? TextDirection.rtl
                   : TextDirection.ltr,
               bottom: 0,
-              end: 0,
+              start: 0,
               child: IconButton(
                 icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
                     color: isFavorite ? Colors.red : Colors.grey),

@@ -311,7 +311,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bool? foodSearchAlert =
           SharedPref.getBool(StorageKeys.foodSearchAlert);
-      if (foodSearchAlert == null || foodSearchAlert == true) {
+      if (foodSearchAlert == null || foodSearchAlert == false) {
         TalkerService.info('Showing food search dialog...', 'FOOD_SEARCH');
         showDialog(
           context: context,

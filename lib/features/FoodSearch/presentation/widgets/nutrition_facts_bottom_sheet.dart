@@ -1,3 +1,4 @@
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/nutrition_state_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/ocr_scanner_provider.dart';
@@ -242,97 +243,86 @@ class _FieldsGrid extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final NutritionState state;
-  final Animation<double> rotationAnimation;
-  final VoidCallback onTap;
+  final bool isExpanded;
 
   const _Header({
     required this.state,
-    required this.rotationAnimation,
-    required this.onTap,
+    required this.isExpanded,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [colorScheme.primary, colorScheme.secondary],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.restaurant_menu_rounded,
-                  color: Colors.white,
-                  size: 22,
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [colorScheme.primary, colorScheme.secondary],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nutrition Facts',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    if (state.hasData)
-                      Text(
-                        '${state.fieldCount} fields • ${state.dataMode}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              if (state.hasData) ...[
-                ConfidenceBadge(
-                  confidence: state.averageConfidence,
-                  hasWarnings: state.hasLowConfidenceFields,
-                ),
-                const SizedBox(width: 8),
-              ],
-              RotationTransition(
-                turns: rotationAnimation,
-                child: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.restaurant_menu_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
           ),
-        ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Nutrition Facts',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                if (state.hasData)
+                  Text(
+                    '${state.fieldCount} fields • ${state.dataMode}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (state.hasData) ...[
+            ConfidenceBadge(
+              confidence: state.averageConfidence,
+              hasWarnings: state.hasLowConfidenceFields,
+            ),
+            const SizedBox(width: 8),
+          ],
+          AnimatedRotation(
+            duration: const Duration(milliseconds: 200),
+            turns: isExpanded ? 0.5 : 0,
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class _NutritionFactsBottomSheetState
-    extends ConsumerState<NutritionFactsBottomSheet>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _expandController;
-  late Animation<double> _expandAnimation;
-  late Animation<double> _rotationAnimation;
+    extends ConsumerState<NutritionFactsBottomSheet> {
+  late final ExpansibleController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -355,7 +345,7 @@ class _NutritionFactsBottomSheetState
           // Auto-expand to show the data
           if (!ref.read(nutritionStateProvider).isExpanded) {
             ref.read(nutritionStateProvider.notifier).setExpanded(true);
-            _expandController.forward();
+            _controller.expand();
           }
 
           // Notify parent
@@ -377,17 +367,31 @@ class _NutritionFactsBottomSheetState
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _Header(
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: ExpansionTile(
+          controller: _controller,
+          initiallyExpanded: true,
+          tilePadding: EdgeInsets.zero,
+          childrenPadding: EdgeInsets.zero,
+          showTrailingIcon: false,
+          shape: const Border(),
+          collapsedShape: const Border(),
+          onExpansionChanged: (expanded) {
+            if (expanded != state.isExpanded) {
+              ref.read(nutritionStateProvider.notifier).setExpanded(expanded);
+            }
+          },
+          title: _Header(
             state: state,
-            rotationAnimation: _rotationAnimation,
-            onTap: _toggleExpanded,
+            isExpanded: state.isExpanded,
           ),
-          SizeTransition(
-            sizeFactor: _expandAnimation,
-            child: _Content(
+          children: [
+            _Content(
               state: state,
               onScan: _launchScanner,
               onFieldChanged: _onFieldChanged,
@@ -396,8 +400,8 @@ class _NutritionFactsBottomSheetState
               onClearError: () =>
                   ref.read(nutritionStateProvider.notifier).clearError(),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -421,7 +425,7 @@ class _NutritionFactsBottomSheetState
         // Auto-expand when data is received
         if (!ref.read(nutritionStateProvider).isExpanded) {
           ref.read(nutritionStateProvider.notifier).setExpanded(true);
-          _expandController.forward();
+          _controller.expand();
         }
       });
     }
@@ -429,24 +433,13 @@ class _NutritionFactsBottomSheetState
 
   @override
   void dispose() {
-    _expandController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _expandController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _expandAnimation = CurvedAnimation(
-      parent: _expandController,
-      curve: Curves.easeOutCubic,
-    );
-    _rotationAnimation = Tween<double>(begin: 0.0, end: 0.5).animate(
-      CurvedAnimation(parent: _expandController, curve: Curves.easeInOut),
-    );
+    _controller = ExpansibleController();
 
     if (widget.initialFacts != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -471,16 +464,6 @@ class _NutritionFactsBottomSheetState
     final updated = _updateField(facts, key, value);
     ref.read(nutritionStateProvider.notifier).updateFacts(updated);
     widget.onChanged?.call(updated);
-  }
-
-  void _toggleExpanded() {
-    final notifier = ref.read(nutritionStateProvider.notifier);
-    notifier.toggleExpanded();
-    if (ref.read(nutritionStateProvider).isExpanded) {
-      _expandController.forward();
-    } else {
-      _expandController.reverse();
-    }
   }
 
   NutritionFacts _updateField(NutritionFacts facts, String key, double? value) {
@@ -532,7 +515,7 @@ class _ScanButton extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                'Scan',
+                context.l10n.scan,
                 style: TextStyle(
                   color: colorScheme.onTertiary,
                   fontWeight: FontWeight.w600,

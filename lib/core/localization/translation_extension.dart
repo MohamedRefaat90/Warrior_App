@@ -142,6 +142,16 @@ extension TranslationExtension on String {
         return localizations.veganOnly;
       case 'vegetarianOnly':
         return localizations.vegetarianOnly;
+      case 'productNameWithColon':
+        return localizations.productNameWithColon;
+      case 'brandWithColon':
+        return localizations.brandWithColon;
+      case 'quantityWithColon':
+        return localizations.quantityWithColon;
+      case 'oopsSomethingWentWrong':
+        return localizations.oopsSomethingWentWrong;
+      case 'novaGroupLabel':
+        return localizations.novaGroupLabel;
 
       // Nutrition Guide
       case 'makeBetterFoodChoices':

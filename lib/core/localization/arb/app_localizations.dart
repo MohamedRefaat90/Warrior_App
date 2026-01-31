@@ -1370,7 +1370,7 @@ abstract class AppLocalizations {
   /// **'Basic Information'**
   String get basicInformation;
 
-  /// Weight label
+  /// Weight field label
   ///
   /// In en, this message translates to:
   /// **'Weight'**
@@ -2000,11 +2000,41 @@ abstract class AppLocalizations {
   /// **'Enter manually'**
   String get enterManually;
 
+  /// General error message
+  ///
+  /// In en, this message translates to:
+  /// **'Oops! Something went wrong'**
+  String get oopsSomethingWentWrong;
+
+  /// NOVA group label
+  ///
+  /// In en, this message translates to:
+  /// **'NOVA '**
+  String get novaGroupLabel;
+
   /// Unknown product placeholder
   ///
   /// In en, this message translates to:
   /// **'Unknown Product'**
   String get unknownProduct;
+
+  /// Product name label with colon
+  ///
+  /// In en, this message translates to:
+  /// **'Name: '**
+  String get productNameWithColon;
+
+  /// Brand label with colon
+  ///
+  /// In en, this message translates to:
+  /// **'Brand: '**
+  String get brandWithColon;
+
+  /// Quantity label with colon
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity: '**
+  String get quantityWithColon;
 
   /// Allergens section title
   ///

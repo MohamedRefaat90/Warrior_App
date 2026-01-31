@@ -1273,6 +1273,18 @@
   "@unknownProduct": {
     "description": "Unknown product placeholder"
   },
+  "productNameWithColon": "الاسم: ",
+  "@productNameWithColon": {
+    "description": "Product name label with colon"
+  },
+  "brandWithColon": "الماركة: ",
+  "@brandWithColon": {
+    "description": "Brand label with colon"
+  },
+  "quantityWithColon": "الكمية: ",
+  "@quantityWithColon": {
+    "description": "Quantity label with colon"
+  },
   "allergens": "مسببات الحساسية",
   "@allergens": {
     "description": "Allergens section title"
@@ -1288,6 +1300,14 @@
   "nutritionFactsPer100g": "القيم الغذائية (لكل 100 جم)",
   "@nutritionFactsPer100g": {
     "description": "Nutrition facts per 100g section title"
+  },
+  "oopsSomethingWentWrong": "عفواً! حدث خطأ ما",
+  "@oopsSomethingWentWrong": {
+    "description": "General error message"
+  },
+  "novaGroupLabel": "نوفا ",
+  "@novaGroupLabel": {
+    "description": "NOVA group label"
   },
   "nutritionScores": "تقييمات التغذية",
   "@nutritionScores": {

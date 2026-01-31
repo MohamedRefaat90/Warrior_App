@@ -1,5 +1,6 @@
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
 /// Service for managing Open Food Facts API credentials securely.
@@ -25,9 +26,13 @@ class OpenFoodFactsCredentialsService {
     final password =
         await SecureStorageHandler.read(key: StorageKeys.offPassword);
 
+    TalkerService.info("User ID: $userId");
+    TalkerService.info("Password: $password");
+    TalkerService.info(
+        "User Agent: ${OpenFoodAPIConfiguration.userAgent!.name}");
     return User(
-      userId: userId!,
-      password: password!,
+      userId: userId ?? '',
+      password: password ?? '',
       comment: 'Contributed via Warrior App',
     );
   }

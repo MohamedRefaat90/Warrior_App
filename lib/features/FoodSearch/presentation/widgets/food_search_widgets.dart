@@ -39,11 +39,7 @@ class EcoscoreWidget extends StatelessWidget {
   final String? ecoscore;
   final double size;
 
-  const EcoscoreWidget({
-    super.key,
-    required this.ecoscore,
-    this.size = 40,
-  });
+  const EcoscoreWidget({super.key, required this.ecoscore, this.size = 40});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +47,9 @@ class EcoscoreWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final score = ecoscore! != 'UNKNOWN' ? ecoscore!.toUpperCase() : 'N/A';
+    final score = ecoscore! == 'UNKNOWN' || ecoscore! == 'NOT-APPLICABLE'
+        ? "N/A"
+        : ecoscore!.toUpperCase();
     final color = _getEcoscoreColor(score);
 
     return Container(
@@ -184,7 +182,7 @@ class ErrorStateWidget extends StatelessWidget {
             ),
             SizedBox(height: context.mediumSpacing),
             Text(
-              'Oops! Something went wrong',
+              context.l10n.oopsSomethingWentWrong,
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),

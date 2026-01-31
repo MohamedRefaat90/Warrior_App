@@ -982,7 +982,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterManually => 'أدخل يدويًا';
 
   @override
+  String get oopsSomethingWentWrong => 'عفواً! حدث خطأ ما';
+
+  @override
+  String get novaGroupLabel => 'نوفا ';
+
+  @override
   String get unknownProduct => 'منتج غير معروف';
+
+  @override
+  String get productNameWithColon => 'الاسم: ';
+
+  @override
+  String get brandWithColon => 'الماركة: ';
+
+  @override
+  String get quantityWithColon => 'الكمية: ';
 
   @override
   String get allergens => 'مسببات الحساسية';

@@ -1004,7 +1004,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterManually => 'Enter manually';
 
   @override
+  String get oopsSomethingWentWrong => 'Oops! Something went wrong';
+
+  @override
+  String get novaGroupLabel => 'NOVA ';
+
+  @override
   String get unknownProduct => 'Unknown Product';
+
+  @override
+  String get productNameWithColon => 'Name: ';
+
+  @override
+  String get brandWithColon => 'Brand: ';
+
+  @override
+  String get quantityWithColon => 'Quantity: ';
 
   @override
   String get allergens => 'Allergens';

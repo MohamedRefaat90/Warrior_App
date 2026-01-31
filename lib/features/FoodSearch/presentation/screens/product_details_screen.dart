@@ -44,33 +44,6 @@ class Allergens extends StatelessWidget {
   }
 }
 
-class Ingredients extends StatelessWidget {
-  final ProductEntity product;
-
-  const Ingredients({super.key, required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return product.ingredients != null && product.ingredients!.isNotEmpty
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.l10n.ingredients,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              SizedBox(height: context.smallSpacing),
-              Text(
-                product.ingredients!,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              SizedBox(height: context.largeSpacing),
-            ],
-          )
-        : const SizedBox.shrink();
-  }
-}
-
 class Labels extends StatelessWidget {
   final ProductEntity product;
 
@@ -186,13 +159,13 @@ class ProductDetailsScreen extends ConsumerWidget {
                     children: [
                       // Product name and brand
                       Text(
-                        product.productName ?? context.l10n.unknownProduct,
+                        "${context.l10n.productNameWithColon}${product.productName ?? context.l10n.unknownProduct}",
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       if (product.brands != null) ...[
                         SizedBox(height: context.smallSpacing / 2),
                         Text(
-                          product.brands!,
+                          "${context.l10n.brandWithColon}${product.brands!}",
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: Theme.of(context)
@@ -205,7 +178,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                       if (product.quantity != null) ...[
                         SizedBox(height: context.smallSpacing / 2),
                         Text(
-                          product.quantity!,
+                          "${context.l10n.quantityWithColon}${product.quantity!}",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -240,7 +213,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                                 ),
                                 SizedBox(height: context.smallSpacing),
                                 Text(
-                                  'NOVA ${product.novaGroup}',
+                                  '${context.l10n.novaGroupLabel}${product.novaGroup}',
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               ],
@@ -249,9 +222,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                             Column(
                               children: [
                                 EcoscoreWidget(
-                                  ecoscore: product.ecoscore,
-                                  size: 60,
-                                ),
+                                    ecoscore: product.ecoscore, size: 60),
                                 SizedBox(height: context.smallSpacing / 2),
                                 Text(
                                   context.l10n.ecoScore,
@@ -265,9 +236,6 @@ class ProductDetailsScreen extends ConsumerWidget {
 
                       // Allergens
                       Allergens(product: product),
-
-                      // Ingredients
-                      Ingredients(product: product),
 
                       // Labels
                       Labels(product: product),
@@ -339,7 +307,7 @@ class ProductNutritionFacts extends StatelessWidget {
                   label: context.l10n.energy,
                   value: product.nutrition!.energyKcal100g!,
                   maxValue: 2000,
-                  unit: 'kcal',
+                  unit: context.l10n.kcal,
                 ),
               SizedBox(height: context.smallSpacing),
               if (product.nutrition!.proteins100g != null)
@@ -347,6 +315,7 @@ class ProductNutritionFacts extends StatelessWidget {
                   label: context.l10n.proteins,
                   value: product.nutrition!.proteins100g!,
                   maxValue: 50,
+                  unit: context.l10n.g,
                 ),
               SizedBox(height: context.smallSpacing),
               if (product.nutrition!.carbohydrates100g != null)
@@ -354,6 +323,7 @@ class ProductNutritionFacts extends StatelessWidget {
                   label: context.l10n.carbohydrates,
                   value: product.nutrition!.carbohydrates100g!,
                   maxValue: 275,
+                  unit: context.l10n.g,
                 ),
               SizedBox(height: context.smallSpacing),
               if (product.nutrition!.sugars100g != null)
@@ -361,6 +331,7 @@ class ProductNutritionFacts extends StatelessWidget {
                   label: context.l10n.sugars,
                   value: product.nutrition!.sugars100g!,
                   maxValue: 90,
+                  unit: context.l10n.g,
                 ),
               SizedBox(height: context.smallSpacing),
               if (product.nutrition!.fat100g != null)
@@ -368,6 +339,7 @@ class ProductNutritionFacts extends StatelessWidget {
                   label: context.l10n.fat,
                   value: product.nutrition!.fat100g!,
                   maxValue: 70,
+                  unit: context.l10n.g,
                 ),
               SizedBox(height: context.largeSpacing),
             ],

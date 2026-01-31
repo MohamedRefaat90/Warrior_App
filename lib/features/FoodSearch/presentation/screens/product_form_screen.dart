@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/off_credentials_service.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
@@ -194,6 +195,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       );
 
       // Get credentials from secure storage
+      // final user = await OpenFoodFactsCredentialsService.getUser();
       final user = await OpenFoodFactsCredentialsService.getUser();
 
       final repo = ref.read(productWriteRepositoryProvider);
@@ -231,6 +233,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       }
     } catch (e) {
       if (!mounted) return;
+      TalkerService.error("Error: ${e.toString()}");
       Flushbar(
         message: 'Error: ${e.toString()}',
         duration: const Duration(seconds: 3),

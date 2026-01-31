@@ -2,24 +2,22 @@ import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/localization/arb/app_localizations.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/app_open_ad_manager.dart';
+import 'package:Warrior/core/services/off_credentials_service.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/theme/app_theme.dart';
 import 'package:Warrior/routing.dart';
-import 'package:Warrior/test_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +28,8 @@ void main() async {
   // Initialize Open Food Facts API
   OpenFoodAPIConfiguration.userAgent =
       UserAgent(name: 'Warrior App', version: '1.1.0', system: 'Flutter');
+  OpenFoodFactsCredentialsService.saveCredentials(
+      userId: "Warrior App", password: "Warrior App");
   OpenFoodAPIConfiguration.globalLanguages = [
     OpenFoodFactsLanguage.ENGLISH,
     OpenFoodFactsLanguage.ARABIC,

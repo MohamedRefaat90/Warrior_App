@@ -167,16 +167,16 @@ class _NutritionFieldState extends State<NutritionField> {
           color: colorScheme.onSurfaceVariant,
           fontSize: 14,
         ),
-        prefixIcon: widget.data.icon != null
-            ? Icon(widget.data.icon,
-                size: 20, color: isLow ? Colors.orange : null)
-            : (isLow
-                ? const Icon(Icons.warning_amber_rounded,
-                    size: 20, color: Colors.orange)
-                : null),
+        // prefixIcon: widget.data.icon != null
+        //     ? Icon(widget.data.icon,
+        //         size: 20, color: isLow ? Colors.orange : null)
+        //     : (isLow
+        //         ? const Icon(Icons.warning_amber_rounded,
+        //             size: 20, color: Colors.orange)
+        //         : null),
         suffixIcon: hasConfidence
             ? Padding(
-                padding: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.only(right: 0),
                 child: ConfidenceIndicator(
                   confidence: widget.data.confidence,
                   size: 20,
@@ -203,7 +203,7 @@ class _NutritionFieldState extends State<NutritionField> {
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: colorScheme.primary, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
         helperText: isLow ? 'Please verify this value' : null,
         helperStyle: const TextStyle(color: Colors.orange, fontSize: 11),
       ),

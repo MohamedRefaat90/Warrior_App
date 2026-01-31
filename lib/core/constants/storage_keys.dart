@@ -18,8 +18,8 @@ class StorageKeys {
   static const String themeMode = 'themeMode';
   static const String locale = 'locale';
   // Open Food Facts API credentials (secure storage)
-  static const String offUserId = 'off_user_id';
+  static const String offUserId = 'Warrior_user_off';
 
-  static const String offPassword = 'off_password';
+  static const String offPassword = 'Warrior_pass_off';
   StorageKeys._();
 }

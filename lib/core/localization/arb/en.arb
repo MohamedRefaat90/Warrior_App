@@ -1298,9 +1298,29 @@
   "@enterManually": {
     "description": "Barcode scanner instruction"
   },
+  "oopsSomethingWentWrong": "Oops! Something went wrong",
+  "@oopsSomethingWentWrong": {
+    "description": "General error message"
+  },
+  "novaGroupLabel": "NOVA ",
+  "@novaGroupLabel": {
+    "description": "NOVA group label"
+  },
   "unknownProduct": "Unknown Product",
   "@unknownProduct": {
     "description": "Unknown product placeholder"
+  },
+  "productNameWithColon": "Name: ",
+  "@productNameWithColon": {
+    "description": "Product name label with colon"
+  },
+  "brandWithColon": "Brand: ",
+  "@brandWithColon": {
+    "description": "Brand label with colon"
+  },
+  "quantityWithColon": "Quantity: ",
+  "@quantityWithColon": {
+    "description": "Quantity label with colon"
   },
   "allergens": "Allergens",
   "@allergens": {
@@ -1740,14 +1760,6 @@
   "@confirmDeleteSet": {
     "description": "Confirmation message for deleting a set"
   },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel button text"
-  },
-  "delete": "Delete",
-  "@delete": {
-    "description": "Delete button text"
-  },
   "maxSetsReached": "Maximum 5 sets allowed",
   "@maxSetsReached": {
     "description": "Message when max sets limit is reached"
@@ -1763,10 +1775,6 @@
   "setsUpdatedOffline": "Sets saved locally, will sync when online",
   "@setsUpdatedOffline": {
     "description": "Message when sets are saved in offline mode"
-  },
-  "weight": "Weight",
-  "@weight": {
-    "description": "Weight label"
   },
   "weightIncreased": "UNSTOPPABLE! You just leveled up! Keep that fire burning! 🔥",
   "@weightIncreased": {

@@ -82,25 +82,25 @@ final searchProductByBarcodeUseCaseProvider =
   );
 });
 
-/// Provider for SearchProductsByBrandUseCase
-final searchProductsByBrandUseCaseProvider =
-    Provider<SearchProductsByBrandUseCase>((ref) {
-  return SearchProductsByBrandUseCase(
-    ref.watch(productReadRepositoryProvider),
-  );
-});
+// /// Provider for SearchProductsByBrandUseCase
+// final searchProductsByBrandUseCaseProvider =
+//     Provider<SearchProductsByBrandUseCase>((ref) {
+//   return SearchProductsByBrandUseCase(
+//     ref.watch(productReadRepositoryProvider),
+//   );
+// });
 
 // ============================================================================
 // HISTORY & SUGGESTIONS USE CASE PROVIDERS
 // ============================================================================
 
-/// Provider for SearchProductsByCategoryUseCase
-final searchProductsByCategoryUseCaseProvider =
-    Provider<SearchProductsByCategoryUseCase>((ref) {
-  return SearchProductsByCategoryUseCase(
-    ref.watch(productReadRepositoryProvider),
-  );
-});
+// /// Provider for SearchProductsByCategoryUseCase
+// final searchProductsByCategoryUseCaseProvider =
+//     Provider<SearchProductsByCategoryUseCase>((ref) {
+//   return SearchProductsByCategoryUseCase(
+//     ref.watch(productReadRepositoryProvider),
+//   );
+// });
 
 /// Provider for SearchProductsByNameUseCase
 final searchProductsByNameUseCaseProvider =

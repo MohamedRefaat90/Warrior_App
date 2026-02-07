@@ -12,9 +12,9 @@ final nutritionParsingServiceProvider = Provider<NutritionParsingService>(
 );
 
 /// Provider for OCR scanner state and actions.
-final ocrScannerProvider = NotifierProvider<OcrScannerNotifier, OcrScanState>(
-  OcrScannerNotifier.new,
-);
+final ocrScannerProvider =
+    NotifierProvider.autoDispose<OcrScannerNotifier, OcrScanState>(
+        OcrScannerNotifier.new);
 
 /// Provider for OcrService instance.
 final ocrServiceProvider = Provider<OcrService>((ref) {
@@ -22,25 +22,6 @@ final ocrServiceProvider = Provider<OcrService>((ref) {
   ref.onDispose(() => service.dispose());
   return service;
 });
-
-/// Scan failed with error.
-class OcrScanError extends OcrScanState {
-  final String message;
-  final bool canRetry;
-
-  const OcrScanError({required this.message, this.canRetry = true});
-}
-
-/// Initial state - ready to scan.
-class OcrScanInitial extends OcrScanState {
-  const OcrScanInitial();
-}
-
-/// Processing image.
-class OcrScanLoading extends OcrScanState {
-  final String message;
-  const OcrScanLoading([this.message = 'Processing...']);
-}
 
 /// Notifier for managing OCR scanning state.
 class OcrScannerNotifier extends Notifier<OcrScanState> {
@@ -201,4 +182,23 @@ class OcrScanSuccess extends OcrScanState {
   final NutritionFacts facts;
 
   const OcrScanSuccess({required this.facts});
+}
+
+/// Scan failed with error.
+class OcrScanError extends OcrScanState {
+  final String message;
+  final bool canRetry;
+
+  const OcrScanError({required this.message, this.canRetry = true});
+}
+
+/// Initial state - ready to scan.
+class OcrScanInitial extends OcrScanState {
+  const OcrScanInitial();
+}
+
+/// Processing image.
+class OcrScanLoading extends OcrScanState {
+  final String message;
+  const OcrScanLoading([this.message = 'Processing...']);
 }

@@ -6,6 +6,8 @@ import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/ocr_scanner_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/product_form_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_facts_bottom_sheet.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_form/product_form_widgets.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -18,11 +20,7 @@ class ProductFormScreen extends ConsumerStatefulWidget {
   final ProductEntity? product;
   final String? barcode;
 
-  const ProductFormScreen({
-    super.key,
-    this.product,
-    this.barcode,
-  });
+  const ProductFormScreen({super.key, this.product, this.barcode});
 
   @override
   ConsumerState<ProductFormScreen> createState() => _ProductFormScreenState();
@@ -31,14 +29,11 @@ class ProductFormScreen extends ConsumerStatefulWidget {
 class _Disclaimer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Text(
-      context.l10n.openFoodFactsDisclaimer,
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+    return Text(context.l10n.openFoodFactsDisclaimer,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-      textAlign: TextAlign.center,
-    );
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
+        textAlign: TextAlign.center);
   }
 }
 
@@ -48,16 +43,16 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   final _productNameController = TextEditingController();
   final _brandsController = TextEditingController();
   final _quantityController = TextEditingController();
-  final _ingredientsController = TextEditingController();
-  final _servingSizeController = TextEditingController();
-  final _countriesController = TextEditingController();
+  // final _ingredientsController = TextEditingController();
+  // final _servingSizeController = TextEditingController();
+  // final _countriesController = TextEditingController();
 
   bool _isLoading = false;
-  String? _selectedImagePath;
-  NutritionFacts? _scannedNutrition;
 
   @override
   Widget build(BuildContext context) {
+    final formState = ref.watch(productFormProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.product != null
@@ -87,32 +82,39 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               const SizedBox(height: 16),
 
               // Details fields (serving size, ingredients, countries)
-              ProductDetailsFields(
-                servingSizeController: _servingSizeController,
-                ingredientsController: _ingredientsController,
-                countriesController: _countriesController,
-              ),
-              const SizedBox(height: 24),
+              // ProductDetailsFields(
+              //   servingSizeController: _servingSizeController,
+              //   ingredientsController: _ingredientsController,
+              //   countriesController: _countriesController,
+              // ),
+              // const SizedBox(height: 24),
 
               // Nutrition Facts section with OCR scanner
               NutritionFactsBottomSheet(
-                initialFacts: _scannedNutrition,
+                initialFacts: formState.nutrition,
                 onChanged: (facts) {
-                  setState(() {
-                    _scannedNutrition = facts;
-                  });
+                  ref.read(productFormProvider.notifier).updateNutrition(facts);
                 },
-                onScanPressed: _scanNutritionLabel,
+                onScanPressed: () async {
+                  // Mark that we're about to scan - this flag will be checked in initState
+                  // if the widget rebuilds while we're away
+                  ref.read(productFormProvider.notifier).setScanning(true);
+
+                  // Navigate to scanner
+                  await context.push(AppRouters.ocrScanner);
+
+                  // Note: We DON'T set isScanning to false here!
+                  // The _initializeFormState method will handle state restoration
+                  // and reset the flag when it detects we've returned from scanning
+                },
               ),
               const SizedBox(height: 24),
 
               // Image picker section
               ProductImagePicker(
-                selectedImagePath: _selectedImagePath,
+                selectedImagePath: formState.imagePath,
                 onImageChanged: (path) {
-                  setState(() {
-                    _selectedImagePath = path;
-                  });
+                  ref.read(productFormProvider.notifier).updateImage(path);
                 },
               ),
               SizedBox(height: context.extraLargeSpacing),
@@ -140,36 +142,100 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     _productNameController.dispose();
     _brandsController.dispose();
     _quantityController.dispose();
-    _ingredientsController.dispose();
-    _servingSizeController.dispose();
-    _countriesController.dispose();
+    // _ingredientsController.dispose();
+    // _servingSizeController.dispose();
+    // _countriesController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _initializeForm();
+    _setupControllers();
+    _initializeFormState();
   }
 
-  void _initializeForm() {
-    if (widget.product != null) {
-      _barcodeController.text = widget.product!.barcode;
-      _productNameController.text = widget.product!.productName ?? '';
-      _brandsController.text = widget.product!.brands ?? '';
-      _quantityController.text = widget.product!.quantity ?? '';
-      _ingredientsController.text = widget.product!.ingredients ?? '';
-      _servingSizeController.text = widget.product!.servingSize ?? '';
-      _countriesController.text = widget.product!.countries ?? '';
-      _scannedNutrition = widget.product!.nutrition;
-    } else if (widget.barcode != null) {
-      _barcodeController.text = widget.barcode!;
-    }
+  void _initializeFormState() {
+    Future.microtask(() {
+      if (!mounted) return;
+
+      final provider = ref.read(productFormProvider);
+      final notifier = ref.read(productFormProvider.notifier);
+
+      if (provider.isScanning) {
+        // Returning from OCR - Restore state
+        TalkerService.info('Restoring form state from OCR session', 'FORM');
+
+        // Check for newly scanned data
+        final ocrState = ref.read(ocrScannerProvider);
+        if (ocrState is OcrScanSuccess) {
+          TalkerService.info('Applying OCR results to form', 'FORM');
+          notifier.updateNutrition(ocrState.facts);
+          // Optional: Clear OCR state so we don't re-apply it if we navigate back again without scanning
+          ref.read(ocrScannerProvider.notifier).reset();
+        }
+
+        notifier.setScanning(false);
+
+        // IMPORTANT: Re-read the state AFTER all updates to get current values
+        final currentState = ref.read(productFormProvider);
+        _populateControllersFromState(currentState);
+      } else {
+        // New session - Reset and Initialize
+        TalkerService.info('Initializing new form session', 'FORM');
+        // notifier.initialize(product: widget.product, barcode: widget.barcode);
+        _populateControllersFromState(provider);
+      }
+    });
   }
 
-  Future<NutritionFacts?> _scanNutritionLabel() async {
-    await context.push(AppRouters.ocrScanner);
-    return null;
+  void _populateControllersFromState(ProductFormState state) {
+    _barcodeController.text = state.barcode;
+    _productNameController.text = state.productName;
+    _brandsController.text = state.brands;
+    _quantityController.text = state.quantity;
+    // _servingSizeController.text = state.servingSize;
+    // _countriesController.text = state.countries;
+  }
+
+  void _setupControllers() {
+    _barcodeController.addListener(() {
+      ref
+          .read(productFormProvider.notifier)
+          .updateField(barcode: _barcodeController.text);
+      // TalkerService.debug(
+      //     'Barcode changed to ${_barcodeController.text}', 'FORM');
+    });
+    _productNameController.addListener(() {
+      ref
+          .read(productFormProvider.notifier)
+          .updateField(productName: _productNameController.text);
+    });
+    _brandsController.addListener(() {
+      ref
+          .read(productFormProvider.notifier)
+          .updateField(brands: _brandsController.text);
+    });
+    _quantityController.addListener(() {
+      ref
+          .read(productFormProvider.notifier)
+          .updateField(quantity: _quantityController.text);
+    });
+    // _ingredientsController.addListener(() {
+    //   ref
+    //       .read(productFormProvider.notifier)
+    //       .updateField(ingredients: _ingredientsController.text);
+    // });
+    // _servingSizeController.addListener(() {
+    //   ref
+    //       .read(productFormProvider.notifier)
+    //       .updateField(servingSize: _servingSizeController.text);
+    // });
+    // _countriesController.addListener(() {
+    //   ref
+    //       .read(productFormProvider.notifier)
+    //       .updateField(countries: _countriesController.text);
+    // });
   }
 
   Future<void> _submitForm() async {
@@ -187,10 +253,10 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
         productName: _productNameController.text.trim(),
         brands: _brandsController.text.trim(),
         quantity: _quantityController.text.trim(),
-        ingredients: _ingredientsController.text.trim(),
-        servingSize: _servingSizeController.text.trim(),
-        countries: _countriesController.text.trim(),
-        nutrition: _scannedNutrition,
+        // ingredients: _ingredientsController.text.trim(),
+        // servingSize: _servingSizeController.text.trim(),
+        // countries: _countriesController.text.trim(),
+        nutrition: ref.read(productFormProvider).nutrition,
         lastUpdated: DateTime.now(),
       );
 

@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class NutritionFactsBottomSheet extends ConsumerStatefulWidget {
   final ValueChanged<NutritionFacts?>? onChanged;
   final NutritionFacts? initialFacts;
-  final Future<NutritionFacts?> Function()? onScanPressed;
+  final VoidCallback? onScanPressed;
 
   const NutritionFactsBottomSheet({
     super.key,
@@ -393,7 +393,7 @@ class _NutritionFactsBottomSheetState
           children: [
             _Content(
               state: state,
-              onScan: _launchScanner,
+              onScan: widget.onScanPressed!,
               onFieldChanged: _onFieldChanged,
               onModeChanged: (mode) =>
                   ref.read(nutritionStateProvider.notifier).setDataMode(mode),
@@ -450,12 +450,12 @@ class _NutritionFactsBottomSheetState
     }
   }
 
-  Future<void> _launchScanner() async {
-    if (widget.onScanPressed == null) return;
+  // Future<void> _launchScanner() async {
+  //   if (widget.onScanPressed == null) return;
 
-    // Just navigate to scanner - the ref.listen above will handle the result
-    await widget.onScanPressed!();
-  }
+  //   // Just navigate to scanner - the ref.listen above will handle the result
+  //   widget.onScanPressed();
+  // }
 
   void _onFieldChanged(String key, double? value) {
     final facts = ref.read(nutritionStateProvider).facts;

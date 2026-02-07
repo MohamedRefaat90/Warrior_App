@@ -1,9 +1,13 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/image_cropper_service.dart';
 import 'package:Warrior/core/services/talker_service.dart';
-import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/ocr_scanner_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/ocr_scanner/ocr_bottom_controls.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/ocr_scanner/ocr_camera_preview.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/ocr_scanner/ocr_error_overlay.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/ocr_scanner/ocr_loading_overlay.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/ocr_scanner/ocr_success_overlay.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/scanning_overlay_painter.dart';
 import 'package:camera/camera.dart';
 import 'package:confetti/confetti.dart';
@@ -19,121 +23,6 @@ class OcrScannerScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<OcrScannerScreen> createState() => _OcrScannerScreenState();
-}
-
-/// Action button for gallery/manual options.
-class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback? onPressed;
-
-  const _ActionButton({
-    required this.icon,
-    required this.label,
-    this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          onPressed: onPressed,
-          icon: Icon(icon, color: Colors.white, size: 28),
-          style: IconButton.styleFrom(
-            backgroundColor: Colors.white.withValues(alpha: 0.2),
-            padding: const EdgeInsets.all(12),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Colors.white,
-              ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Camera preview widget with proper aspect ratio handling.
-class _CameraPreviewWidget extends StatelessWidget {
-  final CameraController controller;
-
-  const _CameraPreviewWidget({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    // Ensure controller is initialized and not disposed before accessing
-    if (!controller.value.isInitialized) {
-      return const Center(
-        child: CircularProgressIndicator(color: Colors.white),
-      );
-    }
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Double-check controller is still valid during build
-        if (!controller.value.isInitialized) {
-          return const SizedBox.shrink();
-        }
-
-        final size = constraints.biggest;
-        final cameraAspectRatio = controller.value.aspectRatio;
-        var scale = size.aspectRatio * cameraAspectRatio;
-
-        if (scale < 1) scale = 1 / scale;
-
-        return ClipRect(
-          child: Transform.scale(
-            scale: scale,
-            child: Center(child: CameraPreview(controller)),
-          ),
-        );
-      },
-    );
-  }
-}
-
-/// Main capture button with loading state.
-class _CaptureButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-  final bool isLoading;
-
-  const _CaptureButton({
-    this.onPressed,
-    this.isLoading = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 72,
-        height: 72,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 4),
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isLoading ? Colors.grey : Colors.white,
-          ),
-          child: isLoading
-              ? const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.camera_alt, size: 32, color: Colors.black),
-        ),
-      ),
-    );
-  }
 }
 
 class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
@@ -152,7 +41,6 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
   @override
   Widget build(BuildContext context) {
     final scanState = ref.watch(ocrScannerProvider);
-    final theme = Theme.of(context);
     final isLoading = scanState is OcrScanLoading;
 
     return Scaffold(
@@ -161,11 +49,11 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
       appBar: AppBar(
         title: Text(
           context.l10n.scanNutritionLabel,
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         actions: [
           if (_isInitialized)
             IconButton(
@@ -178,7 +66,11 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
         fit: StackFit.expand,
         children: [
           // Camera preview
-          _buildCameraPreview(),
+          OcrCameraPreview(
+            controller: _cameraController,
+            isInitialized: _isInitialized,
+            initError: _initError,
+          ),
 
           // Animated scanning overlay (replaces old static overlay)
           ScanningOverlay(
@@ -192,9 +84,8 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
             left: 0,
             right: 0,
             child: Center(
-              child: ScannerInstructions(
-                  text: 'positionNutritionLabel'.tr(context)),
-            ),
+                child: ScannerInstructions(
+                    text: context.l10n.positionNutritionLabel)),
           ),
 
           // Bottom controls
@@ -202,19 +93,30 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
             bottom: 0,
             left: 0,
             right: 0,
-            child: _buildBottomControls(context, theme, scanState),
+            child: OcrBottomControls(
+              isLoading: isLoading,
+              isInitialized: _isInitialized,
+              onGalleryPressed: _pickFromGallery,
+              onCapturePressed: _captureImage,
+            ),
           ),
 
           // Loading overlay
-          if (isLoading) _buildLoadingOverlay(context, scanState),
+          if (isLoading) OcrLoadingOverlay(state: scanState),
 
           // Error dialog
           if (scanState is OcrScanError)
-            _buildErrorOverlay(context, theme, scanState),
+            OcrErrorOverlay(
+              error: scanState,
+              onRetry: () {
+                ref.read(ocrScannerProvider.notifier).reset();
+                _hasHandledSuccess = false;
+              },
+            ),
 
           // Success - auto return with confetti
           if (scanState is OcrScanSuccess)
-            _handleSuccess(context, scanState.facts),
+            _buildSuccessOverlay(context, scanState.facts),
 
           // Confetti overlay
           Align(
@@ -240,18 +142,25 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
     );
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) {
-      return;
-    }
-
-    if (state == AppLifecycleState.inactive) {
-      _cameraController?.dispose();
-    } else if (state == AppLifecycleState.resumed) {
-      _initializeCamera();
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.inactive) {
+  //     TalkerService.info(
+  //         'OCR Scanner Screen: App lifecycle state changed to inactive', 'OCR');
+  //     // Dispose and nullify controller to prevent usage while inactive
+  //     _cameraController?.dispose();
+  //     if (mounted) {
+  //       setState(() {
+  //         _cameraController = null;
+  //         _isInitialized = false;
+  //       });
+  //     }
+  //   } else if (state == AppLifecycleState.resumed) {
+  //     TalkerService.info(
+  //         'OCR Scanner Screen: App lifecycle state changed to resumed', 'OCR');
+  //     _initializeCamera();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -265,9 +174,8 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 2),
-    );
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 1));
     // Reset OCR state when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(ocrScannerProvider.notifier).reset();
@@ -275,172 +183,30 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
     _initializeCamera();
   }
 
-  Widget _buildBottomControls(
-    BuildContext context,
-    ThemeData theme,
-    OcrScanState state,
-  ) {
-    final isLoading = state is OcrScanLoading;
+  Widget _buildSuccessOverlay(BuildContext context, NutritionFacts facts) {
+    // Only handle success once to prevent multiple pops
+    if (!_hasHandledSuccess) {
+      _hasHandledSuccess = true;
+      TalkerService.debug(
+          'OCR Success: Handling success with ${facts.populatedFieldCount} fields',
+          'OCR');
 
-    return Container(
-      padding: EdgeInsets.all(context.largeSpacing),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            Colors.black.withValues(alpha: 0.8),
-          ],
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              context.l10n.captureAndCropInstructions,
-              style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: context.largeSpacing),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _ActionButton(
-                  icon: Icons.photo_library,
-                  label: 'gallery'.tr(context),
-                  onPressed: isLoading ? null : _pickFromGallery,
-                ),
-                _CaptureButton(
-                  onPressed:
-                      (isLoading || !_isInitialized) ? null : _captureImage,
-                  isLoading: isLoading,
-                ),
-                _ActionButton(
-                  icon: Icons.edit,
-                  label: 'manual'.tr(context),
-                  onPressed: isLoading ? null : () => context.pop(null),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        HapticFeedback.heavyImpact();
+        _confettiController.play();
 
-  Widget _buildCameraPreview() {
-    if (_initError != null) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.camera_alt, size: 64, color: Colors.white54),
-            const SizedBox(height: 16),
-            Text(
-              _initError!,
-              style: const TextStyle(color: Colors.white54),
-            ),
-          ],
-        ),
-      );
+        // Delay pop to show confetti - facts are already in provider
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) {
+            TalkerService.debug(
+                'OCR Success: Popping - facts are in provider', 'OCR');
+            context.pop(); // No need to pass facts, they're in provider
+          }
+        });
+      });
     }
 
-    // Check if camera is properly initialized and not disposed
-    if (!_isInitialized ||
-        _cameraController == null ||
-        !_cameraController!.value.isInitialized) {
-      return const Center(
-        child: CircularProgressIndicator(color: Colors.white),
-      );
-    }
-
-    return _CameraPreviewWidget(controller: _cameraController!);
-  }
-
-  Widget _buildErrorOverlay(
-    BuildContext context,
-    ThemeData theme,
-    OcrScanError error,
-  ) {
-    return Container(
-      color: Colors.black.withValues(alpha: 0.7),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(context.extraLargeSpacing),
-          child: Card(
-            child: Padding(
-              padding: EdgeInsets.all(context.largeSpacing),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: theme.colorScheme.error,
-                  ),
-                  SizedBox(height: context.mediumSpacing),
-                  Text(
-                    'ocrFailed'.tr(context),
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  SizedBox(height: context.smallSpacing),
-                  Text(
-                    error.message,
-                    style: theme.textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: context.largeSpacing),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      if (error.canRetry)
-                        OutlinedButton.icon(
-                          onPressed: () {
-                            ref.read(ocrScannerProvider.notifier).reset();
-                            _hasHandledSuccess = false;
-                          },
-                          icon: const Icon(Icons.refresh),
-                          label: Text('retake'.tr(context)),
-                        ),
-                      ElevatedButton.icon(
-                        onPressed: () => context.pop(null),
-                        icon: const Icon(Icons.edit),
-                        label: Text('manualEntry'.tr(context)),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingOverlay(BuildContext context, OcrScanState state) {
-    final message = state is OcrScanLoading ? state.message : 'Processing...';
-
-    return Container(
-      color: Colors.black.withValues(alpha: 0.7),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CircularProgressIndicator(color: Colors.white),
-            SizedBox(height: context.mediumSpacing),
-            Text(
-              message,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return OcrSuccessOverlay(facts: facts);
   }
 
   Future<void> _captureImage() async {
@@ -471,78 +237,9 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
     }
   }
 
-  Widget _handleSuccess(BuildContext context, NutritionFacts facts) {
-    // Only handle success once to prevent multiple pops
-    if (!_hasHandledSuccess) {
-      _hasHandledSuccess = true;
-      debugPrint(
-          'OCR Success: Handling success with ${facts.populatedFieldCount} fields');
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        HapticFeedback.heavyImpact();
-        _confettiController.play();
-
-        // Delay pop to show confetti - facts are already in provider
-        Future.delayed(const Duration(milliseconds: 800), () {
-          if (mounted) {
-            debugPrint('OCR Success: Popping - facts are in provider');
-            context.pop(); // No need to pass facts, they're in provider
-          }
-        });
-      });
-    }
-
-    return Container(
-      color: Colors.black.withValues(alpha: 0.7),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0.0, end: 1.0),
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.elasticOut,
-              builder: (context, value, child) {
-                return Transform.scale(
-                  scale: value,
-                  child: child,
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.check_circle,
-                  size: 64,
-                  color: Colors.green,
-                ),
-              ),
-            ),
-            SizedBox(height: context.mediumSpacing),
-            Text(
-              'scanComplete'.tr(context),
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${facts.populatedFieldCount} fields detected',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white70,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> _initializeCamera() async {
     try {
+      _isTorchOn = false; // Reset torch state on initialization
       _cameras = await availableCameras();
       if (!mounted) return;
 
@@ -561,7 +258,7 @@ class _OcrScannerScreenState extends ConsumerState<OcrScannerScreen>
 
       _cameraController = CameraController(
         backCamera,
-        ResolutionPreset.high,
+        ResolutionPreset.ultraHigh,
         enableAudio: false,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );

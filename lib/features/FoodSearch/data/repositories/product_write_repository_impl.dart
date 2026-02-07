@@ -1,5 +1,7 @@
+import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
+import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/data/data_sources/food_remote_data_source.dart';
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
@@ -7,7 +9,6 @@ import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.d
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/domain/repositories/product_write_repository.dart';
-import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
 class ProductWriteRepositoryImpl implements ProductWriteRepository {
@@ -35,6 +36,21 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
   }
 
   @override
+  Future<void> deletePendingUpload(String uploadId) async {
+    try {
+      await HiveManager.removePendingProductUploadById(uploadId);
+    } catch (e, stackTrace) {
+      TalkerService.error(
+        'Error in deletePendingUpload',
+        'FOOD_WRITE_REPO',
+        e,
+        stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  @override
   int getPendingProductCount() {
     return HiveManager.getPendingProductUploads().length;
   }
@@ -42,6 +58,82 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
   @override
   List<PendingProductUpload> getPendingProductUploads() {
     return HiveManager.getPendingProductUploads();
+  }
+
+  @override
+  Future<PendingProductUpload> retryPendingUpload(String uploadId) async {
+    try {
+      final uploads = HiveManager.getPendingProductUploads();
+      final upload = uploads.firstWhere(
+        (u) => u.id == uploadId,
+        orElse: () => throw Exception('Pending upload not found: $uploadId'),
+      );
+
+      if (!upload.canRetry) {
+        throw Exception(
+          'Upload has exceeded maximum retries (3 attempts)',
+        );
+      }
+
+      // Increment retry count and mark as uploading
+      upload.incrementRetryCount();
+      upload.markUploading();
+      await upload.save();
+
+      TalkerService.info(
+        'Retrying pending upload: $uploadId (Attempt ${upload.retryCount}/3)',
+        'FOOD_WRITE_REPO',
+      );
+
+      // Attempt to upload if online
+      if (ConnectivityChecker.isOnline == true) {
+        try {
+          final String? user_id =
+              await SecureStorageHandler.read(key: StorageKeys.offUserId);
+          final String? password =
+              await SecureStorageHandler.read(key: StorageKeys.offPassword);
+          final success = await _remoteDataSource.addNewProduct(
+            upload.product.toOpenFoodFactsProduct(),
+            User(userId: user_id ?? "", password: password ?? ""),
+          );
+
+          if (success) {
+            upload.markSuccessful();
+            await upload.save();
+            TalkerService.info(
+              'Pending upload successful: $uploadId',
+              'FOOD_WRITE_REPO',
+            );
+          } else {
+            upload.markFailed('Server rejected the product');
+            await upload.save();
+          }
+        } catch (e) {
+          upload.markFailed('Network error: ${e.toString()}');
+          await upload.save();
+          TalkerService.warning(
+            'Retry attempt failed: $e',
+            'FOOD_WRITE_REPO',
+          );
+        }
+      } else {
+        // Keep as uploading status to retry when back online
+        TalkerService.info(
+          'Device offline: Pending upload queued for retry',
+          'FOOD_WRITE_REPO',
+        );
+      }
+
+      return upload;
+    } catch (e, stackTrace) {
+      TalkerService.error(
+        'Error in retryPendingUpload',
+        'FOOD_WRITE_REPO',
+        e,
+        stackTrace,
+      );
+      rethrow;
+    }
   }
 
   @override
@@ -196,23 +288,22 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
       throw Exception('Product barcode is required for offline queue');
     }
 
-    final productData = <String, dynamic>{
-      'barcode': product.barcode,
-      'productName': product.productName,
-      'brands': product.brands,
-      'countries': product.countries,
-      'quantity': product.quantity,
-      'servingSize': product.servingSize,
-      'ingredientsText': product.ingredientsText,
-    };
+    final foodProductModel = FoodProductModel(
+      barcode: product.barcode ?? '',
+      productName: product.productName ?? '',
+      brands: product.brands ?? '',
+      countries: product.countries,
+      quantity: product.quantity ?? '',
+      servingSize: product.servingSize,
+      ingredients: product.ingredients?.map((i) => i.toString()).join(', '),
+      nutritionValues: nutrition,
+      lastUpdated: DateTime.now(),
+    );
 
     final pendingUpload = PendingProductUpload(
-      barcode: product.barcode!,
-      productData: productData,
-      nutritionFacts: nutrition,
-      imagePath: imagePath,
-      operationType:
-          isUpdate ? SyncOperationType.update : SyncOperationType.create,
+      id: product.barcode ?? DateTime.now().toString(),
+      product: foodProductModel,
+      queuedAt: DateTime.now(),
     );
 
     await HiveManager.addPendingProductUpload(pendingUpload);

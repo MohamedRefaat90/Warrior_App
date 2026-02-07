@@ -864,6 +864,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Failed to update product. Please try again.';
 
   @override
+  String get validationErrorsFixRequired =>
+      'Please fix validation errors before submitting';
+
+  @override
+  String get savedToOfflineQueue =>
+      'Saved to offline queue - will upload when online';
+
+  @override
   String imageSelected(String filename) {
     return 'Image selected: $filename';
   }

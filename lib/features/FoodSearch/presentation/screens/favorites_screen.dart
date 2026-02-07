@@ -1,7 +1,9 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/pending_upload_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/pending_upload_badge.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +22,20 @@ class FavoritesScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text('favorites'.tr(context)),
         actions: [
+          // Pending uploads badge
+          Consumer(
+            builder: (context, ref, _) {
+              final pendingCount = ref.watch(pendingUploadCountProvider);
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Center(
+                  child: PendingUploadBadge(
+                    pendingCount: pendingCount,
+                  ),
+                ),
+              );
+            },
+          ),
           if (favorites.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.sort),

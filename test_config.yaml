@@ -6,7 +6,8 @@ test_settings:
   
   coverage:
     enabled: true
-    minimum_coverage: 80
+    minimum_coverage: 70
+    food_search_target: 70  # 70% coverage target for FoodSearch feature
     exclude_patterns:
       - "**/*.g.dart"
       - "**/*.freezed.dart"

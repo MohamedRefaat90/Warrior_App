@@ -124,9 +124,9 @@ class SyncService extends Notifier<SyncState> {
 
     for (final upload in pendingUploads) {
       // Skip if max retries exceeded
-      if (upload.retryCount >= _maxRetries) {
+      if (upload.isMaxRetriesExceeded) {
         TalkerService.warning(
-          'Max retries exceeded for product: ${upload.barcode}, removing',
+          'Max retries exceeded for product: ${upload.product.barcode}, removing',
           'SYNC',
         );
         uploadsToRemove.add(upload);
@@ -144,13 +144,13 @@ class SyncService extends Notifier<SyncState> {
         final success = await foodSearchRepository.submitProduct(
           product: entity,
           user: user,
-          imagePath: upload.imagePath,
-          isUpdate: upload.operationType == SyncOperationType.update,
+          imagePath: null, // Image path not stored in new model structure
+          isUpdate: false, // Determine update status from product ID
         );
 
         if (success) {
           TalkerService.info(
-            'Successfully synced product: ${upload.barcode}',
+            'Successfully synced product: ${upload.product.barcode}',
             'SYNC',
           );
           uploadsToRemove.add(upload);
@@ -168,7 +168,7 @@ class SyncService extends Notifier<SyncState> {
         }
       } catch (e) {
         TalkerService.error(
-          'Error syncing product: ${upload.barcode}',
+          'Error syncing product: ${upload.product.barcode}',
           'SYNC',
           e,
         );

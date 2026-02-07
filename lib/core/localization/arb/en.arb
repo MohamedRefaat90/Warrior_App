@@ -1106,6 +1106,14 @@
   "@failedToUpdateProduct": {
     "description": "Error message when updating product fails"
   },
+  "validationErrorsFixRequired": "Please fix validation errors before submitting",
+  "@validationErrorsFixRequired": {
+    "description": "Message shown when validation errors prevent form submission"
+  },
+  "savedToOfflineQueue": "Saved to offline queue - will upload when online",
+  "@savedToOfflineQueue": {
+    "description": "Message shown when product is saved offline and will be uploaded later"
+  },
   "imageSelected": "Image selected: {filename}",
   "@imageSelected": {
     "description": "Message showing selected image filename",

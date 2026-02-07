@@ -81,6 +81,18 @@ class FoodProductModel extends HiveObject {
   @HiveField(23)
   final String? countries;
 
+  /// Local file path to cached/compressed image (if any).
+  @HiveField(24)
+  final String? cachedImagePath;
+
+  /// Timestamp when this product was cached.
+  @HiveField(25)
+  final DateTime cachedAt;
+
+  /// Source of the product data (OpenFoodFacts, user manual, OCR, etc).
+  @HiveField(26)
+  final String dataSource;
+
   FoodProductModel({
     required this.barcode,
     this.productName,
@@ -106,7 +118,10 @@ class FoodProductModel extends HiveObject {
     this.servingSize,
     this.packagingText,
     this.countries,
-  });
+    this.cachedImagePath,
+    DateTime? cachedAt,
+    this.dataSource = 'openFoodFacts',
+  }) : cachedAt = cachedAt ?? DateTime.now();
 
   /// Create from domain entity
   factory FoodProductModel.fromEntity(ProductEntity entity) {
@@ -133,6 +148,7 @@ class FoodProductModel extends HiveObject {
       lastUpdated: entity.lastUpdated,
       servingSize: entity.servingSize,
       countries: entity.countries,
+      dataSource: 'userManual',
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/comparison_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/cache_indicator_widget.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nova_group_indicator.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
@@ -143,7 +144,16 @@ class ProductDetailsScreen extends ConsumerWidget {
                 onPressed: () {
                   ref.read(favoritesProvider.notifier).toggleFavorite(product);
                 },
-              )
+              ),
+              // Cache indicator
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Center(
+                  child: CacheIndicatorWidget(
+                    cachedAt: product.lastUpdated,
+                  ),
+                ),
+              ),
             ],
           ),
           SliverToBoxAdapter(

@@ -32,4 +32,5 @@ abstract class AppRouters {
   static const String productForm = '/productForm';
   static const String nutritionGuide = '/nutritionGuide';
   static const String ocrScanner = '/ocrScanner';
+  static const String pendingUploads = '/pendingUploads';
 }

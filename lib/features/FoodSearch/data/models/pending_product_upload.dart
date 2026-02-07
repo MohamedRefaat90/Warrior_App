@@ -1,6 +1,5 @@
-import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
+import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
-import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:hive/hive.dart';
 
 part 'pending_product_upload.g.dart';
@@ -9,74 +8,111 @@ part 'pending_product_upload.g.dart';
 ///
 /// This is used for offline-first functionality, allowing products to be
 /// submitted when offline and synced when connectivity is restored.
+///
+/// Enhanced with retry tracking, status management, and failure diagnostics
+/// to support robust offline sync workflows.
 @HiveType(typeId: 20)
 class PendingProductUpload extends HiveObject {
-  /// The product barcode.
+  /// Unique identifier for this pending upload.
   @HiveField(0)
-  final String barcode;
+  final String id;
 
-  /// Product data serialized as JSON map.
-  ///
-  /// Contains all product fields like name, brands, categories, etc.
+  /// The product being uploaded.
   @HiveField(1)
-  final Map<String, dynamic> productData;
-
-  /// Nutrition facts associated with the product.
-  @HiveField(2)
-  final NutritionValuesModel? nutritionFacts;
-
-  /// Local path to the product image (if any).
-  @HiveField(3)
-  final String? imagePath;
+  final FoodProductModel product;
 
   /// Timestamp when the upload was queued.
-  @HiveField(4)
-  final DateTime timestamp;
+  @HiveField(2)
+  final DateTime queuedAt;
 
   /// Number of retry attempts for this upload.
-  @HiveField(5)
+  @HiveField(3)
   int retryCount;
 
-  /// The type of operation (create or update).
+  /// Current status of the upload (pending, uploading, failed).
+  @HiveField(4)
+  final PendingUploadStatus status;
+
+  /// Timestamp of the last upload attempt (if any).
+  @HiveField(5)
+  DateTime? lastAttemptAt;
+
+  /// Reason for last failure (if status is failed).
   @HiveField(6)
-  final SyncOperationType operationType;
+  String? failureReason;
 
   PendingProductUpload({
-    required this.barcode,
-    required this.productData,
-    this.nutritionFacts,
-    this.imagePath,
-    DateTime? timestamp,
+    required this.id,
+    required this.product,
+    required this.queuedAt,
     this.retryCount = 0,
-    required this.operationType,
-  }) : timestamp = timestamp ?? DateTime.now();
+    this.status = PendingUploadStatus.pending,
+    this.lastAttemptAt,
+    this.failureReason,
+  });
+
+  /// Whether this upload is eligible for retry.
+  bool get canRetry =>
+      !isMaxRetriesExceeded && status == PendingUploadStatus.failed;
+
+  /// Whether this upload has exceeded max retries (3).
+  bool get isMaxRetriesExceeded => retryCount >= 3;
 
   /// Increments the retry count.
   void incrementRetryCount() {
     retryCount++;
   }
 
+  /// Marks this upload as failed with optional reason.
+  void markFailed(String? reason) {
+    lastAttemptAt = DateTime.now();
+    failureReason = reason;
+  }
+
+  /// Marks this upload as successfully completed.
+  void markSuccessful() {
+    lastAttemptAt = DateTime.now();
+  }
+
+  /// Marks this upload as currently uploading.
+  void markUploading() {
+    lastAttemptAt = DateTime.now();
+  }
+
   /// Converts this pending upload to a [ProductEntity].
   ProductEntity toEntity() {
     return ProductEntity(
-      barcode: barcode,
-      productName: productData['productName'] as String?,
-      brands: productData['brands'] as String?,
-      countries: productData['countries'] as String?,
-      quantity: productData['quantity'] as String?,
-      servingSize: productData['servingSize'] as String?,
-      ingredients: productData['ingredientsText'] as String?,
-      nutrition: nutritionFacts?.toEntity(),
-      lastUpdated: timestamp,
+      barcode: product.barcode,
+      productName: product.productName,
+      brands: product.brands,
+      countries: product.countries,
+      quantity: product.quantity,
+      servingSize: product.servingSize,
+      ingredients: product.ingredients,
+      nutrition: product.nutritionValues?.toEntity(),
+      lastUpdated: queuedAt,
     );
   }
 
   @override
   String toString() {
     return 'PendingProductUpload('
-        'barcode: $barcode, '
-        'operationType: $operationType, '
+        'id: $id, '
+        'barcode: ${product.barcode}, '
+        'status: $status, '
         'retryCount: $retryCount, '
-        'timestamp: $timestamp)';
+        'queuedAt: $queuedAt)';
   }
+}
+
+/// Status enumeration for pending product uploads.
+enum PendingUploadStatus {
+  /// Upload is queued and waiting to be sent.
+  pending,
+
+  /// Upload is currently in progress.
+  uploading,
+
+  /// Upload failed (eligible for retry if within retry limit).
+  failed,
 }

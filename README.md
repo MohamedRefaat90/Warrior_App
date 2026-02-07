@@ -66,6 +66,112 @@ _Your personal fitness companion for creating and managing custom workout routin
 - **Workout Editing** - Inline editing of workout names and descriptions
 - **Progress Tracking** - Track weights for each exercise
 
+---
+
+## 🍎 FoodSearch Feature
+
+The **FoodSearch** module provides comprehensive food database integration with offline-first support.
+
+### 📋 FoodSearch Capabilities
+
+| Feature                        | Description                                           | Status      |
+| ------------------------------ | ----------------------------------------------------- | ----------- |
+| **Barcode Scanning**           | QR/Barcode scanning for quick product lookup          | ✅ Complete |
+| **OCR Nutrition Extraction**   | Extract nutrition facts from food labels using ML Kit | ✅ Complete |
+| **Food Search**                | Search food database by name or barcode               | ✅ Complete |
+| **Product Details**            | View comprehensive nutrition information              | ✅ Complete |
+| **Product Comparison**         | Compare nutrition across multiple products            | ✅ Complete |
+| **Nutrition Guide**            | Learn about nutrition scores and food ratings         | ✅ Complete |
+| **Form Validation**            | Real-time validation for product submissions          | ✅ Complete |
+| **Offline Sync**               | Queue submissions and sync when online                | ✅ Complete |
+| **Pending Uploads Management** | View and manage queued products with manual retry     | ✅ Complete |
+| **Search History**             | Track and manage product search history              | ✅ Complete |
+| **Favorites**                  | Save favorite products for quick access              | ✅ Complete |
+
+### 🔄 Offline-First Architecture
+
+**Key Features**:
+- ✅ Automatic queueing of product submissions when offline
+- ✅ Persistent Hive storage for offline data
+- ✅ Auto-retry with exponential backoff (max 3 attempts)
+- ✅ Manual retry and delete controls for queued items
+- ✅ Automatic sync when connectivity restored
+- ✅ User-friendly pending uploads management screen
+
+**File Structure**:
+```
+lib/features/FoodSearch/
+├── data/
+│   ├── models/                    # Data models
+│   │   ├── food_product_model.dart
+│   │   ├── pending_product_upload.dart
+│   │   ├── pending_upload_status.dart
+│   │   └── ...
+│   ├── repositories/              # Repository implementations
+│   │   ├── product_read_repository_impl.dart
+│   │   └── product_write_repository_impl.dart
+│   └── data_sources/              # API & local data sources
+│       ├── food_remote_data_source.dart
+│       └── food_local_data_source.dart
+├── domain/
+│   ├── repositories/              # Repository interfaces
+│   │   ├── product_read_repository.dart
+│   │   └── product_write_repository.dart
+│   ├── usecases/                  # Business logic (11 use cases)
+│   │   ├── search_product_by_barcode_usecase.dart
+│   │   ├── search_products_by_name_usecase.dart
+│   │   ├── toggle_favorite_usecase.dart
+│   │   ├── get_pending_uploads_usecase.dart
+│   │   ├── retry_pending_upload_usecase.dart
+│   │   └── ...
+│   └── entities/                  # Domain models
+│       ├── product_entity.dart
+│       ├── nutrition_facts.dart
+│       └── ...
+└── presentation/
+    ├── screens/                   # UI Screens
+    │   ├── food_search_screen.dart
+    │   ├── pending_uploads_screen.dart
+    │   ├── product_form_screen.dart
+    │   └── ...
+    ├── widgets/                   # Reusable widgets
+    │   ├── pending_upload_card.dart
+    │   ├── pending_upload_badge.dart
+    │   ├── product_card.dart
+    │   └── ...
+    ├── providers/                 # Riverpod providers
+    │   └── food_search_provider.dart
+    └── ...
+```
+
+### 📊 Food Product Validation
+
+**Fields Validated**:
+- Product Name (required, 2-200 characters)
+- Barcode (required, valid EAN/UPC format)
+- Brands (optional, max 200 characters)
+- Quantity (optional, valid format)
+- Nutrition Values (optional, valid ranges)
+- Images (optional, valid formats and sizes)
+
+**Validation Features**:
+- ✅ Real-time validation as user types
+- ✅ Clear, actionable error messages
+- ✅ Localization support for all messages
+- ✅ Visual feedback (red borders, error text)
+- ✅ Submit button disabled until valid
+
+### 🧪 FoodSearch Test Coverage
+
+| Test Category | Count | Coverage |
+| ------------- | ----- | -------- |
+| Unit Tests    | 60+   | Domain & Data layers |
+| Widget Tests  | 30+   | UI components |
+| Integration   | 5+    | End-to-end scenarios |
+| **Total**     | **95+** | **70%+ overall** |
+
+For detailed FoodSearch documentation, see [FoodSearch Feature README](./lib/features/FoodSearch/README.md)
+
 ### 🧩 Architecture Pattern
 
 The app follows **Clean Architecture** principles with clear separation:

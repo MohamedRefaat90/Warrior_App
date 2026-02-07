@@ -3,6 +3,7 @@ import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/favorites_provider.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/cache_indicator_widget.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_score_badge.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,15 @@ class ProductCard extends ConsumerWidget {
                                 size: 32,
                               ),
                             ),
+                          // Cache indicator
+                          Positioned(
+                            top: 4,
+                            right: 4,
+                            child: CacheIndicatorWidget(
+                              cachedAt: product.lastUpdated,
+                              showIcon: true,
+                            ),
+                          ),
                         ],
                       );
                     },

@@ -1,11 +1,15 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/off_credentials_service.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
-import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
+import 'package:Warrior/features/FoodSearch/domain/validators/barcode_validator.dart';
+import 'package:Warrior/features/FoodSearch/domain/validators/brand_validator.dart';
+import 'package:Warrior/features/FoodSearch/domain/validators/product_name_validator.dart';
+import 'package:Warrior/features/FoodSearch/domain/validators/quantity_validator.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/ocr_scanner_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/product_form_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/nutrition_facts_bottom_sheet.dart';
@@ -49,6 +53,14 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
 
   bool _isLoading = false;
 
+  // Validation error tracking
+  final Map<String, String?> _validationErrors = {
+    'barcode': null,
+    'productName': null,
+    'brand': null,
+    'quantity': null,
+  };
+
   @override
   Widget build(BuildContext context) {
     final formState = ref.watch(productFormProvider);
@@ -78,6 +90,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 quantityController: _quantityController,
                 isBarcodeEditable:
                     widget.product == null && widget.barcode == null,
+                validationErrors: _validationErrors,
               ),
               const SizedBox(height: 16),
 
@@ -123,6 +136,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               _SubmitButton(
                 isLoading: _isLoading,
                 isEditing: widget.product != null,
+                hasValidationErrors: _hasValidationErrors,
                 onPressed: _submitForm,
               ),
               SizedBox(height: context.mediumSpacing),
@@ -203,6 +217,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       ref
           .read(productFormProvider.notifier)
           .updateField(barcode: _barcodeController.text);
+      _validateBarcode();
       // TalkerService.debug(
       //     'Barcode changed to ${_barcodeController.text}', 'FORM');
     });
@@ -210,16 +225,19 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       ref
           .read(productFormProvider.notifier)
           .updateField(productName: _productNameController.text);
+      _validateProductName();
     });
     _brandsController.addListener(() {
       ref
           .read(productFormProvider.notifier)
           .updateField(brands: _brandsController.text);
+      _validateBrand();
     });
     _quantityController.addListener(() {
       ref
           .read(productFormProvider.notifier)
           .updateField(quantity: _quantityController.text);
+      _validateQuantity();
     });
     // _ingredientsController.addListener(() {
     //   ref
@@ -238,7 +256,64 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     // });
   }
 
+  void _validateBarcode() {
+    final result = BarcodeValidator.validate(_barcodeController.text);
+    setState(() {
+      _validationErrors['barcode'] = result.isValid
+          ? null
+          : result.fieldErrors['barcode'];
+    });
+  }
+
+  void _validateProductName() {
+    final result = ProductNameValidator.validate(_productNameController.text);
+    setState(() {
+      _validationErrors['productName'] = result.isValid
+          ? null
+          : result.fieldErrors['productName'];
+    });
+  }
+
+  void _validateBrand() {
+    final result = BrandValidator.validate(_brandsController.text);
+    setState(() {
+      _validationErrors['brand'] = result.isValid
+          ? null
+          : result.fieldErrors['brand'];
+    });
+  }
+
+  void _validateQuantity() {
+    final result = QuantityValidator.validate(_quantityController.text);
+    setState(() {
+      _validationErrors['quantity'] = result.isValid
+          ? null
+          : result.fieldErrors['quantity'];
+    });
+  }
+
+  bool get _hasValidationErrors {
+    return _validationErrors.values.any((error) => error != null);
+  }
+
   Future<void> _submitForm() async {
+    // Run validation
+    _validateBarcode();
+    _validateProductName();
+    _validateBrand();
+    _validateQuantity();
+
+    // Check if there are any validation errors
+    if (_hasValidationErrors) {
+      Flushbar(
+        message: context.l10n.validationErrorsFixRequired,
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.orange,
+        icon: const Icon(Icons.warning, color: Colors.white),
+      ).show(context);
+      return;
+    }
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -283,6 +358,19 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
           icon: const Icon(Icons.check_circle, color: Colors.white),
         ).show(context);
 
+        // Show additional notification if offline
+        if (ConnectivityChecker.isOnline != true) {
+          await Future.delayed(const Duration(seconds: 1));
+          if (mounted) {
+            Flushbar(
+              message: context.l10n.savedToOfflineQueue,
+              duration: const Duration(seconds: 4),
+              backgroundColor: Colors.blue,
+              icon: const Icon(Icons.cloud_queue, color: Colors.white),
+            ).show(context);
+          }
+        }
+
         await Future.delayed(const Duration(seconds: 1));
         if (mounted) {
           Navigator.of(context).pop(true);
@@ -319,18 +407,20 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
 class _SubmitButton extends StatelessWidget {
   final bool isLoading;
   final bool isEditing;
+  final bool hasValidationErrors;
   final VoidCallback onPressed;
 
   const _SubmitButton({
     required this.isLoading,
     required this.isEditing,
+    required this.hasValidationErrors,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
+      onPressed: isLoading || hasValidationErrors ? null : onPressed,
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: context.mediumSpacing),
       ),

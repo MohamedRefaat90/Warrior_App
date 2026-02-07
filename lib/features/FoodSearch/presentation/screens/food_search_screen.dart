@@ -10,6 +10,7 @@ import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_dialog.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/pending_upload_badge.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +35,18 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
       appBar: AppBar(
         title: Text('foodSearch'.tr(context)),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Center(
+              child: PendingUploadBadge(
+                pendingCount: 0, // Will be fetched from provider
+                onTap: () {
+                  context.pushNamed(AppRouters.pendingUploads);
+                },
+                isVisible: true,
+              ),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: context.l10n.advancedSearchTooltip,

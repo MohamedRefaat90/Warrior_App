@@ -1184,6 +1184,14 @@
   "@failedToUpdateProduct": {
     "description": "Failed to update product error"
   },
+  "validationErrorsFixRequired": "يرجى إصلاح أخطاء التحقق قبل الإرسال",
+  "@validationErrorsFixRequired": {
+    "description": "Message shown when validation errors prevent form submission"
+  },
+  "savedToOfflineQueue": "تم الحفظ في قائمة الانتظار - سيتم التحميل عندما تكون متصلاً بالإنترنت",
+  "@savedToOfflineQueue": {
+    "description": "Message shown when product is saved offline and will be uploaded later"
+  },
   "imageSelected": "تم اختيار الصورة",
   "@imageSelected": {
     "description": "Image selected message"

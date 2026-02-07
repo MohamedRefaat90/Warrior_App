@@ -41,13 +41,16 @@ class FoodProductModelAdapter extends TypeAdapter<FoodProductModel> {
       servingSize: fields[21] as String?,
       packagingText: fields[22] as String?,
       countries: fields[23] as String?,
+      cachedImagePath: fields[24] as String?,
+      cachedAt: fields[25] as DateTime?,
+      dataSource: fields[26] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, FoodProductModel obj) {
     writer
-      ..writeByte(24)
+      ..writeByte(27)
       ..writeByte(0)
       ..write(obj.barcode)
       ..writeByte(1)
@@ -95,7 +98,13 @@ class FoodProductModelAdapter extends TypeAdapter<FoodProductModel> {
       ..writeByte(22)
       ..write(obj.packagingText)
       ..writeByte(23)
-      ..write(obj.countries);
+      ..write(obj.countries)
+      ..writeByte(24)
+      ..write(obj.cachedImagePath)
+      ..writeByte(25)
+      ..write(obj.cachedAt)
+      ..writeByte(26)
+      ..write(obj.dataSource);
   }
 
   @override

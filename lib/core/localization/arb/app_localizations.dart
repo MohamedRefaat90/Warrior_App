@@ -1748,6 +1748,18 @@ abstract class AppLocalizations {
   /// **'Failed to update product. Please try again.'**
   String get failedToUpdateProduct;
 
+  /// Message shown when validation errors prevent form submission
+  ///
+  /// In en, this message translates to:
+  /// **'Please fix validation errors before submitting'**
+  String get validationErrorsFixRequired;
+
+  /// Message shown when product is saved offline and will be uploaded later
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to offline queue - will upload when online'**
+  String get savedToOfflineQueue;
+
   /// Message showing selected image filename
   ///
   /// In en, this message translates to:

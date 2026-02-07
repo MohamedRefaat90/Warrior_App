@@ -8,6 +8,7 @@ class ProductBasicFields extends StatelessWidget {
   final TextEditingController brandsController;
   final TextEditingController quantityController;
   final bool isBarcodeEditable;
+  final Map<String, String?> validationErrors;
 
   const ProductBasicFields({
     super.key,
@@ -16,6 +17,7 @@ class ProductBasicFields extends StatelessWidget {
     required this.brandsController,
     required this.quantityController,
     this.isBarcodeEditable = true,
+    this.validationErrors = const {},
   });
 
   @override
@@ -30,6 +32,8 @@ class ProductBasicFields extends StatelessWidget {
             hintText: context.l10n.enterProductBarcode,
             prefixIcon: const Icon(Icons.qr_code),
             border: const OutlineInputBorder(),
+            errorText: validationErrors['barcode'],
+            errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
           ),
           keyboardType: TextInputType.number,
           enabled: isBarcodeEditable,
@@ -53,6 +57,8 @@ class ProductBasicFields extends StatelessWidget {
             hintText: context.l10n.enterProductName,
             prefixIcon: const Icon(Icons.shopping_bag),
             border: const OutlineInputBorder(),
+            errorText: validationErrors['productName'],
+            errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
           ),
           textCapitalization: TextCapitalization.words,
           validator: (value) {
@@ -72,6 +78,8 @@ class ProductBasicFields extends StatelessWidget {
             hintText: context.l10n.enterBrandName,
             prefixIcon: const Icon(Icons.business),
             border: const OutlineInputBorder(),
+            errorText: validationErrors['brand'],
+            errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
           ),
           textCapitalization: TextCapitalization.words,
         ),
@@ -85,6 +93,8 @@ class ProductBasicFields extends StatelessWidget {
             hintText: context.l10n.quantityExample,
             prefixIcon: const Icon(Icons.scale),
             border: const OutlineInputBorder(),
+            errorText: validationErrors['quantity'],
+            errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
           ),
         ),
       ],

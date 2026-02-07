@@ -35,11 +35,62 @@ class HiveManager {
   // Pending product upload methods
   static Future<void> addPendingProductUpload(
       PendingProductUpload upload) async {
-    await pendingProductsBox.add(upload);
+    await pendingProductsBox.put(upload.id, upload);
     TalkerService.debug(
-        'Added pending product upload: ${upload.barcode}, '
+        'Added pending product upload: ${upload.product.barcode}, '
             'total count: ${pendingProductsBox.length}',
         'HIVE');
+  }
+
+  /// Gets all pending uploads.
+  static List<PendingProductUpload> getPendingProductUploads() {
+    TalkerService.debug(
+        'Getting pending product uploads, count: ${pendingProductsBox.length}',
+        'HIVE');
+    return pendingProductsBox.values.toList();
+  }
+
+  /// Gets all pending uploads with given status.
+  static List<PendingProductUpload> getPendingUploadsByStatus(
+    PendingUploadStatus status,
+  ) {
+    return pendingProductsBox.values
+        .where((upload) => upload.status == status)
+        .toList();
+  }
+
+  /// Gets uploads eligible for retry (failed, not at max retries).
+  static List<PendingProductUpload> getPendingUploadsEligibleForRetry() {
+    return pendingProductsBox.values
+        .where((upload) => upload.canRetry)
+        .toList();
+  }
+
+  /// Removes a pending upload by ID.
+  static Future<void> removePendingProductUploadById(String uploadId) async {
+    await pendingProductsBox.delete(uploadId);
+    TalkerService.debug('Removed pending product upload: $uploadId', 'HIVE');
+  }
+
+  /// Updates a pending upload's retry count and status.
+  static Future<void> updatePendingUploadStatus(
+    String uploadId,
+    PendingUploadStatus status, {
+    String? failureReason,
+  }) async {
+    final upload = pendingProductsBox.get(uploadId);
+    if (upload != null) {
+      if (status == PendingUploadStatus.uploading) {
+        upload.markUploading();
+      } else if (status == PendingUploadStatus.failed) {
+        upload.markFailed(failureReason);
+      } else if (status == PendingUploadStatus.pending) {
+        upload.markSuccessful();
+      }
+      await upload.save();
+      TalkerService.debug(
+          'Updated pending upload $uploadId status to $status', 'HIVE');
+    }
   }
 
   // Clear pending operations
@@ -56,13 +107,6 @@ class HiveManager {
     TalkerService.debug(
         'Getting pending operations, count: ${pendingOpsBox.length}', 'HIVE');
     return pendingOpsBox.values.toList();
-  }
-
-  static List<PendingProductUpload> getPendingProductUploads() {
-    TalkerService.debug(
-        'Getting pending product uploads, count: ${pendingProductsBox.length}',
-        'HIVE');
-    return pendingProductsBox.values.toList();
   }
 
   static Future<void> init() async {
@@ -103,7 +147,7 @@ class HiveManager {
       PendingProductUpload upload) async {
     await upload.delete();
     TalkerService.debug(
-        'Removed pending product upload: ${upload.barcode}', 'HIVE');
+        'Removed pending product upload: ${upload.product.barcode}', 'HIVE');
   }
 
   static Future<void> saveToHive(Box box, List data) async {

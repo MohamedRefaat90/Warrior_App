@@ -25,6 +25,7 @@ import 'package:Warrior/features/FoodSearch/presentation/screens/favorites_scree
 import 'package:Warrior/features/FoodSearch/presentation/screens/food_search_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/nutrition_guide_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/ocr_scanner_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/pending_uploads_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/product_comparison_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/product_details_screen.dart';
 import 'package:Warrior/features/FoodSearch/presentation/screens/product_form_screen.dart';
@@ -367,6 +368,14 @@ class RoutersManager {
       pageBuilder: (context, state) => CustomTransition(
         child: const OcrScannerScreen(),
         transitionType: PageTransitionType.bottomToTop,
+      ),
+    ),
+    GoRoute(
+      path: AppRouters.pendingUploads,
+      name: AppRouters.pendingUploads,
+      pageBuilder: (context, state) => CustomTransition(
+        child: const PendingUploadsScreen(),
+        transitionType: PageTransitionType.fade,
       ),
     ),
   ]);

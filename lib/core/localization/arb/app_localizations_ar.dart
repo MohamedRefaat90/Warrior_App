@@ -846,6 +846,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get failedToUpdateProduct => 'فشل في تحديث المنتج';
 
   @override
+  String get validationErrorsFixRequired =>
+      'يرجى إصلاح أخطاء التحقق قبل الإرسال';
+
+  @override
+  String get savedToOfflineQueue =>
+      'تم الحفظ في قائمة الانتظار - سيتم التحميل عندما تكون متصلاً بالإنترنت';
+
+  @override
   String imageSelected(String filename) {
     return 'تم اختيار الصورة';
   }

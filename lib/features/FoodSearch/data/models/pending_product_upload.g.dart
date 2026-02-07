@@ -17,13 +17,13 @@ class PendingProductUploadAdapter extends TypeAdapter<PendingProductUpload> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PendingProductUpload(
-      barcode: fields[0] as String,
-      productData: (fields[1] as Map).cast<String, dynamic>(),
-      nutritionFacts: fields[2] as NutritionValuesModel?,
-      imagePath: fields[3] as String?,
-      timestamp: fields[4] as DateTime?,
-      retryCount: fields[5] as int,
-      operationType: fields[6] as SyncOperationType,
+      id: fields[0] as String,
+      product: fields[1] as FoodProductModel,
+      queuedAt: fields[2] as DateTime,
+      retryCount: fields[3] as int,
+      status: fields[4] as PendingUploadStatus,
+      lastAttemptAt: fields[5] as DateTime?,
+      failureReason: fields[6] as String?,
     );
   }
 
@@ -32,19 +32,19 @@ class PendingProductUploadAdapter extends TypeAdapter<PendingProductUpload> {
     writer
       ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.barcode)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.productData)
+      ..write(obj.product)
       ..writeByte(2)
-      ..write(obj.nutritionFacts)
+      ..write(obj.queuedAt)
       ..writeByte(3)
-      ..write(obj.imagePath)
-      ..writeByte(4)
-      ..write(obj.timestamp)
-      ..writeByte(5)
       ..write(obj.retryCount)
+      ..writeByte(4)
+      ..write(obj.status)
+      ..writeByte(5)
+      ..write(obj.lastAttemptAt)
       ..writeByte(6)
-      ..write(obj.operationType);
+      ..write(obj.failureReason);
   }
 
   @override

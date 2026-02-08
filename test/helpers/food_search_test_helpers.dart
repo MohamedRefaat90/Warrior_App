@@ -17,12 +17,12 @@ ProductEntity createTestProduct({
   NutritionFacts? nutrition,
 }) {
   return ProductEntity(
-    barcode: barcode ?? '5449000000996',
-    productName: productName ?? 'Test Product',
-    brands: brands ?? 'Test Brand',
-    quantity: quantity ?? '100g',
-    nutrition: nutrition ?? createTestNutritionFacts(),
-  );
+      barcode: barcode ?? '5449000000996',
+      productName: productName ?? 'Test Product',
+      brands: brands ?? 'Test Brand',
+      quantity: quantity ?? '100g',
+      nutrition: nutrition ?? createTestNutritionFacts(),
+      lastUpdated: DateTime.now());
 }
 
 /// Creates a valid test nutrition facts
@@ -34,11 +34,11 @@ NutritionFacts createTestNutritionFacts({
   double? fiber,
 }) {
   return NutritionFacts(
-    caloriesPerHundred: caloriesPerHundred ?? 100.0,
-    protein: protein ?? 5.0,
-    carbohydrates: carbohydrates ?? 20.0,
-    fat: fat ?? 3.0,
-    fiber: fiber ?? 2.0,
+    energyKcal100g: caloriesPerHundred ?? 100.0,
+    proteins100g: protein ?? 5.0,
+    carbohydrates100g: carbohydrates ?? 20.0,
+    fat100g: fat ?? 3.0,
+    fiber100g: fiber ?? 2.0,
   );
 }
 
@@ -56,21 +56,20 @@ class FoodSearchTestConstants {
   /// Valid product names
   static const String validProductName = 'Test Product';
   static const String validProductNameMin = 'Ab';
-  static const String validProductNameMax =
-      'A' * 200; // 200 character product name
+  static String validProductNameMax = 'A' * 200; // 200 character product name
 
   /// Invalid product names
   static const String invalidProductNameEmpty = '';
   static const String invalidProductNameShort = 'A';
-  static const String invalidProductNameLong = 'A' * 201;
+  static String invalidProductNameLong = 'A' * 201;
 
   /// Valid brands
   static const String validBrand = 'Test Brand';
-  static const String validBrandMax = 'A' * 100;
+  static String validBrandMax = 'A' * 100;
 
   /// Valid quantities
   static const String validQuantity = '100g';
-  static const String validQuantityMax = 'A' * 50;
+  static String validQuantityMax = 'A' * 50;
 }
 
 /// Helper function to create multiple test products

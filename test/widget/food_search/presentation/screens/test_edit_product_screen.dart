@@ -1,56 +1,179 @@
-import 'package:Warrior/features/FoodSearch/presentation/screens/edit_product_screen.dart';
+﻿import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/services/secure_storage_handler.dart';
+import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
+import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
+import 'package:Warrior/features/FoodSearch/domain/repositories/product_write_repository.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/product_form_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:openfoodfacts/openfoodfacts.dart' as off;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../helpers/test_app_wrapper.dart';
 
 void main() {
-  group('EditProductScreen', () {
-    testWidgets('loads product data on init', (tester) async {
-      // TODO: Test data loading
-      expect(true, true);
-    });
+  late MockProductWriteRepository mockRepo;
+  late MockFlutterSecureStorage mockStorage;
 
-    testWidgets('displays form populated with product data', (tester) async {
-      // TODO: Test form population
-      expect(true, true);
-    });
+  setUpAll(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
+    
+    // Initialize Open Food Facts API for testing
+    off.OpenFoodAPIConfiguration.userAgent =
+        off.UserAgent(name: 'Warrior App Test', version: '1.1.0', system: 'Testing');
 
-    testWidgets('allows editing of product fields', (tester) async {
-      // TODO: Test field editing
-      expect(true, true);
-    });
+    registerFallbackValue(ProductEntity(
+      barcode: '12345678',
+      productName: 'Test Product',
+      lastUpdated: DateTime.now(),
+    ));
+    registerFallbackValue(const off.User(userId: 'test', password: 'test'));
+  });
 
-    testWidgets('validates edited data on save', (tester) async {
-      // TODO: Test validation
-      expect(true, true);
-    });
+  setUp(() {
+    mockRepo = MockProductWriteRepository();
+    mockStorage = MockFlutterSecureStorage();
+    ProductFormScreen.showNotifications = false;
+    
+    // Setup secure storage mock to return null for all reads
+    when(() => mockStorage.read(key: any(named: 'key')))
+        .thenAnswer((_) async => null);
+    
+    // Inject the mock storage
+    SecureStorageHandler.storage = mockStorage;
+    
+    ConnectivityChecker.isOnline = true; // Default to online
+  });
 
-    testWidgets('saves changes online', (tester) async {
-      // TODO: Test online save
-      expect(true, true);
-    });
+  testWidgets('EditProductScreen shows validation errors', (tester) async {
+    final product = ProductEntity(
+      barcode: '12345678',
+      productName: 'Original Product',
+      brands: 'Original Brand',
+      quantity: '500',
+      lastUpdated: DateTime.now(),
+    );
 
-    testWidgets('queues changes for sync when offline', (tester) async {
-      // TODO: Test offline queue
-      expect(true, true);
-    });
+    await tester.pumpWidget(
+      TestAppWrapper.createTestApp(
+        additionalOverrides: [
+          productWriteRepositoryProvider.overrideWithValue(mockRepo),
+        ],
+        child: ProductFormScreen(product: product),
+      ),
+    );
 
-    testWidgets('allows image replacement', (tester) async {
-      // TODO: Test image replacement
-      expect(true, true);
-    });
+    await tester.pumpAndSettle();
 
-    testWidgets('shows success message after save', (tester) async {
-      // TODO: Test success message
-      expect(true, true);
-    });
+    // Clear name
+    await tester.enterText(find.byType(TextFormField).at(1), '');
+    await tester.pumpAndSettle();
 
-    testWidgets('allows discard changes', (tester) async {
-      // TODO: Test discard
-      expect(true, true);
-    });
+    final submitButton = find.text('Update Product');
+    await tester.ensureVisible(submitButton);
+    await tester.tap(submitButton);
+    
+    // Pump several times to let animations start and reach visible state
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
 
-    testWidgets('compresses images before upload', (tester) async {
-      // TODO: Test compression
-      expect(true, true);
-    });
+    expect(find.textContaining('fix validation'), findsWidgets);
+  });
+
+  testWidgets('EditProductScreen submits successfully', (tester) async {
+    final product = ProductEntity(
+      barcode: '12345678',
+      productName: 'Original Product',
+      lastUpdated: DateTime.now(),
+    );
+
+    ConnectivityChecker.isOnline = true;
+
+    when(() => mockRepo.submitProduct(
+          product: any(named: 'product'),
+          user: any(named: 'user'),
+          isUpdate: any(named: 'isUpdate'),
+        )).thenAnswer((_) async => true);
+
+    await tester.pumpWidget(
+      TestAppWrapper.createTestApp(
+        additionalOverrides: [
+          productWriteRepositoryProvider.overrideWithValue(mockRepo),
+        ],
+        child: ProductFormScreen(product: product),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextFormField).at(1), 'Updated Product');
+    await tester.pumpAndSettle();
+
+    final submitButton = find.text('Update Product');
+    await tester.ensureVisible(submitButton);
+    await tester.tap(submitButton);
+
+    // Wait for async processing - enough time for getUser and initial submitProduct response
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
+
+    verify(() => mockRepo.submitProduct(
+          product: any(named: 'product'),
+          user: any(named: 'user'),
+          isUpdate: true,
+        )).called(1);
+
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('EditProductScreen handles offline queue', (tester) async {
+    final product = ProductEntity(
+      barcode: '12345678',
+      productName: 'Original Product',
+      lastUpdated: DateTime.now(),
+    );
+
+    ConnectivityChecker.isOnline = false;
+
+    when(() => mockRepo.submitProduct(
+          product: any(named: 'product'),
+          user: any(named: 'user'),
+          isUpdate: any(named: 'isUpdate'),
+        )).thenAnswer((_) async => true);
+
+    await tester.pumpWidget(
+      TestAppWrapper.createTestApp(
+        additionalOverrides: [
+          productWriteRepositoryProvider.overrideWithValue(mockRepo),
+        ],
+        child: ProductFormScreen(product: product),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    final submitButton = find.text('Update Product');
+    await tester.ensureVisible(submitButton);
+    await tester.tap(submitButton);
+
+    // Wait for async processing - enough time for getUser and initial submitProduct response
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
+
+    verify(() => mockRepo.submitProduct(
+          product: any(named: 'product'),
+          user: any(named: 'user'),
+          isUpdate: true,
+        )).called(1);
+
+    await tester.pumpAndSettle();
   });
 }
+
+class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
+
+class MockProductWriteRepository extends Mock implements ProductWriteRepository {}

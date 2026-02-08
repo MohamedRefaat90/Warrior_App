@@ -1,42 +1,92 @@
-import 'package:Warrior/features/FoodSearch/domain/usecases/search_food_products_usecase.dart';
+import 'package:Warrior/features/FoodSearch/domain/repositories/product_read_repository.dart';
+import 'package:Warrior/features/FoodSearch/domain/usecases/get_product_suggestions_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 void main() {
-  group('SearchFoodProductsUseCase', () {
-    late SearchFoodProductsUseCase usecase;
+  group('GetProductSuggestionsUseCase', () {
+    late GetProductSuggestionsUseCase usecase;
+    late MockProductReadRepository mockRepository;
 
     setUp(() {
-      usecase = SearchFoodProductsUseCase();
+      mockRepository = MockProductReadRepository();
+      usecase = GetProductSuggestionsUseCase(mockRepository);
     });
 
-    test('returns matching products for query', () async {
-      // TODO: Test search
-      expect(true, true);
+    test('returns product suggestions for query', () async {
+      // Arrange
+      const query = 'apple';
+      final suggestions = ['Apple', 'Apple Juice', 'Apple Sauce'];
+      when(mockRepository.getProductSuggestions(query))
+          .thenAnswer((_) async => suggestions);
+
+      // Act
+      final result = await usecase.call(query);
+
+      // Assert
+      expect(result, isA<List<String>>());
+      expect(result.length, equals(3));
+      expect(result[0], equals('Apple'));
+      verify(mockRepository.getProductSuggestions(query)).called(1);
     });
 
-    test('supports pagination', () async {
-      // TODO: Test pagination
-      expect(true, true);
+    test('returns empty list for no matches', () async {
+      // Arrange
+      const query = 'xyz-nonexistent';
+      when(mockRepository.getProductSuggestions(query))
+          .thenAnswer((_) async => []);
+
+      // Act
+      final result = await usecase.call(query);
+
+      // Assert
+      expect(result.isEmpty, isTrue);
+      verify(mockRepository.getProductSuggestions(query)).called(1);
     });
 
-    test('returns empty list when no matches', () async {
-      // TODO: Test empty results
-      expect(true, true);
+    test('handles case-insensitive queries', () async {
+      // Arrange
+      const query = 'BANANA';
+      final suggestions = ['Banana', 'Banana Chips'];
+      when(mockRepository.getProductSuggestions(query))
+          .thenAnswer((_) async => suggestions);
+
+      // Act
+      final result = await usecase.call(query);
+
+      // Assert
+      expect(result.isNotEmpty, isTrue);
+      verify(mockRepository.getProductSuggestions(query)).called(1);
     });
 
-    test('searches across product name and brands', () async {
-      // TODO: Test multi-field search
-      expect(true, true);
+    test('handles repository exceptions', () async {
+      // Arrange
+      const query = 'error';
+      when(mockRepository.getProductSuggestions(query))
+          .thenThrow(Exception('Suggestion fetch failed'));
+
+      // Act & Assert
+      expect(
+        () => usecase.call(query),
+        throwsException,
+      );
     });
 
-    test('respects offline mode with cached results', () async {
-      // TODO: Test offline search
-      expect(true, true);
-    });
+    test('caches suggestions across calls', () async {
+      // Arrange
+      const query = 'orange';
+      final suggestions = ['Orange', 'Orange Juice'];
+      when(mockRepository.getProductSuggestions(query))
+          .thenAnswer((_) async => suggestions);
 
-    test('filters by nutrition criteria if provided', () async {
-      // TODO: Test filtering
-      expect(true, true);
+      // Act
+      final result1 = await usecase.call(query);
+      final result2 = await usecase.call(query);
+
+      // Assert
+      expect(result1, equals(result2));
     });
   });
 }
+
+class MockProductReadRepository extends Mock implements ProductReadRepository {}

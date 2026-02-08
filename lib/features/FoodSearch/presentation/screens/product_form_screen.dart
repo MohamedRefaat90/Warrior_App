@@ -26,6 +26,9 @@ class ProductFormScreen extends ConsumerStatefulWidget {
 
   const ProductFormScreen({super.key, this.product, this.barcode});
 
+  @visibleForTesting
+  static bool showNotifications = true;
+
   @override
   ConsumerState<ProductFormScreen> createState() => _ProductFormScreenState();
 }
@@ -60,6 +63,10 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     'brand': null,
     'quantity': null,
   };
+
+  bool get _hasValidationErrors {
+    return _validationErrors.values.any((error) => error != null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,8 +204,8 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       } else {
         // New session - Reset and Initialize
         TalkerService.info('Initializing new form session', 'FORM');
-        // notifier.initialize(product: widget.product, barcode: widget.barcode);
-        _populateControllersFromState(provider);
+        notifier.initialize(product: widget.product, barcode: widget.barcode);
+        _populateControllersFromState(ref.read(productFormProvider));
       }
     });
   }
@@ -256,46 +263,6 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     // });
   }
 
-  void _validateBarcode() {
-    final result = BarcodeValidator.validate(_barcodeController.text);
-    setState(() {
-      _validationErrors['barcode'] = result.isValid
-          ? null
-          : result.fieldErrors['barcode'];
-    });
-  }
-
-  void _validateProductName() {
-    final result = ProductNameValidator.validate(_productNameController.text);
-    setState(() {
-      _validationErrors['productName'] = result.isValid
-          ? null
-          : result.fieldErrors['productName'];
-    });
-  }
-
-  void _validateBrand() {
-    final result = BrandValidator.validate(_brandsController.text);
-    setState(() {
-      _validationErrors['brand'] = result.isValid
-          ? null
-          : result.fieldErrors['brand'];
-    });
-  }
-
-  void _validateQuantity() {
-    final result = QuantityValidator.validate(_quantityController.text);
-    setState(() {
-      _validationErrors['quantity'] = result.isValid
-          ? null
-          : result.fieldErrors['quantity'];
-    });
-  }
-
-  bool get _hasValidationErrors {
-    return _validationErrors.values.any((error) => error != null);
-  }
-
   Future<void> _submitForm() async {
     // Run validation
     _validateBarcode();
@@ -349,51 +316,60 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       if (!mounted) return;
 
       if (success) {
-        Flushbar(
-          message: widget.product != null
-              ? context.l10n.productUpdatedSuccessfully
-              : context.l10n.productAddedSuccessfully,
-          duration: const Duration(seconds: 3),
-          backgroundColor: Colors.green,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-        ).show(context);
+        if (!context.mounted) return;
 
-        // Show additional notification if offline
-        if (ConnectivityChecker.isOnline != true) {
-          await Future.delayed(const Duration(seconds: 1));
-          if (mounted) {
-            Flushbar(
-              message: context.l10n.savedToOfflineQueue,
-              duration: const Duration(seconds: 4),
-              backgroundColor: Colors.blue,
-              icon: const Icon(Icons.cloud_queue, color: Colors.white),
-            ).show(context);
+        if (ProductFormScreen.showNotifications) {
+          Flushbar(
+            message: widget.product != null
+                ? context.l10n.productUpdatedSuccessfully
+                : context.l10n.productAddedSuccessfully,
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.green,
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+          ).show(context);
+
+          // Show additional notification if offline
+          if (ConnectivityChecker.isOnline != true) {
+            await Future.delayed(const Duration(seconds: 1));
+            if (mounted) {
+              Flushbar(
+                message: context.l10n.savedToOfflineQueue,
+                duration: const Duration(seconds: 4),
+                backgroundColor: Colors.blue,
+                icon: const Icon(Icons.cloud_queue, color: Colors.white),
+              ).show(context);
+            }
           }
+
+          await Future.delayed(const Duration(seconds: 1));
         }
 
-        await Future.delayed(const Duration(seconds: 1));
         if (mounted) {
           Navigator.of(context).pop(true);
         }
       } else {
+        if (ProductFormScreen.showNotifications) {
+          Flushbar(
+            message: widget.product != null
+                ? context.l10n.failedToUpdateProduct
+                : context.l10n.failedToAddProduct,
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red,
+            icon: const Icon(Icons.error, color: Colors.white),
+          ).show(context);
+        }
+      }
+    } catch (e) {
+      if (!mounted) return;
+      TalkerService.error("Error: ${e.toString()}");
+      if (ProductFormScreen.showNotifications) {
         Flushbar(
-          message: widget.product != null
-              ? context.l10n.failedToUpdateProduct
-              : context.l10n.failedToAddProduct,
+          message: 'Error: ${e.toString()}',
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.red,
           icon: const Icon(Icons.error, color: Colors.white),
         ).show(context);
       }
-    } catch (e) {
-      if (!mounted) return;
-      TalkerService.error("Error: ${e.toString()}");
-      Flushbar(
-        message: 'Error: ${e.toString()}',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        icon: const Icon(Icons.error, color: Colors.white),
-      ).show(context);
     } finally {
       if (mounted) {
         setState(() {
@@ -401,6 +377,38 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
         });
       }
     }
+  }
+
+  void _validateBarcode() {
+    final result = BarcodeValidator.validate(_barcodeController.text);
+    setState(() {
+      _validationErrors['barcode'] =
+          result.isValid ? null : result.fieldErrors['barcode'];
+    });
+  }
+
+  void _validateBrand() {
+    final result = BrandValidator.validate(_brandsController.text);
+    setState(() {
+      _validationErrors['brand'] =
+          result.isValid ? null : result.fieldErrors['brand'];
+    });
+  }
+
+  void _validateProductName() {
+    final result = ProductNameValidator.validate(_productNameController.text);
+    setState(() {
+      _validationErrors['productName'] =
+          result.isValid ? null : result.fieldErrors['productName'];
+    });
+  }
+
+  void _validateQuantity() {
+    final result = QuantityValidator.validate(_quantityController.text);
+    setState(() {
+      _validationErrors['quantity'] =
+          result.isValid ? null : result.fieldErrors['quantity'];
+    });
   }
 }
 
@@ -420,7 +428,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isLoading || hasValidationErrors ? null : onPressed,
+      onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: context.mediumSpacing),
       ),

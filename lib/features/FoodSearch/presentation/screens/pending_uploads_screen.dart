@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
 import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
 import 'package:Warrior/features/FoodSearch/domain/usecases/delete_pending_upload_usecase.dart';
@@ -7,20 +5,8 @@ import 'package:Warrior/features/FoodSearch/domain/usecases/get_pending_uploads_
 import 'package:Warrior/features/FoodSearch/domain/usecases/retry_pending_upload_usecase.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/empty_pending_uploads_widget.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/pending_upload_card.dart';
-
-/// Provider for GetPendingUploadsUseCase
-final getPendingUploadsUseCaseProvider =
-    Provider<GetPendingUploadsUseCase>((ref) {
-  final repository = ref.watch(productWriteRepositoryProvider);
-  return GetPendingUploadsUseCase(repository: repository);
-});
-
-/// Provider for RetryPendingUploadUseCase
-final retryPendingUploadUseCaseProvider =
-    Provider<RetryPendingUploadUseCase>((ref) {
-  final repository = ref.watch(productWriteRepositoryProvider);
-  return RetryPendingUploadUseCase(repository: repository);
-});
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for DeletePendingUploadUseCase
 final deletePendingUploadUseCaseProvider =
@@ -29,11 +15,25 @@ final deletePendingUploadUseCaseProvider =
   return DeletePendingUploadUseCase(repository: repository);
 });
 
+/// Provider for GetPendingUploadsUseCase
+final getPendingUploadsUseCaseProvider =
+    Provider<GetPendingUploadsUseCase>((ref) {
+  final repository = ref.watch(productWriteRepositoryProvider);
+  return GetPendingUploadsUseCase(repository: repository);
+});
+
 /// Async provider that fetches pending uploads
 final pendingUploadsProvider =
     FutureProvider<List<PendingProductUpload>>((ref) async {
   final useCase = ref.watch(getPendingUploadsUseCaseProvider);
   return useCase();
+});
+
+/// Provider for RetryPendingUploadUseCase
+final retryPendingUploadUseCaseProvider =
+    Provider<RetryPendingUploadUseCase>((ref) {
+  final repository = ref.watch(productWriteRepositoryProvider);
+  return RetryPendingUploadUseCase(repository: repository);
 });
 
 /// Screen for viewing and managing pending product uploads.
@@ -170,77 +170,6 @@ class _PendingUploadsScreenState extends ConsumerState<PendingUploadsScreen> {
     );
   }
 
-  /// Sorts uploads by status priority
-  List<PendingProductUpload> _sortUploads(
-    List<PendingProductUpload> uploads,
-  ) {
-    final sorted = [...uploads];
-    sorted.sort((a, b) {
-      // Priority: uploading > failed > pending
-      const priorityMap = {
-        PendingUploadStatus.uploading: 0,
-        PendingUploadStatus.failed: 1,
-        PendingUploadStatus.pending: 2,
-      };
-
-      final priorityA = priorityMap[a.status] ?? 3;
-      final priorityB = priorityMap[b.status] ?? 3;
-
-      if (priorityA != priorityB) {
-        return priorityA.compareTo(priorityB);
-      }
-
-      // Within same status, sort by queued time (oldest first)
-      return a.queuedAt.compareTo(b.queuedAt);
-    });
-    return sorted;
-  }
-
-  /// Handles retry for a single upload
-  Future<void> _handleRetry(
-    BuildContext context,
-    WidgetRef ref,
-    PendingProductUpload upload,
-  ) async {
-    try {
-      setState(() {
-        _retryngUploads.add(upload.id);
-      });
-
-      final retryUseCase = ref.read(retryPendingUploadUseCaseProvider);
-      await retryUseCase(upload.id);
-
-      // Refresh the list after retry
-      // ignore: unawaited_futures,unused_result
-      ref.refresh(pendingUploadsProvider);
-
-      setState(() {
-        _retryngUploads.remove(upload.id);
-      });
-
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Retrying "${upload.product.productName ?? 'Unknown Product'}"...',
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    } catch (e) {
-      setState(() {
-        _retryngUploads.remove(upload.id);
-      });
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Failed to retry upload'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
   /// Handles deletion with confirmation dialog
   Future<void> _handleDelete(
     BuildContext context,
@@ -299,6 +228,51 @@ class _PendingUploadsScreenState extends ConsumerState<PendingUploadsScreen> {
     }
   }
 
+  /// Handles retry for a single upload
+  Future<void> _handleRetry(
+    BuildContext context,
+    WidgetRef ref,
+    PendingProductUpload upload,
+  ) async {
+    try {
+      setState(() {
+        _retryngUploads.add(upload.id);
+      });
+
+      final retryUseCase = ref.read(retryPendingUploadUseCaseProvider);
+      await retryUseCase(upload.id);
+
+      // Refresh the list after retry
+      // ignore: unawaited_futures,unused_result
+      ref.refresh(pendingUploadsProvider);
+
+      setState(() {
+        _retryngUploads.remove(upload.id);
+      });
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Retrying "${upload.product.productName ?? 'Unknown Product'}"...',
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _retryngUploads.remove(upload.id);
+      });
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Failed to retry upload'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   /// Handles retry for all eligible uploads
   Future<void> _retryAll(
     BuildContext context,
@@ -349,5 +323,31 @@ class _PendingUploadsScreenState extends ConsumerState<PendingUploadsScreen> {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  /// Sorts uploads by status priority
+  List<PendingProductUpload> _sortUploads(
+    List<PendingProductUpload> uploads,
+  ) {
+    final sorted = [...uploads];
+    sorted.sort((a, b) {
+      // Priority: uploading > failed > pending
+      const priorityMap = {
+        PendingUploadStatus.uploading: 0,
+        PendingUploadStatus.failed: 1,
+        PendingUploadStatus.pending: 2,
+      };
+
+      final priorityA = priorityMap[a.status] ?? 3;
+      final priorityB = priorityMap[b.status] ?? 3;
+
+      if (priorityA != priorityB) {
+        return priorityA.compareTo(priorityB);
+      }
+
+      // Within same status, sort by queued time (oldest first)
+      return a.queuedAt.compareTo(b.queuedAt);
+    });
+    return sorted;
   }
 }

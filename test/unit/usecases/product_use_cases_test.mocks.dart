@@ -5,9 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i9;
-import 'package:openfoodfacts/openfoodfacts.dart' as _i6;
+import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart'
+    as _i11;
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart'
     as _i10;
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart'
@@ -20,38 +19,134 @@ import 'package:Warrior/features/FoodSearch/domain/repositories/product_write_re
     as _i5;
 import 'package:Warrior/features/FoodSearch/domain/repositories/user_interaction_repository.dart'
     as _i7;
+import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i9;
+import 'package:openfoodfacts/openfoodfacts.dart' as _i6;
 
-// ignore_for_file: type=lint
-// ignore_for_file: avoid_redundant_argument_values
-// ignore_for_file: avoid_setters_without_getters
-// ignore_for_file: comment_references
-// ignore_for_file: deprecated_member_use
-// ignore_for_file: deprecated_member_use_from_same_package
-// ignore_for_file: implementation_imports
-// ignore_for_file: invalid_use_of_visible_for_testing_member
-// ignore_for_file: prefer_const_constructors
-// ignore_for_file: unnecessary_parenthesis
-// ignore_for_file: camel_case_types
-// ignore_for_file: subtype_of_sealed_class
+/// A class which mocks [ProductEntity].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockProductEntity extends _i1.Mock implements _i2.ProductEntity {
+  MockProductEntity() {
+    _i1.throwOnMissingStub(this);
+  }
 
-class _FakeDateTime_0 extends _i1.SmartFake implements DateTime {
-  _FakeDateTime_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
+  @override
+  String get barcode => (super.noSuchMethod(
+        Invocation.getter(#barcode),
+        returnValue: _i9.dummyValue<String>(
+          this,
+          Invocation.getter(#barcode),
+        ),
+      ) as String);
 
-class _FakeProductEntity_1 extends _i1.SmartFake implements _i2.ProductEntity {
-  _FakeProductEntity_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  @override
+  String get displayName => (super.noSuchMethod(
+        Invocation.getter(#displayName),
+        returnValue: _i9.dummyValue<String>(
+          this,
+          Invocation.getter(#displayName),
+        ),
+      ) as String);
+
+  @override
+  bool get hasBasicInfo => (super.noSuchMethod(
+        Invocation.getter(#hasBasicInfo),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  DateTime get lastUpdated => (super.noSuchMethod(
+        Invocation.getter(#lastUpdated),
+        returnValue: _FakeDateTime_0(
+          this,
+          Invocation.getter(#lastUpdated),
+        ),
+      ) as DateTime);
+
+  @override
+  _i2.ProductEntity copyWith({
+    String? barcode,
+    String? productName,
+    String? brands,
+    String? quantity,
+    String? imageUrl,
+    String? nutriScore,
+    int? novaGroup,
+    String? ecoscore,
+    _i10.NutritionFacts? nutrition,
+    String? ingredients,
+    List<String>? allergens,
+    List<String>? additives,
+    List<String>? categories,
+    List<String>? labels,
+    bool? isVegan,
+    bool? isVegetarian,
+    bool? palmOilFree,
+    DateTime? lastUpdated,
+    String? servingSize,
+    String? packagingText,
+    String? countries,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #copyWith,
+          [],
+          {
+            #barcode: barcode,
+            #productName: productName,
+            #brands: brands,
+            #quantity: quantity,
+            #imageUrl: imageUrl,
+            #nutriScore: nutriScore,
+            #novaGroup: novaGroup,
+            #ecoscore: ecoscore,
+            #nutrition: nutrition,
+            #ingredients: ingredients,
+            #allergens: allergens,
+            #additives: additives,
+            #categories: categories,
+            #labels: labels,
+            #isVegan: isVegan,
+            #isVegetarian: isVegetarian,
+            #palmOilFree: palmOilFree,
+            #lastUpdated: lastUpdated,
+            #servingSize: servingSize,
+            #packagingText: packagingText,
+            #countries: countries,
+          },
+        ),
+        returnValue: _FakeProductEntity_1(
+          this,
+          Invocation.method(
+            #copyWith,
+            [],
+            {
+              #barcode: barcode,
+              #productName: productName,
+              #brands: brands,
+              #quantity: quantity,
+              #imageUrl: imageUrl,
+              #nutriScore: nutriScore,
+              #novaGroup: novaGroup,
+              #ecoscore: ecoscore,
+              #nutrition: nutrition,
+              #ingredients: ingredients,
+              #allergens: allergens,
+              #additives: additives,
+              #categories: categories,
+              #labels: labels,
+              #isVegan: isVegan,
+              #isVegetarian: isVegetarian,
+              #palmOilFree: palmOilFree,
+              #lastUpdated: lastUpdated,
+              #servingSize: servingSize,
+              #packagingText: packagingText,
+              #countries: countries,
+            },
+          ),
+        ),
+      ) as _i2.ProductEntity);
 }
 
 /// A class which mocks [ProductReadRepository].
@@ -214,13 +309,14 @@ class MockProductWriteRepository extends _i1.Mock
       ) as int);
 
   @override
-  List<dynamic> getPendingProductUploads() => (super.noSuchMethod(
+  List<_i11.PendingProductUpload> getPendingProductUploads() =>
+      (super.noSuchMethod(
         Invocation.method(
           #getPendingProductUploads,
           [],
         ),
-        returnValue: <dynamic>[],
-      ) as List<dynamic>);
+        returnValue: <_i11.PendingProductUpload>[],
+      ) as List<_i11.PendingProductUpload>);
 
   @override
   _i4.Future<bool> submitProduct({
@@ -279,6 +375,66 @@ class MockProductWriteRepository extends _i1.Mock
         ),
         returnValue: _i4.Future<bool>.value(false),
       ) as _i4.Future<bool>);
+}
+
+/// A class which mocks [User].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUser extends _i1.Mock implements _i6.User {
+  MockUser() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get password => (super.noSuchMethod(
+        Invocation.getter(#password),
+        returnValue: _i9.dummyValue<String>(
+          this,
+          Invocation.getter(#password),
+        ),
+      ) as String);
+
+  @override
+  String get userId => (super.noSuchMethod(
+        Invocation.getter(#userId),
+        returnValue: _i9.dummyValue<String>(
+          this,
+          Invocation.getter(#userId),
+        ),
+      ) as String);
+
+  @override
+  Map<String, String> toData() => (super.noSuchMethod(
+        Invocation.method(
+          #toData,
+          [],
+        ),
+        returnValue: <String, String>{},
+      ) as Map<String, String>);
+
+  @override
+  Map<String, dynamic> toJson() => (super.noSuchMethod(
+        Invocation.method(
+          #toJson,
+          [],
+        ),
+        returnValue: <String, dynamic>{},
+      ) as Map<String, dynamic>);
+
+  @override
+  String toValueString() => (super.noSuchMethod(
+        Invocation.method(
+          #toValueString,
+          [],
+        ),
+        returnValue: _i9.dummyValue<String>(
+          this,
+          Invocation.method(
+            #toValueString,
+            [],
+          ),
+        ),
+      ) as String);
 }
 
 /// A class which mocks [UserInteractionRepository].
@@ -351,188 +507,35 @@ class MockUserInteractionRepository extends _i1.Mock
       ) as _i4.Future<void>);
 }
 
-/// A class which mocks [ProductEntity].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockProductEntity extends _i1.Mock implements _i2.ProductEntity {
-  MockProductEntity() {
-    _i1.throwOnMissingStub(this);
-  }
+// ignore_for_file: type=lint
+// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_setters_without_getters
+// ignore_for_file: comment_references
+// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: implementation_imports
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+// ignore_for_file: prefer_const_constructors
+// ignore_for_file: unnecessary_parenthesis
+// ignore_for_file: camel_case_types
+// ignore_for_file: subtype_of_sealed_class
 
-  @override
-  String get barcode => (super.noSuchMethod(
-        Invocation.getter(#barcode),
-        returnValue: _i9.dummyValue<String>(
-          this,
-          Invocation.getter(#barcode),
-        ),
-      ) as String);
-
-  @override
-  DateTime get lastUpdated => (super.noSuchMethod(
-        Invocation.getter(#lastUpdated),
-        returnValue: _FakeDateTime_0(
-          this,
-          Invocation.getter(#lastUpdated),
-        ),
-      ) as DateTime);
-
-  @override
-  String get displayName => (super.noSuchMethod(
-        Invocation.getter(#displayName),
-        returnValue: _i9.dummyValue<String>(
-          this,
-          Invocation.getter(#displayName),
-        ),
-      ) as String);
-
-  @override
-  bool get hasBasicInfo => (super.noSuchMethod(
-        Invocation.getter(#hasBasicInfo),
-        returnValue: false,
-      ) as bool);
-
-  @override
-  _i2.ProductEntity copyWith({
-    String? barcode,
-    String? productName,
-    String? brands,
-    String? quantity,
-    String? imageUrl,
-    String? nutriScore,
-    int? novaGroup,
-    String? ecoscore,
-    _i10.NutritionFacts? nutrition,
-    String? ingredients,
-    List<String>? allergens,
-    List<String>? additives,
-    List<String>? categories,
-    List<String>? labels,
-    bool? isVegan,
-    bool? isVegetarian,
-    bool? palmOilFree,
-    DateTime? lastUpdated,
-    String? servingSize,
-    String? packagingText,
-    String? countries,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #copyWith,
-          [],
-          {
-            #barcode: barcode,
-            #productName: productName,
-            #brands: brands,
-            #quantity: quantity,
-            #imageUrl: imageUrl,
-            #nutriScore: nutriScore,
-            #novaGroup: novaGroup,
-            #ecoscore: ecoscore,
-            #nutrition: nutrition,
-            #ingredients: ingredients,
-            #allergens: allergens,
-            #additives: additives,
-            #categories: categories,
-            #labels: labels,
-            #isVegan: isVegan,
-            #isVegetarian: isVegetarian,
-            #palmOilFree: palmOilFree,
-            #lastUpdated: lastUpdated,
-            #servingSize: servingSize,
-            #packagingText: packagingText,
-            #countries: countries,
-          },
-        ),
-        returnValue: _FakeProductEntity_1(
-          this,
-          Invocation.method(
-            #copyWith,
-            [],
-            {
-              #barcode: barcode,
-              #productName: productName,
-              #brands: brands,
-              #quantity: quantity,
-              #imageUrl: imageUrl,
-              #nutriScore: nutriScore,
-              #novaGroup: novaGroup,
-              #ecoscore: ecoscore,
-              #nutrition: nutrition,
-              #ingredients: ingredients,
-              #allergens: allergens,
-              #additives: additives,
-              #categories: categories,
-              #labels: labels,
-              #isVegan: isVegan,
-              #isVegetarian: isVegetarian,
-              #palmOilFree: palmOilFree,
-              #lastUpdated: lastUpdated,
-              #servingSize: servingSize,
-              #packagingText: packagingText,
-              #countries: countries,
-            },
-          ),
-        ),
-      ) as _i2.ProductEntity);
+class _FakeDateTime_0 extends _i1.SmartFake implements DateTime {
+  _FakeDateTime_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
-/// A class which mocks [User].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockUser extends _i1.Mock implements _i6.User {
-  MockUser() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  String get userId => (super.noSuchMethod(
-        Invocation.getter(#userId),
-        returnValue: _i9.dummyValue<String>(
-          this,
-          Invocation.getter(#userId),
-        ),
-      ) as String);
-
-  @override
-  String get password => (super.noSuchMethod(
-        Invocation.getter(#password),
-        returnValue: _i9.dummyValue<String>(
-          this,
-          Invocation.getter(#password),
-        ),
-      ) as String);
-
-  @override
-  Map<String, dynamic> toJson() => (super.noSuchMethod(
-        Invocation.method(
-          #toJson,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
-
-  @override
-  Map<String, String> toData() => (super.noSuchMethod(
-        Invocation.method(
-          #toData,
-          [],
-        ),
-        returnValue: <String, String>{},
-      ) as Map<String, String>);
-
-  @override
-  String toValueString() => (super.noSuchMethod(
-        Invocation.method(
-          #toValueString,
-          [],
-        ),
-        returnValue: _i9.dummyValue<String>(
-          this,
-          Invocation.method(
-            #toValueString,
-            [],
-          ),
-        ),
-      ) as String);
+class _FakeProductEntity_1 extends _i1.SmartFake implements _i2.ProductEntity {
+  _FakeProductEntity_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }

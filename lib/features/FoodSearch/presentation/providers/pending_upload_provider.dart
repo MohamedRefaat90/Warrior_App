@@ -1,5 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider that watches the count of pending product uploads.
 ///

@@ -368,7 +368,9 @@ class ProductImageWidget extends StatelessWidget {
         color: Colors.grey[200],
         child: Icon(
           Icons.fastfood,
-          size: width * 0.4,
+          size: width.isFinite
+              ? width * 0.4
+              : (height.isFinite ? height * 0.4 : 40),
           color: Colors.grey[400],
         ),
       );

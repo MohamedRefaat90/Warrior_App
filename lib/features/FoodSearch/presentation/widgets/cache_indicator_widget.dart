@@ -44,7 +44,11 @@ class CacheIndicatorWidget extends StatelessWidget {
             Icon(
               Icons.cloud_off_outlined,
               size: 16,
-              color: iconColor ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: iconColor ??
+                  Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
             ),
             const SizedBox(width: 6),
           ],
@@ -52,8 +56,12 @@ class CacheIndicatorWidget extends StatelessWidget {
             child: Text(
               'Offline - Cached ${_getTimeAgo()}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: textColor ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+                    color: textColor ??
+                        Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
+                  ),
               overflow: TextOverflow.ellipsis,
             ),
           ),

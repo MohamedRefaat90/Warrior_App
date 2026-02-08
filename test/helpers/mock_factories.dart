@@ -5,8 +5,8 @@
 library;
 
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
-import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 
 /// Factory for creating mock FoodProductModel instances
 class MockFoodProductModelFactory {
@@ -16,7 +16,7 @@ class MockFoodProductModelFactory {
     String? productName,
     String? brands,
     String? quantity,
-    NutritionFacts? nutrition,
+    NutritionValuesModel? nutritionValues,
     String? imagePath,
     DateTime? cachedAt,
   }) {
@@ -25,27 +25,17 @@ class MockFoodProductModelFactory {
       productName: productName ?? 'Mock Product',
       brands: brands ?? 'Mock Brand',
       quantity: quantity ?? '100g',
-      nutrition: nutrition ??
-          NutritionFacts(
-            caloriesPerHundred: 100,
-            protein: 5,
+      lastUpdated: DateTime.now(),
+      nutritionValues: nutritionValues ??
+          NutritionValuesModel(
+            energyKcal: 100,
+            proteins: 5,
             carbohydrates: 20,
             fat: 3,
             fiber: 2,
           ),
-      imagePath: imagePath,
+      imageUrl: imagePath,
       cachedAt: cachedAt ?? DateTime.now(),
-    );
-  }
-
-  /// Creates multiple FoodProductModel instances
-  static List<FoodProductModel> createList({int count = 5}) {
-    return List.generate(
-      count,
-      (index) => create(
-        barcode: '${5449000000990 + index}',
-        productName: 'Mock Product $index',
-      ),
     );
   }
 
@@ -61,6 +51,17 @@ class MockFoodProductModelFactory {
     );
   }
 
+  /// Creates multiple FoodProductModel instances
+  static List<FoodProductModel> createList({int count = 5}) {
+    return List.generate(
+      count,
+      (index) => create(
+        barcode: '${5449000000990 + index}',
+        productName: 'Mock Product $index',
+      ),
+    );
+  }
+
   /// Creates a stale FoodProductModel (cache older than 7 days)
   static FoodProductModel createStale({String? barcode}) {
     return createCached(
@@ -72,6 +73,51 @@ class MockFoodProductModelFactory {
 
 /// Factory for creating mock PendingProductUpload instances
 class MockPendingProductUploadFactory {
+  /// Creates a failed PendingProductUpload with retry count
+  static PendingProductUpload createFailed({
+    String? id,
+    int? retryCount,
+    String? failureReason,
+  }) {
+    final product = MockFoodProductModelFactory.create();
+
+    return PendingProductUpload(
+      id: id ?? 'failed_${DateTime.now().millisecondsSinceEpoch}',
+      product: product,
+      queuedAt: DateTime.now().subtract(const Duration(minutes: 30)),
+      retryCount: retryCount ?? 1,
+      status: PendingUploadStatus.failed,
+      lastAttemptAt: DateTime.now().subtract(const Duration(minutes: 5)),
+      failureReason: failureReason ?? 'Network error',
+    );
+  }
+
+  /// Creates multiple pending uploads
+  static List<PendingProductUpload> createList({int count = 5}) {
+    return List.generate(
+      count,
+      (index) => createPending(
+        barcode: '${5449000000990 + index}',
+        productName: 'Pending Product $index',
+      ),
+    );
+  }
+
+  /// Creates a PendingProductUpload at max retries (3)
+  static PendingProductUpload createMaxRetries({String? id}) {
+    final product = MockFoodProductModelFactory.create();
+
+    return PendingProductUpload(
+      id: id ?? 'max_retries_${DateTime.now().millisecondsSinceEpoch}',
+      product: product,
+      queuedAt: DateTime.now().subtract(const Duration(hours: 1)), // Old queue
+      retryCount: 3,
+      status: PendingUploadStatus.failed,
+      lastAttemptAt: DateTime.now().subtract(const Duration(minutes: 2)),
+      failureReason: 'Max retries exceeded',
+    );
+  }
+
   /// Creates a pending (queued) PendingProductUpload
   static PendingProductUpload createPending({
     String? id,
@@ -92,25 +138,6 @@ class MockPendingProductUploadFactory {
     );
   }
 
-  /// Creates a failed PendingProductUpload with retry count
-  static PendingProductUpload createFailed({
-    String? id,
-    int? retryCount,
-    String? failureReason,
-  }) {
-    final product = MockFoodProductModelFactory.create();
-
-    return PendingProductUpload(
-      id: id ?? 'failed_${DateTime.now().millisecondsSinceEpoch}',
-      product: product,
-      queuedAt: DateTime.now().subtract(const Duration(minutes: 30)),
-      retryCount: retryCount ?? 1,
-      status: PendingUploadStatus.failed,
-      lastAttemptAt: DateTime.now().subtract(const Duration(minutes: 5)),
-      failureReason: failureReason ?? 'Network error',
-    );
-  }
-
   /// Creates an uploading PendingProductUpload
   static PendingProductUpload createUploading({String? id}) {
     final product = MockFoodProductModelFactory.create();
@@ -124,37 +151,4 @@ class MockPendingProductUploadFactory {
       lastAttemptAt: DateTime.now(),
     );
   }
-
-  /// Creates a PendingProductUpload at max retries (3)
-  static PendingProductUpload createMaxRetries({String? id}) {
-    final product = MockFoodProductModelFactory.create();
-
-    return PendingProductUpload(
-      id: id ?? 'max_retries_${DateTime.now().millisecondsSinceEpoch}',
-      product: product,
-      queuedAt: DateTime.now().subtract(const Duration(hours: 1)), // Old queue
-      retryCount: 3,
-      status: PendingUploadStatus.failed,
-      lastAttemptAt: DateTime.now().subtract(const Duration(minutes: 2)),
-      failureReason: 'Max retries exceeded',
-    );
-  }
-
-  /// Creates multiple pending uploads
-  static List<PendingProductUpload> createList({int count = 5}) {
-    return List.generate(
-      count,
-      (index) => createPending(
-        barcode: '${5449000000990 + index}',
-        productName: 'Pending Product $index',
-      ),
-    );
-  }
-}
-
-/// Enum for pending upload status (mirrors domain enum)
-enum PendingUploadStatus {
-  pending,
-  uploading,
-  failed,
 }

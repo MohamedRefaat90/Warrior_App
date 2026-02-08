@@ -115,10 +115,15 @@ class _SyncIndicator extends ConsumerWidget {
 class _WarriorAppState extends ConsumerState<WarriorApp>
     with WidgetsBindingObserver {
   @override
-  Widget build(BuildContext context) {
-    // Initialize connectivity checker
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // Initialize connectivity checker once
     ConnectivityChecker.initialize(ref);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     // Watch app settings from provider
     final appSettings = ref.watch(appSettingsProvider);
 
@@ -182,12 +187,6 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   /// Precache frequently used asset images for better performance

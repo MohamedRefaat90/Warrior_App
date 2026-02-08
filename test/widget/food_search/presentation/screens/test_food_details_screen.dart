@@ -1,51 +1,88 @@
-import 'package:Warrior/features/FoodSearch/presentation/screens/food_details_screen.dart';
+﻿import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
+import 'package:Warrior/features/FoodSearch/presentation/screens/product_details_screen.dart';
+import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../../helpers/test_app_wrapper.dart';
 
 void main() {
   group('FoodDetailsScreen', () {
     testWidgets('displays product information', (tester) async {
-      // TODO: Test product display
-      expect(true, true);
+      await tester.pumpWidget(
+        TestAppWrapper.createTestApp(
+          child: ProductDetailsScreen(
+            product: ProductEntity(
+              barcode: '12345678',
+              productName: 'Test Product',
+              servingSize: "100g",
+              lastUpdated: DateTime.now(),
+              imageUrl: 'https://example.com/image.jpg',
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.textContaining('Test Product'), findsWidgets);
     });
 
     testWidgets('shows nutrition facts', (tester) async {
-      // TODO: Test nutrition display
-      expect(true, true);
+      await tester.pumpWidget(
+        TestAppWrapper.createTestApp(
+          child: ProductDetailsScreen(
+            product: ProductEntity(
+              barcode: '12345678',
+              lastUpdated: DateTime.now(),
+              nutrition: null, // Test empty state or default
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      // Look for nutrition section title
+      expect(find.textContaining('Nutrition'), findsWidgets);
     });
 
     testWidgets('displays product image', (tester) async {
-      // TODO: Test image display
-      expect(true, true);
+      await tester.pumpWidget(
+        TestAppWrapper.createTestApp(
+          child: ProductDetailsScreen(
+            product: ProductEntity(
+              barcode: '12345678',
+              lastUpdated: DateTime.now(),
+              imageUrl: 'https://example.com/image.jpg',
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      // Should show a placeholder since network images are mocked/blocked in tests
+      // Our fix to ProductImageWidget ensures it doesn't crash
+      expect(find.byType(ProductImageWidget), findsOneWidget);
     });
 
-    testWidgets('shows favorite button in edit mode', (tester) async {
-      // TODO: Test favorite button
-      expect(true, true);
-    });
+    testWidgets('shows favorite button', (tester) async {
+      await tester.pumpWidget(
+        TestAppWrapper.createTestApp(
+          child: ProductDetailsScreen(
+            product: ProductEntity(
+              barcode: '12345678',
+              lastUpdated: DateTime.now(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
-    testWidgets('toggles favorite status on button tap', (tester) async {
-      // TODO: Test favorite toggle
-      expect(true, true);
-    });
-
-    testWidgets('displays edit button when appropriate', (tester) async {
-      // TODO: Test edit button
-      expect(true, true);
-    });
-
-    testWidgets('navigates to edit screen on button tap', (tester) async {
-      // TODO: Test navigation to edit
-      expect(true, true);
-    });
-
-    testWidgets('shows allergen warnings if present', (tester) async {
-      // TODO: Test allergen display
-      expect(true, true);
-    });
-
-    testWidgets('displays comparison with daily values', (tester) async {
-      // TODO: Test comparison display
-      expect(true, true);
+      // Favorite button is typically an IconButton with Icons.favorite_border
+      expect(find.byIcon(Icons.favorite_border), findsOneWidget);
     });
   });
 }

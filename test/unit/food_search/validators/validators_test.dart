@@ -1,9 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:Warrior/features/FoodSearch/domain/validators/barcode_validator.dart';
 import 'package:Warrior/features/FoodSearch/domain/validators/brand_validator.dart';
+import 'package:Warrior/features/FoodSearch/domain/validators/nutrition_validator.dart';
 import 'package:Warrior/features/FoodSearch/domain/validators/product_name_validator.dart';
 import 'package:Warrior/features/FoodSearch/domain/validators/quantity_validator.dart';
-import 'package:Warrior/features/FoodSearch/domain/validators/nutrition_validator.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BarcodeValidator', () {

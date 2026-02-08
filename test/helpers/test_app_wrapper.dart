@@ -1,9 +1,11 @@
+import 'package:Warrior/core/localization/arb/app_localizations.dart';
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/features/Auth/data/repo/auth_repo.dart';
 import 'package:Warrior/features/FoodSearch/data/repositories/food_repositories_provider.dart';
 import 'package:Warrior/features/Workouts/data/repo/workout_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 
@@ -44,6 +46,16 @@ class TestAppWrapper {
           ),
           useMaterial3: true,
         ),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('ar'),
+        ],
         home: child ??
             const Scaffold(
               body: Center(

@@ -45,13 +45,13 @@ class NutritionValidator {
     return ProductValidationResult.success();
   }
 
-  /// Validates protein value is within acceptable range.
+  /// Validates carbohydrates value is within acceptable range.
   ///
-  /// Protein is optional. If provided, must be:
+  /// Carbs is optional. If provided, must be:
   /// - A valid positive number
-  /// - Between 0 and 100 (percentage)
-  static ProductValidationResult validateProtein(String? protein) {
-    return _validatePercentageValue(protein, 'protein');
+  /// - Between 0 and 100 (percentage or grams)
+  static ProductValidationResult validateCarbohydrates(String? carbs) {
+    return _validatePercentageValue(carbs, 'carbohydrates');
   }
 
   /// Validates fat value is within acceptable range.
@@ -63,15 +63,6 @@ class NutritionValidator {
     return _validatePercentageValue(fat, 'fat');
   }
 
-  /// Validates carbohydrates value is within acceptable range.
-  ///
-  /// Carbs is optional. If provided, must be:
-  /// - A valid positive number
-  /// - Between 0 and 100 (percentage or grams)
-  static ProductValidationResult validateCarbohydrates(String? carbs) {
-    return _validatePercentageValue(carbs, 'carbohydrates');
-  }
-
   /// Validates fiber value is within acceptable range.
   ///
   /// Fiber is optional. If provided, must be:
@@ -81,13 +72,13 @@ class NutritionValidator {
     return _validatePercentageValue(fiber, 'fiber');
   }
 
-  /// Validates sugar value is within acceptable range.
+  /// Validates protein value is within acceptable range.
   ///
-  /// Sugar is optional. If provided, must be:
+  /// Protein is optional. If provided, must be:
   /// - A valid positive number
-  /// - Between 0 and 100 (grams)
-  static ProductValidationResult validateSugar(String? sugar) {
-    return _validatePercentageValue(sugar, 'sugar');
+  /// - Between 0 and 100 (percentage)
+  static ProductValidationResult validateProtein(String? protein) {
+    return _validatePercentageValue(protein, 'protein');
   }
 
   /// Validates salt/sodium value is within acceptable range.
@@ -97,6 +88,15 @@ class NutritionValidator {
   /// - Between 0 and 100 (grams)
   static ProductValidationResult validateSalt(String? salt) {
     return _validatePercentageValue(salt, 'salt');
+  }
+
+  /// Validates sugar value is within acceptable range.
+  ///
+  /// Sugar is optional. If provided, must be:
+  /// - A valid positive number
+  /// - Between 0 and 100 (grams)
+  static ProductValidationResult validateSugar(String? sugar) {
+    return _validatePercentageValue(sugar, 'sugar');
   }
 
   /// Internal helper to validate percentage/percentage-like values.

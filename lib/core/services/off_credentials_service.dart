@@ -30,6 +30,7 @@ class OpenFoodFactsCredentialsService {
     TalkerService.info("Password: $password");
     TalkerService.info(
         "User Agent: ${OpenFoodAPIConfiguration.userAgent!.name}");
+
     return User(
       userId: userId ?? '',
       password: password ?? '',

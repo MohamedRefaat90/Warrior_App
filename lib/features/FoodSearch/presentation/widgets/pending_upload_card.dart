@@ -1,4 +1,5 @@
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
+import 'package:Warrior/features/FoodSearch/data/models/pending_upload_status.dart';
 import 'package:flutter/material.dart';
 
 /// Widget displaying a single pending product upload in the queue.

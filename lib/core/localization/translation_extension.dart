@@ -105,7 +105,7 @@ extension TranslationExtension on String {
       case 'letsBegin':
         return localizations.letsBegin;
 
-      // Food Search
+      // Food Scanner
       case 'scanBarcode':
         return localizations.scanBarcode;
       case 'productNotFound':
@@ -124,8 +124,8 @@ extension TranslationExtension on String {
         return localizations.palmOilFree;
       case 'nutriScore':
         return localizations.nutriScore;
-      case 'foodSearch':
-        return localizations.foodSearch;
+      case 'foodScanner':
+        return localizations.foodScanner;
       case 'scan':
         return localizations.scan;
       case 'compareProducts':
@@ -326,8 +326,8 @@ extension TranslationExtension on String {
         return localizations.muscles;
       case 'myWorkouts':
         return localizations.myWorkouts;
-      case 'predefinedWorkouts':
-        return localizations.predefinedWorkouts;
+      case 'popularWorkouts':
+        return localizations.popularWorkouts;
       case 'caloriesCalculator':
         return localizations.caloriesCalculator;
       case 'resetCalculator':

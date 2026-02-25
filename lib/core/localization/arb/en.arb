@@ -168,9 +168,9 @@
   "@nutriScore": {
     "description": "Nutri-Score label"
   },
-  "foodSearch": "Food Search",
-  "@foodSearch": {
-    "description": "Food search screen title"
+  "foodScanner": "Food Scanner",
+  "@foodScanner": {
+    "description": "Food scanner screen title"
   },
   "foodSearchDescription": "Currently, search is available only for packaged supermarket products.\nYou can scan barcodes, compare products, and save favorites for easy access.\nSupport for fresh foods and daily food logging will be coming soon.",
   "@foodSearchDescription": {
@@ -552,9 +552,9 @@
   "@myWorkouts": {
     "description": "My workouts category title"
   },
-  "predefinedWorkouts": "Predefined Workouts",
-  "@predefinedWorkouts": {
-    "description": "Predefined workouts category title"
+  "popularWorkouts": "Popular Workouts",
+  "@popularWorkouts": {
+    "description": "Popular workouts category title"
   },
   "caloriesCalculator": "Calories Calculator",
   "@caloriesCalculator": {
@@ -1286,9 +1286,9 @@
   "@compareButton": {
     "description": "Compare button label"
   },
-  "recentlyScanned": "Recently Scanned",
-  "@recentlyScanned": {
-    "description": "Recently scanned section title"
+  "recentlySearched": "Recently Searched",
+  "@recentlySearched": {
+    "description": "Recently searched section title"
   },
   "noProductsYet": "No Products Yet",
   "@noProductsYet": {
@@ -1821,5 +1821,34 @@
   "weightSelectionSubtitleGridView": "Updates all current sets",
   "@weightSelectionSubtitleGridView": {
     "description": "Subtitle for weight selection bottom sheet in grid view"
+  },
+  "resetZoomToOriginalSize": "Reset zoom to original size",
+  "@resetZoomToOriginalSize": {
+    "description": "Tooltip message for reset zoom to original size"
+  },
+  "updateReps": "Update Reps",
+  "@updateReps": {
+    "description": "Update Reps"
+  },
+  "customReps": "Custom Reps",
+  "@customReps": {
+    "description": "Custom Reps"
+  },
+  "set": "Set",
+  "@set": {
+    "description": "Set label"
+  },
+  "sets": "Sets",
+  "@sets": {
+    "description": "Sets label"
+  },
+  "setsCount": "{count} {count,plural,one{set}other{sets}}",
+  "@setsCount": {
+    "description": "Sets count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

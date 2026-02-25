@@ -14,7 +14,7 @@ List<Override> getIntegrationTestOverrides() {
   return [
     syncServiceProvider.overrideWith(() => FakeSyncService()),
     favoritesProvider.overrideWith(() => FakeFavoritesNotifier()),
-    recentlyScannedProvider.overrideWith((ref) => [
+    recentlySearchedProvider.overrideWith((ref) => [
           ProductEntity(
             barcode: '123456789',
             productName: 'Test Product',

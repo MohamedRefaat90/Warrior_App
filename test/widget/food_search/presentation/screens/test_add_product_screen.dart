@@ -118,7 +118,6 @@ void main() {
       when(() => mockProductWriteRepository.submitProduct(
             product: any(named: 'product'),
             user: any(named: 'user'),
-            isUpdate: any(named: 'isUpdate'),
           )).thenAnswer((_) async {
         await Future.delayed(const Duration(milliseconds: 100));
         return true;

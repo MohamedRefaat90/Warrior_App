@@ -350,11 +350,11 @@ abstract class AppLocalizations {
   /// **'Nutri-Score'**
   String get nutriScore;
 
-  /// Food search screen title
+  /// Food scanner screen title
   ///
   /// In en, this message translates to:
-  /// **'Food Search'**
-  String get foodSearch;
+  /// **'Food Scanner'**
+  String get foodScanner;
 
   /// Description of the food search feature shown in a dialog
   ///
@@ -926,11 +926,11 @@ abstract class AppLocalizations {
   /// **'My Workouts'**
   String get myWorkouts;
 
-  /// Predefined workouts category title
+  /// Popular workouts category title
   ///
   /// In en, this message translates to:
-  /// **'Predefined Workouts'**
-  String get predefinedWorkouts;
+  /// **'Popular Workouts'**
+  String get popularWorkouts;
 
   /// Calories calculator category title
   ///
@@ -1982,11 +1982,11 @@ abstract class AppLocalizations {
   /// **'Compare'**
   String get compareButton;
 
-  /// Recently scanned section title
+  /// Recently searched section title
   ///
   /// In en, this message translates to:
-  /// **'Recently Scanned'**
-  String get recentlyScanned;
+  /// **'Recently Searched'**
+  String get recentlySearched;
 
   /// No products empty state title
   ///
@@ -2749,6 +2749,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Updates all current sets'**
   String get weightSelectionSubtitleGridView;
+
+  /// Tooltip message for reset zoom to original size
+  ///
+  /// In en, this message translates to:
+  /// **'Reset zoom to original size'**
+  String get resetZoomToOriginalSize;
+
+  /// Update Reps
+  ///
+  /// In en, this message translates to:
+  /// **'Update Reps'**
+  String get updateReps;
+
+  /// Custom Reps
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Reps'**
+  String get customReps;
+
+  /// Set label
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get set;
+
+  /// Sets label
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get sets;
+
+  /// Sets count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count,plural,one{set}other{sets}}'**
+  String setsCount(int count);
 }
 
 class _AppLocalizationsDelegate

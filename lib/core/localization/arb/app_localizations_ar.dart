@@ -136,7 +136,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nutriScore => 'التقييم الغذائي';
 
   @override
-  String get foodSearch => 'البحث عن الطعام';
+  String get foodScanner => 'فحص الأطعمة';
 
   @override
   String get foodSearchDescription =>
@@ -430,7 +430,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myWorkouts => 'تماريني';
 
   @override
-  String get predefinedWorkouts => 'التمارين الجاهزة';
+  String get popularWorkouts => 'التمرينات المشهورة';
 
   @override
   String get caloriesCalculator => 'حاسبة السعرات';
@@ -973,7 +973,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get compareButton => 'مقارنة';
 
   @override
-  String get recentlyScanned => 'أخر ما تم فحصه';
+  String get recentlySearched => 'أخر ما تم البحث عنه';
 
   @override
   String get noProductsYet => 'لا يوجد منتجات';
@@ -1321,7 +1321,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noSetsRecorded => 'لا توجد مجموعات مسجلة بعد';
 
   @override
-  String get reps => 'تكرارات';
+  String get reps => 'عدات';
 
   @override
   String get addSet => 'إضافة مجموعة';
@@ -1379,4 +1379,31 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get weightSelectionSubtitleGridView =>
       'هيغير الوزن في كل المجموعات الحالية';
+
+  @override
+  String get resetZoomToOriginalSize => 'إعادة تعيين التكبير إلى الحجم الأصلي';
+
+  @override
+  String get updateReps => 'تحديث عدد العدات';
+
+  @override
+  String get customReps => 'عدد عدات مخصص';
+
+  @override
+  String get set => 'مجموعة';
+
+  @override
+  String get sets => 'مجموعات';
+
+  @override
+  String setsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'مجموعات',
+      two: 'مجموعتين',
+      one: 'مجموعة',
+    );
+    return '$count $_temp0';
+  }
 }

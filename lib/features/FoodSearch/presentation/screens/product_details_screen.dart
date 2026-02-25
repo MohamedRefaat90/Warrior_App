@@ -146,14 +146,14 @@ class ProductDetailsScreen extends ConsumerWidget {
                 },
               ),
               // Cache indicator
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Center(
-                  child: CacheIndicatorWidget(
-                    cachedAt: product.lastUpdated,
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 8),
+              //   child: Center(
+              //     child: CacheIndicatorWidget(
+              //       cachedAt: product.lastUpdated,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           SliverToBoxAdapter(

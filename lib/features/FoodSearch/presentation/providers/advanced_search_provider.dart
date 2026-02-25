@@ -151,6 +151,10 @@ class AdvancedSearchNotifier extends Notifier<AdvancedSearchState> {
     state = state.copyWith(query: query);
   }
 
+  void setShowSuggestions(bool showSuggestions) {
+    state = state.copyWith(showSuggestions: showSuggestions);
+  }
+
   /// Applies local filtering to search results.
   ///
   /// Note: This duplicates filtering logic. In a future refactor, consider
@@ -213,6 +217,7 @@ class AdvancedSearchState {
   final String? errorMessage;
   final int currentPage;
   final bool hasMoreResults;
+  final bool showSuggestions;
 
   AdvancedSearchState({
     this.query = '',
@@ -228,6 +233,7 @@ class AdvancedSearchState {
     this.errorMessage,
     this.currentPage = 1,
     this.hasMoreResults = true,
+    this.showSuggestions = false,
   });
 
   bool get hasActiveFilters =>
@@ -256,6 +262,7 @@ class AdvancedSearchState {
     String? errorMessage,
     int? currentPage,
     bool? hasMoreResults,
+    bool? showSuggestions,
     bool clearNutriScore = false,
     bool clearNovaGroup = false,
     bool clearErrorMessage = false,
@@ -277,6 +284,7 @@ class AdvancedSearchState {
       errorMessage: clearErrorMessage ? null : errorMessage,
       currentPage: currentPage ?? this.currentPage,
       hasMoreResults: hasMoreResults ?? this.hasMoreResults,
+      showSuggestions: showSuggestions ?? this.showSuggestions,
     );
   }
 }

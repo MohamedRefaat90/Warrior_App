@@ -17,20 +17,17 @@ class SubmitProductUseCase {
   /// - Network availability checks
   /// - Offline queueing
   /// - Image upload if provided
-  /// - Create vs Update logic
   ///
   /// Returns true if submission was successful or queued for later.
   Future<bool> call({
     required ProductEntity product,
     required User user,
     String? imagePath,
-    bool isUpdate = false,
   }) async {
     return await _repository.submitProduct(
       product: product,
       user: user,
       imagePath: imagePath,
-      isUpdate: isUpdate,
     );
   }
 }

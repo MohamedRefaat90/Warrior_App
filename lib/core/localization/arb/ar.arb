@@ -496,9 +496,9 @@
   "@compareButton": {
     "description": "Compare button label"
   },
-  "recentlyScanned": "أخر ما تم فحصه",
-  "@recentlyScanned": {
-    "description": "Recently scanned section title"
+  "recentlySearched": "أخر ما تم البحث عنه",
+  "@recentlySearched": {
+    "description": "Recently searched section title"
   },
   "noProductsYet": "لا يوجد منتجات",
   "@noProductsYet": {
@@ -640,13 +640,17 @@
   "@myWorkouts": {
     "description": "My workouts screen title"
   },
-  "predefinedWorkouts": "التمارين الجاهزة",
-  "@predefinedWorkouts": {
-    "description": "Predefined workouts screen title"
+  "popularWorkouts": "التمرينات المشهورة",
+  "@popularWorkouts": {
+    "description": "Popular workouts screen title"
   },
   "caloriesCalculator": "حاسبة السعرات",
   "@caloriesCalculator": {
     "description": "Calories calculator screen title"
+  },
+  "foodScanner": "فحص الأطعمة",
+  "@foodScanner": {
+    "description": "Food scanner screen title"
   },
   "resetCalculator": "إعادة تعيين الحاسبة",
   "@resetCalculator": {
@@ -1719,7 +1723,7 @@
   "@noSetsRecorded": {
     "description": "Empty state when no workout sets are available"
   },
-  "reps": "تكرارات",
+  "reps": "عدات",
   "@reps": {
     "description": "Repetitions label"
   },
@@ -1796,5 +1800,34 @@
   "weightSelectionSubtitleGridView": "هيغير الوزن في كل المجموعات الحالية",
   "@weightSelectionSubtitleGridView": {
     "description": "Subtitle for weight selection bottom sheet in grid view"
+  },
+  "resetZoomToOriginalSize": "إعادة تعيين التكبير إلى الحجم الأصلي",
+  "@resetZoomToOriginalSize": {
+    "description": "Tooltip message for reset zoom to original size"
+  },
+  "updateReps": "تحديث عدد العدات",
+  "@updateReps": {
+    "description": "Update reps button"
+  },
+  "customReps": "عدد عدات مخصص",
+  "@customReps": {
+    "description": "Custom reps button"
+  },
+  "set": "مجموعة",
+  "@set": {
+    "description": "Set label"
+  },
+  "sets": "مجموعات",
+  "@sets": {
+    "description": "Sets label"
+  },
+  "setsCount": "{count} {count,plural,one{مجموعة}two{مجموعتين}other{مجموعات}}",
+  "@setsCount": {
+    "description": "Sets count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

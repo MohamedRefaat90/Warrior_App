@@ -37,7 +37,6 @@ void main() {
       product: tProduct,
       user: tUser,
       imagePath: 'path/to/image',
-      isUpdate: true,
     );
 
     // Assert

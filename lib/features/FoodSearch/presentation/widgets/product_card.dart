@@ -66,14 +66,14 @@ class ProductCard extends ConsumerWidget {
                               ),
                             ),
                           // Cache indicator
-                          Positioned(
-                            top: 4,
-                            right: 4,
-                            child: CacheIndicatorWidget(
-                              cachedAt: product.lastUpdated,
-                              showIcon: true,
-                            ),
-                          ),
+                          // Positioned(
+                          //   top: 4,
+                          //   right: 4,
+                          //   child: CacheIndicatorWidget(
+                          //     cachedAt: product.lastUpdated,
+                          //     showIcon: true,
+                          //   ),
+                          // ),
                         ],
                       );
                     },

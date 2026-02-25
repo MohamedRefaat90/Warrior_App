@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
+import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
-import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/core/widgets/loading_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
@@ -81,6 +81,7 @@ class _EditableSetRow extends ConsumerWidget {
   final String? equipmentType;
   final String exerciseName;
   final VoidCallback onDelete;
+  final VoidCallback onChanged;
 
   const _EditableSetRow({
     required this.setNumber,
@@ -89,6 +90,7 @@ class _EditableSetRow extends ConsumerWidget {
     this.equipmentType,
     required this.exerciseName,
     required this.onDelete,
+    required this.onChanged,
   });
 
   @override
@@ -162,6 +164,7 @@ class _EditableSetRow extends ConsumerWidget {
                     if (result != null) {
                       weightController.text = result.toStringAsFixed(
                           result.truncateToDouble() == result ? 0 : 2);
+                      onChanged();
                     }
                   },
                 );
@@ -197,6 +200,7 @@ class _EditableSetRow extends ConsumerWidget {
                     );
                     if (result != null) {
                       repsController.text = result.toInt().toString();
+                      onChanged();
                     }
                   },
                 );
@@ -717,11 +721,12 @@ class _ImagePlaceholder extends StatelessWidget {
 
 /// Smart progress indicator showing weight change feedback.
 /// Displays subtle visual hints based on progress direction.
-class _ProgressIndicator extends StatelessWidget {
+class ProgressExerciseIndicator extends StatelessWidget {
   final num? weightChange;
   final num? previousMaxWeight;
 
-  const _ProgressIndicator({
+  const ProgressExerciseIndicator({
+    super.key,
     required this.weightChange,
     required this.previousMaxWeight,
   });
@@ -987,7 +992,7 @@ class _WorkoutLoggingSectionState
   static const int _maxSets = 5;
 
   bool _isExpanded = true;
-  bool _isLoading = false;
+  bool _isSaving = false;
   late List<_EditableSet> _editableSets;
 
   @override
@@ -1059,7 +1064,7 @@ class _WorkoutLoggingSectionState
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${_editableSets.length} ${_editableSets.length == 1 ? 'set' : 'sets'}',
+                          context.l10n.setsCount(_editableSets.length),
                           style: TextStyle(
                             fontFamily: appSettings.fontFamily(),
                             fontSize: 12,
@@ -1069,13 +1074,13 @@ class _WorkoutLoggingSectionState
                       ],
                     ),
                   ),
-                  // Progress indicator
-                  if (widget.workoutItem.weightChange != null)
-                    _ProgressIndicator(
-                      weightChange: widget.workoutItem.weightChange,
-                      previousMaxWeight: widget.workoutItem.previousMaxWeight,
-                    ),
-                  const SizedBox(width: 8),
+                  // // Progress indicator
+                  // if (widget.workoutItem.weightChange != null)
+                  //   ProgressExerciseIndicator(
+                  //     weightChange: widget.workoutItem.weightChange,
+                  //     previousMaxWeight: widget.workoutItem.previousMaxWeight,
+                  //   ),
+                  // const SizedBox(width: 8),
                   AnimatedRotation(
                     turns: _isExpanded ? 0.5 : 0,
                     duration: const Duration(milliseconds: 200),
@@ -1136,6 +1141,9 @@ class _WorkoutLoggingSectionState
         weight: defaultWeight,
       ));
     });
+
+    // Auto-save when adding a set
+    _saveSets();
   }
 
   Widget _buildSetsContent(bool isDark, dynamic appSettings) {
@@ -1177,6 +1185,7 @@ class _WorkoutLoggingSectionState
                 equipmentType: widget.workoutItem.exercise.equipmentType,
                 exerciseName: widget.workoutItem.exercise.name,
                 onDelete: () => _confirmDeleteSet(index),
+                onChanged: _saveSets,
               );
             },
           ),
@@ -1184,25 +1193,46 @@ class _WorkoutLoggingSectionState
         if (_editableSets.length < _maxSets)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: OutlinedButton.icon(
-              onPressed: _addSet,
-              icon: const Icon(Icons.add_rounded, size: 20),
-              label: Text(context.l10n.addSet),
-              style: OutlinedButton.styleFrom(
-                foregroundColor:
-                    isDark ? AppColors.darkSecondary : AppColors.primaryColor,
-                side: BorderSide(
-                  color: isDark
-                      ? AppColors.darkSecondary.withOpacity(0.5)
-                      : AppColors.primaryColor.withOpacity(0.5),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
+            child: _isSaving
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: SizedBox(
+                        height: 48, // Match button height
+                        width: 48,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                            color: isDark
+                                ? AppColors.darkSecondary
+                                : AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : OutlinedButton.icon(
+                    onPressed: _addSet,
+                    icon: const Icon(Icons.add_rounded, size: 20),
+                    label: Text(context.l10n.addSet),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: isDark
+                          ? AppColors.darkSecondary
+                          : AppColors.primaryColor,
+                      minimumSize: const Size(double.infinity, 48),
+                      side: BorderSide(
+                        color: isDark
+                            ? AppColors.darkSecondary.withOpacity(0.5)
+                            : AppColors.primaryColor.withOpacity(0.5),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
           )
         else
           Padding(
@@ -1215,42 +1245,7 @@ class _WorkoutLoggingSectionState
               ),
             ),
           ),
-        // Save Button
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: CustomBTN(
-            widget: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.save_rounded,
-                          color: Colors.white, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        context.l10n.saveSets,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-            width: double.infinity,
-            padding: 14,
-            radius: 12,
-            color: AppColors.primaryColor,
-            press: _isLoading ? null : _saveSets,
-          ),
-        ),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -1309,6 +1304,8 @@ class _WorkoutLoggingSectionState
           _editableSets[i].setNumber = i + 1;
         }
       });
+      // Auto-save after deletion
+      _saveSets();
     }
   }
 
@@ -1326,31 +1323,11 @@ class _WorkoutLoggingSectionState
     }).toList();
   }
 
-  /// Refreshes the editable sets with fresh data from the server.
-  void _refreshEditableSets(WorkoutItemModel updatedItem) {
-    // Dispose old controllers
-    for (final set in _editableSets) {
-      set.dispose();
-    }
+  void _saveSets() async {
+    if (_isSaving) return; // Prevent concurrent saves
 
-    // Create new editable sets from updated data
-    final sets = updatedItem.sets ?? [];
-    _editableSets = sets.asMap().entries.map((entry) {
-      final index = entry.key;
-      final set = entry.value;
-      return _EditableSet(
-        id: set.id,
-        setNumber: index + 1,
-        reps: set.reps,
-        weight: set.weight,
-      );
-    }).toList();
-
-    setState(() {});
-  }
-
-  Future<void> _saveSets() async {
     if (widget.workoutSetId == null) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(context.l10n.errorUpdatingSets),
@@ -1360,7 +1337,11 @@ class _WorkoutLoggingSectionState
       return;
     }
 
-    setState(() => _isLoading = true);
+    if (mounted) {
+      setState(() => _isSaving = true);
+    }
+
+    // State management for loading is removed as updates are instant and non-blocking in UI
 
     try {
       final setsData = _editableSets
@@ -1374,50 +1355,38 @@ class _WorkoutLoggingSectionState
               })
           .toList();
 
-      // Use provider to update sets (handles online/offline automatically)
-      final updatedItem =
-          await ref.read(workoutsProvider.notifier).updateExerciseSets(
-                workoutSetId: widget.workoutSetId,
-                exerciseId: widget.workoutItem.exercise.id,
-                sets: setsData,
-              );
+      // Use provider to update sets (handles online/offline automatically
+      await ref.read(workoutsProvider.notifier).updateExerciseSets(
+            workoutSetId: widget.workoutSetId,
+            exerciseId: widget.workoutItem.exercise.id,
+            sets: setsData,
+          );
 
       if (mounted) {
-        if (updatedItem != null) {
-          // Notify parent of updated data
-          widget.onWorkoutItemUpdated?.call(updatedItem);
-
-          // Update local editable sets with fresh data from server
-          _refreshEditableSets(updatedItem);
-
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        if (ConnectivityChecker.isOnline! &&
+            ref.read(workoutsProvider).isSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(context.l10n.setsUpdated),
               backgroundColor: Colors.green,
             ),
           );
-        } else {
           // Check if we're offline - still show success for queued operations
-          if (!ConnectivityChecker.isOnline!) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.l10n.setsUpdatedOffline),
-                backgroundColor: Colors.orange,
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.l10n.errorUpdatingSets),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+        } else if (ConnectivityChecker.isOnline! &&
+            !ref.read(workoutsProvider).isSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.l10n.setsUpdatedOffline),
+              backgroundColor: Colors.orange,
+            ),
+          );
         }
       }
     } catch (e) {
       TalkerService.error('Error saving sets', 'EXERCISE_DETAILS', e);
       if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(context.l10n.errorUpdatingSets),
@@ -1427,7 +1396,7 @@ class _WorkoutLoggingSectionState
       }
     } finally {
       if (mounted) {
-        setState(() => _isLoading = false);
+        setState(() => _isSaving = false);
       }
     }
   }

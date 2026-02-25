@@ -1,23 +1,27 @@
 import 'dart:io';
 
 import 'package:Warrior/core/localization/translation_extension.dart';
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
+import 'package:Warrior/features/FoodSearch/presentation/providers/product_form_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// Image picker section with preview and fullscreen view.
-class ProductImagePicker extends StatelessWidget {
-  final String? selectedImagePath;
+class ProductImagePicker extends ConsumerWidget {
   final ValueChanged<String?> onImageChanged;
 
   const ProductImagePicker({
     super.key,
-    required this.selectedImagePath,
     required this.onImageChanged,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productForm = ref.watch(productFormProvider);
+    TalkerService.info(
+        'productForm.imagePath image path: ${productForm.imagePath}', 'FORM');
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -29,9 +33,9 @@ class ProductImagePicker extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            if (selectedImagePath != null) ...[
+            if (productForm.imagePath != null) ...[
               _ImagePreview(
-                imagePath: selectedImagePath!,
+                imagePath: productForm.imagePath!,
                 onRemove: () => onImageChanged(null),
               ),
               const SizedBox(height: 12),
@@ -39,7 +43,7 @@ class ProductImagePicker extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () => _pickImage(context),
               icon: const Icon(Icons.camera_alt),
-              label: Text(selectedImagePath != null
+              label: Text(productForm.imagePath != null
                   ? context.l10n.changeImage
                   : context.l10n.takePhoto),
             ),
@@ -181,17 +185,20 @@ class _FullScreenImageViewState extends State<_FullScreenImageView> {
               child: Material(
                 color: Colors.black54,
                 borderRadius: BorderRadius.circular(24),
-                child: InkWell(
-                  onTap: () {
-                    _transformationController.value = Matrix4.identity();
-                  },
-                  borderRadius: BorderRadius.circular(24),
-                  child: const Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Icon(
-                      Icons.fit_screen_rounded,
-                      color: Colors.white,
-                      size: 24,
+                child: Tooltip(
+                  message: context.l10n.resetZoomToOriginalSize,
+                  child: InkWell(
+                    onTap: () {
+                      _transformationController.value = Matrix4.identity();
+                    },
+                    borderRadius: BorderRadius.circular(24),
+                    child: const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.fit_screen_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ),

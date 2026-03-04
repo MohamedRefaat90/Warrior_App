@@ -58,9 +58,9 @@ class ProductFormNotifier extends Notifier<ProductFormState> {
   }
 
   void updateImage(String? imagePath) {
-    TalkerService.info('Updating image path: $imagePath', 'FORM');
+    TalkerService.debug('Updating image path: $imagePath', 'FORM');
     state = state.copyWith(imagePath: imagePath);
-    TalkerService.info('Image path updated: ${state.imagePath}', 'FORM');
+    TalkerService.debug('Image path updated: ${state.imagePath}', 'FORM');
   }
 
   void updateNutrition(NutritionFacts? nutrition) {

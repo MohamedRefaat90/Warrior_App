@@ -409,7 +409,7 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
   /// Updates exercise sets for a workout.
   /// Works for both online and offline modes.
-  /// Returns the updated WorkoutItemModel or null if failed.
+  /// Throws an error if the update fails.
   Future<void> updateExerciseSets({
     required int? workoutSetId,
     required int exerciseId,
@@ -462,14 +462,6 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
         // Update local Hive data with new sets
         await _updateExerciseSetsLocal(workoutSetId!, exerciseId, sets);
-
-        // Get the updated workout item from local storage
-        final updatedWorkout = workoutList.firstWhere(
-          (w) => w.id == workoutSetId,
-        );
-        updatedWorkout.workoutItems?.firstWhere(
-          (item) => item.exercise.id == exerciseId,
-        );
 
         TalkerService.info(
             'Sets update queued for sync: workout=$workoutSetId, exercise=$exerciseId',

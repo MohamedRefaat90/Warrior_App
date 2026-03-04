@@ -128,7 +128,9 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                     },
                   ),
                 ),
-              if (!selectMode && widget.workoutItem!.weightChange != null)
+              if (!selectMode &&
+                  widget.workoutItem != null &&
+                  widget.workoutItem!.weightChange != null)
                 Positioned(
                   top: 5,
                   left: 5,

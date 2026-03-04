@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
-import 'package:Warrior/core/network/provider_states.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
@@ -39,6 +38,82 @@ class ExerciseDetailsScreen extends StatefulWidget {
 
   @override
   State<ExerciseDetailsScreen> createState() => _ExerciseDetailsScreenState();
+}
+
+/// Smart progress indicator showing weight change feedback.
+/// Displays subtle visual hints based on progress direction.
+class ProgressExerciseIndicator extends StatelessWidget {
+  final num? weightChange;
+  final num? previousMaxWeight;
+
+  const ProgressExerciseIndicator({
+    super.key,
+    required this.weightChange,
+    required this.previousMaxWeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Don't show indicator if no weight change data
+    if (weightChange == null) return const SizedBox.shrink();
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Determine indicator properties based on weight change
+    final Color backgroundColor;
+    final Color iconColor;
+    final IconData icon;
+
+    if (weightChange! > 0) {
+      // Positive progress - green accent
+      backgroundColor = Colors.green.withOpacity(0.15);
+      iconColor = Colors.green;
+      icon = Icons.trending_up_rounded;
+    } else if (weightChange! < 0) {
+      // Regression - soft neutral (not punishing)
+      backgroundColor = isDark
+          ? Colors.orange.withOpacity(0.12)
+          : Colors.orange.withOpacity(0.1);
+      iconColor = Colors.orange.shade400;
+      icon = Icons.trending_down_rounded;
+    } else {
+      // No change - neutral gray
+      backgroundColor = isDark
+          ? Colors.white.withOpacity(0.08)
+          : Colors.grey.withOpacity(0.12);
+      iconColor = isDark ? Colors.white54 : Colors.grey;
+      icon = Icons.trending_flat_rounded;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 18,
+            color: iconColor,
+          ),
+          if (weightChange != 0) ...[
+            const SizedBox(width: 4),
+            Text(
+              '${weightChange! > 0 ? '+' : ''}${weightChange!.toStringAsFixed(weightChange!.truncateToDouble() == weightChange ? 0 : 1)}',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: iconColor,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }
 
 /// Mutable set data for editing.
@@ -719,82 +794,6 @@ class _ImagePlaceholder extends StatelessWidget {
   }
 }
 
-/// Smart progress indicator showing weight change feedback.
-/// Displays subtle visual hints based on progress direction.
-class ProgressExerciseIndicator extends StatelessWidget {
-  final num? weightChange;
-  final num? previousMaxWeight;
-
-  const ProgressExerciseIndicator({
-    super.key,
-    required this.weightChange,
-    required this.previousMaxWeight,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Don't show indicator if no weight change data
-    if (weightChange == null) return const SizedBox.shrink();
-
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Determine indicator properties based on weight change
-    final Color backgroundColor;
-    final Color iconColor;
-    final IconData icon;
-
-    if (weightChange! > 0) {
-      // Positive progress - green accent
-      backgroundColor = Colors.green.withOpacity(0.15);
-      iconColor = Colors.green;
-      icon = Icons.trending_up_rounded;
-    } else if (weightChange! < 0) {
-      // Regression - soft neutral (not punishing)
-      backgroundColor = isDark
-          ? Colors.orange.withOpacity(0.12)
-          : Colors.orange.withOpacity(0.1);
-      iconColor = Colors.orange.shade400;
-      icon = Icons.trending_down_rounded;
-    } else {
-      // No change - neutral gray
-      backgroundColor = isDark
-          ? Colors.white.withOpacity(0.08)
-          : Colors.grey.withOpacity(0.12);
-      iconColor = isDark ? Colors.white54 : Colors.grey;
-      icon = Icons.trending_flat_rounded;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 18,
-            color: iconColor,
-          ),
-          if (weightChange != 0) ...[
-            const SizedBox(width: 4),
-            Text(
-              '${weightChange! > 0 ? '+' : ''}${weightChange!.toStringAsFixed(weightChange!.truncateToDouble() == weightChange ? 0 : 1)}',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: iconColor,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
 class _TargetedMusclesSection extends ConsumerWidget {
   final String imageUrl;
 
@@ -1323,9 +1322,8 @@ class _WorkoutLoggingSectionState
     }).toList();
   }
 
-  void _saveSets() async {
+  Future<void> _saveSets() async {
     if (_isSaving) return; // Prevent concurrent saves
-
     if (widget.workoutSetId == null) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1364,8 +1362,8 @@ class _WorkoutLoggingSectionState
 
       if (mounted) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        if (ConnectivityChecker.isOnline! &&
-            ref.read(workoutsProvider).isSuccess) {
+        final isOnline = ConnectivityChecker.isOnline;
+        if (isOnline == true && ref.read(workoutsProvider).isSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(context.l10n.setsUpdated),
@@ -1373,7 +1371,7 @@ class _WorkoutLoggingSectionState
             ),
           );
           // Check if we're offline - still show success for queued operations
-        } else if (ConnectivityChecker.isOnline! &&
+        } else if ((isOnline == null || !isOnline) &&
             !ref.read(workoutsProvider).isSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

@@ -26,7 +26,7 @@ final productSuggestionsProvider =
   return await suggestionsUseCase(query);
 });
 
-/// Provider for recently scanned products
+/// Provider for recently searched products
 final recentlySearchedProvider =
     Provider.autoDispose<List<ProductEntity>>((ref) {
   final recentlySearchedUseCase = ref.watch(getRecentlySearchedUseCaseProvider);

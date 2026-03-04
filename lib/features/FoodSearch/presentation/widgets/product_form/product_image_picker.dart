@@ -20,7 +20,7 @@ class ProductImagePicker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productForm = ref.watch(productFormProvider);
-    TalkerService.info(
+    TalkerService.debug(
         'productForm.imagePath image path: ${productForm.imagePath}', 'FORM');
     return Card(
       child: Padding(

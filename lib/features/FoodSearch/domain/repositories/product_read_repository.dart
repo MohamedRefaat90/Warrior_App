@@ -16,20 +16,6 @@ abstract class ProductReadRepository {
   /// Get recently scanned products
   List<ProductEntity> getRecentlyScanned({int limit = 10});
 
-  /// Search products by brand
-  Future<List<ProductEntity>> searchByBrand(
-    String brand, {
-    int page = 1,
-    int pageSize = 25,
-  });
-
-  /// Search products by category
-  Future<List<ProductEntity>> searchByCategory(
-    String category, {
-    int page = 1,
-    int pageSize = 25,
-  });
-
   /// Search product by barcode
   Future<ProductEntity?> searchProductByBarcode(String barcode);
 

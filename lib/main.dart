@@ -29,7 +29,7 @@ void main() async {
   OpenFoodAPIConfiguration.userAgent =
       UserAgent(name: 'Warrior App', version: '1.1.0', system: 'Flutter');
   OpenFoodFactsCredentialsService.saveCredentials(
-      userId: "Warrior App", password: "Warrior App");
+      userId: "warrior-app", password: "test1234T@");
   OpenFoodAPIConfiguration.globalLanguages = [
     OpenFoodFactsLanguage.ENGLISH,
     OpenFoodFactsLanguage.ARABIC,

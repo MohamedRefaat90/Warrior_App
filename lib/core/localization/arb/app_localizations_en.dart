@@ -136,7 +136,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nutriScore => 'Nutri-Score';
 
   @override
-  String get foodSearch => 'Food Search';
+  String get foodScanner => 'Food Scanner';
 
   @override
   String get foodSearchDescription =>
@@ -433,7 +433,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myWorkouts => 'My Workouts';
 
   @override
-  String get predefinedWorkouts => 'Predefined Workouts';
+  String get popularWorkouts => 'Popular Workouts';
 
   @override
   String get caloriesCalculator => 'Calories Calculator';
@@ -995,7 +995,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get compareButton => 'Compare';
 
   @override
-  String get recentlyScanned => 'Recently Scanned';
+  String get recentlySearched => 'Recently Searched';
 
   @override
   String get noProductsYet => 'No Products Yet';
@@ -1402,4 +1402,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weightSelectionSubtitleGridView => 'Updates all current sets';
+
+  @override
+  String get resetZoomToOriginalSize => 'Reset zoom to original size';
+
+  @override
+  String get updateReps => 'Update Reps';
+
+  @override
+  String get customReps => 'Custom Reps';
+
+  @override
+  String get set => 'Set';
+
+  @override
+  String get sets => 'Sets';
+
+  @override
+  String setsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'sets',
+      one: 'set',
+    );
+    return '$count $_temp0';
+  }
 }

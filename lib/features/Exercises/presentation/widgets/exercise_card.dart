@@ -4,6 +4,7 @@ import 'package:Warrior/core/constants/colors.dart';
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
+import 'package:Warrior/features/Exercises/presentation/screens/exercise_details_screen.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/download_indicator.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
@@ -125,6 +126,17 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                             (e) => e.exercise.id == widget.exercise.id);
                       }
                     },
+                  ),
+                ),
+              if (!selectMode &&
+                  widget.workoutItem != null &&
+                  widget.workoutItem!.weightChange != null)
+                Positioned(
+                  top: 5,
+                  left: 5,
+                  child: ProgressExerciseIndicator(
+                    weightChange: widget.workoutItem!.weightChange,
+                    previousMaxWeight: widget.workoutItem!.previousMaxWeight,
                   ),
                 ),
               // Download indicator banner

@@ -26,11 +26,11 @@ final productSuggestionsProvider =
   return await suggestionsUseCase(query);
 });
 
-/// Provider for recently scanned products
-final recentlyScannedProvider =
+/// Provider for recently searched products
+final recentlySearchedProvider =
     Provider.autoDispose<List<ProductEntity>>((ref) {
-  final recentlyScannedUseCase = ref.watch(getRecentlyScannedUseCaseProvider);
-  return recentlyScannedUseCase(limit: 10);
+  final recentlySearchedUseCase = ref.watch(getRecentlySearchedUseCaseProvider);
+  return recentlySearchedUseCase(limit: 10);
 });
 
 /// State provider for current search filters

@@ -53,6 +53,7 @@ sentry.properties
 
 /macos/
 
-.github
+.github/agents/
+.github/prompts/
 .specify
 .cursor

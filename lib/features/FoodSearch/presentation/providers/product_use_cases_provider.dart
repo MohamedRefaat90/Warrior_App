@@ -46,10 +46,10 @@ final getProductSuggestionsUseCaseProvider =
   );
 });
 
-/// Provider for GetRecentlyScannedUseCase
-final getRecentlyScannedUseCaseProvider =
-    Provider<GetRecentlyScannedUseCase>((ref) {
-  return GetRecentlyScannedUseCase(
+/// Provider for GetRecentlySearchedUseCase
+final getRecentlySearchedUseCaseProvider =
+    Provider<GetRecentlySearchedUseCase>((ref) {
+  return GetRecentlySearchedUseCase(
     ref.watch(productReadRepositoryProvider),
   );
 });

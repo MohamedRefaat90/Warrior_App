@@ -29,7 +29,7 @@ class _PredefinedWorkoutScreenState
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          context.l10n.predefinedWorkouts,
+          context.l10n.popularWorkouts,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontFamily: appSettings.fontFamily(),
                 fontWeight: FontWeight.bold,

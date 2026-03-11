@@ -21,7 +21,7 @@ class _FoodSearchDialogState extends State<FoodSearchDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        context.l10n.foodSearch,
+        context.l10n.foodScanner,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       content: Column(

@@ -94,64 +94,6 @@ class ProductReadRepositoryImpl implements ProductReadRepository {
   }
 
   @override
-  Future<List<ProductEntity>> searchByBrand(
-    String brand, {
-    int page = 1,
-    int pageSize = 25,
-  }) async {
-    try {
-      if (ConnectivityChecker.isOnline != true) {
-        return _searchInCache(brand);
-      }
-
-      final products = await _remoteDataSource.searchByBrand(
-        brand,
-        page: page,
-        pageSize: pageSize,
-      );
-
-      await Future.wait(
-        products.map((product) => _localDataSource.cacheProduct(product)),
-      );
-
-      return products.map((p) => p.toEntity()).toList();
-    } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error in searchByBrand', 'FOOD_READ_REPO', e, stackTrace);
-      return _searchInCache(brand);
-    }
-  }
-
-  @override
-  Future<List<ProductEntity>> searchByCategory(
-    String category, {
-    int page = 1,
-    int pageSize = 25,
-  }) async {
-    try {
-      if (ConnectivityChecker.isOnline != true) {
-        return _searchInCache(category);
-      }
-
-      final products = await _remoteDataSource.searchByCategory(
-        category,
-        page: page,
-        pageSize: pageSize,
-      );
-
-      await Future.wait(
-        products.map((product) => _localDataSource.cacheProduct(product)),
-      );
-
-      return products.map((p) => p.toEntity()).toList();
-    } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error in searchByCategory', 'FOOD_READ_REPO', e, stackTrace);
-      return _searchInCache(category);
-    }
-  }
-
-  @override
   Future<ProductEntity?> searchProductByBarcode(String barcode) async {
     try {
       // Try cache first

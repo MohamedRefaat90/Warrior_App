@@ -11,14 +11,14 @@ void main() {
   late MockUserInteractionRepository mockInteractionRepo;
   late MockProductReadRepository mockReadRepo;
   late GetSearchHistoryUseCase getSearchHistoryUseCase;
-  late GetRecentlyScannedUseCase getRecentlyScannedUseCase;
+  late GetRecentlySearchedUseCase getRecentlySearchedUseCase;
   late GetProductSuggestionsUseCase getProductSuggestionsUseCase;
 
   setUp(() {
     mockInteractionRepo = MockUserInteractionRepository();
     mockReadRepo = MockProductReadRepository();
     getSearchHistoryUseCase = GetSearchHistoryUseCase(mockInteractionRepo);
-    getRecentlyScannedUseCase = GetRecentlyScannedUseCase(mockReadRepo);
+    getRecentlySearchedUseCase = GetRecentlySearchedUseCase(mockReadRepo);
     getProductSuggestionsUseCase = GetProductSuggestionsUseCase(mockReadRepo);
   });
 
@@ -41,11 +41,11 @@ void main() {
     });
   });
 
-  group('GetRecentlyScannedUseCase', () {
-    test('should return recently scanned from repository', () {
+  group('GetRecentlySearchedUseCase', () {
+    test('should return recently searched from repository', () {
       when(mockReadRepo.getRecentlyScanned(limit: 5)).thenReturn([]);
 
-      final result = getRecentlyScannedUseCase(limit: 5);
+      final result = getRecentlySearchedUseCase(limit: 5);
 
       expect(result, []);
       verify(mockReadRepo.getRecentlyScanned(limit: 5));

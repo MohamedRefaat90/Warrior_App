@@ -57,7 +57,7 @@ class WorkoutDetails extends ConsumerWidget {
                 "appendToExistingWorkoutSet": true
               });
             },
-            tooltip: "Add New Exercise",
+            tooltip: context.l10n.addNewExercise,
             shape: CircleBorder(),
             child: Icon(
               Icons.add,
@@ -81,7 +81,7 @@ class WorkoutDetails extends ConsumerWidget {
           centerTitle: true,
           actions: [
             IconButton(
-              tooltip: 'Share workout',
+              tooltip: context.l10n.shareWorkout,
               icon: const Icon(Icons.share),
               onPressed: () async {
                 try {

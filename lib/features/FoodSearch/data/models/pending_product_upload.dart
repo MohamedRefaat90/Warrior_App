@@ -1,4 +1,5 @@
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
+import 'package:Warrior/features/FoodSearch/data/models/pending_upload_status.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:hive/hive.dart';
 
@@ -103,16 +104,4 @@ class PendingProductUpload extends HiveObject {
         'retryCount: $retryCount, '
         'queuedAt: $queuedAt)';
   }
-}
-
-/// Status enumeration for pending product uploads.
-enum PendingUploadStatus {
-  /// Upload is queued and waiting to be sent.
-  pending,
-
-  /// Upload is currently in progress.
-  uploading,
-
-  /// Upload failed (eligible for retry if within retry limit).
-  failed,
 }

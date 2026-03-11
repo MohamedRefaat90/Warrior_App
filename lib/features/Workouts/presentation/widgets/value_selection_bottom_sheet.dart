@@ -227,8 +227,9 @@ class _ValueSelectionBottomSheetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context
-                .l10n.customWeight, // Reuse "Custom Weight" or generic "Custom"
+            widget.mode == ValueSelectionMode.weight
+                ? context.l10n.customWeight
+                : context.l10n.customReps,
             style: TextStyle(
               fontFamily: appSettings.fontFamily(),
               fontWeight: FontWeight.bold,
@@ -554,7 +555,7 @@ class _ValueSelectionBottomSheetState
   String _getButtonText(BuildContext context) {
     return widget.mode == ValueSelectionMode.weight
         ? context.l10n.updateWeight
-        : "Confirm";
+        : context.l10n.updateReps;
   }
 
   void _handleUpdate() {

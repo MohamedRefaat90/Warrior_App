@@ -5,6 +5,7 @@ import 'package:Warrior/features/FoodSearch/data/models/favorite_food_model.dart
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
+import 'package:Warrior/features/FoodSearch/data/models/pending_upload_status.dart';
 import 'package:Warrior/features/FoodSearch/data/models/search_history_model.dart';
 import 'package:Warrior/features/Workouts/data/models/exercise_set_record_model.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
@@ -127,6 +128,7 @@ class HiveManager {
     Hive.registerAdapter(SearchTypeAdapter());
     Hive.registerAdapter(FavoriteFoodModelAdapter());
     Hive.registerAdapter(PendingProductUploadAdapter());
+    Hive.registerAdapter(PendingUploadStatusAdapter());
 
     musclesBox = await Hive.openBox<MuscleModel>('muscles');
     exercisesBox = await Hive.openBox<ExerciseModel>('exercises');

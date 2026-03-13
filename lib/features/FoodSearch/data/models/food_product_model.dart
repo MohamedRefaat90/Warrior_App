@@ -1,6 +1,6 @@
 import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
 
 part 'food_product_model.g.dart';

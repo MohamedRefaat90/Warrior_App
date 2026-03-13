@@ -10,7 +10,8 @@ import 'package:Warrior/features/FoodSearch/data/models/search_history_model.dar
 import 'package:Warrior/features/Workouts/data/models/exercise_set_record_model.dart';
 import 'package:Warrior/features/Workouts/data/models/pending_operations_model.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 class HiveManager {
   static late Box<ExerciseModel> exercisesBox;

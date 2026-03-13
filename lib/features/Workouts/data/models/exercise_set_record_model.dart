@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:Warrior/core/services/talker_service.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'exercise_set_record_model.g.dart';
 
@@ -123,4 +123,3 @@ class ExerciseSetRecordModel {
     return defaultValue;
   }
 }
-

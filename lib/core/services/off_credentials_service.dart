@@ -26,8 +26,6 @@ class OpenFoodFactsCredentialsService {
     final password =
         await SecureStorageHandler.read(key: StorageKeys.offPassword);
 
-    TalkerService.info("User ID: $userId");
-    TalkerService.info("Password: $password");
     TalkerService.info(
         "User Agent: ${OpenFoodAPIConfiguration.userAgent!.name}");
 

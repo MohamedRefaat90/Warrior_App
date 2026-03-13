@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:hive/hive.dart';
+
+import 'package:hive_ce/hive.dart';
 
 part 'muscle_model.g.dart';
 

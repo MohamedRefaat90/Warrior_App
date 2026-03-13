@@ -1,6 +1,6 @@
 import 'package:Warrior/features/FoodSearch/domain/entities/search_history_entity.dart'
     as entity;
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'search_history_model.g.dart';
 

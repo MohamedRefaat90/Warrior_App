@@ -104,7 +104,9 @@ class RoutersManager {
           path: AppRouters.verifyOTP,
           name: AppRouters.verifyOTP,
           pageBuilder: (context, state) => CustomTransition(
-            child: VerifyOtpScreen(email: state.extra! as String),
+            child: VerifyOtpScreen(
+              email: state.extra as String? ?? '',
+            ),
             transitionType: PageTransitionType.fade,
           ),
         ),
@@ -112,7 +114,9 @@ class RoutersManager {
           path: AppRouters.newPassword,
           name: AppRouters.newPassword,
           pageBuilder: (context, state) => CustomTransition(
-            child: ResetPasswordScreen(email: state.extra! as String),
+            child: ResetPasswordScreen(
+              email: state.extra as String? ?? '',
+            ),
             transitionType: PageTransitionType.bottomToTop,
           ),
         ),

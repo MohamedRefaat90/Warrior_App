@@ -1,7 +1,7 @@
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_upload_status.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'pending_product_upload.g.dart';
 

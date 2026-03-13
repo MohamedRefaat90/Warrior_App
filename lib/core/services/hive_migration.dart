@@ -1,5 +1,6 @@
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 /// Migration utilities for Hive database schema upgrades.
 ///
@@ -32,7 +33,7 @@ class HiveMigration {
         await box.deleteAt(key);
       }
     } catch (e) {
-      print('Error cleaning up stale pending uploads: $e');
+      TalkerService.error('Error cleaning up stale pending uploads: $e');
     }
   }
 
@@ -74,7 +75,7 @@ class HiveMigration {
       }
     } catch (e) {
       // Log migration error but don't crash the app
-      print('Error during PendingProductUpload migration: $e');
+      TalkerService.error('Error during PendingProductUpload migration: $e');
     }
   }
 }

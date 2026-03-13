@@ -1,5 +1,5 @@
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'pending_operations_model.g.dart';
 

@@ -23,7 +23,8 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 class MusclesContent extends ConsumerWidget {
   final List<MuscleModel> muscles;

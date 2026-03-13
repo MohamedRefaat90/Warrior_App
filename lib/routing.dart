@@ -1,6 +1,7 @@
 import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/functions/custom_transition_page.dart';
+import 'package:Warrior/core/functions/flushbar.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/shared_pref.dart';
@@ -41,16 +42,13 @@ import 'package:Warrior/features/Workouts/presentation/screens/workout_details.d
 import 'package:Warrior/features/Workouts/presentation/screens/workouts_screen.dart';
 import 'package:Warrior/features/onboarding/screens/onboarding_screen.dart';
 import 'package:Warrior/features/onboarding/screens/welcome_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class RoutersManager {
   static GoRouter? _router;
-
-  static void reset() {
-    _router = null;
-  }
 
   static GoRouter get router => _router ??=
           GoRouter(initialLocation: AppServices.initialLocation, observers: [
@@ -103,9 +101,21 @@ class RoutersManager {
         GoRoute(
           path: AppRouters.verifyOTP,
           name: AppRouters.verifyOTP,
+          redirect: (context, state) {
+            final email = state.extra as String?;
+            if (email == null || email.isEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  showErrorFlushbar(context, 'Missing email to verify OTP. Please start over.');
+                }
+              });
+              return AppRouters.login;
+            }
+            return null;
+          },
           pageBuilder: (context, state) => CustomTransition(
             child: VerifyOtpScreen(
-              email: state.extra as String? ?? '',
+              email: state.extra as String,
             ),
             transitionType: PageTransitionType.fade,
           ),
@@ -113,9 +123,21 @@ class RoutersManager {
         GoRoute(
           path: AppRouters.newPassword,
           name: AppRouters.newPassword,
+          redirect: (context, state) {
+            final email = state.extra as String?;
+            if (email == null || email.isEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  showErrorFlushbar(context, 'Missing email for password reset. Please start over.');
+                }
+              });
+              return AppRouters.login;
+            }
+            return null;
+          },
           pageBuilder: (context, state) => CustomTransition(
             child: ResetPasswordScreen(
-              email: state.extra as String? ?? '',
+              email: state.extra as String,
             ),
             transitionType: PageTransitionType.bottomToTop,
           ),
@@ -391,6 +413,10 @@ class RoutersManager {
           ),
         ),
       ]);
+
+  static void reset() {
+    _router = null;
+  }
 
   static Future<String?> routingChecker() async {
     String? token = await SecureStorageHandler.read(key: StorageKeys.token);

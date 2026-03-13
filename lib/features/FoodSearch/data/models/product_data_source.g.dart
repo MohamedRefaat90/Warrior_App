@@ -8,7 +8,7 @@ part of 'product_data_source.dart';
 
 class ProductDataSourceAdapter extends TypeAdapter<ProductDataSource> {
   @override
-  final int typeId = 9;
+  final typeId = 9;
 
   @override
   ProductDataSource read(BinaryReader reader) {
@@ -31,16 +31,12 @@ class ProductDataSourceAdapter extends TypeAdapter<ProductDataSource> {
     switch (obj) {
       case ProductDataSource.openFoodFacts:
         writer.writeByte(0);
-        break;
       case ProductDataSource.userManual:
         writer.writeByte(1);
-        break;
       case ProductDataSource.ocrExtracted:
         writer.writeByte(2);
-        break;
       case ProductDataSource.cached:
         writer.writeByte(3);
-        break;
     }
   }
 

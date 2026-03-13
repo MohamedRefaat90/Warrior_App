@@ -8,7 +8,7 @@ part of 'search_history_model.dart';
 
 class SearchHistoryModelAdapter extends TypeAdapter<SearchHistoryModel> {
   @override
-  final int typeId = 12;
+  final typeId = 12;
 
   @override
   SearchHistoryModel read(BinaryReader reader) {
@@ -19,7 +19,7 @@ class SearchHistoryModelAdapter extends TypeAdapter<SearchHistoryModel> {
     return SearchHistoryModel(
       searchQuery: fields[0] as String,
       timestamp: fields[1] as DateTime,
-      resultCount: fields[2] as int,
+      resultCount: (fields[2] as num).toInt(),
       searchType: fields[3] as SearchType,
     );
   }
@@ -51,7 +51,7 @@ class SearchHistoryModelAdapter extends TypeAdapter<SearchHistoryModel> {
 
 class SearchTypeAdapter extends TypeAdapter<SearchType> {
   @override
-  final int typeId = 13;
+  final typeId = 13;
 
   @override
   SearchType read(BinaryReader reader) {
@@ -74,16 +74,12 @@ class SearchTypeAdapter extends TypeAdapter<SearchType> {
     switch (obj) {
       case SearchType.barcode:
         writer.writeByte(0);
-        break;
       case SearchType.text:
         writer.writeByte(1);
-        break;
       case SearchType.category:
         writer.writeByte(2);
-        break;
       case SearchType.brand:
         writer.writeByte(3);
-        break;
     }
   }
 

@@ -8,7 +8,7 @@ part of 'muscle_model.dart';
 
 class MuscleModelAdapter extends TypeAdapter<MuscleModel> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   MuscleModel read(BinaryReader reader) {
@@ -17,10 +17,10 @@ class MuscleModelAdapter extends TypeAdapter<MuscleModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return MuscleModel(
-      id: fields[0] as int,
+      id: (fields[0] as num).toInt(),
       name: fields[1] as String,
       image: fields[2] as String,
-      exerciseCount: fields[3] as int,
+      exerciseCount: (fields[3] as num).toInt(),
     );
   }
 

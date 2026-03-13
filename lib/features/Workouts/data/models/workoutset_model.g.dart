@@ -8,7 +8,7 @@ part of 'workoutset_model.dart';
 
 class WorkoutItemModelAdapter extends TypeAdapter<WorkoutItemModel> {
   @override
-  final int typeId = 4;
+  final typeId = 4;
 
   @override
   WorkoutItemModel read(BinaryReader reader) {
@@ -54,7 +54,7 @@ class WorkoutItemModelAdapter extends TypeAdapter<WorkoutItemModel> {
 
 class WorkoutSetModelAdapter extends TypeAdapter<WorkoutSetModel> {
   @override
-  final int typeId = 3;
+  final typeId = 3;
 
   @override
   WorkoutSetModel read(BinaryReader reader) {
@@ -63,7 +63,7 @@ class WorkoutSetModelAdapter extends TypeAdapter<WorkoutSetModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WorkoutSetModel(
-      id: fields[0] as int?,
+      id: (fields[0] as num?)?.toInt(),
       name: fields[1] as String?,
       description: fields[2] as String?,
       createdAt: fields[3] as DateTime?,

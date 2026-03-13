@@ -8,7 +8,7 @@ part of 'nutrition_values_model.dart';
 
 class NutritionValuesModelAdapter extends TypeAdapter<NutritionValuesModel> {
   @override
-  final int typeId = 15;
+  final typeId = 15;
 
   @override
   NutritionValuesModel read(BinaryReader reader) {
@@ -17,17 +17,17 @@ class NutritionValuesModelAdapter extends TypeAdapter<NutritionValuesModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return NutritionValuesModel(
-      energyKcal: fields[0] as double?,
-      energyKj: fields[1] as double?,
-      proteins: fields[2] as double?,
-      carbohydrates: fields[3] as double?,
-      sugars: fields[4] as double?,
-      fat: fields[5] as double?,
-      saturatedFat: fields[6] as double?,
-      fiber: fields[7] as double?,
-      sodium: fields[8] as double?,
-      salt: fields[9] as double?,
-      servingSize: fields[10] as double?,
+      energyKcal: (fields[0] as num?)?.toDouble(),
+      energyKj: (fields[1] as num?)?.toDouble(),
+      proteins: (fields[2] as num?)?.toDouble(),
+      carbohydrates: (fields[3] as num?)?.toDouble(),
+      sugars: (fields[4] as num?)?.toDouble(),
+      fat: (fields[5] as num?)?.toDouble(),
+      saturatedFat: (fields[6] as num?)?.toDouble(),
+      fiber: (fields[7] as num?)?.toDouble(),
+      sodium: (fields[8] as num?)?.toDouble(),
+      salt: (fields[9] as num?)?.toDouble(),
+      servingSize: (fields[10] as num?)?.toDouble(),
       confidenceScores: (fields[11] as Map?)?.cast<String, double>(),
       requiresManualReview: fields[12] as bool?,
       ocrScannedAt: fields[13] as DateTime?,

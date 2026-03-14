@@ -26,7 +26,7 @@ class HomeRepo {
       navigateTo: AppRouters.workouts,
     ),
     CategoryItem(
-      title: "predefinedWorkouts",
+      title: "popularWorkouts",
       image: AppAssets.dumbbell,
       navigateTo: AppRouters.predefinedWorkouts,
     ),
@@ -36,7 +36,7 @@ class HomeRepo {
       navigateTo: AppRouters.caloriesCalculator,
     ),
     CategoryItem(
-      title: "foodSearch",
+      title: "foodScanner",
       image: AppAssets.foodSearch,
       navigateTo: AppRouters.foodSearch,
     ),

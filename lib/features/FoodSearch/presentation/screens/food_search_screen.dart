@@ -4,6 +4,7 @@ import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/services/interstitial_ad_manager.dart';
 import 'package:Warrior/core/services/sync.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
+import 'package:Warrior/core/widgets/custom_btn.dart';
 import 'package:Warrior/features/FoodSearch/presentation/providers/food_search_provider.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/food_search_widgets.dart';
 import 'package:Warrior/features/FoodSearch/presentation/widgets/pending_upload_badge.dart';
@@ -25,13 +26,13 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final recentlyScanned = ref.watch(recentlyScannedProvider);
+    final recentlySearched = ref.watch(recentlySearchedProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final syncState = ref.watch(syncServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('foodSearch'.tr(context)),
+        title: Text('foodScanner'.tr(context)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
@@ -45,13 +46,13 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: context.l10n.advancedSearchTooltip,
-            onPressed: () {
-              context.pushNamed(AppRouters.advancedSearch);
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.search),
+          //   tooltip: context.l10n.advancedSearchTooltip,
+          //   onPressed: () {
+          //     context.pushNamed(AppRouters.advancedSearch);
+          //   },
+          // ),
           IconButton(
             icon: const Icon(Icons.history),
             tooltip: context.l10n.searchHistoryTooltip,
@@ -64,7 +65,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(recentlyScannedProvider);
+            ref.invalidate(recentlySearchedProvider);
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -194,11 +195,30 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
                         );
                       },
                     ),
+                    // Nutrition guide button
+                    SizedBox(height: context.mediumSpacing),
+                    CustomBTN(
+                      widget: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.school, color: AppColors.white),
+                          SizedBox(width: context.smallSpacing),
+                          Text(context.l10n.understandingFoodScores,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 12)),
+                        ],
+                      ),
+                      color: AppColors.darkSurface,
+                      padding: 12,
+                      radius: context.responsiveBorderRadius,
+                      width: double.infinity,
+                      press: () => context.pushNamed(AppRouters.nutritionGuide),
+                    ),
                     SizedBox(height: context.mediumSpacing),
                     // Recently scanned section
-                    if (recentlyScanned.isNotEmpty) ...[
+                    if (recentlySearched.isNotEmpty) ...[
                       Text(
-                        context.l10n.recentlyScanned,
+                        context.l10n.recentlySearched,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       SizedBox(height: context.smallSpacing),
@@ -207,13 +227,13 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
                             mobile: 220.0, tablet: 250.0, desktop: 280.0),
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: recentlyScanned.length,
+                          itemCount: recentlySearched.length,
                           itemBuilder: (context, index) {
                             return SizedBox(
                               width: ResponsiveUtils.value(context,
                                   mobile: 160.0, tablet: 180.0, desktop: 200.0),
                               child: ProductCard(
-                                product: recentlyScanned[index],
+                                product: recentlySearched[index],
                               ),
                             );
                           },
@@ -222,7 +242,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
                       SizedBox(height: context.largeSpacing),
                     ],
                     // Empty state
-                    if (recentlyScanned.isEmpty)
+                    if (recentlySearched.isEmpty)
                       EmptyStateWidget(
                         title: context.l10n.noProductsYet,
                         message: context.l10n.startByScanningBarcode,

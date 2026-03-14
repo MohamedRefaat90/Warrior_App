@@ -1,3 +1,4 @@
+import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
 import 'package:Warrior/features/FoodSearch/domain/entities/product_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,7 +58,9 @@ class ProductFormNotifier extends Notifier<ProductFormState> {
   }
 
   void updateImage(String? imagePath) {
+    TalkerService.debug('Updating image path: $imagePath', 'FORM');
     state = state.copyWith(imagePath: imagePath);
+    TalkerService.debug('Image path updated: ${state.imagePath}', 'FORM');
   }
 
   void updateNutrition(NutritionFacts? nutrition) {
@@ -114,7 +117,7 @@ class ProductFormState {
       // servingSize: servingSize ?? this.servingSize,
       // countries: countries ?? this.countries,
       nutrition: nutrition ?? this.nutrition,
-      imagePath: imagePath ?? this.imagePath,
+      imagePath: imagePath,
       isInitialized: isInitialized ?? this.isInitialized,
       isScanning: isScanning ?? this.isScanning,
     );

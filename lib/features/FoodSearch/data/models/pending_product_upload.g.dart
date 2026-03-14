@@ -8,7 +8,7 @@ part of 'pending_product_upload.dart';
 
 class PendingProductUploadAdapter extends TypeAdapter<PendingProductUpload> {
   @override
-  final int typeId = 20;
+  final typeId = 20;
 
   @override
   PendingProductUpload read(BinaryReader reader) {
@@ -20,8 +20,10 @@ class PendingProductUploadAdapter extends TypeAdapter<PendingProductUpload> {
       id: fields[0] as String,
       product: fields[1] as FoodProductModel,
       queuedAt: fields[2] as DateTime,
-      retryCount: fields[3] as int,
-      status: fields[4] as PendingUploadStatus,
+      retryCount: fields[3] == null ? 0 : (fields[3] as num).toInt(),
+      status: fields[4] == null
+          ? PendingUploadStatus.pending
+          : fields[4] as PendingUploadStatus,
       lastAttemptAt: fields[5] as DateTime?,
       failureReason: fields[6] as String?,
     );

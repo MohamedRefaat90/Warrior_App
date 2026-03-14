@@ -19,23 +19,6 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
   }) : _remoteDataSource = remoteDataSource;
 
   @override
-  Future<bool> addNewProduct(ProductEntity product, User user) async {
-    try {
-      if (ConnectivityChecker.isOnline != true) {
-        throw Exception('No internet connection');
-      }
-      return await _remoteDataSource.addNewProduct(
-        FoodProductModel.fromEntity(product).toOpenFoodFactsProduct(),
-        user,
-      );
-    } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error in addNewProduct', 'FOOD_WRITE_REPO', e, stackTrace);
-      rethrow;
-    }
-  }
-
-  @override
   Future<void> deletePendingUpload(String uploadId) async {
     try {
       await HiveManager.removePendingProductUploadById(uploadId);
@@ -92,8 +75,12 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
               await SecureStorageHandler.read(key: StorageKeys.offUserId);
           final String? password =
               await SecureStorageHandler.read(key: StorageKeys.offPassword);
-          final success = await _remoteDataSource.addNewProduct(
-            upload.product.toOpenFoodFactsProduct(),
+
+          // Convert pending product to OFF format
+          final offProduct = _entityToOFFProduct(upload.product.toEntity());
+
+          final success = await _remoteDataSource.saveProduct(
+            offProduct,
             User(userId: user_id ?? "", password: password ?? ""),
           );
 
@@ -141,32 +128,24 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
     required ProductEntity product,
     required User user,
     String? imagePath,
-    bool isUpdate = false,
   }) async {
     try {
-      final offProduct =
-          FoodProductModel.fromEntity(product).toOpenFoodFactsProduct();
-      final nutritionModel = product.nutrition != null
-          ? NutritionValuesModel.fromEntity(product.nutrition!)
-          : null;
-
-      final productWithNutrition =
-          _applyNutritionToProduct(offProduct, nutritionModel);
+      // Convert entity directly to OFF Product with nutrition included
+      final offProduct = _entityToOFFProduct(product);
 
       if (ConnectivityChecker.isOnline == true) {
-        final success = isUpdate
-            ? await _remoteDataSource.updateProduct(productWithNutrition, user)
-            : await _remoteDataSource.addNewProduct(productWithNutrition, user);
+        final success = await _remoteDataSource.saveProduct(offProduct, user);
 
         if (success) {
           TalkerService.info(
-            'Product ${isUpdate ? "updated" : "created"} successfully: ${product.barcode}',
+            'Product saved successfully: ${product.barcode}',
             'FOOD_WRITE_REPO',
           );
 
+          // Upload image if provided
           if (imagePath != null) {
             try {
-              await uploadProductImage(
+              await _remoteDataSource.uploadProductImage(
                 barcode: product.barcode,
                 imagePath: imagePath,
                 imageField: ImageField.FRONT,
@@ -186,24 +165,14 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
           'Direct submission failed, queuing for retry',
           'FOOD_WRITE_REPO',
         );
-        await _enqueuePendingProduct(
-          product: offProduct,
-          nutrition: nutritionModel,
-          imagePath: imagePath,
-          isUpdate: isUpdate,
-        );
+        await _enqueuePendingProduct(product, imagePath);
         return true;
       } else {
         TalkerService.info(
           'Offline: Queuing product for sync: ${product.barcode}',
           'FOOD_WRITE_REPO',
         );
-        await _enqueuePendingProduct(
-          product: offProduct,
-          nutrition: nutritionModel,
-          imagePath: imagePath,
-          isUpdate: isUpdate,
-        );
+        await _enqueuePendingProduct(product, imagePath);
         return true;
       }
     } catch (e, stackTrace) {
@@ -217,91 +186,34 @@ class ProductWriteRepositoryImpl implements ProductWriteRepository {
     }
   }
 
-  @override
-  Future<bool> updateProduct(ProductEntity product, User user) async {
-    try {
-      if (ConnectivityChecker.isOnline != true) {
-        throw Exception('No internet connection');
-      }
-      return await _remoteDataSource.updateProduct(
-        FoodProductModel.fromEntity(product).toOpenFoodFactsProduct(),
-        user,
-      );
-    } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error in updateProduct', 'FOOD_WRITE_REPO', e, stackTrace);
-      rethrow;
-    }
-  }
+  /// Convert ProductEntity directly to OFF Product with nutrition
+  Product _entityToOFFProduct(ProductEntity entity) {
+    final nutriments = entity.nutrition != null
+        ? NutritionValuesModel.fromEntity(entity.nutrition!).toOFFNutriments()
+        : null;
 
-  @override
-  Future<bool> uploadProductImage({
-    required String barcode,
-    required String imagePath,
-    required ImageField imageField,
-    required User user,
-  }) async {
-    try {
-      if (ConnectivityChecker.isOnline != true) {
-        throw Exception('No internet connection');
-      }
-      return await _remoteDataSource.uploadProductImage(
-        barcode: barcode,
-        imagePath: imagePath,
-        imageField: imageField,
-        user: user,
-      );
-    } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error in uploadProductImage', 'FOOD_WRITE_REPO', e, stackTrace);
-      rethrow;
-    }
-  }
-
-  Product _applyNutritionToProduct(
-    Product product,
-    NutritionValuesModel? nutrition,
-  ) {
-    if (nutrition == null) return product;
-
-    final nutriments = nutrition.toOFFNutriments();
     return Product(
-      barcode: product.barcode,
-      productName: product.productName,
-      brands: product.brands,
-      countries: product.countries,
-      quantity: product.quantity,
-      servingSize: product.servingSize,
-      ingredientsText: product.ingredientsText,
-      noNutritionData: false,
-      nutriments: Nutriments.fromJson(nutriments),
+      barcode: entity.barcode,
+      productName: entity.productName,
+      brands: entity.brands,
+      quantity: entity.quantity,
+      countries: entity.countries,
+      servingSize: entity.servingSize,
+      ingredientsText: entity.ingredients,
+      noNutritionData: nutriments == null,
+      nutriments: nutriments != null ? Nutriments.fromJson(nutriments) : null,
     );
   }
 
-  Future<void> _enqueuePendingProduct({
-    required Product product,
-    NutritionValuesModel? nutrition,
+  /// Queue product for offline upload
+  Future<void> _enqueuePendingProduct(
+    ProductEntity product,
     String? imagePath,
-    required bool isUpdate,
-  }) async {
-    if (product.barcode == null) {
-      throw Exception('Product barcode is required for offline queue');
-    }
-
-    final foodProductModel = FoodProductModel(
-      barcode: product.barcode ?? '',
-      productName: product.productName ?? '',
-      brands: product.brands ?? '',
-      countries: product.countries,
-      quantity: product.quantity ?? '',
-      servingSize: product.servingSize,
-      ingredients: product.ingredients?.map((i) => i.toString()).join(', '),
-      nutritionValues: nutrition,
-      lastUpdated: DateTime.now(),
-    );
+  ) async {
+    final foodProductModel = FoodProductModel.fromEntity(product);
 
     final pendingUpload = PendingProductUpload(
-      id: product.barcode ?? DateTime.now().toString(),
+      id: product.barcode,
       product: foodProductModel,
       queuedAt: DateTime.now(),
     );

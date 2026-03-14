@@ -7,6 +7,7 @@ library;
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/nutrition_values_model.dart';
 import 'package:Warrior/features/FoodSearch/data/models/pending_product_upload.dart';
+import 'package:Warrior/features/FoodSearch/data/models/pending_upload_status.dart';
 
 /// Factory for creating mock FoodProductModel instances
 class MockFoodProductModelFactory {

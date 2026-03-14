@@ -8,7 +8,7 @@ part of 'pending_upload_status.dart';
 
 class PendingUploadStatusAdapter extends TypeAdapter<PendingUploadStatus> {
   @override
-  final int typeId = 8;
+  final typeId = 8;
 
   @override
   PendingUploadStatus read(BinaryReader reader) {
@@ -29,13 +29,10 @@ class PendingUploadStatusAdapter extends TypeAdapter<PendingUploadStatus> {
     switch (obj) {
       case PendingUploadStatus.pending:
         writer.writeByte(0);
-        break;
       case PendingUploadStatus.uploading:
         writer.writeByte(1);
-        break;
       case PendingUploadStatus.failed:
         writer.writeByte(2);
-        break;
     }
   }
 

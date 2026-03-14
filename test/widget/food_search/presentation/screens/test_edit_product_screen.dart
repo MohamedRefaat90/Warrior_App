@@ -20,10 +20,10 @@ void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
-    
+
     // Initialize Open Food Facts API for testing
-    off.OpenFoodAPIConfiguration.userAgent =
-        off.UserAgent(name: 'Warrior App Test', version: '1.1.0', system: 'Testing');
+    off.OpenFoodAPIConfiguration.userAgent = off.UserAgent(
+        name: 'Warrior App Test', version: '1.1.0', system: 'Testing');
 
     registerFallbackValue(ProductEntity(
       barcode: '12345678',
@@ -37,14 +37,14 @@ void main() {
     mockRepo = MockProductWriteRepository();
     mockStorage = MockFlutterSecureStorage();
     ProductFormScreen.showNotifications = false;
-    
+
     // Setup secure storage mock to return null for all reads
     when(() => mockStorage.read(key: any(named: 'key')))
         .thenAnswer((_) async => null);
-    
+
     // Inject the mock storage
     SecureStorageHandler.storage = mockStorage;
-    
+
     ConnectivityChecker.isOnline = true; // Default to online
   });
 
@@ -75,7 +75,7 @@ void main() {
     final submitButton = find.text('Update Product');
     await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);
-    
+
     // Pump several times to let animations start and reach visible state
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
@@ -96,7 +96,6 @@ void main() {
     when(() => mockRepo.submitProduct(
           product: any(named: 'product'),
           user: any(named: 'user'),
-          isUpdate: any(named: 'isUpdate'),
         )).thenAnswer((_) async => true);
 
     await tester.pumpWidget(
@@ -124,7 +123,6 @@ void main() {
     verify(() => mockRepo.submitProduct(
           product: any(named: 'product'),
           user: any(named: 'user'),
-          isUpdate: true,
         )).called(1);
 
     await tester.pumpAndSettle();
@@ -142,7 +140,6 @@ void main() {
     when(() => mockRepo.submitProduct(
           product: any(named: 'product'),
           user: any(named: 'user'),
-          isUpdate: any(named: 'isUpdate'),
         )).thenAnswer((_) async => true);
 
     await tester.pumpWidget(
@@ -167,7 +164,6 @@ void main() {
     verify(() => mockRepo.submitProduct(
           product: any(named: 'product'),
           user: any(named: 'user'),
-          isUpdate: true,
         )).called(1);
 
     await tester.pumpAndSettle();
@@ -176,4 +172,5 @@ void main() {
 
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
-class MockProductWriteRepository extends Mock implements ProductWriteRepository {}
+class MockProductWriteRepository extends Mock
+    implements ProductWriteRepository {}

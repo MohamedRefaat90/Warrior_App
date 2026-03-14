@@ -145,7 +145,6 @@ class SyncService extends Notifier<SyncState> {
           product: entity,
           user: user,
           imagePath: null, // Image path not stored in new model structure
-          isUpdate: false, // Determine update status from product ID
         );
 
         if (success) {

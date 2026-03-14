@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Workouts/data/models/exercise_set_record_model.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'workoutset_model.g.dart';
 

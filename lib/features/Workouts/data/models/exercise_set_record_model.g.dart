@@ -9,7 +9,7 @@ part of 'exercise_set_record_model.dart';
 class ExerciseSetRecordModelAdapter
     extends TypeAdapter<ExerciseSetRecordModel> {
   @override
-  final int typeId = 7;
+  final typeId = 7;
 
   @override
   ExerciseSetRecordModel read(BinaryReader reader) {
@@ -18,9 +18,9 @@ class ExerciseSetRecordModelAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ExerciseSetRecordModel(
-      id: fields[0] as int,
-      setNumber: fields[1] as int,
-      reps: fields[2] as int,
+      id: (fields[0] as num).toInt(),
+      setNumber: (fields[1] as num).toInt(),
+      reps: (fields[2] as num).toInt(),
       weight: fields[3] as num,
     );
   }

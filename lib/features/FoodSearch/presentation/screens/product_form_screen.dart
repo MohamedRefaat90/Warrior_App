@@ -132,7 +132,6 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
 
               // Image picker section
               ProductImagePicker(
-                selectedImagePath: formState.imagePath,
                 onImageChanged: (path) {
                   ref.read(productFormProvider.notifier).updateImage(path);
                 },
@@ -310,7 +309,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
       final success = await repo.submitProduct(
         product: product,
         user: user,
-        isUpdate: widget.product != null,
+        imagePath: ref.read(productFormProvider).imagePath,
       );
 
       if (!mounted) return;

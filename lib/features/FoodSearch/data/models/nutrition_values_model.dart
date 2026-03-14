@@ -1,5 +1,5 @@
 import 'package:Warrior/features/FoodSearch/domain/entities/nutrition_facts.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'nutrition_values_model.g.dart';
 

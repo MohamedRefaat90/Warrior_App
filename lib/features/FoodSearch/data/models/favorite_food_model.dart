@@ -1,5 +1,5 @@
 import 'package:Warrior/features/FoodSearch/data/models/food_product_model.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'favorite_food_model.g.dart';
 

@@ -16,28 +16,27 @@ class FoodRemoteDataSource {
     ProductField.NUTRISCORE,
     ProductField.NOVA_GROUP,
     ProductField.ECOSCORE_GRADE,
-    ProductField.NUTRIMENTS,
-    ProductField.INGREDIENTS_ANALYSIS_TAGS,
+    ProductField.NUTRIMENTS
   ];
 
-  /// Add new product to Open Food Facts database
-  Future<bool> addNewProduct(Product product, User user) async {
+  /// Save product to Open Food Facts database
+  /// Handles both adding new products and updating existing ones
+  Future<bool> saveProduct(Product product, User user) async {
     try {
-      TalkerService.info('Adding new product: ${product.barcode}', 'FOOD_API');
+      TalkerService.info('Saving product: ${product.barcode}', 'FOOD_API');
 
       final Status result = await OpenFoodAPIClient.saveProduct(user, product);
 
       if (result.status == 1) {
-        TalkerService.info('Product added successfully', 'FOOD_API');
+        TalkerService.info('Product saved successfully', 'FOOD_API');
         return true;
       }
 
       TalkerService.warning(
-          'Failed to add product: ${result.error}', 'FOOD_API');
+          'Failed to save product: ${result.error}', 'FOOD_API');
       return false;
     } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error adding new product', 'FOOD_API', e, stackTrace);
+      TalkerService.error('Error saving product', 'FOOD_API', e, stackTrace);
       rethrow;
     }
   }
@@ -105,118 +104,20 @@ class FoodRemoteDataSource {
     }
   }
 
-  /// Search products by brand
-  Future<List<FoodProductModel>> searchByBrand(
-    String brand, {
-    int page = 1,
-    int pageSize = 25,
-  }) async {
-    try {
-      TalkerService.info('Searching products by brand: $brand', 'FOOD_API');
-
-      final ProductSearchQueryConfiguration configuration =
-          ProductSearchQueryConfiguration(
-        parametersList: [
-          TagFilter.fromType(
-            tagFilterType: TagFilterType.BRANDS,
-            tagName: brand,
-            contains: true,
-          ),
-          PageNumber(page: page),
-          PageSize(size: pageSize),
-        ],
-        version: ProductQueryVersion.v3,
-        languages: [
-          OpenFoodFactsLanguage.ENGLISH,
-          OpenFoodFactsLanguage.ARABIC
-        ],
-        fields: _listViewFields,
-      );
-
-      final SearchResult result =
-          await OpenFoodAPIClient.searchProducts(null, configuration);
-
-      if (result.products != null && result.products!.isNotEmpty) {
-        return result.products!
-            .where((product) =>
-                product.brands?.toLowerCase().contains(brand.toLowerCase()) ??
-                false)
-            .where((product) => product.nutriments != null)
-            .map(
-                (product) => FoodProductModel.fromOpenFoodFactsProduct(product))
-            .toList();
-      }
-
-      return [];
-    } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error searching products by brand', 'FOOD_API', e, stackTrace);
-      rethrow;
-    }
-  }
-
-  /// Search products by category
-  Future<List<FoodProductModel>> searchByCategory(
-    String category, {
-    int page = 1,
-    int pageSize = 25,
-  }) async {
-    try {
-      TalkerService.info(
-          'Searching products by category: $category', 'FOOD_API');
-
-      final ProductSearchQueryConfiguration configuration =
-          ProductSearchQueryConfiguration(
-        parametersList: [
-          TagFilter.fromType(
-            tagFilterType: TagFilterType.CATEGORIES,
-            tagName: category,
-            contains: true,
-          ),
-          PageNumber(page: page),
-          PageSize(size: pageSize),
-        ],
-        version: ProductQueryVersion.v3,
-        languages: [
-          OpenFoodFactsLanguage.ENGLISH,
-          OpenFoodFactsLanguage.ARABIC
-        ],
-        fields: _listViewFields,
-      );
-
-      final SearchResult result =
-          await OpenFoodAPIClient.searchProducts(null, configuration);
-
-      if (result.products != null && result.products!.isNotEmpty) {
-        return result.products!
-            .where((product) => product.nutriments != null)
-            .map(
-                (product) => FoodProductModel.fromOpenFoodFactsProduct(product))
-            .toList();
-      }
-
-      return [];
-    } catch (e, stackTrace) {
-      TalkerService.error(
-          'Error searching products by category', 'FOOD_API', e, stackTrace);
-      rethrow;
-    }
-  }
-
   /// Search product by barcode
   Future<FoodProductModel?> searchProductByBarcode(String barcode) async {
     try {
       TalkerService.info('Searching product by barcode: $barcode', 'FOOD_API');
 
       final ProductQueryConfiguration configuration = ProductQueryConfiguration(
-        barcode,
-        version: ProductQueryVersion.v3,
-        languages: [
-          OpenFoodFactsLanguage.ENGLISH,
-          OpenFoodFactsLanguage.ARABIC
-        ],
-        fields: [ProductField.ALL],
-      );
+          barcode,
+          version: ProductQueryVersion.v3,
+          languages: [
+            OpenFoodFactsLanguage.ENGLISH,
+            OpenFoodFactsLanguage.ARABIC
+          ],
+          fields: _listViewFields,
+          country: OpenFoodFactsCountry.EGYPT);
 
       final ProductResultV3 result =
           await OpenFoodAPIClient.getProductV3(configuration);
@@ -251,18 +152,18 @@ class FoodRemoteDataSource {
 
       final ProductSearchQueryConfiguration configuration =
           ProductSearchQueryConfiguration(
-        parametersList: [
-          SearchTerms(terms: [query]),
-          PageNumber(page: page),
-          PageSize(size: pageSize),
-        ],
-        version: ProductQueryVersion.v3,
-        languages: [
-          OpenFoodFactsLanguage.ENGLISH,
-          OpenFoodFactsLanguage.ARABIC
-        ],
-        fields: _listViewFields,
-      );
+              parametersList: [
+                SearchTerms(terms: [query]),
+                PageNumber(page: page),
+                PageSize(size: pageSize),
+              ],
+              version: ProductQueryVersion.v3,
+              languages: [
+                OpenFoodFactsLanguage.ENGLISH,
+                OpenFoodFactsLanguage.ARABIC
+              ],
+              fields: _listViewFields,
+              country: OpenFoodFactsCountry.EGYPT);
 
       final SearchResult result =
           await OpenFoodAPIClient.searchProducts(null, configuration);
@@ -271,7 +172,8 @@ class FoodRemoteDataSource {
         TalkerService.info(
             'Found ${result.products!.length} products', 'FOOD_API');
         return result.products!
-            .where((product) => product.nutriments != null)
+            .where((product) =>
+                product.nutriments != null && !product.nutriments!.isEmpty())
             .map(
                 (product) => FoodProductModel.fromOpenFoodFactsProduct(product))
             .toList();
@@ -282,27 +184,6 @@ class FoodRemoteDataSource {
     } catch (e, stackTrace) {
       TalkerService.error(
           'Error searching products by name', 'FOOD_API', e, stackTrace);
-      rethrow;
-    }
-  }
-
-  /// Update existing product in Open Food Facts database
-  Future<bool> updateProduct(Product product, User user) async {
-    try {
-      TalkerService.info('Updating product: ${product.barcode}', 'FOOD_API');
-
-      final Status result = await OpenFoodAPIClient.saveProduct(user, product);
-
-      if (result.status == 1) {
-        TalkerService.info('Product updated successfully', 'FOOD_API');
-        return true;
-      }
-
-      TalkerService.warning(
-          'Failed to update product: ${result.error}', 'FOOD_API');
-      return false;
-    } catch (e, stackTrace) {
-      TalkerService.error('Error updating product', 'FOOD_API', e, stackTrace);
       rethrow;
     }
   }
@@ -327,13 +208,15 @@ class FoodRemoteDataSource {
       final Status result =
           await OpenFoodAPIClient.addProductImage(user, image);
 
-      if (result.status == 1) {
+      // Check success: imageId is set when upload succeeds
+      if (result.imageId != null && result.imageId! > 0) {
         TalkerService.info('Image uploaded successfully', 'FOOD_API');
         return true;
       }
 
       TalkerService.warning(
-          'Failed to upload image: ${result.error}', 'FOOD_API');
+          'Failed to upload image: ${result.error ?? result.statusVerbose ?? "Unknown error"}',
+          'FOOD_API');
       return false;
     } catch (e, stackTrace) {
       TalkerService.error(

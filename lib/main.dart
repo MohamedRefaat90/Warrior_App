@@ -12,6 +12,7 @@ import 'package:Warrior/routing.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -22,14 +23,24 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load environment variables from .env file
+  await dotenv.load();
+
   // Initialize app services
   await AppServices.init();
 
   // Initialize Open Food Facts API
   OpenFoodAPIConfiguration.userAgent =
       UserAgent(name: 'Warrior App', version: '1.1.0', system: 'Flutter');
-  OpenFoodFactsCredentialsService.saveCredentials(
-      userId: "Warrior App", password: "Warrior App");
+
+  // Load OFF credentials from environment variables
+  final offUserId = dotenv.env['OPENFOODFACTS_USER_ID'] ?? '';
+  final offPassword = dotenv.env['OPENFOODFACTS_PASSWORD'] ?? '';
+  if (offUserId.isNotEmpty && offPassword.isNotEmpty) {
+    OpenFoodFactsCredentialsService.saveCredentials(
+        userId: offUserId, password: offPassword);
+  }
+
   OpenFoodAPIConfiguration.globalLanguages = [
     OpenFoodFactsLanguage.ENGLISH,
     OpenFoodFactsLanguage.ARABIC,

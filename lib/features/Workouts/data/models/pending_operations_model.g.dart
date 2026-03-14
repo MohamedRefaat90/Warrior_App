@@ -8,7 +8,7 @@ part of 'pending_operations_model.dart';
 
 class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
   @override
-  final int typeId = 5;
+  final typeId = 5;
 
   @override
   PendingOperation read(BinaryReader reader) {
@@ -20,16 +20,16 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
       entityType: fields[0] as String,
       operationType: fields[1] as SyncOperationType,
       workout: fields[2] as WorkoutSetModel?,
-      id: fields[3] as int?,
-      exerciseId: fields[4] as int?,
+      id: (fields[3] as num?)?.toInt(),
+      exerciseId: (fields[4] as num?)?.toInt(),
       weight: fields[5] as num?,
       reorderWorkoutList: (fields[7] as List?)
-          ?.map((dynamic e) => (e as Map).cast<String, dynamic>())
-          ?.toList(),
+          ?.map((e) => (e as Map).cast<String, dynamic>())
+          .toList(),
       sets: (fields[8] as List?)
-          ?.map((dynamic e) => (e as Map).cast<String, dynamic>())
-          ?.toList(),
-      workoutSetId: fields[9] as int?,
+          ?.map((e) => (e as Map).cast<String, dynamic>())
+          .toList(),
+      workoutSetId: (fields[9] as num?)?.toInt(),
       timestamp: fields[6] as DateTime?,
     );
   }
@@ -73,7 +73,7 @@ class PendingOperationAdapter extends TypeAdapter<PendingOperation> {
 
 class SyncOperationTypeAdapter extends TypeAdapter<SyncOperationType> {
   @override
-  final int typeId = 6;
+  final typeId = 6;
 
   @override
   SyncOperationType read(BinaryReader reader) {
@@ -96,16 +96,12 @@ class SyncOperationTypeAdapter extends TypeAdapter<SyncOperationType> {
     switch (obj) {
       case SyncOperationType.create:
         writer.writeByte(0);
-        break;
       case SyncOperationType.update:
         writer.writeByte(1);
-        break;
       case SyncOperationType.delete:
         writer.writeByte(2);
-        break;
       case SyncOperationType.reorder:
         writer.writeByte(3);
-        break;
     }
   }
 

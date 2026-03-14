@@ -5,13 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 void main() {
-  group('GetRecentlyScannedUseCase', () {
-    late GetRecentlyScannedUseCase usecase;
+  group('GetRecentlySearchedUseCase', () {
+    late GetRecentlySearchedUseCase usecase;
     late MockProductReadRepository mockRepository;
 
     setUp(() {
       mockRepository = MockProductReadRepository();
-      usecase = GetRecentlyScannedUseCase(mockRepository);
+      usecase = GetRecentlySearchedUseCase(mockRepository);
     });
 
     test('returns recently scanned products', () {

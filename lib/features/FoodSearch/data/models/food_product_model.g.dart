@@ -8,7 +8,7 @@ part of 'food_product_model.dart';
 
 class FoodProductModelAdapter extends TypeAdapter<FoodProductModel> {
   @override
-  final int typeId = 10;
+  final typeId = 10;
 
   @override
   FoodProductModel read(BinaryReader reader) {
@@ -26,7 +26,7 @@ class FoodProductModelAdapter extends TypeAdapter<FoodProductModel> {
       imageIngredientsUrl: fields[6] as String?,
       imageNutritionUrl: fields[7] as String?,
       nutriScore: fields[8] as String?,
-      novaGroup: fields[9] as int?,
+      novaGroup: (fields[9] as num?)?.toInt(),
       ecoscore: fields[10] as String?,
       nutritionValues: fields[11] as NutritionValuesModel?,
       ingredients: fields[12] as String?,
@@ -43,7 +43,7 @@ class FoodProductModelAdapter extends TypeAdapter<FoodProductModel> {
       countries: fields[23] as String?,
       cachedImagePath: fields[24] as String?,
       cachedAt: fields[25] as DateTime?,
-      dataSource: fields[26] as String,
+      dataSource: fields[26] == null ? 'openFoodFacts' : fields[26] as String,
     );
   }
 

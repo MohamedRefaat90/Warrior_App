@@ -30,7 +30,6 @@ void main() {
         product: product,
         user: mockUser,
         imagePath: null,
-        isUpdate: false,
       )).thenAnswer((_) async => true);
 
       // Act
@@ -56,7 +55,6 @@ void main() {
         product: product,
         user: mockUser,
         imagePath: null,
-        isUpdate: false,
       )).thenAnswer((_) async => false);
 
       // Act
@@ -83,7 +81,6 @@ void main() {
         product: product,
         user: mockUser,
         imagePath: imagePath,
-        isUpdate: false,
       )).thenAnswer((_) async => true);
 
       // Act
@@ -110,14 +107,12 @@ void main() {
         product: product,
         user: mockUser,
         imagePath: null,
-        isUpdate: true,
       )).thenAnswer((_) async => true);
 
       // Act
       final result = await usecase.call(
         product: product,
         user: mockUser,
-        isUpdate: true,
       );
 
       // Assert
@@ -137,7 +132,6 @@ void main() {
         product: product,
         user: mockUser,
         imagePath: null,
-        isUpdate: false,
       )).thenThrow(Exception('Submission failed'));
 
       // Act & Assert

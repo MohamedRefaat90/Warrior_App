@@ -87,6 +87,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                     _debounceTimer =
                         Timer(const Duration(milliseconds: 400), () {
                       searchNotifier.updateQuery(value);
+                      searchNotifier.setShowSuggestions(true);
                     });
                   },
                   onSubmitted: (value) {
@@ -100,7 +101,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                 ),
                 SizedBox(height: context.smallSpacing),
                 // Autocomplete suggestions
-                if (_searchController.text.length >= 2)
+                if (_searchController.text.length >= 2 &&
+                    searchState.showSuggestions)
                   Consumer(
                     builder: (context, ref, child) {
                       final suggestions = ref.watch(
@@ -136,6 +138,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
                                   title: Text(suggestion),
                                   onTap: () {
                                     _searchController.text = suggestion;
+                                    searchNotifier.setShowSuggestions(false);
                                     searchNotifier.updateQuery(suggestion);
                                     searchNotifier.performSearch();
                                   },

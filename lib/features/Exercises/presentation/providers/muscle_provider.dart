@@ -25,9 +25,11 @@ final muscleExerciseProvider = FutureProvider.family
 ///
 /// - Not autoDispose, so it persists in memory across navigations, preventing
 ///   redundant re-fetches when the user navigates back to the screen.
+///   Call `ref.invalidate(musclesProvider)` on user logout to clear stale data.
 final musclesProvider =
     AsyncNotifierProvider<MusclesNotifier, List<MuscleModel>>(
   MusclesNotifier.new,
+  retry: (retryCount, error) => null,
 );
 
 class MusclesNotifier extends AsyncNotifier<List<MuscleModel>> {
@@ -41,12 +43,30 @@ class MusclesNotifier extends AsyncNotifier<List<MuscleModel>> {
         'MUSCLES',
       );
       // Validate in background without blocking the UI.
-      Future.microtask(_validateAndRefreshIfNeeded);
+      _scheduleBackgroundValidation();
       return cached;
     }
 
-    // No cache — must fetch from the network.
+    // No cache — fetch only if online; throw if offline so the UI
+    // shows the error state (with ErrorCard) instead of empty list.
+    if (!(ConnectivityChecker.isOnline ?? false)) {
+      TalkerService.info(
+        'Offline and no cache — throwing to show error state',
+        'MUSCLES',
+      );
+      throw Exception('No cached muscles and device is offline');
+    }
     return _fetchAndStoreMetadata();
+  }
+
+  /// Schedules [_validateAndRefreshIfNeeded] as a microtask with a disposal
+  /// guard so the microtask is a no-op if the notifier is disposed first.
+  void _scheduleBackgroundValidation() {
+    var disposed = false;
+    ref.onDispose(() => disposed = true);
+    Future.microtask(() {
+      if (!disposed) _validateAndRefreshIfNeeded();
+    });
   }
 
   /// Checks the lightweight `/cache-status/` endpoint. Fetches fresh data only

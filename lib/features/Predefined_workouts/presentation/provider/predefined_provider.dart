@@ -15,13 +15,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// - Validates against the server in the background and refreshes only when
 ///   the server reports a change.
 /// - Not autoDispose so the provider persists in memory across navigations.
+///   Call `ref.invalidate(groupedWorkoutsProvider)` on user logout to clear
+///   stale data.
 final groupedWorkoutsProvider =
     AsyncNotifierProvider<PredefinedWorkoutsNotifier, List<WorkoutGroup>>(
   PredefinedWorkoutsNotifier.new,
+  retry: (retryCount, error) =>
+      null, // Disable automatic retries; errors are handled in the UI with a retry button.
 );
 
-class PredefinedWorkoutsNotifier
-    extends AsyncNotifier<List<WorkoutGroup>> {
+class PredefinedWorkoutsNotifier extends AsyncNotifier<List<WorkoutGroup>> {
   final _groupUseCase = GroupWorkoutsUseCase();
 
   @override
@@ -36,12 +39,30 @@ class PredefinedWorkoutsNotifier
       // Sync exercise media paths without blocking the UI.
       ref.read(predefinedRepo).syncExercisesWithCache(cached);
       // Validate against the server in the background.
-      Future.microtask(_validateAndRefreshIfNeeded);
+      _scheduleBackgroundValidation();
       return _groupUseCase(cached);
     }
 
-    // No cache — must fetch from the network.
+    // No cache — fetch only if online; throw if offline so the UI
+    // shows the error state (with retry button) instead of empty list.
+    if (!(ConnectivityChecker.isOnline ?? false)) {
+      TalkerService.info(
+        'Offline and no cache — throwing to show error state',
+        'PREDEFINED',
+      );
+      throw Exception("No cached predefined workouts and device is offline");
+    }
     return _fetchAndGroup();
+  }
+
+  /// Schedules [_validateAndRefreshIfNeeded] as a microtask with a disposal
+  /// guard so the microtask is a no-op if the notifier is disposed first.
+  void _scheduleBackgroundValidation() {
+    var disposed = false;
+    ref.onDispose(() => disposed = true);
+    Future.microtask(() {
+      if (!disposed) _validateAndRefreshIfNeeded();
+    });
   }
 
   /// Checks the lightweight `/cache-status/` endpoint and refreshes only when
@@ -88,7 +109,18 @@ class PredefinedWorkoutsNotifier
     int? serverCount,
   }) async {
     final repo = ref.read(predefinedRepo);
-    final workouts = await repo.fetchFromServer();
+    final List<WorkoutSetModel> workouts;
+    try {
+      workouts = await repo.fetchFromServer();
+    } catch (e, st) {
+      TalkerService.error(
+        'Failed to fetch predefined workouts from server',
+        'PREDEFINED',
+        e,
+        st,
+      );
+      rethrow;
+    }
 
     await _saveToHive(workouts);
     await repo.cacheExerciseMedia(workouts);
@@ -119,9 +151,9 @@ class PredefinedWorkoutsNotifier
   }
 
   Future<void> _saveToHive(List<WorkoutSetModel> workouts) async {
-    await HiveManager.predefinedWorkoutsBox.clear();
-    for (final workout in workouts) {
-      await HiveManager.predefinedWorkoutsBox.add(workout);
-    }
+    await HiveManager.saveToHive(
+      HiveManager.predefinedWorkoutsBox,
+      workouts,
+    );
   }
 }

@@ -1406,4 +1406,7 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$count $_temp0';
   }
+
+  @override
+  String get noMusclesAvailableOffline => 'لا توجد عضلات متوفرة بدون إنترنت';
 }

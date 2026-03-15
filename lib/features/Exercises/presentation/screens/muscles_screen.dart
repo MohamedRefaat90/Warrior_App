@@ -10,12 +10,12 @@ import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/core/widgets/loader.dart';
+import 'package:Warrior/core/widgets/offline_error.dart';
 import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Exercises/data/models/muscle_model.dart';
 import 'package:Warrior/features/Exercises/data/repo/exercises_repo.dart';
 import 'package:Warrior/features/Exercises/presentation/providers/muscle_provider.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/download_progress_indicator.dart';
-import 'package:Warrior/features/Exercises/presentation/widgets/error_card.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscle_body_view.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/muscles_gridview.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/workout_creation_and_warning.dart';
@@ -197,7 +197,7 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
             children: [
               Column(
                 children: [
-                  ConnectivityChecker.isOnline!
+                  (ConnectivityChecker.isOnline ?? false)
                       ? const BannerAdWidget(
                           adUnitId: "ca-app-pub-7417773148722475/6170304015")
                       : const SizedBox.shrink(),
@@ -211,9 +211,10 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                               data: (muscles) {
                                 if (muscles.isEmpty) {
                                   return OfflineView(
-                                    title: 'No muscles available offline',
+                                    title:
+                                        context.l10n.noMusclesAvailableOffline,
                                     subtitle:
-                                        'Please go online to download muscle groups',
+                                        context.l10n.pleaseGoOnlineToDownload,
                                   );
                                 }
 
@@ -231,12 +232,17 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                                     appendToExistingWorkoutSet:
                                         widget.appendToExistingWorkoutSet,
                                     hasBannerAd:
-                                        ConnectivityChecker.isOnline!);
+                                        ConnectivityChecker.isOnline ?? false);
                               },
-                              error: (error, stackTrace) =>
-                                  ref.watch(musclesProvider).isRefreshing
-                                      ? Loader()
-                                      : ErrorCard(),
+                              error: (error, stackTrace) {
+                                final isOffline =
+                                    ConnectivityChecker.isOnline == false;
+                                return ref.read(musclesProvider).isRefreshing
+                                    ? Loader()
+                                    : OfflineError(
+                                        isOffline: isOffline,
+                                        provider: musclesProvider);
+                              },
                             ),
                       ),
                     ),

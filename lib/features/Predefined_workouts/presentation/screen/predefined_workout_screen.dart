@@ -1,8 +1,8 @@
 import 'package:Warrior/core/localization/translation_extension.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
-import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/loader.dart';
+import 'package:Warrior/core/widgets/offline_error.dart';
 import 'package:Warrior/core/widgets/offline_view.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/provider/predefined_provider.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_groups_view.dart';
@@ -42,50 +42,10 @@ class PredefinedWorkoutsScreen extends ConsumerWidget {
         loading: () => const Loader(),
         error: (error, stackTrace) {
           final isOffline = ConnectivityChecker.isOnline == false;
-          return Center(
-            child: Padding(
-              padding: context.screenPadding,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    isOffline ? Icons.wifi_off : Icons.error_outline,
-                    size: ResponsiveUtils.value<double>(
-                      context,
-                      mobile: 48,
-                      tablet: 56,
-                      desktop: 64,
-                    ),
-                    color: isOffline ? Colors.orange : Colors.red,
-                  ),
-                  SizedBox(height: context.mediumSpacing),
-                  Text(
-                    isOffline
-                        ? context.l10n.youAreOffline
-                        : context.l10n.somethingWentWrong,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  SizedBox(height: context.smallSpacing),
-                  Text(
-                    isOffline
-                        ? context.l10n.noCachedWorkoutsAvailable
-                        : context.l10n.failedToLoadPredefinedWorkouts,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
-                  ),
-                  SizedBox(height: context.mediumSpacing),
-                  ElevatedButton(
-                    onPressed: () => ref.invalidate(groupedWorkoutsProvider),
-                    child: Text('retry'.tr(context)),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return ref.read(groupedWorkoutsProvider).isRefreshing
+              ? Loader()
+              : OfflineError(
+                  isOffline: isOffline, provider: groupedWorkoutsProvider);
         },
       ),
     );

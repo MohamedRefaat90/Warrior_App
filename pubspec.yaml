@@ -27,7 +27,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_cache_manager: null
-  flutter_dotenv: null
   flutter_launcher_icons: null
   flutter_local_notifications: ^19.4.2
   flutter_native_splash: null
@@ -99,7 +98,6 @@ flutter:
   generate: true
 
   assets:
-    - .env
     - assets/
     - assets/images/onboarding/
     - assets/images/signup/

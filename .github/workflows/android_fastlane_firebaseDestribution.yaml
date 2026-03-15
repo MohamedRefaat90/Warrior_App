@@ -45,6 +45,12 @@ jobs:
         working-directory: android
     
     - run: flutter pub get
+    - name: Create secrets file
+      run: |
+        echo '{
+          "OPENFOODFACTS_USER_ID": "${{ secrets.OPENFOODFACTS_USER_ID }}",
+          "OPENFOODFACTS_PASSWORD": "${{ secrets.OPENFOODFACTS_PASSWORD }}"
+        }' > secrets.json
     - name: Generate release notes
       id: release_notes
       run: |

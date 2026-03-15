@@ -45,6 +45,7 @@ app.*.map.json
 .env
 .env.*
 !.env.example
+secrets.json
 
 # **/android/key.properties
 # **/android/app/*.jks

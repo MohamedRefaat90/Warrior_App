@@ -1,9 +1,7 @@
 import 'package:Warrior/core/constants/apis_url.dart';
-import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/providers/cache_provider.dart';
 import 'package:Warrior/core/services/exercise_cache_manager.dart';
-import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Workouts/data/models/workoutset_model.dart';
 import 'package:dio/dio.dart';
@@ -22,81 +20,45 @@ class PredefinedWorkoutRepository {
 
   PredefinedWorkoutRepository(this._dio, this._exerciseCacheManager);
 
-  bool get _isOnline => ConnectivityChecker.isOnline == true;
+  /// Fetches predefined workouts from the server only.
+  /// Callers are responsible for persisting to Hive and updating cache metadata.
+  Future<List<WorkoutSetModel>> fetchFromServer() async {
+    final Response response = await _dio.get(ApisUrl.predefinedWorkouts);
+    final List<dynamic> data = response.data['data'] as List<dynamic>;
+    final workouts = data
+        .map((e) => WorkoutSetModel.fromMap(e as Map<String, dynamic>))
+        .toList();
+    TalkerService.info(
+      'Fetched ${workouts.length} predefined workouts from server',
+      'PREDEFINED-REPO',
+    );
+    return workouts;
+  }
 
-  Future<List<WorkoutSetModel>> fetchPredefinedWorkouts() async {
+  /// Caches exercise media files for the given workouts.
+  /// Call after a successful [fetchFromServer] to populate offline media.
+  Future<void> cacheExerciseMedia(List<WorkoutSetModel> workouts) async {
     try {
-      if (_isOnline) {
-        // Online: Fetch from server and cache in Hive
-        final Response response = await _dio.get(ApisUrl.predefinedWorkouts);
-        if (response.statusCode == 200) {
-          List<dynamic> data = response.data['data'];
-          List<WorkoutSetModel> workouts =
-              data.map((e) => WorkoutSetModel.fromMap(e)).toList();
-
-          // Auto-cache exercises for offline access
-          try {
-            await _exerciseCacheManager.autoCacheWorkoutExercises(workouts);
-          } catch (e) {
-            TalkerService.error(
-                'Failed to auto-cache predefined workout exercises',
-                'PREDEFINED-REPO',
-                e);
-          }
-
-          // Save to Hive for offline access
-          await HiveManager.predefinedWorkoutsBox.clear();
-          for (var workout in workouts) {
-            await HiveManager.predefinedWorkoutsBox.add(workout);
-          }
-
-          TalkerService.info(
-              'Fetched ${workouts.length} predefined workouts from server',
-              'PREDEFINED-REPO');
-          return workouts;
-        }
-      } else {
-        // Offline: Load from Hive cache
-        final cachedWorkouts =
-            HiveManager.predefinedWorkoutsBox.values.toList();
-
-        // Sync with local file paths
-        try {
-          _exerciseCacheManager.syncWorkoutExercisesWithCache(cachedWorkouts);
-        } catch (e) {
-          TalkerService.error(
-              'Failed to sync cached predefined workouts with local files',
-              'PREDEFINED-REPO',
-              e);
-        }
-
-        TalkerService.info(
-            'Loaded ${cachedWorkouts.length} predefined workouts from cache',
-            'PREDEFINED-REPO');
-        return cachedWorkouts;
-      }
+      await _exerciseCacheManager.autoCacheWorkoutExercises(workouts);
     } catch (e) {
-      // On error, try to load from cache as fallback
       TalkerService.error(
-          'Error fetching predefined workouts: $e', 'PREDEFINED-REPO');
-      final cachedWorkouts = HiveManager.predefinedWorkoutsBox.values.toList();
-      if (cachedWorkouts.isNotEmpty) {
-        // Sync with local file paths
-        try {
-          _exerciseCacheManager.syncWorkoutExercisesWithCache(cachedWorkouts);
-        } catch (e) {
-          TalkerService.error(
-              'Failed to sync fallback predefined workouts with local files',
-              'PREDEFINED-REPO',
-              e);
-        }
-
-        TalkerService.info(
-            'Falling back to ${cachedWorkouts.length} cached workouts',
-            'PREDEFINED-REPO');
-        return cachedWorkouts;
-      }
+        'Failed to auto-cache predefined workout exercises',
+        'PREDEFINED-REPO',
+        e,
+      );
     }
-    return [];
+  }
+
+  /// Syncs exercise media paths from the local cache for offline workouts.
+  void syncExercisesWithCache(List<WorkoutSetModel> workouts) {
+    try {
+      _exerciseCacheManager.syncWorkoutExercisesWithCache(workouts);
+    } catch (e) {
+      TalkerService.error(
+        'Failed to sync predefined workouts with local cache',
+        'PREDEFINED-REPO',
+        e,
+      );
+    }
   }
 }

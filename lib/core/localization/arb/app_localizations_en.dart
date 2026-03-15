@@ -1428,4 +1428,7 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$count $_temp0';
   }
+
+  @override
+  String get noMusclesAvailableOffline => 'No muscle data available offline';
 }

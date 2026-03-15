@@ -2785,6 +2785,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} {count,plural,one{set}other{sets}}'**
   String setsCount(int count);
+
+  /// Message when muscle data is not available offline
+  ///
+  /// In en, this message translates to:
+  /// **'No muscle data available offline'**
+  String get noMusclesAvailableOffline;
 }
 
 class _AppLocalizationsDelegate

@@ -9,21 +9,14 @@ import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workou
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PredefinedWorkoutsScreen extends ConsumerStatefulWidget {
+class PredefinedWorkoutsScreen extends ConsumerWidget {
   const PredefinedWorkoutsScreen({super.key});
 
   @override
-  ConsumerState<PredefinedWorkoutsScreen> createState() =>
-      _PredefinedWorkoutScreenState();
-}
-
-class _PredefinedWorkoutScreenState
-    extends ConsumerState<PredefinedWorkoutsScreen> {
-  @override
-  Widget build(BuildContext context) {
-    // Watch the grouped workouts provider instead of flat list
+  Widget build(BuildContext context, WidgetRef ref) {
     final groupedWorkoutsState = ref.watch(groupedWorkoutsProvider);
     final appSettings = ref.watch(appSettingsProvider.notifier);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -38,14 +31,12 @@ class _PredefinedWorkoutScreenState
       ),
       body: groupedWorkoutsState.when(
         data: (workoutGroups) {
-          // Check if the list is empty
           if (workoutGroups.isEmpty) {
             return OfflineView(
               title: context.l10n.noPredefinedWorkoutsOffline,
               subtitle: context.l10n.pleaseGoOnlineToDownload,
             );
           }
-          // Use the new grouped view with domain entities
           return WorkoutGroupsView(workoutGroups: workoutGroups);
         },
         loading: () => const Loader(),
@@ -88,10 +79,7 @@ class _PredefinedWorkoutScreenState
                   ),
                   SizedBox(height: context.mediumSpacing),
                   ElevatedButton(
-                    onPressed: () {
-                      // Refresh the grouped workouts provider
-                      ref.invalidate(groupedWorkoutsProvider);
-                    },
+                    onPressed: () => ref.invalidate(groupedWorkoutsProvider),
                     child: Text('retry'.tr(context)),
                   ),
                 ],
@@ -101,13 +89,5 @@ class _PredefinedWorkoutScreenState
         },
       ),
     );
-  }
-
-  @override
-  void initState() {
-    Future.microtask(() {
-      ref.invalidate(groupedWorkoutsProvider, asReload: true);
-    });
-    super.initState();
   }
 }

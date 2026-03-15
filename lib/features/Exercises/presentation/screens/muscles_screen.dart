@@ -23,8 +23,6 @@ import 'package:Warrior/features/Workouts/presentation/providers/workout_provide
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_ce/hive.dart';
-import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 class MusclesContent extends ConsumerWidget {
   final List<MuscleModel> muscles;
@@ -208,58 +206,38 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
                       opacity: _fadeAnimation,
                       child: SlideTransition(
                         position: _slideAnimation,
-                        child: ConnectivityChecker.isOnline!
-                            ? ref.watch(musclesProvider).when(
-                                  loading: () => Loader(),
-                                  data: (muscles) {
-                                    HiveManager.saveToHive(
-                                        HiveManager.musclesBox, muscles);
+                        child: ref.watch(musclesProvider).when(
+                              loading: () => Loader(),
+                              data: (muscles) {
+                                if (muscles.isEmpty) {
+                                  return OfflineView(
+                                    title: 'No muscles available offline',
+                                    subtitle:
+                                        'Please go online to download muscle groups',
+                                  );
+                                }
 
-                                    // Start caching all exercises in the background
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      _startCachingAllExercises(ref, muscles);
-                                    });
+                                // Start caching all exercises in the background.
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  _startCachingAllExercises(ref, muscles);
+                                });
 
-                                    return MusclesContent(
-                                        muscles: muscles,
-                                        viewMode: _viewMode,
-                                        isComingFromWorkoutScreen:
-                                            widget.isComingFromWorkoutScreen,
-                                        appendToExistingWorkoutSet:
-                                            widget.appendToExistingWorkoutSet,
-                                        hasBannerAd:
-                                            ConnectivityChecker.isOnline!);
-                                  },
-                                  error: (error, stackTrace) =>
-                                      ref.read(musclesProvider).isRefreshing
-                                          ? Loader()
-                                          : ErrorCard(),
-                                )
-                            : ValueListenableBuilder(
-                                valueListenable:
-                                    HiveManager.musclesBox.listenable(),
-                                builder: (context, Box<MuscleModel> box, _) {
-                                  if (box.values.isEmpty) {
-                                    return OfflineView(
-                                      title: 'No muscles available offline',
-                                      subtitle:
-                                          'Please go online to download muscle groups',
-                                    );
-                                  }
-
-                                  final muscles = box.values.toList();
-                                  return MusclesContent(
-                                      muscles: muscles,
-                                      viewMode: _viewMode,
-                                      isComingFromWorkoutScreen:
-                                          widget.isComingFromWorkoutScreen,
-                                      appendToExistingWorkoutSet:
-                                          widget.appendToExistingWorkoutSet,
-                                      hasBannerAd:
-                                          ConnectivityChecker.isOnline!);
-                                },
-                              ),
+                                return MusclesContent(
+                                    muscles: muscles,
+                                    viewMode: _viewMode,
+                                    isComingFromWorkoutScreen:
+                                        widget.isComingFromWorkoutScreen,
+                                    appendToExistingWorkoutSet:
+                                        widget.appendToExistingWorkoutSet,
+                                    hasBannerAd:
+                                        ConnectivityChecker.isOnline!);
+                              },
+                              error: (error, stackTrace) =>
+                                  ref.watch(musclesProvider).isRefreshing
+                                      ? Loader()
+                                      : ErrorCard(),
+                            ),
                       ),
                     ),
                   ),
@@ -324,13 +302,35 @@ class _MusclesScreenState extends ConsumerState<MusclesScreen>
     });
   }
 
-  /// Start caching all exercises for all muscles in the background
+  /// Start caching all exercises for all muscles in the background.
+  /// Only runs when online and only fetches muscles whose exercises are not
+  /// already stored in the Hive exercises box.
   Future<void> _startCachingAllExercises(
     WidgetRef ref,
     List<MuscleModel> muscles,
   ) async {
+    if (ConnectivityChecker.isOnline != true) return;
+
+    // Find which muscles have no exercises stored in Hive yet.
+    final exercisesBox = HiveManager.exercisesBox;
+    final musclesNeedingFetch = muscles
+        .where((m) => !exercisesBox.values.any((e) => e.muscleID == m.id))
+        .toList();
+
+    if (musclesNeedingFetch.isEmpty) {
+      TalkerService.info(
+        'All exercises already in Hive — skipping fetch',
+        'CACHE',
+      );
+      return;
+    }
+
     try {
-      final muscleIds = muscles.map((m) => m.id).toList();
+      final muscleIds = musclesNeedingFetch.map((m) => m.id).toList();
+      TalkerService.info(
+        'Fetching exercises for ${muscleIds.length} uncached muscles',
+        'CACHE',
+      );
       final allExercises =
           await ref.read(exercisesRepo).getAllExercises(muscleIds: muscleIds);
 

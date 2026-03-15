@@ -23,8 +23,14 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables from .env file
-  await dotenv.load();
+  // Load environment variables from .env file.
+  // Wrapped in try-catch so the app still starts in environments
+  // where the .env asset is absent (e.g. CI without secrets).
+  try {
+    await dotenv.load();
+  } catch (e) {
+    TalkerService.warning('.env file not found – running without env vars', 'ENV', e);
+  }
 
   // Initialize app services
   await AppServices.init();

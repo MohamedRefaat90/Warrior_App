@@ -99,6 +99,7 @@ flutter:
   generate: true
 
   assets:
+    - .env
     - assets/
     - assets/images/onboarding/
     - assets/images/signup/

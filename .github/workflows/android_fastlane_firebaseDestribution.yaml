@@ -84,4 +84,5 @@ jobs:
         bundle exec fastlane android fbd release_notes:"${{ steps.release_notes.outputs.RELEASE_NOTES }}"
       working-directory: android
       env:
-        FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}  
+        FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+        SECRETS_FILE_PATH: ${{ github.workspace }}/secrets.json

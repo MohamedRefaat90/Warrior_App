@@ -21,12 +21,12 @@ platform :android do
     release_notes = options[:release_notes] || "Performance improvements and bug fixes"
     
     sh "flutter clean"
-    sh "flutter build apk --release --dart-define-from-file=../secrets.json --obfuscate --split-debug-info=../build/debug-info"
+    sh "flutter build apk --release --dart-define-from-file=../../secrets.json --obfuscate --split-debug-info=../../build/debug-info"
     firebase_app_distribution(
       app: "1:466603345246:android:810666c6db8b75510a3bcf",
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
       android_artifact_type: "APK",
-      android_artifact_path: "../build/app/outputs/flutter-apk/app-release.apk",
+      android_artifact_path: "../../build/app/outputs/flutter-apk/app-release.apk",
       testers: "bombotuf15@gmail.com,mohamedbfc700@gmail.com,momenrefat977@gmail.com,ahmedkok980@gmail.com,mohamedrefaat900@gmail.com",
       release_notes: release_notes,
     )

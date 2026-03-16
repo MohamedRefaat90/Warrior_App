@@ -29,7 +29,6 @@ void main() {
       product: anyNamed('product'),
       user: anyNamed('user'),
       imagePath: anyNamed('imagePath'),
-      isUpdate: anyNamed('isUpdate'),
     )).thenAnswer((_) async => true);
 
     // Act
@@ -45,7 +44,6 @@ void main() {
       product: tProduct,
       user: tUser,
       imagePath: 'path/to/image',
-      isUpdate: true,
     ));
     verifyNoMoreInteractions(mockWriteRepo);
   });

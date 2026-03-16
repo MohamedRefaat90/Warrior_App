@@ -3,6 +3,7 @@ import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
 import 'package:Warrior/features/Exercises/data/models/exercise_model.dart';
 import 'package:Warrior/features/Exercises/presentation/widgets/exercise_card.dart';
+import 'package:Warrior/features/Home/presentation/provider/system_settings_provider.dart';
 import 'package:Warrior/features/Workouts/presentation/providers/workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,7 +53,9 @@ class _ExercisesGridViewState extends ConsumerState<ExercisesGridView> {
             ),
           ),
           // Native ad after first 4 items (full width)
-          if (widget.exercises.length > 4 && ConnectivityChecker.isOnline!)
+          if (widget.exercises.length > 4 &&
+              ConnectivityChecker.isOnline! &&
+              ref.watch(systemSettingsProvider).showAds)
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),

@@ -1,7 +1,9 @@
 import 'package:Warrior/core/constants/apis_url.dart';
+import 'package:Warrior/core/constants/routers.dart';
 import 'package:Warrior/core/constants/storage_keys.dart';
 import 'package:Warrior/core/services/secure_storage_handler.dart';
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/routing.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -105,13 +107,23 @@ class DioHandler {
             return handler.next(response);
           }
         },
-        onError: (error, handler) {
+        onError: (error, handler) async {
           try {
-            TalkerService.error(
-              'Network request failed: ${error.requestOptions.uri}',
-              'DIO',
-              error,
-            );
+            if (error.response?.statusCode == 401) {
+              TalkerService.warning(
+                'Token expired or invalid — clearing session',
+                'DIO',
+              );
+              await SecureStorageHandler.delete(key: StorageKeys.token);
+              RoutersManager.router.go(AppRouters.login);
+            } else {
+              TalkerService.error(
+                'Network request failed: ${error.requestOptions.uri}',
+                'DIO',
+                error,
+              );
+            }
+
             return handler.next(error);
           } catch (e) {
             TalkerService.error('Error in error interceptor', 'DIO', e);

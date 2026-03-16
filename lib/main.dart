@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/localization/arb/app_localizations.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/app_open_ad_manager.dart';
+import 'package:Warrior/features/Home/presentation/provider/system_settings_provider.dart';
 import 'package:Warrior/core/services/off_credentials_service.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
@@ -12,7 +13,6 @@ import 'package:Warrior/routing.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -23,9 +23,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables from .env file
-  await dotenv.load();
-
   // Initialize app services
   await AppServices.init();
 
@@ -33,9 +30,9 @@ void main() async {
   OpenFoodAPIConfiguration.userAgent =
       UserAgent(name: 'Warrior App', version: '1.1.0', system: 'Flutter');
 
-  // Load OFF credentials from environment variables
-  final offUserId = dotenv.env['OPENFOODFACTS_USER_ID'] ?? '';
-  final offPassword = dotenv.env['OPENFOODFACTS_PASSWORD'] ?? '';
+  // Load OFF credentials injected at build time via --dart-define-from-file
+  const offUserId = String.fromEnvironment('OPENFOODFACTS_USER_ID');
+  const offPassword = String.fromEnvironment('OPENFOODFACTS_PASSWORD');
   if (offUserId.isNotEmpty && offPassword.isNotEmpty) {
     OpenFoodFactsCredentialsService.saveCredentials(
         userId: offUserId, password: offPassword);
@@ -182,9 +179,10 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Show app open ad when app resumes
+    // Show app open ad when app resumes — respects the showAds flag
     if (state == AppLifecycleState.resumed) {
-      AppOpenAdManager.instance.showAdIfAvailable();
+      final showAds = ref.read(systemSettingsProvider).showAds;
+      AppOpenAdManager.instance.showAdIfAvailable(showAds: showAds);
     }
   }
 

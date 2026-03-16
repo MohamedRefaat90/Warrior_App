@@ -2,6 +2,7 @@ import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/native_ad_widget.dart';
+import 'package:Warrior/features/Home/presentation/provider/system_settings_provider.dart';
 import 'package:Warrior/features/Predefined_workouts/domain/entities/workout_group.dart';
 import 'package:Warrior/features/Predefined_workouts/presentation/widgets/workout_group_tile.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,9 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
       itemCount: widget.workoutGroups.length,
       separatorBuilder: (context, index) {
         // Show native ad after the first group
-        if (index == 0 && ConnectivityChecker.isOnline!) {
+        if (index == 0 &&
+            ConnectivityChecker.isOnline! &&
+            ref.watch(systemSettingsProvider).showAds) {
           return Column(
             children: [
               SizedBox(height: context.mediumSpacing),
@@ -46,7 +49,7 @@ class _WorkoutGroupsViewState extends ConsumerState<WorkoutGroupsView> {
             ],
           );
         }
-        return SizedBox(height: context.mediumSpacing);
+        return SizedBox.shrink();
       },
       itemBuilder: (context, index) {
         final group = widget.workoutGroups[index];

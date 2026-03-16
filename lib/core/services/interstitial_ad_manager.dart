@@ -76,6 +76,10 @@ class InterstitialAdManager {
   /// Cache of ad manager instances keyed by ad unit ID
   static final Map<String, InterstitialAdManager> _instances = {};
 
+  /// Global kill-switch set from [systemSettingsProvider].
+  /// When false, all load and show calls are no-ops.
+  static bool showAds = true;
+
   static const _testAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
 
   static const _retryDelay = Duration(seconds: 30);
@@ -108,6 +112,7 @@ class InterstitialAdManager {
 
   /// Loads an interstitial ad if not already loaded or loading
   Future<void> loadAd() async {
+    if (!InterstitialAdManager.showAds) return;
     if (_isLoaded || _isLoading) return;
 
     _isLoading = true;
@@ -145,6 +150,10 @@ class InterstitialAdManager {
   ///
   /// [onAdDismissed] - Callback executed after ad dismissal or if no ad available
   void showAd({required VoidCallback onAdDismissed}) {
+    if (!InterstitialAdManager.showAds) {
+      onAdDismissed();
+      return;
+    }
     if (!isReady) {
       TalkerService.warning('No ad ready to show', _logTag);
       onAdDismissed();

@@ -12,4 +12,6 @@ class ApisUrl {
   static const String workouts = "workout/";
   static const String forceUpdate = "auth/appVersion/";
   static const String predefinedWorkouts = "workout/predefined";
+  static const String cacheStatus = "cache-status/";
+  static const String systemSettings = "auth/systemSettings/";
 }

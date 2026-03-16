@@ -19,7 +19,8 @@ class AppOpenAdManager {
       ? 'ca-app-pub-3940256099942544/9257395921'
       : 'ca-app-pub-7417773148722475/1584778167';
 
-  Future<void> initialize() async {
+  Future<void> initialize({bool showAds = true}) async {
+    if (!showAds) return;
     await MobileAds.instance.updateRequestConfiguration(config);
     await MobileAds.instance.initialize();
     loadAd();
@@ -51,7 +52,8 @@ class AppOpenAdManager {
     );
   }
 
-  void showAdIfAvailable() {
+  void showAdIfAvailable({bool showAds = true}) {
+    if (!showAds) return;
     if (_isShowingAd) return;
 
     if (_lastAdShownTime != null) {

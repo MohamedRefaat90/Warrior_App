@@ -106,7 +106,8 @@ class RoutersManager {
             if (email == null || email.isEmpty) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (context.mounted) {
-                  showErrorFlushbar(context, 'Missing email to verify OTP. Please start over.');
+                  showErrorFlushbar(context,
+                      'Missing email to verify OTP. Please start over.');
                 }
               });
               return AppRouters.login;
@@ -128,7 +129,8 @@ class RoutersManager {
             if (email == null || email.isEmpty) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (context.mounted) {
-                  showErrorFlushbar(context, 'Missing email for password reset. Please start over.');
+                  showErrorFlushbar(context,
+                      'Missing email for password reset. Please start over.');
                 }
               });
               return AppRouters.login;

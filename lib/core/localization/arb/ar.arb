@@ -1829,5 +1829,9 @@
         "type": "int"
       }
     }
+  },
+  "noMusclesAvailableOffline": "لا توجد عضلات متوفرة بدون إنترنت",
+  "@noMusclesAvailableOffline": {
+    "description": "No muscles available offline message"
   }
 }

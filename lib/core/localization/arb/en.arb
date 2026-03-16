@@ -1850,5 +1850,9 @@
         "type": "int"
       }
     }
+  },
+  "noMusclesAvailableOffline": "No muscle data available offline",
+  "@noMusclesAvailableOffline": {
+    "description": "Message when muscle data is not available offline"
   }
 }

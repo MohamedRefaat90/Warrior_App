@@ -1,17 +1,21 @@
 import 'package:Warrior/core/services/talker_service.dart';
+import 'package:Warrior/features/Home/presentation/provider/system_settings_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-/// Reusable native ad widget that matches app design
-class NativeAdWidget extends StatefulWidget {
+/// Reusable native ad widget that matches app design.
+/// Respects the global [systemSettingsProvider] showAds flag —
+/// returns [SizedBox.shrink] when ads are disabled.
+class NativeAdWidget extends ConsumerStatefulWidget {
   const NativeAdWidget({super.key});
 
   @override
-  State<NativeAdWidget> createState() => _NativeAdWidgetState();
+  ConsumerState<NativeAdWidget> createState() => _NativeAdWidgetState();
 }
 
-class _NativeAdWidgetState extends State<NativeAdWidget> {
+class _NativeAdWidgetState extends ConsumerState<NativeAdWidget> {
   NativeAd? _ad;
   bool _isLoaded = false;
 
@@ -21,6 +25,9 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // if (!ref.watch(systemSettingsProvider).showAds) {
+    //   return const SizedBox.shrink();
+    // }
     if (!_isLoaded || _ad == null) {
       return const SizedBox.shrink();
     }

@@ -11,6 +11,7 @@ class CalculatorHeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: context.cardPadding,
+      width: context.screenWidth * 0.7,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [

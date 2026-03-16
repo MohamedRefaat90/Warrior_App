@@ -13,6 +13,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+require 'json'
+
 default_platform(:android)
 
 platform :android do
@@ -21,7 +23,15 @@ platform :android do
     release_notes = options[:release_notes] || "Performance improvements and bug fixes"
     
     sh "flutter clean"
-    secrets_path = ENV["SECRETS_FILE_PATH"] || File.expand_path("../../secrets.json", __dir__)
+    secrets_path = File.expand_path("../../secrets.json", __dir__)
+    unless File.exist?(secrets_path)
+      UI.message("secrets.json not found locally, creating from environment variables...")
+      secrets = {
+        "OPENFOODFACTS_USER_ID" => ENV["OPENFOODFACTS_USER_ID"] || "",
+        "OPENFOODFACTS_PASSWORD" => ENV["OPENFOODFACTS_PASSWORD"] || ""
+      }
+      File.write(secrets_path, JSON.generate(secrets))
+    end
     UI.message("Secrets file path: #{secrets_path}")
     UI.user_error!("secrets.json not found at #{secrets_path}") unless File.exist?(secrets_path)
     sh "flutter build apk --release --dart-define-from-file=#{secrets_path} --obfuscate --split-debug-info=../../build/debug-info"

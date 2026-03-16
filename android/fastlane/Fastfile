@@ -21,7 +21,9 @@ platform :android do
     release_notes = options[:release_notes] || "Performance improvements and bug fixes"
     
     sh "flutter clean"
-    secrets_path = ENV["SECRETS_FILE_PATH"] || "../../secrets.json"
+    secrets_path = ENV["SECRETS_FILE_PATH"] || File.expand_path("../../secrets.json", __dir__)
+    UI.message("Secrets file path: #{secrets_path}")
+    UI.user_error!("secrets.json not found at #{secrets_path}") unless File.exist?(secrets_path)
     sh "flutter build apk --release --dart-define-from-file=#{secrets_path} --obfuscate --split-debug-info=../../build/debug-info"
     firebase_app_distribution(
       app: "1:466603345246:android:810666c6db8b75510a3bcf",

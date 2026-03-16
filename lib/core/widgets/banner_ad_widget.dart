@@ -1,26 +1,32 @@
+import 'package:Warrior/features/Home/presentation/provider/system_settings_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /// A reusable banner ad widget that handles loading and displaying AdMob banners.
 ///
 /// This widget manages its own ad lifecycle and provides consistent
-/// ad placement across the app.
-class BannerAdWidget extends StatefulWidget {
+/// ad placement across the app. Respects the global [systemSettingsProvider]
+/// showAds flag — returns [SizedBox.shrink] when ads are disabled.
+class BannerAdWidget extends ConsumerStatefulWidget {
   final String adUnitId;
 
   const BannerAdWidget({super.key, required this.adUnitId});
 
   @override
-  State<BannerAdWidget> createState() => _BannerAdWidgetState();
+  ConsumerState<BannerAdWidget> createState() => _BannerAdWidgetState();
 }
 
-class _BannerAdWidgetState extends State<BannerAdWidget> {
+class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
 
   @override
   Widget build(BuildContext context) {
+    if (!ref.watch(systemSettingsProvider).showAds) {
+      return const SizedBox.shrink();
+    }
     if (!_isLoaded || _bannerAd == null) {
       return const SizedBox.shrink();
     }

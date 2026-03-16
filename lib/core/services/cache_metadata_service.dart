@@ -32,14 +32,14 @@ class CacheMetadataService {
       return true;
     }
 
-    final changed = storedLastUpdated != serverLastUpdated ||
-        storedCount != serverCount;
+    final changed =
+        storedLastUpdated != serverLastUpdated || storedCount != serverCount;
 
     if (changed) {
       TalkerService.info(
         '"$key" changed on server '
-        '(was: $storedLastUpdated/$storedCount, '
-        'now: $serverLastUpdated/$serverCount) — refresh required',
+            '(was: $storedLastUpdated/$storedCount, '
+            'now: $serverLastUpdated/$serverCount) — refresh required',
         'CACHE_META',
       );
     } else {

@@ -2,6 +2,7 @@ import 'package:Warrior/core/constants/assets.dart';
 import 'package:Warrior/core/localization/arb/app_localizations.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/app_open_ad_manager.dart';
+import 'package:Warrior/features/Home/presentation/provider/system_settings_provider.dart';
 import 'package:Warrior/core/services/off_credentials_service.dart';
 import 'package:Warrior/core/services/services.dart';
 import 'package:Warrior/core/services/sync.dart';
@@ -178,9 +179,10 @@ class _WarriorAppState extends ConsumerState<WarriorApp>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Show app open ad when app resumes
+    // Show app open ad when app resumes — respects the showAds flag
     if (state == AppLifecycleState.resumed) {
-      AppOpenAdManager.instance.showAdIfAvailable();
+      final showAds = ref.read(systemSettingsProvider).showAds;
+      AppOpenAdManager.instance.showAdIfAvailable(showAds: showAds);
     }
   }
 

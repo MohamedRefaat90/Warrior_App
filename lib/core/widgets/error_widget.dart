@@ -29,7 +29,8 @@ class CustomErrorWidget extends StatelessWidget {
         padding: context.cardPadding,
         decoration: BoxDecoration(
             color: const Color.fromARGB(209, 181, 26, 9),
-            borderRadius: BorderRadius.circular(context.responsiveBorderRadius)),
+            borderRadius:
+                BorderRadius.circular(context.responsiveBorderRadius)),
         child: Text(
           errorMsg,
           textAlign: TextAlign.center,

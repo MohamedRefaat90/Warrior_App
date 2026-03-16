@@ -5,6 +5,7 @@ import 'package:Warrior/core/network/dio.dart';
 import 'package:Warrior/core/services/talker_service.dart';
 import 'package:Warrior/features/Home/data/models/app_version.dart';
 import 'package:Warrior/features/Home/data/models/category_item.dart';
+import 'package:Warrior/features/Home/data/models/system_settings.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -64,6 +65,19 @@ class HomeRepo {
       }
     } catch (e) {
       TalkerService.error('Error fetching app version: $e', 'HOME-REPO');
+    }
+    return null;
+  }
+
+  Future<SystemSettings?> getSystemSettings() async {
+    try {
+      final Response response = await _dio.get(ApisUrl.systemSettings);
+      if (response.statusCode == 200) {
+        final data = response.data['data'] as Map<String, dynamic>? ?? {};
+        return SystemSettings.fromMap(data);
+      }
+    } catch (e) {
+      TalkerService.error('Error fetching system settings: $e', 'HOME-REPO');
     }
     return null;
   }

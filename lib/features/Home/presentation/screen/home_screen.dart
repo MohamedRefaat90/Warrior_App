@@ -6,6 +6,7 @@ import 'package:Warrior/core/settings/app_settings_provider.dart';
 import 'package:Warrior/core/utils/responsive_utils.dart';
 import 'package:Warrior/core/widgets/banner_ad_widget.dart';
 import 'package:Warrior/features/Home/presentation/provider/home_provider.dart';
+import 'package:Warrior/features/Home/presentation/provider/system_settings_provider.dart';
 import 'package:Warrior/features/Home/presentation/widgets/category_card.dart';
 import 'package:Warrior/features/Home/presentation/widgets/fancy_drawer.dart';
 import 'package:flutter/material.dart';
@@ -93,8 +94,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       child: CategoryCard(
                           category: ref.read(homeProvider).categoryItems.last)),
                   const Spacer(),
-                  const BannerAdWidget(
-                      adUnitId: "ca-app-pub-7417773148722475/3352321251"),
+                  if (ref.watch(systemSettingsProvider).showAds)
+                    const BannerAdWidget(
+                        adUnitId: "ca-app-pub-7417773148722475/3352321251"),
                 ],
               ),
             ),
@@ -108,6 +110,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Load system settings (reads cache first, then fetches from network)
+      ref.read(systemSettingsProvider);
       if (ConnectivityChecker.isOnline ?? false) {
         checkAndShowReviewDialog(context);
         checkForForceUpdate(ref, context);

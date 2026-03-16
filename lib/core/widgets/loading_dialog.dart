@@ -23,7 +23,8 @@ class LoadingDialog extends StatelessWidget {
           height: size,
           padding: EdgeInsets.all(context.mediumSpacing),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+              borderRadius:
+                  BorderRadius.circular(context.responsiveBorderRadius),
               color: AppColors.white),
           child: CircularProgressIndicator(color: AppColors.primaryColor),
         ),

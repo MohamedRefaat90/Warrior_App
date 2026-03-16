@@ -47,10 +47,16 @@ jobs:
     - run: flutter pub get
     - name: Create secrets file
       run: |
-        echo '{
+        cat <<EOF > "$GITHUB_WORKSPACE/secrets.json"
+        {
           "OPENFOODFACTS_USER_ID": "${{ secrets.OPENFOODFACTS_USER_ID }}",
           "OPENFOODFACTS_PASSWORD": "${{ secrets.OPENFOODFACTS_PASSWORD }}"
-        }' > secrets.json
+        }
+        EOF
+        echo "PWD: $(pwd)"
+        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        ls -la "$GITHUB_WORKSPACE/secrets.json"
+        cat "$GITHUB_WORKSPACE/secrets.json"
     - name: Generate release notes
       id: release_notes
       run: |

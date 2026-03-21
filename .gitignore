@@ -60,3 +60,4 @@ sentry.properties
 .github/prompts/
 .specify
 .cursor
+settings.local.json

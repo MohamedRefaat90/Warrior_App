@@ -59,7 +59,7 @@ void main() async {
         child: SentryWidget(
           child: kDebugMode
               ? DevicePreview(
-                  enabled: true,
+                  enabled: false,
                   builder: (context) => const WarriorApp(),
                 )
               : const WarriorApp(),

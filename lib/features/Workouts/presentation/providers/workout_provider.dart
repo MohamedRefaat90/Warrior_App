@@ -73,16 +73,13 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
       final localWeightChange = newWeight - originalWeight;
 
       // 2. Optimistic Local Update
-      // Update Exercise Last Weight (Default for future sets)
-      workoutItem.lastWeight = newWeight;
-
       // Update ALL existing sets in the workout item
       final updatedSets = (workoutItem.sets ?? []).asMap().entries.map((entry) {
         return entry.value.copyWith(weight: newWeight);
       }).toList();
 
       resolvedWorkout.workoutItems![itemIndex] =
-          workoutItem.copyWith(sets: updatedSets);
+          workoutItem.copyWith(lastWeight: newWeight, sets: updatedSets);
 
       // 3. Save to Hive immediately
       final hiveIndex = HiveManager.workoutsBox.values.toList().indexWhere((w) {
@@ -574,7 +571,8 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
         throw Exception('Exercise not found in workout');
       }
 
-      storedWorkout.workoutItems![exerciseIndex].lastWeight = weight;
+      storedWorkout.workoutItems![exerciseIndex] =
+          storedWorkout.workoutItems![exerciseIndex].copyWith(lastWeight: weight);
       await HiveManager.workoutsBox.putAt(index, storedWorkout);
 
       // Update the workout list
@@ -618,7 +616,8 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
         throw Exception('Exercise not found in workout');
       }
 
-      workout.workoutItems![exerciseIndex].lastWeight = weight;
+      workout.workoutItems![exerciseIndex] =
+          workout.workoutItems![exerciseIndex].copyWith(lastWeight: weight);
       await HiveManager.workoutsBox.putAt(index, workout);
 
       TalkerService.info(

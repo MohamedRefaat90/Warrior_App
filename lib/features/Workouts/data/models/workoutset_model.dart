@@ -14,7 +14,7 @@ class WorkoutItemModel {
   final ExerciseModel exercise;
 
   @HiveField(1)
-  num lastWeight;
+  final num lastWeight;
 
   @HiveField(2)
   final List<ExerciseSetRecordModel>? sets;

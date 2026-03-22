@@ -166,14 +166,10 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
           SharedPref.getInt(StorageKeys.numberOfWorkouts) ?? 0;
 
       if (_isOnline) {
-        // Online: Create on server and update local
+        // Online: Create on server, then refresh list (which updates Hive)
         await _workoutRepo.createWorkoutSet(newWorkout);
-        await HiveManager.workoutsBox.add(newWorkout);
-
         await SharedPref.setInt(
             StorageKeys.numberOfWorkouts, numberOfWorkouts + 1);
-
-        // Refresh the list after creating
         await getWorkoutSets();
         TalkerService.info(
             'Workout created online: ${newWorkout.name}', 'WORKOUT');

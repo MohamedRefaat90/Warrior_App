@@ -196,7 +196,10 @@ class SyncService extends Notifier<SyncState> {
 
     pendingOps.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
-    for (final op in pendingOps) {
+    final keysToDelete = <dynamic>[];
+
+    for (int i = 0; i < pendingOps.length; i++) {
+      final op = pendingOps[i];
       try {
         if (op.entityType == 'workout') {
           switch (op.operationType) {
@@ -233,7 +236,6 @@ class SyncService extends Notifier<SyncState> {
             op.weight!,
           );
         } else if (op.entityType == 'workout_sets') {
-          // Sync exercise sets update
           if (op.workoutSetId != null &&
               op.exerciseId != null &&
               op.sets != null) {
@@ -248,13 +250,35 @@ class SyncService extends Notifier<SyncState> {
             );
           }
         }
+
+        // Only mark for deletion if operation succeeded
+        if (op.key != null) {
+          keysToDelete.add(op.key);
+        }
       } on Exception catch (e) {
-        TalkerService.error('Error processing operation ${op.id}', 'SYNC', e);
+        TalkerService.error(
+            'Error syncing operation: ${op.entityType}/${op.operationType}',
+            'SYNC',
+            e);
+        // Do NOT add to keysToDelete — operation stays in queue for retry
         continue;
       }
     }
 
-    await HiveManager.clearPendingOperations();
+    // Delete only successful operations
+    for (final key in keysToDelete) {
+      await HiveManager.pendingOpsBox.delete(key);
+    }
+
+    if (keysToDelete.length == pendingOps.length) {
+      TalkerService.info('All ${pendingOps.length} operations synced', 'SYNC');
+    } else {
+      final failed = pendingOps.length - keysToDelete.length;
+      TalkerService.warning(
+        '$failed/${pendingOps.length} operations failed, will retry next sync',
+        'SYNC',
+      );
+    }
   }
 }
 

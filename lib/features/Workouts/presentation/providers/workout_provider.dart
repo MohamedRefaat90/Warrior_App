@@ -211,20 +211,17 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
     }
   }
 
-  Future<void> deleteWorkoutSet(int? workoutID, int index) async {
+  Future<void> deleteWorkoutSet(int? workoutID,
+      {WorkoutSetModel? workout}) async {
     try {
-      // Check if this is an offline-created workout (no server ID)
       final isOfflineWorkout = workoutID == null || workoutID <= 0;
 
       if (!isOfflineWorkout) {
-        // Workout has a valid server ID
         if (_isOnline) {
-          // Online: Delete from server
-          _workoutRepo.deleteWorkoutSet(workoutID);
+          await _workoutRepo.deleteWorkoutSet(workoutID);
           TalkerService.info(
               'Workout deleted online: ID $workoutID', 'WORKOUT');
         } else {
-          // Offline: Track for later sync
           await HiveManager.addPendingOperation(
             PendingOperation(
               entityType: 'workout',
@@ -234,24 +231,19 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
             ),
           );
           TalkerService.info(
-              'Workout deletion queued for sync: ID $workoutID', 'WORKOUT');
-        }
-        // Update UI - remove by ID
-        workoutList.removeWhere((workout) => workout.id == workoutID);
-      } else {
-        // Offline-created workout without server ID
-        // Just remove locally by index, no sync needed
-        if (index >= 0 && index < workoutList.length) {
-          workoutList.removeAt(index);
-          TalkerService.info(
-              'Offline workout deleted locally at index: $index', 'WORKOUT');
+              'Workout deletion queued for sync: ID $workoutID',
+              'WORKOUT');
         }
       }
 
-      // Remove from Hive safely
-      if (index >= 0 && index < HiveManager.workoutsBox.length) {
-        await HiveManager.workoutsBox.deleteAt(index);
-      }
+      // Delete from Hive by key, not index
+      await HiveManager.deleteWorkoutFromBox(
+        workoutId: workoutID,
+        workout: workout,
+      );
+
+      // Refresh list from Hive (single source of truth)
+      workoutList = HiveManager.workoutsBox.values.toList();
 
       state = ProviderStates(isSuccess: true);
     } catch (e, stackTrace) {
@@ -398,12 +390,12 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
 
   void toggleSelectMode() {
     selectMode = !selectMode;
-    // Clear selected items when turning off select mode
-    if (!selectMode) {
-      newWorkout.workoutItems?.clear();
-      TalkerService.info(
-          'Select mode ${selectMode ? 'enabled' : 'disabled'}', 'WORKOUT');
-    }
+    // Always reset to a fresh instance so we never share a list reference
+    // with the actual workout stored in Hive (Hive Box returns same instances).
+    // Mutating the old newWorkout.workoutItems would silently wipe workout data.
+    resetNewWorkout();
+    TalkerService.info(
+        'Select mode ${selectMode ? 'enabled' : 'disabled'}', 'WORKOUT');
     state = ProviderStates(isSuccess: true);
   }
 

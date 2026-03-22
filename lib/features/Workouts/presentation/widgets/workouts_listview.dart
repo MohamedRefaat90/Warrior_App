@@ -247,7 +247,8 @@ class _WorkoutsReorderableListState
             onPressed: () {
               ref
                   .read(workoutsProvider.notifier)
-                  .deleteWorkoutSet(widget.workouts[index].id!, index);
+                  .deleteWorkoutSet(widget.workouts[index].id,
+                      workout: widget.workouts[index]);
               Navigator.of(context).pop(true);
             },
             style: ElevatedButton.styleFrom(

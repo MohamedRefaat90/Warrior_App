@@ -51,11 +51,37 @@ class SyncService extends Notifier<SyncState> {
     try {
       state = state.copyWith(isLoading: true);
 
+      // Track if we had create operations (need ID refresh after sync)
+      final hadCreateOps = HiveManager.pendingOpsBox.values
+          .any((op) => op.operationType == SyncOperationType.create);
+
       // Sync workouts
       await _syncWorkouts();
 
       // Sync products
       await _syncProducts();
+
+      // If we synced any create operations, refresh workout list
+      // to get server-assigned IDs into Hive
+      if (hadCreateOps && ConnectivityChecker.isOnline == true) {
+        try {
+          final freshWorkouts =
+              await workoutRepository.getWorkoutSets();
+          await HiveManager.workoutsBox.clear();
+          for (var workout in freshWorkouts) {
+            await HiveManager.workoutsBox.add(workout);
+          }
+          TalkerService.info(
+            'Refreshed workout list after sync to update server IDs',
+            'SYNC',
+          );
+        } catch (e) {
+          TalkerService.warning(
+            'Failed to refresh workouts after sync: $e',
+            'SYNC',
+          );
+        }
+      }
 
       // Update pending counts
       state = state.copyWith(

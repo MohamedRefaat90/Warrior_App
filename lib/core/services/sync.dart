@@ -210,6 +210,9 @@ class SyncService extends Notifier<SyncState> {
 
   /// Syncs pending workout operations.
   Future<void> _syncWorkouts() async {
+    // Deduplicate before syncing to reduce redundant server calls
+    await HiveManager.deduplicatePendingOps();
+
     final List<PendingOperation> pendingOps =
         HiveManager.pendingOpsBox.values.toList();
 

@@ -124,6 +124,86 @@ class HiveManager {
     return false;
   }
 
+  /// Deduplicates pending operations to minimize sync overhead.
+  ///
+  /// Rules:
+  /// 1. If a workout has a `delete` op, remove all prior `create`/`update` ops
+  ///    for that same workout.
+  /// 2. For multiple `update` ops on the same workout+entity, keep only the
+  ///    latest (by timestamp).
+  /// 3. For `reorder`, keep only the latest.
+  static Future<void> deduplicatePendingOps() async {
+    final ops = pendingOpsBox.values.toList();
+    if (ops.length <= 1) return;
+
+    final keysToRemove = <dynamic>{};
+
+    // Collect IDs of workouts that will be deleted
+    final deleteIds = <int>{};
+    for (final op in ops) {
+      if (op.entityType == 'workout' &&
+          op.operationType == SyncOperationType.delete &&
+          op.id != null) {
+        deleteIds.add(op.id!);
+      }
+    }
+
+    // Rule 1: Remove create/update ops for workouts that will be deleted
+    for (final op in ops) {
+      if (op.operationType == SyncOperationType.delete) continue;
+      if (op.entityType == 'workout' &&
+          op.workout?.id != null &&
+          deleteIds.contains(op.workout!.id)) {
+        keysToRemove.add(op.key);
+      }
+    }
+
+    // Rule 2: For same entity+workout+exercise, keep only latest update
+    final updateGroups = <String, List<PendingOperation>>{};
+    for (final op in ops) {
+      if (keysToRemove.contains(op.key)) continue;
+      if (op.operationType != SyncOperationType.update) continue;
+
+      final groupKey =
+          '${op.entityType}_${op.workout?.id ?? "null"}_${op.exerciseId ?? "null"}';
+      updateGroups.putIfAbsent(groupKey, () => []).add(op);
+    }
+
+    for (final group in updateGroups.values) {
+      if (group.length <= 1) continue;
+      group.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+      // Remove all but the latest
+      for (int i = 0; i < group.length - 1; i++) {
+        keysToRemove.add(group[i].key);
+      }
+    }
+
+    // Rule 3: Keep only latest reorder
+    final reorderOps = ops
+        .where((op) =>
+            op.operationType == SyncOperationType.reorder &&
+            !keysToRemove.contains(op.key))
+        .toList();
+    if (reorderOps.length > 1) {
+      reorderOps.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+      for (int i = 0; i < reorderOps.length - 1; i++) {
+        keysToRemove.add(reorderOps[i].key);
+      }
+    }
+
+    // Apply removals
+    if (keysToRemove.isNotEmpty) {
+      for (final key in keysToRemove) {
+        await pendingOpsBox.delete(key);
+      }
+      TalkerService.info(
+        'Deduplicated pending ops: removed ${keysToRemove.length}, '
+            '${pendingOpsBox.length} remaining',
+        'HIVE',
+      );
+    }
+  }
+
   static Future<void> clearPendingProductUploads() async {
     await pendingProductsBox.clear();
     TalkerService.debug('Cleared all pending product uploads', 'HIVE');

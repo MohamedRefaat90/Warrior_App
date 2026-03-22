@@ -745,7 +745,44 @@ class WorkoutsNotifier extends Notifier<ProviderStates> {
         }
       }
     } catch (e, stack) {
-      TalkerService.error('Background sync failed', 'WORKOUT', e, stack);
+      TalkerService.error('Background sync failed, queuing for retry',
+          'WORKOUT', e, stack);
+
+      // CRITICAL FIX: Queue pending operations on failure so they retry later
+      if (workoutID != null && workoutID > 0) {
+        try {
+          final setsData = updatedSets
+              .map((s) => {
+                    'set_number': s.setNumber,
+                    'reps': s.reps,
+                    'weight': s.weight,
+                  })
+              .toList();
+
+          await HiveManager.addPendingOperation(PendingOperation(
+            entityType: 'workout_weight',
+            operationType: SyncOperationType.update,
+            workout: resolvedWorkout,
+            exerciseId: exerciseID,
+            weight: newWeight,
+            timestamp: DateTime.now(),
+          ));
+          await HiveManager.addPendingOperation(PendingOperation(
+            entityType: 'workout_sets',
+            operationType: SyncOperationType.update,
+            workout: resolvedWorkout,
+            workoutSetId: workoutID,
+            exerciseId: exerciseID,
+            sets: setsData,
+            timestamp: DateTime.now(),
+          ));
+        } catch (pendingError) {
+          TalkerService.error(
+              'Failed to queue pending operations after sync failure',
+              'WORKOUT',
+              pendingError);
+        }
+      }
     }
   }
 

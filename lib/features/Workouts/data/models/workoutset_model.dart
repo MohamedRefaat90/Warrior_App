@@ -279,4 +279,24 @@ class WorkoutSetModel extends HiveObject {
 
     return DateTime.now();
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! WorkoutSetModel) return false;
+
+    // If both have server IDs, compare by ID
+    if (id != null && id! > 0 && other.id != null && other.id! > 0) {
+      return id == other.id;
+    }
+
+    // For offline workouts (no ID), compare by name + createdAt
+    return name == other.name && createdAt == other.createdAt;
+  }
+
+  @override
+  int get hashCode {
+    if (id != null && id! > 0) return id.hashCode;
+    return Object.hash(name, createdAt);
+  }
 }

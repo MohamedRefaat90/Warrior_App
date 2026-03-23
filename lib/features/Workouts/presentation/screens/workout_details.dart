@@ -25,10 +25,12 @@ class WorkoutDetails extends ConsumerWidget {
     ref.watch(workoutsProvider);
     final workoutNotifier = ref.read(workoutsProvider.notifier);
     final appSettings = ref.watch(appSettingsProvider.notifier);
-    // Get the updated workout from the provider's workout list
-    // This ensures we always show the latest data after updates
+    // Always look up the latest version from workoutList so the UI reflects
+    // changes made via updateWorkoutSet (e.g. adding exercises).
+    // For online workouts: match by server ID.
+    // For offline workouts: match by value equality (name + createdAt).
     final updatedWorkout = workoutNotifier.workoutList
-            .where((w) => w.id == workout.id)
+            .where((w) => w == workout)
             .firstOrNull ??
         workout;
 

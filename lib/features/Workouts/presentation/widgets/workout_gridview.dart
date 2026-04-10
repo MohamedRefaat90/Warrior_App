@@ -56,7 +56,7 @@ class _WorkoutGridViewState extends ConsumerState<WorkoutGridView> {
                         exercise: workoutExercise.exercise,
                         isComingFromWorkoutScreen: workoutNotifier.selectMode,
                         workoutItem: workoutExercise,
-                        workoutSetId: widget.workout.id,
+                        workout: widget.workout,
                       ),
                     ),
                     Positioned(

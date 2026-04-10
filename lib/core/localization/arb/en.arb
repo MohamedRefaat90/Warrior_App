@@ -1854,5 +1854,37 @@
   "noMusclesAvailableOffline": "No muscle data available offline",
   "@noMusclesAvailableOffline": {
     "description": "Message when muscle data is not available offline"
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "noExercisesAvailableOffline": "No exercises available offline",
+  "@noExercisesAvailableOffline": {
+    "description": "Message when no exercises are available offline"
+  },
+  "pleaseGoOnlineToDownloadExercises": "Please go online to download exercises",
+  "@pleaseGoOnlineToDownloadExercises": {
+    "description": "Subtitle when no exercises are available offline"
+  },
+  "noMuscleExercisesOffline": "No {muscleName} exercises available offline",
+  "@noMuscleExercisesOffline": {
+    "description": "Message when no exercises for a specific muscle are available offline",
+    "placeholders": {
+      "muscleName": {
+        "type": "String",
+        "description": "Muscle group name"
+      }
+    }
+  },
+  "goOnlineForMuscleExercises": "Go online to get {muscleName} exercises",
+  "@goOnlineForMuscleExercises": {
+    "description": "Prompt to go online to get exercises for a specific muscle",
+    "placeholders": {
+      "muscleName": {
+        "type": "String",
+        "description": "Muscle group name"
+      }
+    }
   }
 }

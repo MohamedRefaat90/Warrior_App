@@ -186,16 +186,26 @@ class _WorkoutsReorderableListState
 
   Widget _buildWorkoutItem(int index) {
     final workout = widget.workouts[index];
+    // Use a stable, unique key: server ID when available,
+    // otherwise the Hive box key (assigned on insert, always non-null
+    // for objects loaded from the box — more reliable than createdAt
+    // which can be null in legacy data).
+    final stableKey = workout.id != null && workout.id! > 0
+        ? 'workout_${workout.id}'
+        : 'workout_hive_${workout.key}';
 
     return Dismissible(
-      key: Key('${workout.id}_$index'),
+      key: Key(stableKey),
       direction: DismissDirection.endToStart,
-      background: _DismissBackground(),
-      confirmDismiss: (_) => _confirmDelete(index),
+      background: const _DismissBackground(),
+      confirmDismiss: (_) => _confirmDelete(),
+      onDismissed: (_) => ref
+          .read(workoutsProvider.notifier)
+          .deleteWorkoutSet(workout.id, workout: workout),
       child: Stack(
         children: [
           EnhancedWorkoutCard(
-            key: ValueKey(workout.id),
+            key: ValueKey(stableKey),
             workout: workout,
             index: index,
           ),
@@ -214,7 +224,7 @@ class _WorkoutsReorderableListState
     );
   }
 
-  Future<bool?> _confirmDelete(int index) async {
+  Future<bool?> _confirmDelete() async {
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -244,13 +254,7 @@ class _WorkoutsReorderableListState
             child: Text('cancel'.tr(context)),
           ),
           ElevatedButton(
-            onPressed: () {
-              ref
-                  .read(workoutsProvider.notifier)
-                  .deleteWorkoutSet(widget.workouts[index].id,
-                      workout: widget.workouts[index]);
-              Navigator.of(context).pop(true);
-            },
+            onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,

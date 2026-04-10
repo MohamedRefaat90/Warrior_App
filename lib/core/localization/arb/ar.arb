@@ -1833,5 +1833,37 @@
   "noMusclesAvailableOffline": "لا توجد عضلات متوفرة بدون إنترنت",
   "@noMusclesAvailableOffline": {
     "description": "No muscles available offline message"
+  },
+  "refresh": "تحديث",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "noExercisesAvailableOffline": "لا تتوفر تمارين بدون إنترنت",
+  "@noExercisesAvailableOffline": {
+    "description": "Message when no exercises are available offline"
+  },
+  "pleaseGoOnlineToDownloadExercises": "يرجى الاتصال بالإنترنت لتحميل التمارين",
+  "@pleaseGoOnlineToDownloadExercises": {
+    "description": "Subtitle when no exercises are available offline"
+  },
+  "noMuscleExercisesOffline": "لا تتوفر تمارين {muscleName} بدون إنترنت",
+  "@noMuscleExercisesOffline": {
+    "description": "Message when no exercises for a specific muscle are available offline",
+    "placeholders": {
+      "muscleName": {
+        "type": "String",
+        "description": "Muscle group name"
+      }
+    }
+  },
+  "goOnlineForMuscleExercises": "اتصل بالإنترنت للحصول على تمارين {muscleName}",
+  "@goOnlineForMuscleExercises": {
+    "description": "Prompt to go online to get exercises for a specific muscle",
+    "placeholders": {
+      "muscleName": {
+        "type": "String",
+        "description": "Muscle group name"
+      }
+    }
   }
 }

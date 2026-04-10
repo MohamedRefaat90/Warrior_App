@@ -1431,4 +1431,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMusclesAvailableOffline => 'No muscle data available offline';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get noExercisesAvailableOffline => 'No exercises available offline';
+
+  @override
+  String get pleaseGoOnlineToDownloadExercises =>
+      'Please go online to download exercises';
+
+  @override
+  String noMuscleExercisesOffline(String muscleName) {
+    return 'No $muscleName exercises available offline';
+  }
+
+  @override
+  String goOnlineForMuscleExercises(String muscleName) {
+    return 'Go online to get $muscleName exercises';
+  }
 }

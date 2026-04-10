@@ -9,12 +9,18 @@ import 'package:go_router/go_router.dart';
 
 class FinishBTN extends ConsumerWidget {
   final Color primaryColor;
-
   final bool? appendToExistingWorkoutSet;
+
+  /// Number of extra screens to pop after the default one.
+  /// Use 1 when the button is nested one level deeper than usual
+  /// (e.g. exercises screen on top of muscles screen).
+  final int extraPops;
+
   const FinishBTN({
     super.key,
     required this.primaryColor,
     required this.appendToExistingWorkoutSet,
+    this.extraPops = 0,
   });
 
   @override
@@ -70,10 +76,15 @@ class FinishBTN extends ConsumerWidget {
                       }
                     }
                   } else {
+                    // Store router before any pop — context becomes invalid
+                    // after the first pop disposes this widget.
+                    final router = GoRouter.of(context);
                     await workoutNotifier
                         .updateWorkoutSet(workoutNotifier.newWorkout);
                     if (context.mounted) {
-                      context.pop();
+                      for (int i = 0; i <= extraPops; i++) {
+                        router.pop();
+                      }
                     }
                   }
                 },

@@ -29,11 +29,16 @@ class ExerciseDetailsScreen extends StatefulWidget {
   /// Optional workout set ID for API calls.
   final int? workoutSetId;
 
+  /// The parent workout — required for offline-created workouts (id == null)
+  /// so sets can be saved locally without a server ID.
+  final WorkoutSetModel? workout;
+
   const ExerciseDetailsScreen({
     super.key,
     required this.exercise,
     this.workoutItem,
     this.workoutSetId,
+    this.workout,
   });
 
   @override
@@ -372,6 +377,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                       _WorkoutLoggingSection(
                         workoutItem: _workoutItem!,
                         workoutSetId: widget.workoutSetId,
+                        workout: widget.workout,
                         onWorkoutItemUpdated: _onWorkoutItemUpdated,
                       ),
                     ],
@@ -973,11 +979,13 @@ class _VideoErrorWidget extends StatelessWidget {
 class _WorkoutLoggingSection extends ConsumerStatefulWidget {
   final WorkoutItemModel workoutItem;
   final int? workoutSetId;
+  final WorkoutSetModel? workout;
   final void Function(WorkoutItemModel updatedItem)? onWorkoutItemUpdated;
 
   const _WorkoutLoggingSection({
     required this.workoutItem,
     this.workoutSetId,
+    this.workout,
     this.onWorkoutItemUpdated,
   });
 
@@ -1324,7 +1332,10 @@ class _WorkoutLoggingSectionState
 
   Future<void> _saveSets() async {
     if (_isSaving) return; // Prevent concurrent saves
-    if (widget.workoutSetId == null) {
+
+    // For offline-created workouts (no server ID), we need the workout object.
+    // If neither is available, we can't save.
+    if (widget.workoutSetId == null && widget.workout == null) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1339,8 +1350,6 @@ class _WorkoutLoggingSectionState
       setState(() => _isSaving = true);
     }
 
-    // State management for loading is removed as updates are instant and non-blocking in UI
-
     try {
       final setsData = _editableSets
           .asMap()
@@ -1353,11 +1362,13 @@ class _WorkoutLoggingSectionState
               })
           .toList();
 
-      // Use provider to update sets (handles online/offline automatically
+      // Use provider to update sets (handles online/offline automatically).
+      // Pass workout for offline-created workouts that have no server ID yet.
       await ref.read(workoutsProvider.notifier).updateExerciseSets(
             workoutSetId: widget.workoutSetId,
             exerciseId: widget.workoutItem.exercise.id,
             sets: setsData,
+            workout: widget.workout,
           );
 
       if (mounted) {

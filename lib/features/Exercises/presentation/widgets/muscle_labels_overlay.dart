@@ -9,6 +9,7 @@ import 'muscle_label_card.dart';
 class MuscleLabelsOverlay extends StatefulWidget {
   final List<MuscleModel> muscles;
   final bool isComingFromWorkoutScreen;
+  final bool? appendToExistingWorkoutSet;
   final Size containerSize; // Full container size
   final Size imageSize; // Actual rendered image size
   final BodyView bodyView;
@@ -17,6 +18,7 @@ class MuscleLabelsOverlay extends StatefulWidget {
     super.key,
     required this.muscles,
     required this.isComingFromWorkoutScreen,
+    this.appendToExistingWorkoutSet,
     required this.containerSize,
     required this.imageSize,
     required this.bodyView,
@@ -185,6 +187,7 @@ class _MuscleLabelsOverlayState extends State<MuscleLabelsOverlay> {
           child: MuscleLabelCard(
             muscle: muscle,
             isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
+            appendToExistingWorkoutSet: widget.appendToExistingWorkoutSet,
           ),
         ),
       ),

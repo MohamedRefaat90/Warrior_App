@@ -167,6 +167,7 @@ class _MuscleBodyViewState extends ConsumerState<MuscleBodyView> {
             child: MuscleLabelsOverlay(
               muscles: widget.muscles,
               isComingFromWorkoutScreen: widget.isComingFromWorkoutScreen,
+              appendToExistingWorkoutSet: widget.appendToExistingWorkoutSet,
               containerSize: Size(maxWidth, maxHeight),
               imageSize: renderedSize,
               bodyView: view,

@@ -1,4 +1,6 @@
+import 'package:Warrior/core/extensions/translation_ext.dart';
 import 'package:Warrior/core/localization/muscle_translations.dart';
+import 'package:Warrior/features/Exercises/presentation/widgets/workout_creation_and_warning.dart';
 import 'package:Warrior/core/network/connectivity.dart';
 import 'package:Warrior/core/services/hive_boxes.dart';
 import 'package:Warrior/core/settings/app_settings_provider.dart';
@@ -15,11 +17,13 @@ import 'package:go_router/go_router.dart';
 class ExercisesScreen extends ConsumerWidget {
   final Map muscle;
   final bool? isComingFromWorkoutScreen;
+  final bool appendToExistingWorkoutSet;
 
   const ExercisesScreen({
     super.key,
     required this.muscle,
     this.isComingFromWorkoutScreen,
+    this.appendToExistingWorkoutSet = false,
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,78 +55,87 @@ class ExercisesScreen extends ConsumerWidget {
           ),
           centerTitle: true,
         ),
-        body: ConnectivityChecker.isOnline!
-            ? ref.watch(muscleExerciseProvider(muscle['id'])).when(
-                loading: () => const Loader(),
-                data: (exercises) {
-                  // Exercises are already being cached from muscles screen
-                  // Just display them
-                  return Stack(
-                    children: [
-                      ExercisesGridView(
-                        exercises: exercises,
-                        isComingFromWorkoutScreen:
-                            isComingFromWorkoutScreen ?? false,
-                      ),
-                      // Keep indicator to show ongoing cache progress
-                      const DownloadProgressIndicator(),
-                    ],
-                  );
-                },
-                error: (error, stackTrace) => Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Something went wrong!'),
-                          ElevatedButton(
-                            onPressed: () => ref
-                                .refresh(muscleExerciseProvider(muscle['id'])),
-                            child: Text('Refresh'),
+        body: Column(
+          children: [
+            Expanded(
+              child: ConnectivityChecker.isOnline!
+                  ? ref.watch(muscleExerciseProvider(muscle['id'])).when(
+                      loading: () => const Loader(),
+                      data: (exercises) {
+                        return Stack(
+                          children: [
+                            ExercisesGridView(
+                              exercises: exercises,
+                              isComingFromWorkoutScreen:
+                                  isComingFromWorkoutScreen ?? false,
+                            ),
+                            const DownloadProgressIndicator(),
+                          ],
+                        );
+                      },
+                      error: (error, stackTrace) => Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(context.l10n.somethingWentWrong),
+                                ElevatedButton(
+                                  onPressed: () => ref.refresh(
+                                      muscleExerciseProvider(muscle['id'])),
+                                  child: Text(context.l10n.refresh),
+                                ),
+                              ],
+                            ),
+                          ))
+                  : HiveManager.exercisesBox.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.wifi_off,
+                                size: ResponsiveUtils.iconSize(context,
+                                    mobile: 64, tablet: 80, desktop: 96),
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: context.mediumSpacing),
+                              Text(
+                                context.l10n.noExercisesAvailableOffline,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                        fontFamily: "poppins",
+                                        fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(height: context.smallSpacing),
+                              Text(
+                                context.l10n.pleaseGoOnlineToDownloadExercises,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                        fontFamily: "poppins",
+                                        color: Colors.grey[600]),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ))
-            : HiveManager.exercisesBox.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.wifi_off,
-                          size: ResponsiveUtils.iconSize(context,
-                              mobile: 64, tablet: 80, desktop: 96),
-                          color: Colors.grey,
+                        )
+                      : _OfflineExercisesView(
+                          muscle: muscle,
+                          isComingFromWorkoutScreen:
+                              isComingFromWorkoutScreen ?? false,
                         ),
-                        SizedBox(height: context.mediumSpacing),
-                        Text(
-                          "No exercises available offline",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(
-                                  fontFamily: "poppins",
-                                  fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: context.smallSpacing),
-                        Text(
-                          "Please go online to download exercises",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(
-                                  fontFamily: "poppins",
-                                  color: Colors.grey[600]),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  )
-                : _OfflineExercisesView(
-                    muscle: muscle,
-                    isComingFromWorkoutScreen:
-                        isComingFromWorkoutScreen ?? false,
-                  ),
+            ),
+            if (isComingFromWorkoutScreen == true)
+              WorkoutCreationAndWarning(
+                isComingFromWorkoutScreen: true,
+                appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+                extraPops: 1,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -156,14 +169,18 @@ class _OfflineExercisesView extends ConsumerWidget {
             ),
             SizedBox(height: context.mediumSpacing),
             Text(
-              "No ${muscle['name']} exercises available offline",
+              context.l10n.noMuscleExercisesOffline(
+                translateMuscleName(context, muscle['name']),
+              ),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontFamily: "poppins", fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 8),
             Text(
-              "Go online to get ${muscle['name']} exercises",
+              context.l10n.goOnlineForMuscleExercises(
+                translateMuscleName(context, muscle['name']),
+              ),
               style: TextStyle(
                   fontFamily: "poppins", fontSize: 16, color: Colors.grey[600]),
               textAlign: TextAlign.center,

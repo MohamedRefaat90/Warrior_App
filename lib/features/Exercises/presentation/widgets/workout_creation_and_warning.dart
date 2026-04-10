@@ -8,24 +8,47 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class WorkoutCreationAndWarning extends ConsumerWidget {
   final bool isComingFromWorkoutScreen;
   final bool appendToExistingWorkoutSet;
-  const WorkoutCreationAndWarning(
-      {super.key,
-      required this.isComingFromWorkoutScreen,
-      required this.appendToExistingWorkoutSet});
+  final int extraPops;
+  const WorkoutCreationAndWarning({
+    super.key,
+    required this.isComingFromWorkoutScreen,
+    required this.appendToExistingWorkoutSet,
+    this.extraPops = 0,
+  });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final providerState = ref.watch(workoutsProvider);
     final workoutNotifier = ref.read(workoutsProvider.notifier);
+    final showWarning = isComingFromWorkoutScreen == true &&
+        !providerState.isSuccess &&
+        (workoutNotifier.newWorkout.workoutItems == null ||
+            workoutNotifier.newWorkout.workoutItems!.isEmpty);
+
     return Column(children: [
-      if (isComingFromWorkoutScreen == true &&
-          (workoutNotifier.newWorkout.workoutItems == null ||
-              workoutNotifier.newWorkout.workoutItems!.isEmpty)) ...[
-        CreateWorkoutWarning(),
-        const SizedBox(height: 8),
-      ],
+      ClipRect(
+        child: AnimatedAlign(
+          alignment: Alignment.topCenter,
+          heightFactor: showWarning ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: AnimatedOpacity(
+            opacity: showWarning ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 200),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CreateWorkoutWarning(),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        ),
+      ),
       if (isComingFromWorkoutScreen) ...[
         FinishBTN(
             primaryColor: AppColors.darkPrimary,
-            appendToExistingWorkoutSet: appendToExistingWorkoutSet),
+            appendToExistingWorkoutSet: appendToExistingWorkoutSet,
+            extraPops: extraPops),
         const SizedBox(height: 16),
       ]
     ]);

@@ -2791,6 +2791,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No muscle data available offline'**
   String get noMusclesAvailableOffline;
+
+  /// Refresh button label
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// Message when no exercises are available offline
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises available offline'**
+  String get noExercisesAvailableOffline;
+
+  /// Subtitle when no exercises are available offline
+  ///
+  /// In en, this message translates to:
+  /// **'Please go online to download exercises'**
+  String get pleaseGoOnlineToDownloadExercises;
+
+  /// Message when no exercises for a specific muscle are available offline
+  ///
+  /// In en, this message translates to:
+  /// **'No {muscleName} exercises available offline'**
+  String noMuscleExercisesOffline(String muscleName);
+
+  /// Prompt to go online to get exercises for a specific muscle
+  ///
+  /// In en, this message translates to:
+  /// **'Go online to get {muscleName} exercises'**
+  String goOnlineForMuscleExercises(String muscleName);
 }
 
 class _AppLocalizationsDelegate

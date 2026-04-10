@@ -53,9 +53,11 @@ android {
         versionCode = flutterVersionCode
         versionName = flutterVersionName
 
-        // Add 16KB page size support
+        // Only include ARM ABIs — x86/x86_64 are emulator-only and
+        // excluded from Play Store delivery via splits.abi below anyway.
+        // Removing them shrinks the uploaded AAB by ~35 MB.
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
     }
     signingConfigs {
@@ -72,7 +74,7 @@ android {
             // Only enable ABI splits for release builds
             enable gradle.startParameter.taskNames.any { it.contains("Release") }
             reset()
-            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            include 'armeabi-v7a', 'arm64-v8a'
             universalApk true
         }
     }

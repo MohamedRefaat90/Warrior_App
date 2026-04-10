@@ -54,6 +54,7 @@ class MusclesGridView extends ConsumerWidget {
                 child: GridMuscleCard(
                     muscle: muscle,
                     isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                    appendToExistingWorkoutSet: appendToExistingWorkoutSet,
                     isDark: isDark,
                     primaryColor: AppColors.darkPrimary),
               );
@@ -65,6 +66,7 @@ class MusclesGridView extends ConsumerWidget {
               child: GridMuscleCard(
                   muscle: muscles.last,
                   isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                  appendToExistingWorkoutSet: appendToExistingWorkoutSet,
                   isDark: isDark,
                   primaryColor: AppColors.darkPrimary),
             ),

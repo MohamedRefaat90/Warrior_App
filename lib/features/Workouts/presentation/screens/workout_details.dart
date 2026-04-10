@@ -28,7 +28,7 @@ class WorkoutDetails extends ConsumerWidget {
     // Always look up the latest version from workoutList so the UI reflects
     // changes made via updateWorkoutSet (e.g. adding exercises).
     // For online workouts: match by server ID.
-    // For offline workouts: match by value equality (name + createdAt).
+    // For offline workouts: match by createdAt (name is mutable).
     final updatedWorkout = workoutNotifier.workoutList
             .where((w) => w == workout)
             .firstOrNull ??

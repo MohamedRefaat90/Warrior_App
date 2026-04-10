@@ -30,6 +30,7 @@ class MusclesListView extends ConsumerWidget {
                 itemBuilder: (context, index) => MuscleTile(
                       muscle: muscles[index],
                       isComingFromWorkoutScreen: isComingFromWorkoutScreen,
+                      appendToExistingWorkoutSet: appendToExistingWorkoutSet,
                     ),
                 separatorBuilder: (context, index) =>
                     SizedBox(height: context.smallSpacing / 2),

@@ -183,6 +183,8 @@ class RoutersManager {
                 muscle: extraData,
                 isComingFromWorkoutScreen:
                     extraData['isComingFromWorkoutScreen'],
+                appendToExistingWorkoutSet:
+                    extraData['appendToExistingWorkoutSet'] ?? false,
               ),
               transitionType: PageTransitionType.fade,
             );
@@ -197,11 +199,13 @@ class RoutersManager {
             if (extra is Map<String, dynamic>) {
               final workoutItem = extra['workoutItem'] as WorkoutItemModel;
               final workoutSetId = extra['workoutSetId'] as int?;
+              final workout = extra['workout'] as WorkoutSetModel?;
               return CustomTransition(
                 child: ExerciseDetailsScreen(
                   exercise: workoutItem.exercise,
                   workoutItem: workoutItem,
                   workoutSetId: workoutSetId,
+                  workout: workout,
                 ),
                 transitionType: PageTransitionType.fade,
               );

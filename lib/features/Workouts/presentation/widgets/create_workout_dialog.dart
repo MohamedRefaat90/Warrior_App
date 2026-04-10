@@ -191,7 +191,11 @@ class _DialogActions extends ConsumerWidget {
         name: nameController.text,
         description: descriptionController.text,
         workoutItems: [],
+        createdAt: DateTime.now(),
       );
+      // Reset provider state to idle so isSuccess from a prior creation
+      // does not suppress the warning on this new workout.
+      workoutNotifier.resetStateToIdle();
       context.pop();
       context.pushNamed(AppRouters.muscles, extra: {
         "isComingFromWorkoutScreen": true,

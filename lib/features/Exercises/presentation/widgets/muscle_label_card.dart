@@ -11,11 +11,13 @@ import 'package:go_router/go_router.dart';
 class MuscleLabelCard extends StatelessWidget {
   final MuscleModel muscle;
   final bool isComingFromWorkoutScreen;
+  final bool? appendToExistingWorkoutSet;
 
   const MuscleLabelCard({
     super.key,
     required this.muscle,
     required this.isComingFromWorkoutScreen,
+    this.appendToExistingWorkoutSet,
   });
 
   @override
@@ -104,6 +106,7 @@ class MuscleLabelCard extends StatelessWidget {
         'id': muscle.id,
         'name': muscle.name,
         'isComingFromWorkoutScreen': isComingFromWorkoutScreen,
+        'appendToExistingWorkoutSet': appendToExistingWorkoutSet,
       },
     );
   }

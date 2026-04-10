@@ -13,12 +13,14 @@ class GridMuscleCard extends StatelessWidget {
   final MuscleModel muscle;
 
   final bool? isComingFromWorkoutScreen;
+  final bool? appendToExistingWorkoutSet;
   final bool isDark;
   final Color primaryColor;
   const GridMuscleCard({
     super.key,
     required this.muscle,
     required this.isComingFromWorkoutScreen,
+    this.appendToExistingWorkoutSet,
     required this.isDark,
     required this.primaryColor,
   });
@@ -32,6 +34,7 @@ class GridMuscleCard extends StatelessWidget {
           'id': muscle.id,
           'name': muscle.name,
           'isComingFromWorkoutScreen': isComingFromWorkoutScreen,
+          'appendToExistingWorkoutSet': appendToExistingWorkoutSet,
         },
       ),
       borderRadius: BorderRadius.circular(context.responsiveBorderRadius + 8),

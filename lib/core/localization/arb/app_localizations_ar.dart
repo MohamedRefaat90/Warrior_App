@@ -1409,4 +1409,24 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noMusclesAvailableOffline => 'لا توجد عضلات متوفرة بدون إنترنت';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get noExercisesAvailableOffline => 'لا تتوفر تمارين بدون إنترنت';
+
+  @override
+  String get pleaseGoOnlineToDownloadExercises =>
+      'يرجى الاتصال بالإنترنت لتحميل التمارين';
+
+  @override
+  String noMuscleExercisesOffline(String muscleName) {
+    return 'لا تتوفر تمارين $muscleName بدون إنترنت';
+  }
+
+  @override
+  String goOnlineForMuscleExercises(String muscleName) {
+    return 'اتصل بالإنترنت للحصول على تمارين $muscleName';
+  }
 }

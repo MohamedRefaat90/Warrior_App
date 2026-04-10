@@ -100,27 +100,32 @@ class HiveManager {
     await pendingOpsBox.clear();
   }
 
-  /// Deletes a workout from Hive by matching its server [id].
-  /// For offline workouts (id == null), falls back to value equality
-  /// (uses WorkoutSetModel's == override which compares name + createdAt).
+  /// Deletes a workout from Hive.
+  /// For server workouts (id > 0), finds by server ID.
+  /// For offline workouts (no server ID), deletes via the HiveObject's own
+  /// box key — avoids equality-based matching which breaks when createdAt
+  /// is null across multiple workouts.
   /// Returns true if a workout was found and deleted.
   static Future<bool> deleteWorkoutFromBox({
     int? workoutId,
     WorkoutSetModel? workout,
   }) async {
-    for (final key in workoutsBox.keys) {
-      final stored = workoutsBox.get(key);
-      if (stored == null) continue;
-
-      if (workoutId != null && workoutId > 0 && stored.id == workoutId) {
-        await workoutsBox.delete(key);
-        return true;
+    if (workoutId != null && workoutId > 0) {
+      for (final key in workoutsBox.keys) {
+        final stored = workoutsBox.get(key);
+        if (stored != null && stored.id == workoutId) {
+          await workoutsBox.delete(key);
+          return true;
+        }
       }
-      if (workoutId == null && workout != null && stored == workout) {
-        await workoutsBox.delete(key);
-        return true;
-      }
+      return false;
     }
+
+    if (workout != null && workout.isInBox) {
+      await workout.delete();
+      return true;
+    }
+
     return false;
   }
 

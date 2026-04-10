@@ -23,15 +23,16 @@ class ExerciseCard extends ConsumerStatefulWidget {
   /// to exercise details from a workout context.
   final WorkoutItemModel? workoutItem;
 
-  /// Optional workout set ID for API calls.
-  final int? workoutSetId;
+  /// The parent workout — used to derive the server ID and support
+  /// offline set updates (no server ID yet).
+  final WorkoutSetModel? workout;
 
   const ExerciseCard({
     super.key,
     required this.exercise,
     this.isComingFromWorkoutScreen,
     this.workoutItem,
-    this.workoutSetId,
+    this.workout,
   });
 
   @override
@@ -52,7 +53,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
           extra: widget.workoutItem != null
               ? {
                   'workoutItem': widget.workoutItem,
-                  'workoutSetId': widget.workoutSetId,
+                  'workoutSetId': widget.workout?.id,
+                  'workout': widget.workout,
                 }
               : widget.exercise,
         ),
@@ -125,6 +127,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                         workoutsNotifier.newWorkout.workoutItems!.removeWhere(
                             (e) => e.exercise.id == widget.exercise.id);
                       }
+                      workoutsNotifier.resetStateToIdle();
                     },
                   ),
                 ),

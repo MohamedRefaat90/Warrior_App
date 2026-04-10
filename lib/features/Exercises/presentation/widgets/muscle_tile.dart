@@ -13,10 +13,12 @@ import '../../../../core/widgets/image_error.dart';
 class MuscleTile extends StatelessWidget {
   final MuscleModel muscle;
   final bool? isComingFromWorkoutScreen;
+  final bool? appendToExistingWorkoutSet;
   const MuscleTile({
     super.key,
     required this.muscle,
     this.isComingFromWorkoutScreen,
+    this.appendToExistingWorkoutSet,
   });
 
   @override
@@ -33,7 +35,8 @@ class MuscleTile extends StatelessWidget {
         onTap: () => context.pushNamed(AppRouters.exercises, extra: {
           'id': muscle.id,
           'name': muscle.name,
-          'isComingFromWorkoutScreen': isComingFromWorkoutScreen
+          'isComingFromWorkoutScreen': isComingFromWorkoutScreen,
+          'appendToExistingWorkoutSet': appendToExistingWorkoutSet,
         }),
         leading: CachedNetworkImage(
           imageUrl: muscle.image,

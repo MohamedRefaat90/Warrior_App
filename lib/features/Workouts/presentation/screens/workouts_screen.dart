@@ -26,7 +26,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   late final Animation<double> _fabRotationAnimation;
   @override
   Widget build(BuildContext context) {
-    final workoutNotifier = ref.watch(workoutsProvider.notifier);
+    // Watch state so the widget rebuilds when workoutList changes
+    // (e.g. FAB visibility after creating/deleting the first workout).
+    ref.watch(workoutsProvider);
+    final workoutNotifier = ref.read(workoutsProvider.notifier);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 

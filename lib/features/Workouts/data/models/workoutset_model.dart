@@ -290,13 +290,15 @@ class WorkoutSetModel extends HiveObject {
       return id == other.id;
     }
 
-    // For offline workouts (no ID), compare by name + createdAt
-    return name == other.name && createdAt == other.createdAt;
+    // For offline workouts (no ID), compare by createdAt only.
+    // Name is mutable (user can edit it), so it must not be part
+    // of the identity check.
+    return createdAt == other.createdAt;
   }
 
   @override
   int get hashCode {
     if (id != null && id! > 0) return id.hashCode;
-    return Object.hash(name, createdAt);
+    return createdAt.hashCode;
   }
 }
